@@ -1,0 +1,6 @@
+columns:
+    address:
+        label: 'lovata.crmshopaholic::lang.tab.address'
+        type: text
+        searchable: true
+        sortable: true

@@ -1,0 +1,116 @@
+<div class="control-toolbar">
+    <div class="toolbar-item toolbar-primary">
+        <div data-control="toolbar" data-disposable="">
+            <button class="btn btn-sm btn-default oc-icon-backward control-disabled order-shopaholic-offer-category-list-back" data-id="<?= $arProduct['category_id'] ?>">
+                <?= e(trans('lovata.ordersshopaholic::lang.text.back_to_category')) ?>
+            </button>
+        </div>
+    </div>
+</div>
+<? if(isset($arProduct) && !empty($arProduct)) {
+    $arActiveOffer = null;
+    if(!empty($arProduct['offers'][$arProduct['active_offer']])) {
+        $arActiveOffer = $arProduct['offers'][$arProduct['active_offer']];
+    }
+?>
+<div class="field-section">
+    <h4><?= $arProduct['name'] ?></h4>
+</div>
+
+<div class="new-elem">
+    <div class="row">
+        <div class="col-md-4">
+            <img class="b-goods-popup__img" src="<? if(!empty($arProduct['offers'][$arProduct['active_offer']]['preview_image'])){ echo $arProduct['offers'][$arProduct['active_offer']]['preview_image']['path']; }?>" alt="">
+        </div>
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-12">
+                    <span class="bold"><?= e(trans('lovata.ordersshopaholic::lang.fields.vendor_code')) ?>:</span> <span class="order-shopaholic-offer-code">
+                        <? if(!empty($arActiveOffer)) {?><?= $arActiveOffer['code'] ?><?}?>
+                    </span>
+                </div>
+            </div>
+            <? if(!empty($arProduct['description'])) {?>
+            <div class="row">
+                <div class="col-md-12"><span class="bold"><?= e(trans('lovata.ordersshopaholic::lang.fields.description')) ?>:</span> <?= $arProduct['description'] ?></div>
+            </div>
+            <?}?>
+            
+            <? if(!empty($arProduct['offer_properties'])) {?>
+            <div class="row">
+                <? foreach($arProduct['offer_properties'] as $iPropertyID => $arProperty) {?>
+                    <? if(!empty($arProperty['value']) && $arProperty['type'] != 'mediafinder' && $arProperty['type'] != 'checkbox' && in_array('main', $arProperty['groups'])) {?>
+                    <div data-prop-id="<?= $iPropertyID ?>" class="b-goods-popup__content__left__check-b b-cart-filter-line col-md-12">
+                        <div class="b-goods-popup__content__left__check-b__title bold"><?= $arProperty['name'] ?></div>
+                        <div class="b-goods-popup__content__left__check-b__btns">
+                            <? foreach($arProperty['value'] as $sValue) {?>
+                            <? if(!empty($sValue)) {?>
+                            <label class="b-color-btn">
+                                <input type="radio" value="<?= $sValue?>"
+                                       name="Property[<?= $iPropertyID ?>]"
+                                       <? if($arActiveOffer['properties'][$iPropertyID]['value'] == $sValue || count($arProperty['value']) == 1) {?>checked<?}?>>
+                                <span class="b-color-btn__text"><?= $sValue?><? if(!empty($arProperty['measure'])) {?> <?=$arProperty['measure'] ?><?}?></span>
+                            </label> 
+                            <?}?>
+                            <?}?>
+                        </div>
+                    </div>
+                    <?}?>
+                <?}?>
+            </div>
+            <?}?>
+            <div class="row">
+                <div class="col-md-12 order-shopaholic-offer-quantity">
+                    <?= e(trans('lovata.ordersshopaholic::lang.fields.has_quantity')) ?>: <span class="bold">
+                        <? if(!empty($arActiveOffer)) {?><?= $arActiveOffer['quantity'] ?><?}?>
+                    </span>
+                </div>
+            </div>
+            <div class="row count-row">
+                <div class="col-md-3 bold">
+                    <?= e(trans('lovata.ordersshopaholic::lang.fields.quantity')) ?>:
+                </div>
+                <div class="col-md-2">
+                    <input type="text" name="" value="1" class="form-control goods-count order-shopaholic-offer-count">
+                </div>
+                <div class="col-md-3">
+                    <button 
+                        class="btn btn-sm btn-primary oc-icon-plus control-disabled order-shopaholic-offer-add-to-order"
+                        data-id="<? if(!empty($arActiveOffer)) {?><?= $arActiveOffer['id'] ?><?}?>"
+                        <? if(!empty($arActiveOffer) && $arActiveOffer['quantity'] < 1 && \Lovata\Shopaholic\Models\Settings::getValue('check_quantity_on_order')) {?>disabled="disabled"<?}?>
+                        data-dismiss="popup">
+                        <?= e(trans('lovata.ordersshopaholic::lang.text.add')) ?>
+                    </button>
+                </div>
+            </div>
+            <div class="row price-counter">
+                <div class="col-md-2 bold"><?= e(trans('lovata.shopaholic::lang.fields.price')) ?>:</div>
+                <div class="col-md-10">
+                    <span class="_price"><? if(!empty($arActiveOffer)) {?><?= $arActiveOffer['price'] ?><?}?></span>
+                    <span><?= \Lovata\Shopaholic\Models\Settings::getValue('currency') ?></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="b-product-selection__offers">
+    <? foreach($arProduct['offers'] as $iOfferID => $arOffer) {?>
+    <div 
+        data-offer-id="<?= $iOfferID ?>"
+        data-offer-code="<?= $arOffer['code'] ?>"
+        data-offer-images="<? if(!empty($arProduct['offers'][$arProduct['active_offer']]['preview_image'])) { echo $arProduct['offers'][$arProduct['active_offer']]['preview_image']['path']; } ?>"
+        data-offer-price="<?= $arOffer['price_value'] ?>" data-offer-old_price="<?= $arOffer['old_price_value'] ?>"
+        data-offer-quantity="<?= $arOffer['quantity'] ?>">
+        <? foreach($arOffer['properties'] as $iPropertyID => $arProperty) {?>
+            <? if(!empty($arProperty['value']) && $arProperty['type'] != 'mediafinder' && $arProperty['type'] != 'checkbox' && in_array('main', $arProperty['groups'])) {?>
+            <div data-property-id="<?= $iPropertyID?>" data-property-value="<?= $arProperty['value'] ?>"></div>
+            <?}?>
+        <?}?>
+    </div>
+    <?}?>
+</div>
+
+<?} else {?>
+    <?= e(trans('lovata.ordersshopaholic::lang.message.list_empty')) ?>
+<?}?>

@@ -1,0 +1,45 @@
+columns:
+    name:
+          label: 'lovata.ordersshopaholic::lang.fields.name'
+          type: text
+          searchable: true
+          sortable: true
+    pivot[code]:
+          label: 'lovata.ordersshopaholic::lang.fields.vendor_code'
+          type: text
+          searchable: true
+          sortable: true
+    pivot[price]:
+          label: 'lovata.ordersshopaholic::lang.fields.price'
+          type: text
+          searchable: true
+          sortable: true
+    pivot[old_price]:
+          label: 'lovata.ordersshopaholic::lang.fields.old_price'
+          type: text
+          searchable: true
+          sortable: true
+    pivot[quantity]:
+          label: 'lovata.ordersshopaholic::lang.fields.quantity'
+          type: partial
+          path: quantity
+          searchable: true
+          sortable: true
+          width: 140px
+    quantity:
+        label: 'lovata.ordersshopaholic::lang.fields.has_quantity'
+        type: text
+        searchable: false
+        sortable: false
+    price:
+        label: 'lovata.ordersshopaholic::lang.fields.catalog_price'
+        type: text
+        searchable: false
+        sortable: false
+    apply_price:
+        label: ''
+        searchable: false
+        sortable: false
+        type: partial
+        path: apply_price_button
+        width: 120px

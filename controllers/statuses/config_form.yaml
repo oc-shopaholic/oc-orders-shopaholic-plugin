@@ -1,0 +1,10 @@
+name: Statuses
+form: $/lovata/ordersshopaholic/models/status/fields.yaml
+modelClass: Lovata\OrdersShopaholic\Models\Status
+defaultRedirect: lovata/ordersshopaholic/statuses
+create:
+    redirect: 'lovata/ordersshopaholic/statuses/update/:id'
+    redirectClose: lovata/ordersshopaholic/statuses
+update:
+    redirect: lovata/ordersshopaholic/statuses
+    redirectClose: lovata/ordersshopaholic/statuses

@@ -1,0 +1,14 @@
+title: 'lovata.ordersshopaholic::lang.title.order_list'
+modelClass: Lovata\OrdersShopaholic\Models\Order
+list: $/lovata/ordersshopaholic/models/order/columns.yaml
+recordUrl: 'lovata/ordersshopaholic/orders/update/:id'
+noRecordsMessage: 'backend::lang.list.no_records'
+recordsPerPage: '25'
+showSetup: true
+showCheckboxes: false
+showSorting: 1
+toolbar:
+    buttons: list_toolbar
+    search:
+        prompt: 'backend::lang.list.search_prompt'
+filter: config_filter.yaml

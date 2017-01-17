@@ -1,0 +1,16 @@
+# ===================================
+# Filter Scope Definitions
+# ===================================
+
+scopes:
+    status:
+        label: 'lovata.ordersshopaholic::lang.fields.status'
+        modelClass: Lovata\OrdersShopaholic\Models\Status
+        nameFrom: name
+        conditions: status_id in (:filtered)
+    manager:
+        label: 'lovata.ordersshopaholic::lang.fields.manager'
+        modelClass: Backend\Models\User
+        nameFrom: first_name
+        descriptionFrom: last_name
+        conditions: manager_id in (:filtered)

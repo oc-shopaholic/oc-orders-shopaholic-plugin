@@ -1,0 +1,15 @@
+title: 'lovata.ordersshopaholic::lang.title.payment_method_list'
+modelClass: Lovata\OrdersShopaholic\Models\PaymentMethod
+list: $/lovata/ordersshopaholic/models/paymentmethod/columns.yaml
+recordUrl: 'lovata/ordersshopaholic/paymentmethods/update/:id'
+noRecordsMessage: 'backend::lang.list.no_records'
+showSetup: true
+showCheckboxes: true
+defaultSort:
+    column: sort_order
+    direction: asc
+toolbar:
+    buttons: list_toolbar
+    search:
+        prompt: 'backend::lang.list.search_prompt'
+recordOnClick: '$.manageModal.clickRecord(:id)'

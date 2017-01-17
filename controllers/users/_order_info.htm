@@ -1,0 +1,12 @@
+<div class="scoreboard">
+    <div data-control="toolbar">
+        <div class="scoreboard-item title-value">
+            <h4><?= e(trans('lovata.ordersshopaholic::lang.text.order_count')) ?></h4>
+            <p><?= $iTotalCount ?></p>
+        </div>
+        <div class="scoreboard-item title-value">
+            <h4><?= e(trans('lovata.ordersshopaholic::lang.text.order_total_cost')) ?></h4>
+            <p><?= $fTotalSum ?> <?= \Lovata\Shopaholic\Models\Settings::getValue('currency')?></p>
+        </div>
+    </div>
+</div>

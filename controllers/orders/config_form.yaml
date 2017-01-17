@@ -1,0 +1,16 @@
+name: Orders
+modelClass: Lovata\OrdersShopaholic\Models\Order
+form: $/lovata/ordersshopaholic/models/order/fields.yaml
+defaultRedirect: lovata/ordersshopaholic/orders
+create:
+    title: 'lovata.ordersshopaholic::lang.title.order_create'
+    redirect: 'lovata/ordersshopaholic/orders/update/:id'
+    redirectClose: lovata/ordersshopaholic/orders
+    flashSave: 'lovata.ordersshopaholic::lang.message.order_create'
+update:
+    title: 'lovata.ordersshopaholic::lang.title.order_update'
+    redirect: lovata/ordersshopaholic/orders
+    redirectClose: lovata/ordersshopaholic/orders
+    flashSave: 'lovata.ordersshopaholic::lang.message.order_update'
+    flashDelete: 'lovata.ordersshopaholic::lang.message.order_delete'
+preview: {  }

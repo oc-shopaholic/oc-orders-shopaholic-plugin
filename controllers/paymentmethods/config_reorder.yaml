@@ -1,0 +1,5 @@
+title: 'lovata.ordersshopaholic::lang.paymentmethod.reorder_title'
+modelClass: Lovata\OrdersShopaholic\Models\PaymentMethod
+nameFrom: name
+toolbar:
+    buttons: reorder_toolbar

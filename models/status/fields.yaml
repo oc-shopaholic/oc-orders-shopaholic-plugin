@@ -1,0 +1,21 @@
+fields:
+    name:
+        label: 'lovata.ordersshopaholic::lang.fields.name'
+        span: full
+        oc.commentPosition: ''
+        type: text
+    code:
+        label: 'lovata.ordersshopaholic::lang.fields.code'
+        oc.commentPosition: ''
+        span: full
+        trigger:
+            action: disable
+            field: code
+            condition: 'value[new] || value[canceled] || value[in_progress] || value[complete]'
+        type: text
+    comment:
+        label: 'lovata.ordersshopaholic::lang.fields.comment'
+        span: full
+        oc.commentPosition: ''
+        type: textarea
+        size: small

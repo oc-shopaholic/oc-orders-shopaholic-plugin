@@ -1,0 +1,5 @@
+title: 'lovata.ordersshopaholic::lang.status.reorder_title'
+modelClass: Lovata\OrdersShopaholic\Models\Status
+nameFrom: name
+toolbar:
+    buttons: reorder_toolbar

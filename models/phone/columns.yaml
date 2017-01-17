@@ -1,0 +1,6 @@
+columns:
+    phone:
+        label: 'lovata.ordersshopaholic::lang.fields.phone'
+        type: text
+        searchable: true
+        sortable: true

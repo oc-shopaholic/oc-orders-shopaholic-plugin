@@ -1,0 +1,10 @@
+name: ShippingTypes
+form: $/lovata/ordersshopaholic/models/shippingtype/fields.yaml
+modelClass: Lovata\OrdersShopaholic\Models\ShippingType
+defaultRedirect: lovata/ordersshopaholic/shippingtypes
+create:
+    redirect: 'lovata/ordersshopaholic/shippingtypes/update/:id'
+    redirectClose: lovata/ordersshopaholic/shippingtypes
+update:
+    redirect: lovata/ordersshopaholic/shippingtypes
+    redirectClose: lovata/ordersshopaholic/shippingtypes

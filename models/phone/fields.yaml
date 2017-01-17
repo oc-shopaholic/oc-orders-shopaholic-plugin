@@ -1,0 +1,7 @@
+fields:
+    phone:
+        label: 'lovata.ordersshopaholic::lang.fields.phone'
+        span: full
+        oc.commentPosition: ''
+        required: 1
+        type: text

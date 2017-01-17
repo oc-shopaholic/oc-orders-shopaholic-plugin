@@ -1,0 +1,34 @@
+columns:
+    name:
+        label: 'lovata.ordersshopaholic::lang.fields.username'
+        type: text
+        searchable: true
+        sortable: true
+    surname:
+        label: 'lovata.ordersshopaholic::lang.fields.surname'
+        type: text
+        searchable: true
+        sortable: true
+    phone:
+        label: 'lovata.ordersshopaholic::lang.fields.phone'
+        type: text
+        relation: phones
+        valueFrom: phone
+        searchable: true
+        sortable: false
+    id:
+        label: 'lovata.ordersshopaholic::lang.fields.id'
+        type: text
+        sortable: true
+    created_at:
+        label: 'lovata.ordersshopaholic::lang.fields.created_at'
+        type: datetime
+        sortable: true
+        format: Y-m-d H:i:s
+        invisible: true
+    updated_at:
+        label: 'lovata.ordersshopaholic::lang.fields.updated_at'
+        type: datetime
+        sortable: true
+        format: Y-m-d H:i:s
+        invisible: true

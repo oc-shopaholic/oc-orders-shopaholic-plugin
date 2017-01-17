@@ -1,0 +1,57 @@
+plugin:
+    name: 'lovata.ordersshopaholic::lang.plugin.name'
+    description: 'lovata.ordersshopaholic::lang.plugin.description'
+    author: Lovata
+    icon: oc-icon-shopping-cart
+    homepage: ''
+navigation:
+    ordersshopaholic-menu:
+        label: 'lovata.ordersshopaholic::lang.menu.orders'
+        url: /lovata/ordersshopaholic/orders
+        icon: icon-shopping-cart
+        permissions:
+            - shopaholic-order
+        sideMenu:
+            ordersshopaholic-menu-orders:
+                label: 'lovata.ordersshopaholic::lang.menu.orders'
+                url: /lovata/ordersshopaholic/orders
+                icon: icon-shopping-cart
+                permissions:
+                    - shopaholic-order
+            users-menu-item:
+                label: 'lovata.ordersshopaholic::lang.menu.users'
+                url: lovata/ordersshopaholic/users
+                icon: icon-users
+                permissions:
+                    - shopaholic-order
+            ordersshopaholic-menu-statuses:
+                label: 'lovata.ordersshopaholic::lang.menu.statuses'
+                url: /lovata/ordersshopaholic/statuses
+                icon: icon-random
+                permissions:
+                    - shopaholic-order-status
+            ordersshopaholic-menu-paymentmethods:
+                label: 'lovata.ordersshopaholic::lang.menu.payment_methods'
+                url: /lovata/ordersshopaholic/paymentmethods
+                icon: icon-credit-card
+                permissions:
+                    - shopaholic-order-payment-type
+            ordersshopaholic-menu-shippingtypes:
+                label: 'lovata.ordersshopaholic::lang.menu.shipping_types'
+                url: lovata/ordersshopaholic/shippingtypes
+                icon: icon-truck
+                permissions:
+                    - shopaholic-delivery-type
+permissions:
+    shopaholic-order:
+        tab: 'lovata.shopaholic::lang.tabs.permissions'
+        label: 'lovata.ordersshopaholic::lang.permission.order'
+    shopaholic-order-status:
+        tab: 'lovata.shopaholic::lang.tabs.permissions'
+        label: 'lovata.ordersshopaholic::lang.permission.status'
+    shopaholic-order-payment-type:
+        tab: 'lovata.shopaholic::lang.tabs.permissions'
+        label: 'lovata.ordersshopaholic::lang.permission.payment_type'
+    shopaholic-delivery-type:
+        tab: 'lovata.shopaholic::lang.tabs.permissions'
+        label: 'lovata.ordersshopaholic::lang.permission.delivery_type'

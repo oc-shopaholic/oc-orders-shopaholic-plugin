@@ -1,0 +1,10 @@
+name: PaymentMethods
+form: $/lovata/ordersshopaholic/models/paymentmethod/fields.yaml
+modelClass: Lovata\OrdersShopaholic\Models\PaymentMethod
+defaultRedirect: lovata/ordersshopaholic/paymentmethods
+create:
+    redirect: 'lovata/ordersshopaholic/paymentmethods/update/:id'
+    redirectClose: lovata/ordersshopaholic/paymentmethods
+update:
+    redirect: lovata/ordersshopaholic/paymentmethods
+    redirectClose: lovata/ordersshopaholic/paymentmethods

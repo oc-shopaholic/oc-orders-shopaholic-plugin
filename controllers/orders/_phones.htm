@@ -1,0 +1,17 @@
+<?
+/** @var \October\Rain\Database\Collection $arPhones */
+$arPhones = $formModel->phones;
+?>
+<div class="crm_user_phone_form">
+    <div class="crm_user_phone_form_value">
+        <? if(!empty($arPhones)) {?>
+            <select name="phone[select]" class="form-control custom-select">
+                <? $bFirst = true;
+                /** @var \Lovata\OrdersShopaholic\Models\Phone $obPhone */
+                foreach($arPhones as $obPhone) {?>
+                    <option <?if($bFirst) {?>selected="selected"<? $bFirst = false; }?> value="<?= $obPhone->id ?>"><?= $obPhone->phone ?></option>
+                <?}?>
+            </select>
+        <?}?>
+    </div>
+</div>

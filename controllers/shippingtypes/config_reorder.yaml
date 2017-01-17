@@ -1,0 +1,5 @@
+title: 'lovata.ordersshopaholic::lang.shippingtype.reorder_title'
+modelClass: Lovata\OrdersShopaholic\Models\ShippingType
+nameFrom: name
+toolbar:
+    buttons: reorder_toolbar

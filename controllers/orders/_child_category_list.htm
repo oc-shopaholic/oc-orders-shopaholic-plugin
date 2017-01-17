@@ -1,0 +1,39 @@
+<? if(!empty($iCurrentCategoryID)) {?>
+<div class="control-toolbar">
+    <div class="toolbar-item toolbar-primary">
+        <div data-control="toolbar" data-disposable="">
+            <button class="btn btn-sm btn-default oc-icon-backward control-disabled order-shopaholic-offer-category-list-back" data-id="<?= $iParentCategoryID ?>">
+                <?= e(trans('lovata.ordersshopaholic::lang.text.back_to_category')) ?>
+            </button>
+        </div>
+    </div>
+</div>
+<?}?>
+<div class="field-section">
+    <h4><?= e(trans('lovata.ordersshopaholic::lang.text.category_list')) ?></h4>
+</div>
+<? if(isset($arCategory) && !empty($arCategory)) {?>
+    <div class="list-flush">
+        <div class="list-widget " id="Lists-relationOffersManageList">
+            <div class="control-list" data-control="listwidget">
+                <table class="table data order-shopaholic-offer-category-list" data-control="rowlink">
+                    <thead>
+                    </thead>
+                    <tbody>
+                    <? foreach($arCategory as $iCategoryID => $arCategoryData) {?>
+                        <tr data-id="<?= $iCategoryID ?>" class="rowlink">
+                            <td><?= $arCategoryData['name'] ?></td>
+                        </tr>
+                    <?}?>
+                    </tbody>
+                    <tfoot>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+<?} else {?>
+<div class="field-section">
+    <?= e(trans('lovata.ordersshopaholic::lang.message.list_empty')) ?>
+</div>
+<?}?>

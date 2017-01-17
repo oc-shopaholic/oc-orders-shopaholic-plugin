@@ -1,0 +1,45 @@
+# ===================================
+#  Relation Behavior Config
+# ===================================
+
+order_address:
+    label: 'lovata.ordersshopaholic::lang.fields.order_address'
+    readOnly: true
+    view:
+        list: $/lovata/ordersshopaholic/models/address/columns.yaml
+        recordsPerPage: 10
+        showCheckboxes: false
+        showSearch: false
+        showSorting: false
+        recordOnClick: ''
+        defaultSort:
+            column: id
+            direction: desc
+    manage:
+        form: $/lovata/ordersshopaholic/models/address/fields.yaml
+phones:
+    label: 'lovata.ordersshopaholic::lang.fields.phone'
+    view:
+        list: $/lovata/ordersshopaholic/models/phone/columns.yaml
+        toolbarButtons: create|delete
+        recordsPerPage: 10
+        defaultSort:
+            column: id
+            direction: desc
+    manage:
+        form: $/lovata/ordersshopaholic/models/phone/fields.yaml
+
+orders:
+    label: 'lovata.ordersshopaholic::lang.fields.orders'
+    readOnly: true
+    view:
+        list: $/lovata/ordersshopaholic/models/order/user_columns.yaml
+        recordsPerPage: 10
+        showSearch: true
+        showSorting: true
+        recordUrl: 'lovata/ordersshopaholic/orders/update/:id'
+        defaultSort:
+            column: id
+            direction: desc
+    manage:
+        form: $/lovata/ordersshopaholic/models/order/fields.yaml

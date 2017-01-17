@@ -1,0 +1,37 @@
+columns:
+    name:
+        label: 'lovata.ordersshopaholic::lang.fields.status'
+        type: text
+        searchable: true
+        sortable: true
+    code:
+        label: 'lovata.ordersshopaholic::lang.fields.code'
+        type: text
+        searchable: true
+        sortable: true
+    comment:
+        label: 'lovata.ordersshopaholic::lang.fields.comment'
+        type: text
+    id:
+        label: 'lovata.ordersshopaholic::lang.fields.id'
+        type: text
+        searchable: true
+        sortable: true
+        width: 100px
+    sort_order:
+        label: 'lovata.ordersshopaholic::lang.fields.sort_order'
+        type: text
+        sortable: true
+        width: 150px
+    created_at:
+        label: 'lovata.ordersshopaholic::lang.fields.created_at'
+        type: datetime
+        sortable: true
+        format: Y-m-d H:i:s
+        invisible: true
+    updated_at:
+        label: 'lovata.ordersshopaholic::lang.fields.updated_at'
+        type: datetime
+        sortable: true
+        format: Y-m-d H:i:s
+        invisible: true

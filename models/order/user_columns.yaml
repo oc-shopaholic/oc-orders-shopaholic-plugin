@@ -1,0 +1,36 @@
+columns:
+    order_number:
+        label: 'lovata.ordersshopaholic::lang.fields.order_id'
+        type: number
+        searchable: true
+        sortable: true
+    status_id:
+        label: 'lovata.ordersshopaholic::lang.fields.status'
+        type: text
+        relation: status
+        searchable: true
+        sortable: true
+        select: name
+    total_price:
+        label: 'lovata.ordersshopaholic::lang.fields.total_price'
+        type: text
+        searchable: true
+        sortable: true
+    manager:
+        label: 'lovata.ordersshopaholic::lang.fields.manager'
+        relation: manager
+        select: concat(first_name, ' ', last_name)
+        searchable: true
+        sortable: true
+    created_at:
+        label: 'lovata.ordersshopaholic::lang.fields.created_at'
+        type: datetime
+        searchable: true
+        sortable: true
+        format: Y-m-d H:i:s
+    updated_at:
+        label: 'lovata.ordersshopaholic::lang.fields.updated_at'
+        type: datetime
+        searchable: true
+        sortable: true
+        format: Y-m-d H:i:s

@@ -1,0 +1,43 @@
+<script>
+    function getCheckedOfferList() {
+
+        var arOfferList = [];
+        $('#Orders-update-RelationController-offers tbody input:checked').each(function () {
+            
+            var _this = $(this).parents('tr').find('.order-shopaholic-offer-list-count');
+            arOfferList.push(_this.attr('data-id'));
+        });
+
+        return arOfferList;
+    }
+</script>
+
+<div id="Orders-update-RelationController-offers-toolbar" class="relation-toolbar">
+    <div class="toolbar-widget list-header" id="Toolbar-relationOffersToolbar">
+        <div class="control-toolbar">
+            <!-- Control Panel -->
+            <div class="toolbar-item toolbar-primary">
+                <div data-control="toolbar" data-disposable="">
+                    <a 
+                        data-control="popup"
+                        data-size="huge"
+                        data-handler="onRelationButtonAddOffer"
+                        href="javascript:;"
+                        class="btn btn-sm btn-primary oc-icon-plus">
+                        Добавить</a>
+                    <button 
+                        class="btn btn-sm btn-default oc-icon-minus control-disabled" 
+                        onclick="$(this).data('request-data', {checked: $('#Orders-update-RelationController-offers-view .control-list').listWidget('getChecked'), offer_list: getCheckedOfferList()})" 
+                        disabled=""
+                        data-request="onRelationButtonRemove"
+                        data-trigger-action="enable"
+                        data-trigger="#Orders-update-RelationController-offers-view .control-list input[type=checkbox]"
+                        data-trigger-condition="checked"
+                        data-stripe-load-indicator="">
+                        Удалить</button>
+                </div>
+            </div>
+            <!-- List Search -->
+        </div>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+# ===================================
+#  Relation Behavior Config
+# ===================================
+
+offers:
+    label: 'lovata.ordersshopaholic::lang.fields.offers'
+    emptyMessage: 'lovata.ordersshopaholic::lang.message.offer_list_empty'
+    readOnly: true
+    view:
+        list: $/lovata/ordersshopaholic/models/offerorder/columns.yaml
+        toolbarPartial: relation_toolbar
+        showSearch: true
+        showSorting: true
+        showCheckboxes: true
+    manage:
+        list: $/lovata/ordersshopaholic/models/offerorder/columns.yaml

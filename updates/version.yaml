@@ -1,0 +1,32 @@
+1.0.1:
+    - 'Initialize plugin.'
+1.0.2:
+    - 'Created table lovata_ordersshopaholic_carts'
+    - builder_table_create_lovata_ordersshopaholic_carts.php
+1.0.3:
+    - 'Created table lovata_ordersshopaholic_cart_item'
+    - builder_table_create_lovata_ordersshopaholic_cart_item.php
+1.0.4:
+    - 'Created table lovata_ordersshopaholic_payment_methods'
+    - builder_table_create_lovata_ordersshopaholic_payment_methods.php
+1.0.5:
+    - 'Created table lovata_ordersshopaholic_addresses'
+    - builder_table_create_lovata_ordersshopaholic_addresses.php
+1.0.6:
+    - 'Created table lovata_ordersshopaholic_statuses'
+    - builder_table_create_lovata_ordersshopaholic_statuses.php
+1.0.7:
+    - 'Created table lovata_ordersshopaholic_orders'
+    - builder_table_create_lovata_ordersshopaholic_orders.php
+1.0.8:
+    - 'Created table lovata_ordersshopaholic_offer_order'
+    - builder_table_create_lovata_ordersshopaholic_offer_order.php
+1.0.9:
+    - 'Seed base order statuses and address types'
+    - seeder109.php
+1.0.11:
+    - 'Created table lovata_ordersshopaholic_phones'
+    - builder_table_create_lovata_ordersshopaholic_phones.php
+1.0.12:
+    - 'Created table lovata_ordersshopaholic_shipping_types'
+    - builder_table_create_lovata_ordersshopaholic_shipping_types.php
