@@ -1,16 +1,21 @@
 fields:
+    active:
+        label: 'lovata.toolbox::lang.field.active'
+        span: left
+        default: 1
+        type: switch
     name:
-        label: 'lovata.ordersshopaholic::lang.fields.name'
+        label: 'lovata.toolbox::lang.field.name'
         span: full
         oc.commentPosition: ''
         type: text
     code:
-        label: 'lovata.ordersshopaholic::lang.fields.code'
+        label: 'lovata.toolbox::lang.field.code'
         oc.commentPosition: ''
         span: full
         type: text
-    comment:
-        label: 'lovata.ordersshopaholic::lang.fields.comment'
+    preview_text:
+        label: 'lovata.toolbox::lang.field.description'
         span: full
         oc.commentPosition: ''
         type: textarea

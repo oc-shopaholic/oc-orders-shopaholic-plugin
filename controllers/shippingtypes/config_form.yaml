@@ -1,10 +1,15 @@
-name: ShippingTypes
+name: 'lovata.ordersshopaholic::lang.shippingtype.name'
 form: $/lovata/ordersshopaholic/models/shippingtype/fields.yaml
 modelClass: Lovata\OrdersShopaholic\Models\ShippingType
 defaultRedirect: lovata/ordersshopaholic/shippingtypes
 create:
+    title: 'backend::lang.form.create_title'
     redirect: 'lovata/ordersshopaholic/shippingtypes/update/:id'
     redirectClose: lovata/ordersshopaholic/shippingtypes
+    flashSave: 'lovata.toolbox::lang.message.create_success'
 update:
+    title: 'backend::lang.form.update_title'
     redirect: lovata/ordersshopaholic/shippingtypes
     redirectClose: lovata/ordersshopaholic/shippingtypes
+    flashSave: 'lovata.toolbox::lang.message.update_success'
+    flashDelete: 'lovata.toolbox::lang.message.delete_success'

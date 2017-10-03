@@ -1,12 +1,14 @@
 <?php namespace Lovata\OrdersShopaholic\Controllers;
 
-use Backend\Classes\Controller;
+use Event;
 use BackendMenu;
-use Lang;
-use Flash;
-use Illuminate\Http\Request;
-use Lovata\OrdersShopaholic\Models\PaymentMethod;
+use Backend\Classes\Controller;
 
+/**
+ * Class PaymentMethods
+ * @package Lovata\OrdersShopaholic\Controllers
+ * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
+ */
 class PaymentMethods extends Controller
 {
     public $implement = [
@@ -20,37 +22,21 @@ class PaymentMethods extends Controller
     public $formConfig = 'config_form.yaml';
     public $reorderConfig = 'config_reorder.yaml';
 
-    /** @var Request */
-    protected $obRequest;
-    
-    public function __construct(Request $obRequest)
+    /**
+     * PaymentMethods constructor.
+     */
+    public function __construct()
     {
-        $this->obRequest = $obRequest;
-
         parent::__construct();
-        BackendMenu::setContext('Lovata.OrdersShopaholic', 'ordersshopaholic-menu', 'ordersshopaholic-menu-paymentmethods');
+        BackendMenu::setContext('Lovata.OrdersShopaholic', 'orders-shopaholic-menu', 'orders-shopaholic-menu-payment-methods');
     }
 
     /**
-     * Ajax element list deleting
-     * @return mixed
+     * Ajax handler onReorder event
      */
-    public function index_onDelete() {
-
-        $arElementsID = $this->obRequest->input('checked');
-
-        if(empty($arElementsID) || !is_array($arElementsID)) {
-            return $this->listRefresh();
-        }
-
-        foreach($arElementsID as $iElementID) {
-            if(!$obElement = PaymentMethod::find($iElementID))
-                continue;
-
-            $obElement->delete();
-        }
-
-        Flash::success(Lang::get('lovata.ordersshopaholic::lang.message.delete_success'));
-        return $this->listRefresh();
+    public function onReorder()
+    {
+        Event::fire('shopaholic.payment_method.update.sorting');
+        return parent::onReorder();
     }
 }

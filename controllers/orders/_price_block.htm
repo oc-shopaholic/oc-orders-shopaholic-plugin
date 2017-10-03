@@ -5,28 +5,21 @@
 if(!isset($obOrder) && isset($formModel)) {
     $obOrder = $formModel;
 }
-
 ?>
 
 <? if(isset($obOrder) && !empty($obOrder)) {?>
 <div class="scoreboard">
     <div class="scoreboard-item title-value">
-        <h4><strong><?= e(trans('lovata.ordersshopaholic::lang.fields.shipping_price')) ?></strong></h4>
+        <h4><strong><?= e(trans('lovata.ordersshopaholic::lang.field.shipping_price')) ?></strong></h4>
         <p><span class="order-shopaholic-delivery-price"><?= $obOrder->shipping_price ?></span> <?= \Lovata\Shopaholic\Models\Settings::getValue('currency');?></p>
     </div>
     <div class="scoreboard-item title-value">
-        <h4><strong><?= e(trans('lovata.ordersshopaholic::lang.fields.offers_total_price')) ?></strong></h4>
+        <h4><strong><?= e(trans('lovata.ordersshopaholic::lang.field.offers_total_price')) ?></strong></h4>
         <p><span class="order-shopaholic-offers-total-price"><?= $obOrder->offers_total_price ?></span> <?= \Lovata\Shopaholic\Models\Settings::getValue('currency');?></p>
     </div>
     <div class="scoreboard-item title-value">
-        <h4><strong><?= e(trans('lovata.ordersshopaholic::lang.fields.total_price')) ?></strong></h4>
+        <h4><strong><?= e(trans('lovata.ordersshopaholic::lang.field.total_price')) ?></strong></h4>
         <p><strong><span class="order-shopaholic-total-price"><?= $obOrder->total_price ?></span> <?= \Lovata\Shopaholic\Models\Settings::getValue('currency')?></strong></p>
     </div>
 </div>
-<input type="hidden" name="order_data[order_id]" value="<?= $obOrder->id ?>">
-<input type="hidden" name="order_data[offers_total_price]" value="<?= $obOrder->getTotalPriceValue() - $obOrder->getShippingPriceValue() ?>">
-<input type="hidden" name="order_data[shipping_price]" value="<?= $obOrder->getShippingPriceValue() ?>">
-<input type="hidden" name="order_data[total_price]" value="<?= $obOrder->getTotalPriceValue() ?>">
-<input class="order-shopaholic-default-decimals" type="hidden" name="" value="<?= \Lovata\Shopaholic\Models\Settings::getValue('decimals') ?>">
-<input class="order-shopaholic-check-quantity" type="hidden" name="" value="<?= \Lovata\Shopaholic\Models\Settings::getValue('check_quantity_on_order') ?>">
 <?}?>

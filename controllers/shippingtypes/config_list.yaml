@@ -1,4 +1,4 @@
-title: 'lovata.ordersshopaholic::lang.title.shipping_list'
+title: 'lovata.ordersshopaholic::lang.shippingtype.list_title'
 modelClass: Lovata\OrdersShopaholic\Models\ShippingType
 list: $/lovata/ordersshopaholic/models/shippingtype/columns.yaml
 recordUrl: 'lovata/ordersshopaholic/shippingtypes/update/:id'

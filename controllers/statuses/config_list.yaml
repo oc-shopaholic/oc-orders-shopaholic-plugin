@@ -1,4 +1,4 @@
-title: 'lovata.ordersshopaholic::lang.title.status_list'
+title: 'lovata.ordersshopaholic::lang.status.list_title'
 modelClass: Lovata\OrdersShopaholic\Models\Status
 list: $/lovata/ordersshopaholic/models/status/columns.yaml
 recordUrl: 'lovata/ordersshopaholic/statuses/update/:id'

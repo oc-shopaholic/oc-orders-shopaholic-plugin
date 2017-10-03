@@ -1,12 +1,28 @@
 <?php namespace Lovata\OrdersShopaholic;
 
-use Backend\Widgets\Form;
 use Event;
-use Lang;
-use Lovata\OrdersShopaholic\Classes\CartStore;
-use Lovata\OrdersShopaholic\Models\Address;
 use System\Classes\PluginBase;
-use Lovata\Shopaholic\Models\Settings;
+
+//Helpers
+use Lovata\OrdersShopaholic\Console\RemoveOldCarts;
+use Lovata\OrdersShopaholic\Classes\CartData;
+use Lovata\OrdersShopaholic\Classes\OrderCreating;
+
+//Items
+use Lovata\OrdersShopaholic\Classes\Item\CartElementItem;
+use Lovata\OrdersShopaholic\Classes\Item\PaymentMethodItem;
+use Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem;
+
+//Collection
+use Lovata\OrdersShopaholic\Classes\Collection\CartElementCollection;
+use Lovata\OrdersShopaholic\Classes\Collection\PaymentMethodCollection;
+use Lovata\OrdersShopaholic\Classes\Collection\ShippingTypeCollection;
+
+//Events
+use Lovata\OrdersShopaholic\Classes\Event\CartItemModelHandler;
+use Lovata\OrdersShopaholic\Classes\Event\PaymentMethodModelHandler;
+use Lovata\OrdersShopaholic\Classes\Event\ShippingTypeModelHandler;
+use Lovata\OrdersShopaholic\Classes\Event\ExtendFieldHandler;
 
 /**
  * Class Plugin
@@ -15,88 +31,55 @@ use Lovata\Shopaholic\Models\Settings;
  */
 class Plugin extends PluginBase
 {
-    const NAME = 'ordersshopaholic';
-    const FIND_USER_BY_PHONE = 'phone';
-    const FIND_USER_BY_EMAIL = 'email';
-    
-    
+    /**
+     * Register component plugin method
+     * @return array
+     */
     public function registerComponents()
     {
         return [
-            'Lovata\OrdersShopaholic\Components\Cart'               => 'Cart',
-            'Lovata\OrdersShopaholic\Components\Ordering'           => 'Ordering',
+            'Lovata\OrdersShopaholic\Components\Cart'              => 'Cart',
+            'Lovata\OrdersShopaholic\Components\OrderCreate'       => 'OrderCreate',
+            'Lovata\OrdersShopaholic\Components\ShippingTypeList'  => 'ShippingTypeList',
+            'Lovata\OrdersShopaholic\Components\PaymentMethodList' => 'PaymentMethodList',
         ];
     }
 
+    /**
+     * Register command plugin method
+     */
     public function register()
     {
-        $this->registerConsoleCommand('ordersshopaholic.removeOldCarts', 'Lovata\OrdersShopaholic\Console\RemoveOldCarts');
+        $this->registerConsoleCommand('shopaholic:remove-old-cart', RemoveOldCarts::class);
     }
-    
+
+    /**
+     * Boot plugin method
+     */
     public function boot()
     {
-        Event::listen('shopaholic.order.created', function($obOrder) {
-            //TODO: Отрефакторить
-            Address::createUserAddress($obOrder);
-        });
+        $this->app->singleton(CartData::class, CartData::class);
+        $this->app->bind(OrderCreating::class, OrderCreating::class);
 
-        Event::listen('shopaholic.order.updated', function($obOrder) {
-            //TODO: Отрефакторить
-            Address::createUserAddress($obOrder);
-        });
+        $this->app->bind(CartElementItem::class, CartElementItem::class);
+        $this->app->bind(PaymentMethodItem::class, PaymentMethodItem::class);
+        $this->app->bind(ShippingTypeItem::class, ShippingTypeItem::class);
         
-        // Extend "Shopaholic" settings form, add cart settings
-        Event::listen('backend.form.extendFields', function($widget) {
+        $this->app->bind(CartElementCollection::class, CartElementCollection::class);
+        $this->app->bind(PaymentMethodCollection::class, PaymentMethodCollection::class);
+        $this->app->bind(ShippingTypeCollection::class, ShippingTypeCollection::class);
 
-            /**@var Form $widget */
-            // Only for the Settings controller
-            if (!$widget->getController() instanceof \System\Controllers\Settings) {
-                return;
-            }
+        $this->addEventListener();
+    }
 
-            // Only for the Settings model
-            if (!$widget->model instanceof Settings) {
-                return;
-            }
-
-            // Add an extra birthday field
-            $widget->addTabFields([
-                'cart_cookie_lifetime' => [
-                    'tab'           => 'lovata.ordersshopaholic::lang.tab.order_settings',
-                    'label'         => 'lovata.ordersshopaholic::lang.settings.cart_cookie_lifetime',
-                    'span'          => 'left',
-                    'type'          => 'number',
-                    'default'       => CartStore::$iCookieLifeTime,
-                ],
-                'check_quantity_on_order' => [
-                    'tab'           => 'lovata.ordersshopaholic::lang.tab.order_settings',
-                    'label'         => 'lovata.ordersshopaholic::lang.settings.check_quantity_on_order',
-                    'span'          => 'left',
-                    'type'          => 'checkbox',
-                ],
-                'decrement_quantity_after_order' => [
-                    'tab'           => 'lovata.ordersshopaholic::lang.tab.order_settings',
-                    'label'         => 'lovata.ordersshopaholic::lang.settings.decrement_quantity_after_order',
-                    'span'          => 'left',
-                    'type'          => 'checkbox',
-                ],
-                'create_new_user' => [
-                    'tab'           => 'lovata.ordersshopaholic::lang.tab.order_settings',
-                    'label'         => 'lovata.ordersshopaholic::lang.settings.create_new_user',
-                    'span'          => 'left',
-                    'type'          => 'checkbox',
-                ],
-                'user_key_field' => [
-                    'tab'           => 'lovata.ordersshopaholic::lang.tab.order_settings',
-                    'label'         => 'lovata.ordersshopaholic::lang.settings.user_key_field',
-                    'span'          => 'left',
-                    'type'          => 'dropdown',
-                    'options'       => [
-                        self::FIND_USER_BY_PHONE => Lang::get('lovata.toolbox::lang.field.phone'),
-                        self::FIND_USER_BY_EMAIL => Lang::get('lovata.toolbox::lang.field.email'),
-                    ],
-                ],
-            ]);
-        });
+    /**
+     * Add event listeners
+     */
+    protected function addEventListener()
+    {
+        Event::subscribe(PaymentMethodModelHandler::class);
+        Event::subscribe(ShippingTypeModelHandler::class);
+        Event::subscribe(CartItemModelHandler::class);
+        Event::subscribe(ExtendFieldHandler::class);
     }
 }

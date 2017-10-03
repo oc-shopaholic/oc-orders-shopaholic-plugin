@@ -1,4 +1,0 @@
-title: Orders
-modelClass: Lovata\OrdersShopaholic\Models\Order
-toolbar:
-    buttons: reorder_toolbar

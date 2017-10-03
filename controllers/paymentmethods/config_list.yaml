@@ -1,4 +1,4 @@
-title: 'lovata.ordersshopaholic::lang.title.payment_method_list'
+title: 'lovata.ordersshopaholic::lang.paymentmethod.list_title'
 modelClass: Lovata\OrdersShopaholic\Models\PaymentMethod
 list: $/lovata/ordersshopaholic/models/paymentmethod/columns.yaml
 recordUrl: 'lovata/ordersshopaholic/paymentmethods/update/:id'

@@ -2,15 +2,13 @@
 #  Relation Behavior Config
 # ===================================
 
-offers:
-    label: 'lovata.ordersshopaholic::lang.fields.offers'
-    emptyMessage: 'lovata.ordersshopaholic::lang.message.offer_list_empty'
-    readOnly: true
+offer:
+    label: 'lovata.ordersshopaholic::lang.field.offer_list'
     view:
         list: $/lovata/ordersshopaholic/models/offerorder/columns.yaml
-        toolbarPartial: relation_toolbar
         showSearch: true
         showSorting: true
         showCheckboxes: true
-    manage:
-        list: $/lovata/ordersshopaholic/models/offerorder/columns.yaml
+        recordsPerPage: 10
+        recordUrl: lovata/shopaholic/products/update/:product_id
+        toolbarButtons: remove

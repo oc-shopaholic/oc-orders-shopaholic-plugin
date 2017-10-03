@@ -5,43 +5,37 @@ plugin:
     icon: oc-icon-shopping-cart
     homepage: ''
 navigation:
-    ordersshopaholic-menu:
+    orders-shopaholic-menu:
         label: 'lovata.ordersshopaholic::lang.menu.orders'
-        url: /lovata/ordersshopaholic/orders
+        url: lovata/ordersshopaholic/orders
         icon: icon-shopping-cart
         permissions:
             - shopaholic-order
         sideMenu:
-            ordersshopaholic-menu-orders:
+            orders-shopaholic-menu-orders:
                 label: 'lovata.ordersshopaholic::lang.menu.orders'
-                url: /lovata/ordersshopaholic/orders
+                url: lovata/ordersshopaholic/orders
                 icon: icon-shopping-cart
                 permissions:
                     - shopaholic-order
-            users-menu-item:
-                label: 'lovata.ordersshopaholic::lang.menu.users'
-                url: lovata/ordersshopaholic/users
-                icon: icon-users
-                permissions:
-                    - shopaholic-order
-            ordersshopaholic-menu-statuses:
-                label: 'lovata.ordersshopaholic::lang.menu.statuses'
-                url: /lovata/ordersshopaholic/statuses
-                icon: icon-random
-                permissions:
-                    - shopaholic-order-status
-            ordersshopaholic-menu-paymentmethods:
+            orders-shopaholic-menu-payment-methods:
                 label: 'lovata.ordersshopaholic::lang.menu.payment_methods'
-                url: /lovata/ordersshopaholic/paymentmethods
+                url: lovata/ordersshopaholic/paymentmethods
                 icon: icon-credit-card
                 permissions:
                     - shopaholic-order-payment-type
-            ordersshopaholic-menu-shippingtypes:
+            orders-shopaholic-menu-shipping-types:
                 label: 'lovata.ordersshopaholic::lang.menu.shipping_types'
                 url: lovata/ordersshopaholic/shippingtypes
                 icon: icon-truck
                 permissions:
                     - shopaholic-delivery-type
+            orders-shopaholic-menu-statuses:
+                label: 'lovata.ordersshopaholic::lang.menu.statuses'
+                url: lovata/ordersshopaholic/statuses
+                icon: icon-random
+                permissions:
+                    - shopaholic-order-status
 permissions:
     shopaholic-order:
         tab: 'lovata.shopaholic::lang.tabs.permissions'

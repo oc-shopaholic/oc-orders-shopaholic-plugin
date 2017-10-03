@@ -1,17 +1,10 @@
 fields:
     order_number:
-       label: 'lovata.ordersshopaholic::lang.fields.order_id'
+       label: 'lovata.ordersshopaholic::lang.field.order_number'
        span: left
        oc.commentPosition: ''
        disabled: 1
        type: text
-    manager:
-        label: 'lovata.ordersshopaholic::lang.fields.manager'
-        span: auto
-        oc.commentPosition: ''
-        select: concat(first_name, ' ', last_name)
-        type: relation
-        emptyOption: 'lovata.ordersshopaholic::lang.fields.empty'
     price_block:
         span: full
         type: partial
@@ -22,7 +15,7 @@ fields:
 tabs:
     fields:
         status:
-            label: 'lovata.ordersshopaholic::lang.fields.status'
+            label: 'lovata.ordersshopaholic::lang.field.status'
             span: auto
             oc.commentPosition: ''
             nameFrom: name
@@ -30,237 +23,34 @@ tabs:
             type: relation
             tab: 'lovata.ordersshopaholic::lang.tab.info'
         payment_method:
-            label: 'lovata.ordersshopaholic::lang.fields.payment_method'
-            span: right
+            label: 'lovata.ordersshopaholic::lang.field.payment_method'
+            span: left
             oc.commentPosition: ''
             nameFrom: name
             descriptionFrom: description
+            emptyOption: 'lovata.toolbox::lang.field.empty'
             context:
                 - update
                 - preview
             type: relation
             tab: 'lovata.ordersshopaholic::lang.tab.info'
-        order_comment:
-            label: 'lovata.ordersshopaholic::lang.fields.order_comment'
-            size: large
-            oc.commentPosition: ''
-            span: left
-            type: textarea
-            tab: 'lovata.ordersshopaholic::lang.tab.info'
-        comment:
-            label: 'lovata.ordersshopaholic::lang.fields.user_comment'
-            size: large
-            oc.commentPosition: ''
-            span: right
-            disabled: 1
-            type: textarea
-            tab: 'lovata.ordersshopaholic::lang.tab.info'
-        offer_list:
-            label: 'lovata.ordersshopaholic::lang.fields.offer_list'
-            span: full
-            context:
-                - update
-                - preview
-            type: section
-            tab: 'lovata.ordersshopaholic::lang.tab.offers_info'
-        offers:
-            span: full
-            path: offers
-            context:
-                - update
-                - preview
-            type: partial
-            tab: 'lovata.ordersshopaholic::lang.tab.offers_info'
-        client_info:
-            label: 'lovata.ordersshopaholic::lang.fields.client_info'
-            span: full
-            context:
-                - update
-                - preview
-            type: section
-            tab: 'lovata.ordersshopaholic::lang.tab.client_info'
-        user_search:
-            span: left
-            path: user_search
-            context:
-                - update
-                - preview
-            type: partial
-            tab: 'lovata.ordersshopaholic::lang.tab.client_info'
-        user_new:
-            label: 'lovata.ordersshopaholic::lang.fields.user_new'
-            span: left
-            context:
-                - update
-                - preview
-            type: checkbox
-            tab: 'lovata.ordersshopaholic::lang.tab.client_info'
-        name:
-            label: 'lovata.ordersshopaholic::lang.fields.username'
-            oc.commentPosition: ''
-            span: left
-            required: 1
-            context:
-                - update
-                - preview
-            type: text
-            tab: 'lovata.ordersshopaholic::lang.tab.client_info'
-        surname:
-            label: 'lovata.ordersshopaholic::lang.fields.surname'
-            oc.commentPosition: ''
-            span: left
-            context:
-                - update
-                - preview
-            type: text
-            tab: 'lovata.ordersshopaholic::lang.tab.client_info'
-        phone:
-            label: 'lovata.ordersshopaholic::lang.fields.phone'
-            comment: 'lovata.ordersshopaholic::lang.fields.phone_desc'
-            span: left
-            oc.commentPosition: ''
-            required: 1
-            context:
-                - update
-                - preview
-            type: text
-            tab: 'lovata.ordersshopaholic::lang.tab.client_info'
-        phone_list:
-            label: 'lovata.ordersshopaholic::lang.fields.phone_list'
-            oc.commentPosition: ''
-            span: left
-            context:
-                - update
-                - preview
-            trigger:
-                action: hide
-                field: user_new
-                condition: checked
-            type: dropdown
-            tab: 'lovata.ordersshopaholic::lang.tab.client_info'
-        email:
-            label: 'lovata.ordersshopaholic::lang.fields.email'
-            oc.commentPosition: ''
-            span: left
-            required: 1
-            context:
-                - update
-                - preview
-            type: text
-            tab: 'lovata.ordersshopaholic::lang.tab.client_info'
         shipping_type:
-            label: 'lovata.ordersshopaholic::lang.fields.shipping_type'
+            label: 'lovata.ordersshopaholic::lang.field.shipping_type'
             span: left
             oc.commentPosition: ''
             nameFrom: name
             descriptionFrom: description
+            emptyOption: 'lovata.toolbox::lang.field.empty'
             context:
                 - update
                 - preview
             type: relation
-            tab: 'lovata.ordersshopaholic::lang.tab.delivery_info'
-        shipping_price:
-            label: 'lovata.ordersshopaholic::lang.fields.shipping_price'
-            span: right
-            type: text
-            oc.commentPosition: ''
+            tab: 'lovata.ordersshopaholic::lang.tab.info'
+        offer:
+            span: full
+            path: offer
             context:
                 - update
                 - preview
-            tab: 'lovata.ordersshopaholic::lang.tab.delivery_info'
-        shipping_info:
-            label: 'lovata.ordersshopaholic::lang.fields.shipping_info'
-            span: left
-            context:
-                - update
-                - preview
-            type: section
-            tab: 'lovata.ordersshopaholic::lang.tab.delivery_info'
-        billing_info:
-            label: 'lovata.ordersshopaholic::lang.fields.billing_info'
-            span: right
-            context:
-                - update
-                - preview
-            type: section
-            tab: 'lovata.ordersshopaholic::lang.tab.delivery_info'
-        shipping_country:
-            span: left
-            label: 'lovata.ordersshopaholic::lang.fields.country'
-            context:
-                - update
-                - preview
-            type: text
-            tab: 'lovata.ordersshopaholic::lang.tab.delivery_info'
-        billing_country:
-            span: right
-            label: 'lovata.ordersshopaholic::lang.fields.country'
-            context:
-                - update
-                - preview
-            type: text
-            tab: 'lovata.ordersshopaholic::lang.tab.delivery_info'
-        shipping_city:
-            span: left
-            label: 'lovata.ordersshopaholic::lang.fields.city'
-            context:
-                - update
-                - preview
-            type: text
-            tab: 'lovata.ordersshopaholic::lang.tab.delivery_info'
-        billing_city:
-            span: right
-            label: 'lovata.ordersshopaholic::lang.fields.city'
-            context:
-                - update
-                - preview
-            type: text
-            tab: 'lovata.ordersshopaholic::lang.tab.delivery_info'
-        shipping_street:
-            span: left
-            label: 'lovata.ordersshopaholic::lang.fields.street'
-            context:
-                - update
-                - preview
-            type: text
-            tab: 'lovata.ordersshopaholic::lang.tab.delivery_info'
-        billing_street:
-            span: right
-            label: 'lovata.ordersshopaholic::lang.fields.street'
-            context:
-                - update
-                - preview
-            type: text
-            tab: 'lovata.ordersshopaholic::lang.tab.delivery_info'
-        shipping_zip:
-            span: left
-            label: 'lovata.ordersshopaholic::lang.fields.zip'
-            context:
-                - update
-                - preview
-            type: text
-            tab: 'lovata.ordersshopaholic::lang.tab.delivery_info'
-        billing_zip:
-            span: right
-            label: 'lovata.ordersshopaholic::lang.fields.zip'
-            context:
-                - update
-                - preview
-            type: text
-            tab: 'lovata.ordersshopaholic::lang.tab.delivery_info'
-        shipping_text_address:
-            span: left
-            label: 'lovata.ordersshopaholic::lang.fields.address'
-            context:
-                - update
-                - preview
-            type: text
-            tab: 'lovata.ordersshopaholic::lang.tab.delivery_info'
-        billing_text_address:
-            span: right
-            label: 'lovata.ordersshopaholic::lang.fields.address'
-            context:
-                - update
-                - preview
-            type: text
-            tab: 'lovata.ordersshopaholic::lang.tab.delivery_info'
+            type: partial
+            tab: 'lovata.ordersshopaholic::lang.tab.offers_info'

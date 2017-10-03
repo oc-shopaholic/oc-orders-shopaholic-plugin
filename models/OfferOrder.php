@@ -1,10 +1,7 @@
 <?php namespace Lovata\OrdersShopaholic\Models;
 
-use DB;
-use Lovata\Shopaholic\Classes\CPrice;
-use Lovata\Shopaholic\Models\Offer;
-use Lovata\Shopaholic\Models\Settings;
 use October\Rain\Database\Pivot;
+use Lovata\Shopaholic\Classes\Helper\PriceHelper;
 
 /**
  * Class OfferOrder
@@ -17,12 +14,10 @@ use October\Rain\Database\Pivot;
  * @property float $old_price
  * @property int $quantity
  * @property string $code
- * 
- * //TODO: Требует рефакторинга
  */
 class OfferOrder extends Pivot
 {
-    public $table = 'lovata_ordersshopaholic_offer_order';
+    public $table = 'lovata_orders_shopaholic_offer_order';
 
     protected $fillable = [
         'order_id',
@@ -32,19 +27,17 @@ class OfferOrder extends Pivot
         'quantity',
         'code',
     ];
-    
-    public function beforeUpdate()
-    {
-        return $this->updateOrderOfferQuantity();
-    }
-    
+
+    /**
+     * After save model method
+     */
     public function afterSave()
     {
         //Get order object
         /** @var Order $obOrder */
         $obOrder = Order::find($this->order_id);
         if(empty($obOrder)){
-            return false;
+            return;
         }
 
         $obOrder->save();
@@ -71,30 +64,27 @@ class OfferOrder extends Pivot
     /**
      * Accessor for price
      *
-     * @param  string  $iPrice
+     * @param  float  $dPrice
      * @return string
      */
-    public function getPriceAttribute($iPrice)
+    public function getPriceAttribute($dPrice)
     {
-        if(!empty($iPrice)){
-            return CPrice::getPriceInFormat((float)$iPrice);
-        }
-        return $iPrice;
+        /** @var PriceHelper $obPriceHelper */
+        $obPriceHelper = app()->make(PriceHelper::class);
+        return $obPriceHelper->get($dPrice);
     }
-
 
     /**
      * Accessor for old_price
      *
-     * @param  string  $iPrice
+     * @param  float  $dPrice
      * @return string
      */
-    public function getOldPriceAttribute($iPrice)
+    public function getOldPriceAttribute($dPrice)
     {
-        if(!empty($iPrice)){
-            return CPrice::getPriceInFormat((float)$iPrice);
-        }
-        return $iPrice;
+        /** @var PriceHelper $obPriceHelper */
+        $obPriceHelper = app()->make(PriceHelper::class);
+        return $obPriceHelper->get($dPrice);
     }
 
     /**
@@ -105,7 +95,7 @@ class OfferOrder extends Pivot
     public function setPriceAttribute($sPrice)
     {
         $sPrice = str_replace(',', '.', $sPrice);
-        $sPrice = preg_replace("/[^0-9\.]/", "",$sPrice);
+        $sPrice = (float) preg_replace("/[^0-9\.]/", "",$sPrice);
         $this->attributes['price'] = (float)$sPrice;
     }
 
@@ -117,76 +107,31 @@ class OfferOrder extends Pivot
     public function setOldPriceAttribute($sPrice)
     {
         $sPrice = str_replace(',', '.', $sPrice);
-        $sPrice = preg_replace("/[^0-9\.]/", "",$sPrice);
+        $sPrice = (float) preg_replace("/[^0-9\.]/", "",$sPrice);
         if($sPrice <= $this->getPriceValue()) {
             $sPrice = 0;
         }
 
-        $this->attributes['old_price'] = (float)$sPrice;
-    }
-
-    public function updateOrderOfferQuantity()
-    {
-        // Get order behavior flags from settings
-        $bDecrementQuantityAfterOrder = Settings::getValue('decrement_quantity_after_order');
-        if(empty($bDecrementQuantityAfterOrder)) {
-            return true;
-        }
-        
-        $newQuantity = $this->attributes['quantity'];
-        $currQuantity = $this->original['quantity'];
-        if($currQuantity != $newQuantity){
-            if($newQuantity > $currQuantity){
-                $bInc = true;
-                $sQuantity = $newQuantity - $currQuantity;
-            }else{
-                $bInc = false;
-                $sQuantity = $currQuantity - $newQuantity;
-            }
-
-            DB::beginTransaction();
-            try{
-                if($bInc){
-                    DB::table('lovata_shopaholic_offers')->where('id', $this->offer_id)->decrement('quantity', $sQuantity);
-                }else{
-                    DB::table('lovata_shopaholic_offers')->where('id', $this->offer_id)->increment('quantity', $sQuantity);
-                }
-            }catch (\Exception $e){
-                DB::rollBack();
-                return false;
-            }
-            
-            DB::commit();
-        }
-        
-        return true;
+        $this->attributes['old_price'] = $sPrice;
     }
 
     /**
-     * Add offer quantity before delete
-     * @param Offer $obOffer
-     * @return bool
+     * Get total price value
+     * @return float
      */
-    public static function addOrderOfferQuantityBeforeDelete($obOffer) {
+    public function getTotalPriceValue()
+    {
+        return $this->quantity * $this->getPriceValue();
+    }
 
-        // Get order behavior flags from settings
-        $bDecrementQuantityAfterOrder = Settings::getValue('decrement_quantity_after_order');
-        if(empty($bDecrementQuantityAfterOrder)) {
-            return true;
-        }
-
-        $iQuantity = $obOffer->pivot->quantity;
-
-        DB::beginTransaction();
-        try{
-            DB::table('lovata_shopaholic_offers')->where('id', $obOffer->id)->increment('quantity', $iQuantity);
-        }catch (\Exception $e){
-            DB::rollBack();
-            return false;
-        }
-
-        DB::commit();
-
-        return true;
+    /**
+     * Get total price string
+     * @return string
+     */
+    public function getTotalPrice()
+    {
+        /** @var PriceHelper $obPriceHelper */
+        $obPriceHelper = app()->make(PriceHelper::class);
+        return $obPriceHelper->get($this->getTotalPriceValue());
     }
 }

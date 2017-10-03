@@ -1,10 +1,15 @@
-name: Statuses
+name: 'lovata.ordersshopaholic::lang.status.name'
 form: $/lovata/ordersshopaholic/models/status/fields.yaml
 modelClass: Lovata\OrdersShopaholic\Models\Status
 defaultRedirect: lovata/ordersshopaholic/statuses
 create:
+    title: 'backend::lang.form.create_title'
     redirect: 'lovata/ordersshopaholic/statuses/update/:id'
     redirectClose: lovata/ordersshopaholic/statuses
+    flashSave: 'lovata.toolbox::lang.message.create_success'
 update:
+    title: 'backend::lang.form.update_title'
     redirect: lovata/ordersshopaholic/statuses
     redirectClose: lovata/ordersshopaholic/statuses
+    flashSave: 'lovata.toolbox::lang.message.update_success'
+    flashDelete: 'lovata.toolbox::lang.message.delete_success'

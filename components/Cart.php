@@ -3,7 +3,7 @@
 use Input;
 use Cms\Classes\ComponentBase;
 use Kharanenka\Helper\Result;
-use Lovata\OrdersShopaholic\Classes\CartStore;
+use Lovata\OrdersShopaholic\Classes\CartData;
 
 /**
  * Class Cart
@@ -12,6 +12,12 @@ use Lovata\OrdersShopaholic\Classes\CartStore;
  */
 class Cart extends ComponentBase
 {
+    /** @var  CartData */
+    protected $obCartData;
+    
+    /**
+     * @return array
+     */
     public function componentDetails()
     {
         return [
@@ -21,13 +27,21 @@ class Cart extends ComponentBase
     }
 
     /**
+     * Init plugin method
+     */
+    public function init()
+    {
+        $this->obCartData = app()->make(CartData::class);
+    }
+
+    /**
      * Add product to cart
      * @return array
      */
     public function onAdd()
     {
         $arRequestData = Input::get('cart');
-        CartStore::add($arRequestData);
+        $this->obCartData->add($arRequestData);
         return Result::get();
     }
 
@@ -41,7 +55,7 @@ class Cart extends ComponentBase
         $bRewrite = Input::get('rewrite');
         $bIncrement = Input::get('increment');
         
-        CartStore::update($arRequestData, $bRewrite, $bIncrement);
+        $this->obCartData->update($arRequestData, $bRewrite, $bIncrement);
         return Result::get();
     }
 
@@ -52,7 +66,7 @@ class Cart extends ComponentBase
     public function onRemove()
     {
         $arRequestData = Input::get('cart');
-        CartStore::remove($arRequestData);
+        $this->obCartData->remove($arRequestData);
         return Result::get();
     }
 
@@ -61,7 +75,7 @@ class Cart extends ComponentBase
      */
     public function onClear()
     {
-        CartStore::clear();
+        $this->obCartData->clear();
     }
 
     /**
@@ -70,15 +84,6 @@ class Cart extends ComponentBase
      */
     public function get()
     {
-        return CartStore::get();
-    }
-
-    /**
-     * Get cart info
-     * @return array
-     */
-    public function getInfo()
-    {
-        return CartStore::getInfo();
+        return $this->obCartData->get();
     }
 }

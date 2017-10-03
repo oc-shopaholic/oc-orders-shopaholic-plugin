@@ -1,7 +1,0 @@
-fields:
-    address:
-        label: 'lovata.crmshopaholic::lang.tab.address'
-        span: full
-        oc.commentPosition: ''
-        required: 1
-        type: text

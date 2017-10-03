@@ -1,6 +1,0 @@
-<? 
-/** @var \Lovata\Shopaholic\Models\Offer $listRecord */
-if(isset($listRecord) && $listRecord->getPriceValue() != $listRecord->pivot->getPriceValue()) {?>
-<button type="button" class="btn btn-success order-apply-price-button" data-price="<?= $listRecord->getPriceValue() ?>"><?= e(trans('lovata.ordersshopaholic::lang.text.apply_price')) ?></button>
-<input type="hidden" name="Offer[<?= $listRecord->id ?>][price]" value="<?= $listRecord->pivot->getPriceValue() ?>">
-<?}?>

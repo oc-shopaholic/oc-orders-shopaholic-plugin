@@ -1,129 +1,62 @@
 <?php namespace Lovata\OrdersShopaholic\Models;
 
-use Kharanenka\Helper\CustomValidationMessage;
 use Model;
-use Carbon\Carbon;
-use Kharanenka\Helper\CCache;
-use October\Rain\Database\Builder;
-use October\Rain\Database\Collection;
-use Lovata\Shopaholic\Plugin;
-use October\Rain\Database\Relations\HasMany;
 use October\Rain\Database\Traits\Sortable;
 use October\Rain\Database\Traits\Validation;
+
+use Kharanenka\Scope\ActiveField;
+use Kharanenka\Scope\CodeField;
+
 
 /**
  * Class PaymentMethod
  * @package Lovata\Shopaholic\Models
  * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  * 
- * @mixin Builder
+ * @mixin \October\Rain\Database\Builder
  * @mixin \Eloquent
  *
  * @property $id
+ * @property bool $active
  * @property string $code
  * @property string $name
- * @property string $description
+ * @property string $preview_text
  * @property int $sort_order
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property Collection|Order[] $order
+ * @property \October\Rain\Argon\Argon $created_at
+ * @property \October\Rain\Argon\Argon $updated_at
  *
- * @method static $this|HasMany order()
+ * @property \October\Rain\Database\Collection|Order[] $order
+ * @method static Order|\October\Rain\Database\Relations\HasMany order()
  */
 class PaymentMethod extends Model
 {
+    use ActiveField;
+    use CodeField;
     use Validation;
     use Sortable;
-    use CustomValidationMessage;
 
-    const CACHE_TAG_ELEMENT = 'shopaholic-order-payment-method-element';
-    const CACHE_TAG_LIST = 'shopaholic-order-payment-method-list';
-    
-    public $table = 'lovata_ordersshopaholic_payment_methods';
+    public $table = 'lovata_orders_shopaholic_payment_methods';
 
     /** Validation */
     public $rules = [
         'name' => 'required',
-        'code' => 'required|unique:lovata_ordersshopaholic_statuses',
+        'code' => 'required|unique:lovata_orders_shopaholic_payment_methods',
     ];
-    public $customMessages = [];
-    public $attributeNames = [];
+
+    public $attributeNames = [
+        'lovata.toolbox::lang.field.name',
+        'lovata.toolbox::lang.field.code',
+    ];
 
     protected $fillable = [
+        'active',
         'code',
         'name',
-        'description',
+        'sort_order',
+        'preview_text',
     ];
 
     protected $dates = ['created_at', 'updated_at'];
 
-    public $hasMany = [
-        'order' => 'Lovata\OrdersShopaholic\Models\Order'
-    ];
-
-    public function afterSave()
-    {
-        $this->clearCache();
-    }
-
-    public function afterDelete()
-    {
-        $this->clearCache();
-    }
-
-    /**
-     * Clear cache data
-     */
-    protected function clearCache()
-    {
-        CCache::clear([Plugin::CACHE_TAG, self::CACHE_TAG_LIST], self::CACHE_TAG_LIST);
-    }
-
-    /**
-     * @return array
-     */
-    public function getData()
-    {
-        $arResult = [
-            'id' => $this->id,
-            'name' => $this->name,
-            'code' => $this->code,
-            'description' => $this->description,
-        ];
-
-        return $arResult;
-    }
-
-    /**
-     * Get element list
-     * @return array|null
-     */
-    public static function getAll()
-    {
-        //Get cache data
-        $arCacheTags = [Plugin::CACHE_TAG, self::CACHE_TAG_LIST];
-        $sCacheKey = self::CACHE_TAG_LIST;
-
-        $arResult = CCache::get($arCacheTags, $sCacheKey);
-        if(!empty($arResult)) {
-            return $arResult;
-        }
-
-        $arResult = [];
-
-        $obElementList = self::orderBy('sort_order', 'ASC')->get();
-        if($obElementList->isEmpty()) {
-            return $arResult;
-        }
-
-        /** @var $this $obElement */
-        foreach ($obElementList as $obElement) {
-            $arResult[$obElement->id] = $obElement->getData();
-        }
-
-        //Set cache data
-        CCache::forever($arCacheTags, $sCacheKey, $arResult);
-
-        return $arResult;
-    }
+    public $hasMany = ['order' => Order::class];
 }

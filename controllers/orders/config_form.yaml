@@ -1,16 +1,16 @@
-name: Orders
+name: 'lovata.ordersshopaholic::lang.order.name'
 modelClass: Lovata\OrdersShopaholic\Models\Order
 form: $/lovata/ordersshopaholic/models/order/fields.yaml
 defaultRedirect: lovata/ordersshopaholic/orders
 create:
-    title: 'lovata.ordersshopaholic::lang.title.order_create'
+    title: 'backend::lang.form.create_title'
     redirect: 'lovata/ordersshopaholic/orders/update/:id'
     redirectClose: lovata/ordersshopaholic/orders
-    flashSave: 'lovata.ordersshopaholic::lang.message.order_create'
+    flashSave: 'lovata.toolbox::lang.message.create_success'
 update:
-    title: 'lovata.ordersshopaholic::lang.title.order_update'
+    title: 'backend::lang.form.update_title'
     redirect: lovata/ordersshopaholic/orders
     redirectClose: lovata/ordersshopaholic/orders
-    flashSave: 'lovata.ordersshopaholic::lang.message.order_update'
-    flashDelete: 'lovata.ordersshopaholic::lang.message.order_delete'
+    flashSave: 'lovata.toolbox::lang.message.update_success'
+    flashDelete: 'lovata.toolbox::lang.message.delete_success'
 preview: {  }

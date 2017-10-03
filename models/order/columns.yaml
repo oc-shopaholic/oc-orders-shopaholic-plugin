@@ -1,46 +1,34 @@
 columns:
     order_number:
-        label: 'lovata.ordersshopaholic::lang.fields.order_id'
+        label: 'lovata.ordersshopaholic::lang.field.order_number'
         type: number
         searchable: true
         sortable: true
     status_id:
-        label: 'lovata.ordersshopaholic::lang.fields.status'
+        label: 'lovata.ordersshopaholic::lang.field.status'
         type: text
         relation: status
         searchable: true
         sortable: true
         select: name
-    name:
-        label: 'lovata.ordersshopaholic::lang.fields.user'
-        type: text
-        searchable: true
-        select: name
-    phone:
-        label: 'lovata.ordersshopaholic::lang.fields.phone'
-        type: text
-        searchable: true
-        type: text
     total_price:
-        label: 'lovata.ordersshopaholic::lang.fields.total_price'
+        label: 'lovata.ordersshopaholic::lang.field.total_price'
         type: text
         searchable: true
         sortable: true
-    manager:
-        label: 'lovata.ordersshopaholic::lang.fields.manager'
-        relation: manager
-        select: concat(first_name, ' ', last_name)
+    id:
+        label: 'lovata.toolbox::lang.field.id'
+        type: text
         searchable: true
         sortable: true
+        width: 100px
     created_at:
-        label: 'lovata.ordersshopaholic::lang.fields.created_at'
-        type: datetime
-        searchable: true
+        label: 'lovata.toolbox::lang.field.created_at'
+        type: timetense
         sortable: true
-        format: Y-m-d H:i:s
+        invisible: true
     updated_at:
-        label: 'lovata.ordersshopaholic::lang.fields.updated_at'
-        type: datetime
-        searchable: true
+        label: 'lovata.toolbox::lang.field.updated_at'
+        type: timetense
         sortable: true
-        format: Y-m-d H:i:s
+        invisible: true

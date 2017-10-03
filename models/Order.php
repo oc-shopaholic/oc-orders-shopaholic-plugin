@@ -1,164 +1,106 @@
 <?php namespace Lovata\OrdersShopaholic\Models;
 
-use Carbon\Carbon;
-use Event;
-use Kharanenka\Scope\UserBelongsTo;
-use Lovata\Buddies\Models\User;
-use Lovata\Shopaholic\Classes\CPrice;
-use Lovata\Shopaholic\Models\Offer;
 use Model;
-use October\Rain\Database\Builder;
-use October\Rain\Database\Collection;
-use October\Rain\Database\Relations\BelongsToMany;
+use Carbon\Carbon;
+
+use Kharanenka\Scope\UserBelongsTo;
+
+use Lovata\Buddies\Models\User;
+use Lovata\Shopaholic\Models\Offer;
+use Lovata\Shopaholic\Classes\Helper\PriceHelper;
 
 /**
  * Class Order
  * @package Lovata\Shopaholic\Models
  * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  *
- * @mixin Builder
+ * @mixin \October\Rain\Database\Builder
  * @mixin \Eloquent
  * 
  * @property int $id
+ * @property string $order_number
  * @property int $user_id
  * @property int $status_id
  * @property int $payment_method_id
  * @property int $shipping_type_id
- * 
- * User data
- * @property string $name
- * @property string $last_name
- * @property string $email
- * 
- * Billing address data
- * @property string $billing_country
- * @property string $billing_state
- * @property string $billing_city
- * @property string $billing_street
- * @property string $billing_zip
- * @property string $billing_text_address
- * 
- * Shipping address
- * @property string $shipping_country
- * @property string $shipping_state
- * @property string $shipping_city
- * @property string $shipping_street
- * @property string $shipping_zip
- * @property string $shipping_text_address
- * 
- * Order data
- * @property string $order_number
- * @property string $user_comment
- * @property string $order_comment
  * @property float $shipping_price
  * @property float $total_price
+ * @property float $offers_total_price
+ * @property array $property
+ *
+ * @property \October\Rain\Argon\Argon $created_at
+ * @property \October\Rain\Argon\Argon $updated_at
  * 
- * @property $offers_total_price
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property int $manager_id
- * 
- * @property Collection|Offer[] $offer
- * @method static Offer|BelongsToMany offer()
+ * @property \October\Rain\Database\Collection|Offer[] $offer
+ * @method static Offer|\October\Rain\Database\Relations\BelongsToMany offer()
  * 
  * @property Status $status
+ * @method static Status|\October\Rain\Database\Relations\BelongsTo status()
+ *
  * @property User $user
+ * @method static User|\October\Rain\Database\Relations\BelongsTo user()
+ *
  * @property ShippingType $shipping_type
+ * @method static ShippingType|\October\Rain\Database\Relations\BelongsTo shipping_type()
+ *
  * @property PaymentMethod $payment_method
- * @property \Backend\Models\User $manager
- * 
- * @method static $this today()
- * @method static $this number($sNumber)
+ * @method static PaymentMethod|\October\Rain\Database\Relations\BelongsTo payment_method()
+ *
+ * @method static $this getByNumber(string $sNumber)
  */
 class Order extends Model
 {
     use UserBelongsTo;
-    
-    const CACHE_TAG_ELEMENT = 'shopaholic-order-element';
-    const CACHE_TAG_LIST = 'shopaholic-order-list';
-    
-    public $table = 'lovata_ordersshopaholic_orders';
+
+    public $table = 'lovata_orders_shopaholic_orders';
 
     protected $appends = [
         'total_price',
         'quantity',
         'shipping_price',
         'offers_total_price',
-        'user_new',
-        'phone_list',
     ];
 
     protected $casts = [
-        'total_price' => 'float',
+        'property' => 'array',
     ];
 
     protected $dates = ['created_at', 'updated_at'];
 
-    protected $fillable = [
+    public $fillable = [
         'user_id',
         'status_id',
         'shipping_type_id',
         'payment_method_id',
-        
-        'name',
-        'last_name',
-        'email',
-        
-        'billing_country',
-        'billing_state',
-        'billing_city',
-        'billing_street',
-        'billing_zip',
-        'billing_text_address',
-        
-        'shipping_country',
-        'shipping_state',
-        'shipping_city',
-        'shipping_street',
-        'shipping_zip',
-        'shipping_text_address',
-        
-        'user_comment',
         'shipping_price',
-        'order_comment',
+        'property',
     ];
 
     public $belongsToMany = [
         'offer' => [
-            'Lovata\Shopaholic\Models\Offer',
-            'table' => 'lovata_ordersshopaholic_offer_order',
-            'pivot' => ['price', 'old_price', 'quantity', 'code'],
-            'key' => 'order_id',
-            'otherKey' => 'offer_id',
-            'pivotModel'=> 'Lovata\OrdersShopaholic\Models\OfferOrder',
+            Offer::class,
+            'table'      => 'lovata_orders_shopaholic_offer_order',
+            'pivot'      => ['price', 'old_price', 'quantity', 'code'],
+            'key'        => 'order_id',
+            'otherKey'   => 'offer_id',
+            'pivotModel' => OfferOrder::class,
         ]
     ];
 
     public $belongsTo = [
-        'status' => ['Lovata\OrdersShopaholic\Models\Status', 'order' => 'sort_order asc'],
-        'user' => ['Lovata\Buddies\Models\User'],
-        'payment_method' => ['Lovata\OrdersShopaholic\Models\PaymentMethod', 'order' => 'sort_order asc'],
-        'shipping_type' => ['Lovata\OrdersShopaholic\Models\ShippingType', 'order' => 'sort_order asc'],
-        'manager' => ['Backend\Models\User'],
+        'status'         => [Status::class, 'order' => 'sort_order asc'],
+        'user'           => [User::class],
+        'payment_method' => [PaymentMethod::class, 'order' => 'sort_order asc'],
+        'shipping_type'  => [ShippingType::class, 'order' => 'sort_order asc'],
     ];
 
     /**
-     * Get all today orders
-     * @param \Illuminate\Database\Eloquent\Builder $obQuery
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeToday($obQuery)
-    {
-        return $obQuery->whereDate('created_at', '=', Carbon::today()->toDateString());
-    }
-
-    /**
      * Get orders by number
-     * @param \Illuminate\Database\Eloquent\Builder $obQuery
+     * @param Order $obQuery
      * @param string $sData
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Order
      */
-    public function scopeNumber($obQuery, $sData)
+    public function scopeGetByNumber($obQuery, $sData)
     {
         if(!empty($sData)) {
             $obQuery->where('order_number', $sData);
@@ -174,19 +116,21 @@ class Order extends Model
     public function getTotalPriceValue()
     {
         if(isset($this->attributes['total_price'])) {
-            return $this->attributes['total_price'];
+            return (float) $this->attributes['total_price'];
         }
         
         return 0;
     }
     
     /**
-     * @param  string  $iPrice
+     * @param  float  $dPrice
      * @return string
      */
-    public function getTotalPriceAttribute($iPrice)
+    public function getTotalPriceAttribute($dPrice)
     {
-        return CPrice::getPriceInFormat($iPrice);
+        /** @var PriceHelper $obPriceHelper */
+        $obPriceHelper = app()->make(PriceHelper::class);
+        return $obPriceHelper->get($dPrice);
     }
 
     /**
@@ -199,12 +143,14 @@ class Order extends Model
     }
     
     /**
-     * @param  string  $iPrice
+     * @param  float  $dPrice
      * @return string
      */
-    public function getOffersTotalPriceAttribute($iPrice)
+    public function getOffersTotalPriceAttribute($dPrice)
     {
-        return CPrice::getPriceInFormat($this->getOffersTotalPriceValue());
+        /** @var PriceHelper $obPriceHelper */
+        $obPriceHelper = app()->make(PriceHelper::class);
+        return $obPriceHelper->get($this->getOffersTotalPriceValue());
     }
     public function setOffersTotalPriceAttribute($iPrice) {}
 
@@ -222,26 +168,28 @@ class Order extends Model
     }
 
     /**
-     * @param  string  $iPrice
+     * @param  float  $dPrice
      * @return string
      */
-    public function getShippingPriceAttribute($iPrice)
+    public function getShippingPriceAttribute($dPrice)
     {
-        return CPrice::getPriceInFormat($iPrice);
+        /** @var PriceHelper $obPriceHelper */
+        $obPriceHelper = app()->make(PriceHelper::class);
+        return $obPriceHelper->get($dPrice);
     }
     
     /**
-     * @param  string  $sPrice
+     * @param  string
      */
     public function setShippingPriceAttribute($sPrice)
     {
         $sPrice = str_replace(',', '.', $sPrice);
-        $sPrice = preg_replace("/[^0-9\.]/", "",$sPrice);
+        $sPrice = (float) preg_replace("/[^0-9\.]/", "",$sPrice);
         $this->attributes['shipping_price'] = $sPrice;
     }
     
     /**
-     * Get product count
+     * Get offer count
      * @return int
      */
     public function getQuantityAttribute()
@@ -249,41 +197,17 @@ class Order extends Model
         return $this->offer->count();
     }
 
-
-    public function getUserNameSearchAttribute() {}
-    public function setUserNameSearchAttribute() {}
-
-    public function getUserSearchAttribute() {}
-    public function setUserSearchAttribute($sValue) {
-
-        if(!empty($sValue) && $sValue != $this->user_id) {
-            $this->user_id = $sValue;
-        }
-    }
-
     /**
-     * Get flag 'create new user'
-     * @return bool
+     * Before save model method
      */
-    public function getUserNewAttribute() {}
-    public function setUserNewAttribute($sValue) {
-
-        if($sValue) {
-            //Get user by email 
-            $obUser = User::email($this->email)->first();
-            if(!empty($obUser)) {
-                $this->user_id = $obUser->id;
-            }
-        }
-    }
-
     public function beforeSave()
     {
         // if there is no saved order number create the new one
         if(empty($this->order_number)) {
-            
+
+            $obDate = Carbon::today()->startOfDay();
             $bAvailableNumber = false;
-            $iTodayOrdersCount = $this->today()->count() + 1;
+            $iTodayOrdersCount = $this->where('created_at', '>=', $obDate->toDateTimeString())->count() + 1;
             
             do {
                 while(strlen($iTodayOrdersCount) < 4) {
@@ -291,7 +215,7 @@ class Order extends Model
                 }
                 
                 $this->order_number = Carbon::today()->format('ymd') . '-' . $iTodayOrdersCount;
-                if(empty($this->number($this->order_number)->first())){
+                if(empty($this->getByNumber($this->order_number)->first())){
                     $bAvailableNumber = true;
                 }else{
                     $iTodayOrdersCount++;
@@ -299,47 +223,11 @@ class Order extends Model
             } while (!$bAvailableNumber);
         }
 
-
         //count and set total order price
         $iOffersTotalPrice = $this->getOffersTotalPrice();
                 
         $iTotalPrice = (float) $this->getShippingPriceValue() + $iOffersTotalPrice;
         $this->attributes['total_price'] = $iTotalPrice;
-    }
-    
-    public function afterUpdate()
-    {
-        Event::fire('shopaholic.order.updated', $this);
-    }
-
-    public function afterDelete()
-    {
-        Event::fire('shopaholic.order.deleted', $this);
-    }
-
-    /**
-     * Get user phone list
-     * @return array
-     */
-    public function getPhoneListOptions() {
-
-        $obUser = $this->user;
-        if(empty($obUser)) {
-            return [];
-        }
-
-        $arPhones = $obUser->phones;
-        if($arPhones->isEmpty()) {
-            return [];
-        }
-
-        $arResult = [];
-        /** @var Phone $obPhone */
-        foreach($arPhones as $obPhone) {
-            $arResult[$obPhone->phone] = $obPhone->phone;
-        }
-
-        return $arResult;
     }
 
     /**
@@ -352,14 +240,14 @@ class Order extends Model
 
         //Get offers list
         $obOrder = $this->load(['offer']);
-        $arOffers = $obOrder->offer;
+        $obOfferList = $obOrder->offer;
         
-        if($arOffers->isEmpty()) {
+        if($obOfferList->isEmpty()) {
             return $iTotalPrice;
         }
 
         /** @var Offer $obOffer */
-        foreach ($arOffers as $obOffer) {
+        foreach ($obOfferList as $obOffer) {
             $iTotalPrice += (float) $obOffer->pivot->getPriceValue() * (int) $obOffer->pivot->quantity;
         }
 

@@ -1,35 +1,35 @@
 <?php namespace Lovata\OrdersShopaholic\Models;
 
-use Carbon\Carbon;
-use Lovata\Shopaholic\Classes\CPrice;
-use Lovata\Shopaholic\Models\Offer;
 use Model;
-use October\Rain\Database\Builder;
-use System\Classes\PluginManager;
+use Lovata\Shopaholic\Models\Offer;
 
 /**
  * Class CartItem
  * @package Lovata\Shopaholic\Models
  * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  *
- * @mixin Builder
+ * @mixin \October\Rain\Database\Builder
  * @mixin \Eloquent
- * @mixin \Lovata\CustomShopaholic\Classes\CartItemExtend
  * 
  * @property $id
  * @property integer $cart_id
  * @property integer $offer_id
  * @property integer $quantity
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property \Lovata\OrdersShopaholic\Models\Cart $cart
+ * @property \October\Rain\Argon\Argon $created_at
+ * @property \October\Rain\Argon\Argon $updated_at
+ *
+ * @property Cart $cart
+ * @method static Cart|\October\Rain\Database\Relations\BelongsTo cart()
+ *
+ * @property Offer $offer
+ * @method static Offer|\October\Rain\Database\Relations\BelongsTo offer()
  * 
  * @method static $this getByCart(int $iCartID)
  * @method static $this getByOffer(int $iOfferID)
  */
 class CartItem extends Model
 {
-    public $table = 'lovata_ordersshopaholic_cart_item';
+    public $table = 'lovata_orders_shopaholic_cart_item';
     
     public $fillable = [
         'offer_id',
@@ -38,30 +38,17 @@ class CartItem extends Model
     ];
     
     public $belongsTo = [
-        'cart' => ['Lovata\OrdersShopaholic\Models\Cart'],
-        'offer' => ['Lovata\Shopaholic\Models\Offer', 'key' => 'product_id'],
+        'cart' => [Cart::class],
+        'offer' => [Offer::class, 'key' => 'offer_id'],
     ];
 
     public $dates = ['created_at', 'updated_at'];
-
-    /**
-     * CartItem constructor.
-     * @param array $attributes
-     */
-    public function __construct(array $attributes = [])
-    {
-        if(PluginManager::instance()->hasPlugin('Lovata.CustomShopaholic')) {
-            \Lovata\CustomShopaholic\Classes\CartItemExtend::constructExtend($this);
-        }
-
-        parent::__construct($attributes);
-    }
     
     /**
      * Get element by cart ID
-     * @param \Illuminate\Database\Eloquent\Builder $obQuery
+     * @param CartItem $obQuery
      * @param string $sData
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return CartItem
      */
     public function scopeGetByCart($obQuery, $sData)
     {
@@ -73,10 +60,10 @@ class CartItem extends Model
     }
 
     /**
-     * Get element by cart ID
-     * @param \Illuminate\Database\Eloquent\Builder $obQuery
+     * Get element by offer ID
+     * @param CartItem $obQuery
      * @param string $sData
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return CartItem
      */
     public function scopeGetByOffer($obQuery, $sData)
     {
@@ -85,29 +72,5 @@ class CartItem extends Model
         }
 
         return $obQuery;
-    }
-
-    /**
-     * Get cart item data
-     * @return array
-     */
-    public function getData() {
-
-        $arResult = Offer::getCacheData($this->offer_id);
-        if(empty($arResult)) {
-            return [];
-        }
-
-        $arResult['cart_quantity'] = $this->quantity;
-        $arResult['cart_price_value'] = $arResult['price_value'] * $this->quantity;
-        $arResult['cart_old_price_value'] = $arResult['old_price_value'] * $this->quantity;
-        $arResult['cart_price'] = CPrice::getPriceInFormat($arResult['cart_price_value']);
-        $arResult['cart_old_price'] = CPrice::getPriceInFormat($arResult['cart_old_price_value']);
-
-        if(PluginManager::instance()->hasPlugin('Lovata.CustomShopaholic')) {
-            \Lovata\CustomShopaholic\Classes\CartItemExtend::getData($arResult, $this);
-        }
-        
-        return $arResult;
     }
 }

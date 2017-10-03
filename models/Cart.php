@@ -1,35 +1,32 @@
 <?php namespace Lovata\OrdersShopaholic\Models;
 
-use Kharanenka\Scope\UserBelongsTo;
 use Model;
-use Carbon\Carbon;
-use October\Rain\Database\Builder;
-use October\Rain\Database\Collection;
 use Lovata\Buddies\Models\User;
-use October\Rain\Database\Relations\HasMany;
+use Kharanenka\Scope\UserBelongsTo;
 
 /**
  * Class Cart
- * @package Lovata\Shopaholic\Models
+ * @package Lovata\OrdersShopaholic\Models
  * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  *
- * @mixin Builder
+ * @mixin \October\Rain\Database\Builder
  * @mixin \Eloquent
  * 
  * @property $id
  * @property integer $user_id
- * @property Carbon $created_at
- * @property Carbon $updated_at
+ * @property \October\Rain\Argon\Argon $created_at
+ * @property \October\Rain\Argon\Argon $updated_at
  * 
  * @property User $user
- * @property Collection|CartItem[] $item
- * @method static $this|HasMany item()
+ * @method static User|\October\Rain\Database\Relations\BelongsTo user()
+ * @property \October\Rain\Database\Collection|CartItem[] $item
+ * @method static CartItem|\October\Rain\Database\Relations\HasMany item()
  */
 class Cart extends Model
 {
     use UserBelongsTo;
     
-    public $table = 'lovata_ordersshopaholic_carts';
+    public $table = 'lovata_orders_shopaholic_carts';
     
     protected $fillable = [
         'user_id',
@@ -37,11 +34,6 @@ class Cart extends Model
 
     protected $dates = ['created_at', 'updated_at'];
     
-    public $belongsTo = [
-        'user' => 'Lovata\Buddies\Models\User'
-    ];
-    
-    public $hasMany = [
-        'item' => 'Lovata\OrdersShopaholic\Models\CartItem'
-    ];
+    public $belongsTo = ['user' => User::class];
+    public $hasMany = ['item' => CartItem::class];
 }

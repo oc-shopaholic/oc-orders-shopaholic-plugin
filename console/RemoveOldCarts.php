@@ -4,12 +4,16 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Lovata\OrdersShopaholic\Models\Cart;
 
+/**
+ * Class RemoveOldCarts
+ * @package Lovata\OrdersShopaholic\Console
+ */
 class RemoveOldCarts extends Command
 {
     /**
      * @var string The console command name.
      */
-    protected $name = 'shopaholic-cart-remove';
+    protected $name = 'shopaholic:remove-old-cart';
 
     /**
      * @var string The console command description.
