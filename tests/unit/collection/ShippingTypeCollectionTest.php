@@ -2,20 +2,20 @@
 
 use Lovata\Toolbox\Tests\CommonTest;
 
-use Lovata\OrdersShopaholic\Models\PaymentMethod;
-use Lovata\OrdersShopaholic\Classes\Item\PaymentMethodItem;
-use Lovata\OrdersShopaholic\Classes\Collection\PaymentMethodCollection;
+use Lovata\OrdersShopaholic\Models\ShippingType;
+use Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem;
+use Lovata\OrdersShopaholic\Classes\Collection\ShippingTypeCollection;
 
 /**
- * Class PaymentMethodCollectionTest
+ * Class ShippingTypeCollectionTest
  * @package Lovata\OrdersShopaholic\Tests\Unit\Collection
  * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  *
  * @mixin \PHPUnit\Framework\Assert
  */
-class PaymentMethodCollectionTest extends CommonTest
+class ShippingTypeCollectionTest extends CommonTest
 {
-    /** @var  PaymentMethod */
+    /** @var  ShippingType */
     protected $obElement;
 
     protected $arCreateData = [
@@ -34,14 +34,14 @@ class PaymentMethodCollectionTest extends CommonTest
             return;
         }
 
-        $sErrorMessage = 'PaymentMethod collection item data is not correct';
+        $sErrorMessage = 'ShippingType collection item data is not correct';
 
         //Check item collection
-        $obCollection = PaymentMethodCollection::make([$this->obElement->id]);
+        $obCollection = ShippingTypeCollection::make([$this->obElement->id]);
 
-        /** @var PaymentMethodItem $obItem */
+        /** @var ShippingTypeItem $obItem */
         $obItem = $obCollection->first();
-        self::assertInstanceOf(PaymentMethodItem::class, $obItem, $sErrorMessage);
+        self::assertInstanceOf(ShippingTypeItem::class, $obItem, $sErrorMessage);
         self::assertEquals($this->obElement->id, $obItem->id, $sErrorMessage);
     }
 
@@ -50,50 +50,50 @@ class PaymentMethodCollectionTest extends CommonTest
      */
     public function testActiveList()
     {
-        PaymentMethodCollection::make()->active();
+        ShippingTypeCollection::make()->active();
 
         $this->createTestData();
         if(empty($this->obElement)) {
             return;
         }
 
-        $sErrorMessage = 'PaymentMethod collection "active" method is not correct';
+        $sErrorMessage = 'ShippingType collection "active" method is not correct';
 
         //Check item collection after create
-        $obCollection = PaymentMethodCollection::make()->active();
+        $obCollection = ShippingTypeCollection::make()->active();
 
-        /** @var PaymentMethodItem $obItem */
+        /** @var ShippingTypeItem $obItem */
         $obItem = $obCollection->first();
-        self::assertInstanceOf(PaymentMethodItem::class, $obItem, $sErrorMessage);
+        self::assertInstanceOf(ShippingTypeItem::class, $obItem, $sErrorMessage);
         self::assertEquals($this->obElement->id, $obItem->id, $sErrorMessage);
 
         $this->obElement->active = false;
         $this->obElement->save();
 
         //Check item collection, after active = false
-        $obCollection = PaymentMethodCollection::make()->active();
+        $obCollection = ShippingTypeCollection::make()->active();
         self::assertEquals(true, $obCollection->isEmpty(), $sErrorMessage);
 
         $this->obElement->active = true;
         $this->obElement->save();
 
         //Check item collection, after active = true
-        $obCollection = PaymentMethodCollection::make()->active();
+        $obCollection = ShippingTypeCollection::make()->active();
 
-        /** @var PaymentMethodItem $obItem */
+        /** @var ShippingTypeItem $obItem */
         $obItem = $obCollection->first();
-        self::assertInstanceOf(PaymentMethodItem::class, $obItem, $sErrorMessage);
+        self::assertInstanceOf(ShippingTypeItem::class, $obItem, $sErrorMessage);
         self::assertEquals($this->obElement->id, $obItem->id, $sErrorMessage);
 
         $this->obElement->delete();
 
         //Check item collection, after element remove
-        $obCollection = PaymentMethodCollection::make()->active();
+        $obCollection = ShippingTypeCollection::make()->active();
         self::assertEquals(true, $obCollection->isEmpty(), $sErrorMessage);
     }
     
     /**
-     * Create payment method object for test
+     * Create shipping type object for test
      */
     protected function createTestData()
     {
@@ -101,6 +101,6 @@ class PaymentMethodCollectionTest extends CommonTest
         $arCreateData = $this->arCreateData;
         $arCreateData['active'] = true;
 
-        $this->obElement = PaymentMethod::create($arCreateData);
+        $this->obElement = ShippingType::create($arCreateData);
     }
 }

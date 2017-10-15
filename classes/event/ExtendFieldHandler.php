@@ -1,7 +1,7 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Event;
 
 use Lovata\Shopaholic\Models\Settings;
-use Lovata\OrdersShopaholic\Classes\CartData;
+use Lovata\OrdersShopaholic\Classes\CartProcessor;
 
 /**
  * Class ExtendCategoryModel
@@ -44,17 +44,17 @@ class ExtendFieldHandler
                 'label'         => 'lovata.ordersshopaholic::lang.settings.cart_cookie_lifetime',
                 'span'          => 'left',
                 'type'          => 'number',
-                'default'       => CartData::$iCookieLifeTime,
+                'default'       => CartProcessor::$iCookieLifeTime,
             ],
-            'check_quantity_on_order' => [
+            'check_offer_quantity' => [
                 'tab'           => 'lovata.ordersshopaholic::lang.tab.order_settings',
-                'label'         => 'lovata.ordersshopaholic::lang.settings.check_quantity_on_order',
+                'label'         => 'lovata.ordersshopaholic::lang.settings.check_offer_quantity',
                 'span'          => 'left',
                 'type'          => 'checkbox',
             ],
-            'decrement_quantity_after_order' => [
+            'decrement_offer_quantity' => [
                 'tab'           => 'lovata.ordersshopaholic::lang.tab.order_settings',
-                'label'         => 'lovata.ordersshopaholic::lang.settings.decrement_quantity_after_order',
+                'label'         => 'lovata.ordersshopaholic::lang.settings.decrement_offer_quantity',
                 'span'          => 'left',
                 'type'          => 'checkbox',
             ],

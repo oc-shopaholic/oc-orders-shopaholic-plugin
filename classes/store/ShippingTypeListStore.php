@@ -1,10 +1,10 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Store;
 
 use Kharanenka\Helper\CCache;
+use Lovata\Toolbox\Traits\Store\TraitActiveList;
 
 use Lovata\Shopaholic\Plugin;
 use Lovata\OrdersShopaholic\Models\ShippingType;
-use Lovata\Toolbox\Traits\Store\TraitActiveList;
 
 /**
  * Class ShippingTypeListStore

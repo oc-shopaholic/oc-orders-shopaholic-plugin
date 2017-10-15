@@ -12,10 +12,8 @@ use Backend\Classes\Controller;
 class ShippingTypes extends Controller
 {
     public $implement = [
-        'Backend\Behaviors\ListController',
-        'Backend\Behaviors\FormController',
-        'Backend\Behaviors\ReorderController',
-        'PlanetaDelEste.Widgets.Behaviors.ModalController',
+        'Backend.Behaviors.ListController',
+        'Backend.Behaviors.FormController',
     ];
 
     public $listConfig = 'config_list.yaml';

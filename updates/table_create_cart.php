@@ -25,6 +25,8 @@ class TableCreateCart extends Migration
             $obTable->increments('id')->unsigned();
             $obTable->integer('user_id')->nullable();
             $obTable->timestamps();
+
+            $obTable->index('user_id');
         });
     }
 

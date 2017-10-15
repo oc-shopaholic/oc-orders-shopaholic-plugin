@@ -6,7 +6,7 @@ use Lovata\Shopaholic\Plugin;
 use Lovata\Shopaholic\Models\Settings;
 use Lovata\Shopaholic\Classes\Helper\PriceHelper;
 use Lovata\Shopaholic\Classes\Item\OfferItem;
-use Lovata\OrdersShopaholic\Models\CartItem;
+use Lovata\OrdersShopaholic\Models\CartElement;
 
 /**
  * Class CartElementItem
@@ -26,7 +26,7 @@ class CartElementItem extends ElementItem
 {
     const CACHE_TAG_ELEMENT = 'orders-shopaholic-cart-item-element';
 
-    /** @var CartItem */
+    /** @var CartElement */
     protected $obElement = null;
 
     public $arRelationList = [
@@ -41,7 +41,7 @@ class CartElementItem extends ElementItem
      */
     protected function setElementObject()
     {
-        if(!empty($this->obElement) && ! $this->obElement instanceof CartItem) {
+        if(!empty($this->obElement) && ! $this->obElement instanceof CartElement) {
             $this->obElement = null;
         }
 
@@ -49,7 +49,7 @@ class CartElementItem extends ElementItem
             return;
         }
 
-        $this->obElement = CartItem::find($this->iElementID);
+        $this->obElement = CartElement::find($this->iElementID);
     }
 
     /**

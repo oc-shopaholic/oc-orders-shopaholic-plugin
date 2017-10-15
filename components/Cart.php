@@ -3,7 +3,7 @@
 use Input;
 use Cms\Classes\ComponentBase;
 use Kharanenka\Helper\Result;
-use Lovata\OrdersShopaholic\Classes\CartData;
+use Lovata\OrdersShopaholic\Classes\CartProcessor;
 
 /**
  * Class Cart
@@ -12,7 +12,7 @@ use Lovata\OrdersShopaholic\Classes\CartData;
  */
 class Cart extends ComponentBase
 {
-    /** @var  CartData */
+    /** @var  CartProcessor */
     protected $obCartData;
     
     /**
@@ -31,7 +31,7 @@ class Cart extends ComponentBase
      */
     public function init()
     {
-        $this->obCartData = app()->make(CartData::class);
+        $this->obCartData = app()->make(CartProcessor::class);
     }
 
     /**
@@ -80,7 +80,7 @@ class Cart extends ComponentBase
 
     /**
      * Get offers list from cart
-     * @return array
+     * @return \Lovata\OrdersShopaholic\Classes\Collection\CartElementCollection
      */
     public function get()
     {

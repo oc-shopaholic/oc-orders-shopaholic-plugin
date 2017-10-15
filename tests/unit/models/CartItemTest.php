@@ -6,7 +6,7 @@ include_once __DIR__.'/../../../../../../tests/PluginTestCase.php';
 use PluginTestCase;
 use Lovata\Shopaholic\Models\Offer;
 use Lovata\OrdersShopaholic\Models\Cart;
-use Lovata\OrdersShopaholic\Models\CartItem;
+use Lovata\OrdersShopaholic\Models\CartElement;
 
 /**
  * Class OrderTest
@@ -15,16 +15,16 @@ use Lovata\OrdersShopaholic\Models\CartItem;
  *
  * @mixin \PHPUnit\Framework\Assert
  */
-class CartItemTest extends PluginTestCase
+class CartElementTest extends PluginTestCase
 {
     protected $sModelClass;
 
     /**
-     * CartItemTest constructor.
+     * CartElementTest constructor.
      */
     public function __construct()
     {
-        $this->sModelClass = CartItem::class;
+        $this->sModelClass = CartElement::class;
         parent::__construct();
     }
 
@@ -35,8 +35,8 @@ class CartItemTest extends PluginTestCase
     {
         $sErrorMessage = $this->sModelClass.' model has not correct "offer" relation config';
 
-        /** @var CartItem $obModel */
-        $obModel = new CartItem();
+        /** @var CartElement $obModel */
+        $obModel = new CartElement();
         self::assertNotEmpty($obModel->belongsTo, $sErrorMessage);
         self::assertArrayHasKey('offer', $obModel->belongsTo, $sErrorMessage);
         self::assertEquals(Offer::class, array_shift($obModel->belongsTo['offer']), $sErrorMessage);
@@ -49,8 +49,8 @@ class CartItemTest extends PluginTestCase
     {
         $sErrorMessage = $this->sModelClass.' model has not correct "cart" relation config';
 
-        /** @var CartItem $obModel */
-        $obModel = new CartItem();
+        /** @var CartElement $obModel */
+        $obModel = new CartElement();
         self::assertNotEmpty($obModel->belongsTo, $sErrorMessage);
         self::assertArrayHasKey('cart', $obModel->belongsTo, $sErrorMessage);
         self::assertEquals(Cart::class, array_shift($obModel->belongsTo['cart']), $sErrorMessage);

@@ -26,6 +26,8 @@ class TableCreatePaymentMethod extends Migration
             $obTable->integer('sort_order')->nullable();
             $obTable->text('preview_text')->nullable();
             $obTable->timestamps();
+
+            $obTable->index('code');
         });
     }
     

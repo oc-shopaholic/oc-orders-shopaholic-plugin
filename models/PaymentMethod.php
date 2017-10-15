@@ -7,7 +7,6 @@ use October\Rain\Database\Traits\Validation;
 use Kharanenka\Scope\ActiveField;
 use Kharanenka\Scope\CodeField;
 
-
 /**
  * Class PaymentMethod
  * @package Lovata\Shopaholic\Models

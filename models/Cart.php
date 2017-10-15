@@ -19,8 +19,8 @@ use Kharanenka\Scope\UserBelongsTo;
  * 
  * @property User $user
  * @method static User|\October\Rain\Database\Relations\BelongsTo user()
- * @property \October\Rain\Database\Collection|CartItem[] $item
- * @method static CartItem|\October\Rain\Database\Relations\HasMany item()
+ * @property \October\Rain\Database\Collection|CartElement[] $item
+ * @method static CartElement|\October\Rain\Database\Relations\HasMany item()
  */
 class Cart extends Model
 {
@@ -35,5 +35,5 @@ class Cart extends Model
     protected $dates = ['created_at', 'updated_at'];
     
     public $belongsTo = ['user' => User::class];
-    public $hasMany = ['item' => CartItem::class];
+    public $hasMany = ['item' => CartElement::class];
 }

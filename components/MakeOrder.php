@@ -1,32 +1,36 @@
 <?php namespace Lovata\OrdersShopaholic\Components;
 
+use App;
 use Input;
 use Cms\Classes\ComponentBase;
-use Lovata\Buddies\Facades\BuddiesAuth;
+
 use Kharanenka\Helper\Result;
-use Lovata\Buddies\Models\User;
-use Lovata\OrdersShopaholic\Classes\OrderCreating;
-use Lovata\Shopaholic\Models\Settings;
 use Lovata\Toolbox\Traits\Helpers\TraitValidationHelper;
-use October\Rain\Argon\Argon;
-use October\Rain\Exception\ValidationException;
+
+use Lovata\Buddies\Models\User;
+use Lovata\Buddies\Facades\AuthHelper;
+use Lovata\Shopaholic\Models\Settings;
+use Lovata\OrdersShopaholic\Classes\OrderProcessor;
 
 /**
- * Class Ordering
+ * Class MakeOrder
  * @package Lovata\OrdersShopaholic\Components
  * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  */
-class Ordering extends ComponentBase
+class MakeOrder extends ComponentBase
 {
     use TraitValidationHelper;
     
     protected $bCreateNewUser = true;
-    
+
     protected $arOrderData;
     protected $arUserData;
 
     /** @var \Lovata\Buddies\Models\User */
     protected $obUser;
+
+    /** @var \Lovata\OrdersShopaholic\Classes\OrderProcessor */
+    protected $obOrderProcessor;
     
     /**
      * @return array
@@ -45,38 +49,51 @@ class Ordering extends ComponentBase
     public function init()
     {
         $this->bCreateNewUser = Settings::getValue('create_new_user');
+        $this->obUser = AuthHelper::getUser();
+
+        $this->obOrderProcessor = App::make(OrderProcessor::class);
     }
 
     /**
      * Order create
      * @return array
      */
-    public function onMakeOrder()
+    public function onCreate()
     {
-        $this->arOrderData = Input::get('order');
-        $this->arUserData = Input::get('user');
+        $arOrderData = Input::get('order');
+        $arUserData = Input::get('user');
 
-        $this->obUser = BuddiesAuth::getUser();
+        return $this->create($arOrderData, $arUserData);
+    }
+
+    /**
+     * Create new order
+     * @param array $arOrderData
+     * @param array $arUserData
+     * @return array
+     */
+    public function create($arOrderData, $arUserData)
+    {
+        $this->arOrderData = $arOrderData;
+        $this->arUserData = $arUserData;
 
         //Find or create new user
         if(empty($this->obUser) && $this->bCreateNewUser) {
             $this->findOrCreateUser();
         }
-        
+
         if(!Result::status()) {
             return Result::get();
         }
-        
+
         $arOrderData = $this->arOrderData;
         if(!isset($arOrderData['property']) || !is_array($arOrderData['property'])) {
             $arOrderData['property'] = [];
         }
-        
+
         $arOrderData['property'] = array_merge($arOrderData['property'], $this->arUserData);
-        
-        /** @var OrderCreating $obOrdering */
-        $obOrdering = app()->make(OrderCreating::class);
-        $obOrdering->create($arOrderData, $this->obUser);
+
+        $this->obOrderProcessor->create($arOrderData, $this->obUser);
 
         return Result::get();
     }
@@ -182,26 +199,16 @@ class Ordering extends ComponentBase
 
         $arUserData = $this->arUserData;
         
-        
         $arUserData['email'] = $sEmail;
-        $arUserData['password_change'] = true;
         $arUserData['password'] = $sPassword;
         $arUserData['password_confirmation'] = $sPassword;
 
         try {
-            $this->obUser = User::create($arUserData);
-        } catch(ValidationException $obValidation) {
-            
-            Result::setFalse($this->getValidationError($obValidation));
+            //Create new user
+            $this->obUser = AuthHelper::register($arUserData, true);
+        } catch (\October\Rain\Database\ModelException $obException) {
+            $this->processValidationError($obException);
             return;
         }
-
-        $this->obUser->password_change = true;
-        $this->obUser->password = $sPassword;
-        $this->obUser->password_confirmation = $sPassword;
-        
-        $this->obUser->is_activated = true;
-        $this->obUser->activated_at = Argon::now();
-        $this->obUser->save();
     }
 }

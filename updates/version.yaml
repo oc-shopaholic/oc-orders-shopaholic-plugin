@@ -1,7 +1,7 @@
 1.0.0:
     - 'Initialize plugin.'
     - table_create_cart.php
-    - table_create_cart_item.php
+    - table_create_cart_element.php
     - table_create_offer_order.php
     - table_create_order.php
     - table_create_payment_method.php

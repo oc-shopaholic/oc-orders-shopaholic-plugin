@@ -1,4 +1,4 @@
-name: 'lovata.ordersshopaholic::lang.paymentmethod.name'
+name: 'lovata.ordersshopaholic::lang.payment_method.name'
 form: $/lovata/ordersshopaholic/models/paymentmethod/fields.yaml
 modelClass: Lovata\OrdersShopaholic\Models\PaymentMethod
 defaultRedirect: lovata/ordersshopaholic/paymentmethods

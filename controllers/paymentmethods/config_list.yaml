@@ -1,4 +1,4 @@
-title: 'lovata.ordersshopaholic::lang.paymentmethod.list_title'
+title: 'lovata.ordersshopaholic::lang.payment_method.list_title'
 modelClass: Lovata\OrdersShopaholic\Models\PaymentMethod
 list: $/lovata/ordersshopaholic/models/paymentmethod/columns.yaml
 recordUrl: 'lovata/ordersshopaholic/paymentmethods/update/:id'
@@ -12,4 +12,3 @@ toolbar:
     buttons: list_toolbar
     search:
         prompt: 'backend::lang.list.search_prompt'
-recordOnClick: '$.manageModal.clickRecord(:id)'

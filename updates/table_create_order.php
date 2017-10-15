@@ -29,6 +29,12 @@ class TableCreateOrder extends Migration
             $obTable->integer('payment_method_id')->nullable();
             $obTable->mediumText('property')->nullable();
             $obTable->timestamps();
+
+            $obTable->index('user_id');
+            $obTable->index('status_id');
+            $obTable->index('order_number');
+            $obTable->index('shipping_type_id');
+            $obTable->index('payment_method_id');
         });
     }
     

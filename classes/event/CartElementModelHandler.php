@@ -2,15 +2,15 @@
 
 use Lovata\Toolbox\Classes\Event\ModelHandler;
 
-use Lovata\OrdersShopaholic\Models\CartItem;
+use Lovata\OrdersShopaholic\Models\CartElement;
 use Lovata\OrdersShopaholic\Classes\Item\CartElementItem;
 
 /**
- * Class CartItemModelHandler
+ * Class CartElementModelHandler
  * @package Lovata\OrdersShopaholic\Classes\Event
  * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  */
-class CartItemModelHandler extends ModelHandler
+class CartElementModelHandler extends ModelHandler
 {
     /**
      * Get model class name
@@ -18,7 +18,7 @@ class CartItemModelHandler extends ModelHandler
      */
     protected function getModelClass()
     {
-        return CartItem::class;
+        return CartElement::class;
     }
     
     /**

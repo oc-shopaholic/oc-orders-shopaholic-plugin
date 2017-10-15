@@ -121,7 +121,7 @@ class OfferOrder extends Pivot
      */
     public function getTotalPriceValue()
     {
-        return $this->quantity * $this->getPriceValue();
+        return (float) $this->quantity * $this->getPriceValue();
     }
 
     /**

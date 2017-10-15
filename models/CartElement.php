@@ -4,7 +4,7 @@ use Model;
 use Lovata\Shopaholic\Models\Offer;
 
 /**
- * Class CartItem
+ * Class CartElement
  * @package Lovata\Shopaholic\Models
  * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  *
@@ -27,9 +27,9 @@ use Lovata\Shopaholic\Models\Offer;
  * @method static $this getByCart(int $iCartID)
  * @method static $this getByOffer(int $iOfferID)
  */
-class CartItem extends Model
+class CartElement extends Model
 {
-    public $table = 'lovata_orders_shopaholic_cart_item';
+    public $table = 'lovata_orders_shopaholic_cart_element';
     
     public $fillable = [
         'offer_id',
@@ -46,9 +46,9 @@ class CartItem extends Model
     
     /**
      * Get element by cart ID
-     * @param CartItem $obQuery
+     * @param CartElement $obQuery
      * @param string $sData
-     * @return CartItem
+     * @return CartElement
      */
     public function scopeGetByCart($obQuery, $sData)
     {
@@ -61,9 +61,9 @@ class CartItem extends Model
 
     /**
      * Get element by offer ID
-     * @param CartItem $obQuery
+     * @param CartElement $obQuery
      * @param string $sData
-     * @return CartItem
+     * @return CartElement
      */
     public function scopeGetByOffer($obQuery, $sData)
     {

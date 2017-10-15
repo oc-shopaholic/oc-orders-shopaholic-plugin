@@ -12,4 +12,4 @@ toolbar:
     buttons: list_toolbar
     search:
         prompt: 'backend::lang.list.search_prompt'
-recordOnClick: '$.manageModal.clickRecord(:id)'
+

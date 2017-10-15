@@ -23,9 +23,9 @@ use Lovata\Shopaholic\Classes\Helper\PriceHelper;
  * @property int $status_id
  * @property int $payment_method_id
  * @property int $shipping_type_id
- * @property float $shipping_price
- * @property float $total_price
- * @property float $offers_total_price
+ * @property string $shipping_price
+ * @property string $total_price
+ * @property string $offers_total_price
  * @property array $property
  *
  * @property \October\Rain\Argon\Argon $created_at
@@ -202,26 +202,8 @@ class Order extends Model
      */
     public function beforeSave()
     {
-        // if there is no saved order number create the new one
-        if(empty($this->order_number)) {
-
-            $obDate = Carbon::today()->startOfDay();
-            $bAvailableNumber = false;
-            $iTodayOrdersCount = $this->where('created_at', '>=', $obDate->toDateTimeString())->count() + 1;
-            
-            do {
-                while(strlen($iTodayOrdersCount) < 4) {
-                    $iTodayOrdersCount = '0'.$iTodayOrdersCount;
-                }
-                
-                $this->order_number = Carbon::today()->format('ymd') . '-' . $iTodayOrdersCount;
-                if(empty($this->getByNumber($this->order_number)->first())){
-                    $bAvailableNumber = true;
-                }else{
-                    $iTodayOrdersCount++;
-                }
-            } while (!$bAvailableNumber);
-        }
+        //Generate new order number
+        $this->generateOrderNumber();
 
         //count and set total order price
         $iOffersTotalPrice = $this->getOffersTotalPrice();
@@ -231,26 +213,58 @@ class Order extends Model
     }
 
     /**
-     * Get offers total price
-     * @return float|int
+     * Generate new order number
      */
-    public function getOffersTotalPrice() {
+    protected function generateOrderNumber()
+    {
+        // if there is no saved order number create the new one
+        if(!empty($this->order_number)) {
+            return;
+        }
 
-        $iTotalPrice = 0;
+        $obDate = Carbon::today()->startOfDay();
+        $bAvailableNumber = false;
+        $iTodayOrdersCount = $this->where('created_at', '>=', $obDate->toDateTimeString())->count() + 1;
+
+        do {
+            while(strlen($iTodayOrdersCount) < 4) {
+                $iTodayOrdersCount = '0'.$iTodayOrdersCount;
+            }
+
+            $this->order_number = Carbon::today()->format('ymd') . '-' . $iTodayOrdersCount;
+            if(empty($this->getByNumber($this->order_number)->first())){
+                $bAvailableNumber = true;
+            }else{
+                $iTodayOrdersCount++;
+            }
+        } while (!$bAvailableNumber);
+    }
+
+    /**
+     * Get offers total price
+     * @return float
+     */
+    public function getOffersTotalPrice()
+    {
+        $fTotalPrice = 0;
 
         //Get offers list
-        $obOrder = $this->load(['offer']);
-        $obOfferList = $obOrder->offer;
+        $this->setRelations([]);
+        $obOfferList = $this->offer;
         
         if($obOfferList->isEmpty()) {
-            return $iTotalPrice;
+            return $fTotalPrice;
         }
 
         /** @var Offer $obOffer */
         foreach ($obOfferList as $obOffer) {
-            $iTotalPrice += (float) $obOffer->pivot->getPriceValue() * (int) $obOffer->pivot->quantity;
+
+            /** @var OfferOrder $obPivot */
+            $obPivot = $obOffer->pivot;
+
+            $fTotalPrice += $obPivot->getTotalPriceValue();
         }
 
-        return $iTotalPrice;
+        return (float) $fTotalPrice;
     }
 }

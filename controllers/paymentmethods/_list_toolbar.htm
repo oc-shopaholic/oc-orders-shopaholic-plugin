@@ -1,9 +1,10 @@
 <div data-control="toolbar">
-    <a href="<?= Backend::url('lovata/ordersshopaholic/paymentmethods/create') ?>"
-       onclick="return $.manageModal.createRecord()"
-       class="btn btn-primary oc-icon-plus"><?= e(trans('backend::lang.form.create')) ?>
+    <a href="<?= Backend::url('lovata/ordersshopaholic/paymentmethods/create') ?>" class="btn btn-primary oc-icon-plus">
+        <?= e(trans('backend::lang.form.create')) ?>
     </a>
-    <a href="<?= Backend::url('lovata/ordersshopaholic/paymentmethods/reorder') ?>" class="btn btn-info oc-icon-exchange"><?= e(trans('backend::lang.reorder.default_title')) ?></a>
+    <a href="<?= Backend::url('lovata/ordersshopaholic/paymentmethods/reorder') ?>" class="btn btn-info oc-icon-exchange">
+        <?= e(trans('backend::lang.reorder.default_title')) ?>
+    </a>
     <button
             class="btn btn-danger oc-icon-trash-o"
             disabled="disabled"

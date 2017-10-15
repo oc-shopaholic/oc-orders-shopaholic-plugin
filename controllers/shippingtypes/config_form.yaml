@@ -1,4 +1,4 @@
-name: 'lovata.ordersshopaholic::lang.shippingtype.name'
+name: 'lovata.ordersshopaholic::lang.shipping_type.name'
 form: $/lovata/ordersshopaholic/models/shippingtype/fields.yaml
 modelClass: Lovata\OrdersShopaholic\Models\ShippingType
 defaultRedirect: lovata/ordersshopaholic/shippingtypes

@@ -1,4 +1,4 @@
-title: 'lovata.ordersshopaholic::lang.shippingtype.list_title'
+title: 'lovata.ordersshopaholic::lang.shipping_type.list_title'
 modelClass: Lovata\OrdersShopaholic\Models\ShippingType
 list: $/lovata/ordersshopaholic/models/shippingtype/columns.yaml
 recordUrl: 'lovata/ordersshopaholic/shippingtypes/update/:id'
@@ -12,4 +12,3 @@ toolbar:
     buttons: list_toolbar
     search:
         prompt: 'backend::lang.list.search_prompt'
-recordOnClick: '$.manageModal.clickRecord(:id)'

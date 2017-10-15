@@ -24,6 +24,9 @@ class TableCreateStatus extends Migration
             $obTable->string('code');
             $obTable->integer('sort_order')->nullable();
             $obTable->timestamps();
+
+            $obTable->index('code');
+            $obTable->index('sort_order');
         });
     }
     
