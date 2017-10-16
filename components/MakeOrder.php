@@ -38,8 +38,8 @@ class MakeOrder extends ComponentBase
     public function componentDetails()
     {
         return [
-            'name'        => 'lovata.ordersshopaholic::lang.component.ordering_name',
-            'description' => 'lovata.ordersshopaholic::lang.component.ordering_description',
+            'name'        => 'lovata.ordersshopaholic::lang.component.make_order_name',
+            'description' => 'lovata.ordersshopaholic::lang.component.make_order_description',
         ];
     }
 
@@ -80,6 +80,15 @@ class MakeOrder extends ComponentBase
         //Find or create new user
         if(empty($this->obUser) && $this->bCreateNewUser) {
             $this->findOrCreateUser();
+        } else {
+
+            $this->arUserData = [
+                'email'       => $this->obUser->email,
+                'name'        => $this->obUser->name,
+                'last_name'   => $this->obUser->last_name,
+                'middle_name' => $this->obUser->middle_name,
+                'phone'       => $this->obUser->phone,
+            ];
         }
 
         if(!Result::status()) {
@@ -91,7 +100,9 @@ class MakeOrder extends ComponentBase
             $arOrderData['property'] = [];
         }
 
-        $arOrderData['property'] = array_merge($arOrderData['property'], $this->arUserData);
+        if(!empty($this->arUserData)) {
+            $arOrderData['property'] = array_merge($arOrderData['property'], $this->arUserData);
+        }
 
         $this->obOrderProcessor->create($arOrderData, $this->obUser);
 

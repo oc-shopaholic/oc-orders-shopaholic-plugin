@@ -31,7 +31,7 @@ class Cart extends ComponentBase
      */
     public function init()
     {
-        $this->obCartData = app()->make(CartProcessor::class);
+        $this->obCartData = CartProcessor::instance();
     }
 
     /**

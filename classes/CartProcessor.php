@@ -3,6 +3,7 @@
 use Lang;
 use Cookie;
 use Event;
+use October\Rain\Support\Traits\Singleton;
 use Kharanenka\Helper\Result;
 
 use Lovata\Buddies\Facades\AuthHelper;
@@ -20,6 +21,8 @@ use Lovata\OrdersShopaholic\Classes\Collection\CartElementCollection;
  */
 class CartProcessor
 {
+    use Singleton;
+
     const COOKIE_NAME = 'shopaholic_cart_id';
     
     /** @var int - Cart cookie life time */
@@ -38,9 +41,8 @@ class CartProcessor
     
     /**
      * CartProcessor constructor.
-     * @param $iCartID
      */
-    public function __construct($iCartID = null)
+    public function __construct()
     {
         //Get cart cookie life time
         $iCookieLifeTime = Settings::getValue('cart_cookie_lifetime');
@@ -48,14 +50,20 @@ class CartProcessor
             self::$iCookieLifeTime = $iCookieLifeTime;
         }
         
+        //Get cart id from cookie, if exists
+        $iCartID = Cookie::get(self::COOKIE_NAME);
+        $this->init($iCartID);
+    }
+
+    /**Init cart data
+     * @param int $iCartID
+     */
+    public function init($iCartID = null)
+    {
         //Get auth user
         $this->obUser = AuthHelper::getUser();
-        
-        //Get cart id from cookie, if exists
-        if(empty($iCartID)) {
-            $iCartID = Cookie::get(self::COOKIE_NAME);
-        }
 
+        $this->obCart = null;
         if(!empty($this->obUser)) {
             //Find cart for authorized user
             $this->findUserCart($iCartID);

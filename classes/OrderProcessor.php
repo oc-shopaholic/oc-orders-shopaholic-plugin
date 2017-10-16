@@ -29,11 +29,10 @@ class OrderProcessor
 
     /**
      * OrderProcessor constructor.
-     * @param CartProcessor $obCartProcessor
      */
-    public function __construct(CartProcessor $obCartProcessor)
+    public function __construct()
     {
-        $this->obCartProcessor = $obCartProcessor;
+        $this->obCartProcessor = CartProcessor::instance();
         
         // Get order behavior flags from settings
         $this->bCheckOfferQuantity = Settings::getValue('check_offer_quantity');

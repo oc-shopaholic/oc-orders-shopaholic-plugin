@@ -72,7 +72,8 @@ class CartProcessorTest extends CommonTest
         $sErrorMessage = 'Method CartProcessor::add is not correct';
 
         /** @var CartProcessor $obCartProcessor */
-        $obCartProcessor = App::make(CartProcessor::class);
+        $obCartProcessor = CartProcessor::instance();
+        $obCartProcessor->init();
         $bResult = $obCartProcessor->add([]);
 
         self::assertEquals(false, $bResult, $sErrorMessage);
@@ -121,6 +122,8 @@ class CartProcessorTest extends CommonTest
         /** @var CartElementItem $obCartElementItem */
         $obCartElementItem = $obCartElementList->first();
         self::assertEquals(5, $obCartElementItem->quantity, $sErrorMessage);
+
+        $obCartProcessor->clear();
     }
 
     /**
@@ -133,7 +136,8 @@ class CartProcessorTest extends CommonTest
         $sErrorMessage = 'Method CartProcessor::update is not correct';
 
         /** @var CartProcessor $obCartProcessor */
-        $obCartProcessor = App::make(CartProcessor::class);
+        $obCartProcessor = CartProcessor::instance();
+        $obCartProcessor->init();
         $bResult = $obCartProcessor->update([]);
 
         self::assertEquals(false, $bResult, $sErrorMessage);
@@ -226,6 +230,8 @@ class CartProcessorTest extends CommonTest
         $obCartElementItem = $obCartElementList->first();
 
         self::assertEquals(1, $obCartElementItem->quantity, $sErrorMessage);
+
+        $obCartProcessor->clear();
     }
 
     /**
@@ -238,7 +244,8 @@ class CartProcessorTest extends CommonTest
         $sErrorMessage = 'Method CartProcessor::remove is not correct';
 
         /** @var CartProcessor $obCartProcessor */
-        $obCartProcessor = App::make(CartProcessor::class);
+        $obCartProcessor = CartProcessor::instance();
+        $obCartProcessor->init();
         $bResult = $obCartProcessor->remove([]);
 
         self::assertEquals(false, $bResult, $sErrorMessage);
@@ -278,6 +285,8 @@ class CartProcessorTest extends CommonTest
         $obCartElementList = $obCartProcessor->get();
 
         self::assertEquals(0, $obCartElementList->count(), $sErrorMessage);
+
+        $obCartProcessor->clear();
     }
 
     /**
@@ -290,7 +299,8 @@ class CartProcessorTest extends CommonTest
         $sErrorMessage = 'Method CartProcessor::clear is not correct';
 
         /** @var CartProcessor $obCartProcessor */
-        $obCartProcessor = App::make(CartProcessor::class);
+        $obCartProcessor = CartProcessor::instance();
+        $obCartProcessor->init();
         $obCartProcessor->clear();
 
         $obCartElementList = $obCartProcessor->get();
@@ -322,7 +332,8 @@ class CartProcessorTest extends CommonTest
         $sErrorMessage = 'Method CartProcessor::get is not correct';
 
         /** @var CartProcessor $obCartProcessor */
-        $obCartProcessor = App::make(CartProcessor::class);
+        $obCartProcessor = CartProcessor::instance();
+        $obCartProcessor->init();
 
         $arOfferList = [
             [
@@ -342,6 +353,8 @@ class CartProcessorTest extends CommonTest
         $obCartElementItem = $obCartElementList->first();
         self::assertEquals($this->obOffer->id, $obCartElementItem->offer_id, $sErrorMessage);
         self::assertEquals(10, $obCartElementItem->quantity, $sErrorMessage);
+
+        $obCartProcessor->clear();
     }
     
     /**

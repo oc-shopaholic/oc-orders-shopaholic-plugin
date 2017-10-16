@@ -44,7 +44,7 @@ class Plugin extends PluginBase
     {
         return [
             'Lovata\OrdersShopaholic\Components\Cart'              => 'Cart',
-            'Lovata\OrdersShopaholic\Components\Ordering'          => 'Ordering',
+            'Lovata\OrdersShopaholic\Components\MakeOrder'         => 'MakeOrder',
             'Lovata\OrdersShopaholic\Components\ShippingTypeList'  => 'ShippingTypeList',
             'Lovata\OrdersShopaholic\Components\PaymentMethodList' => 'PaymentMethodList',
         ];
@@ -64,7 +64,7 @@ class Plugin extends PluginBase
     public function boot()
     {
         $this->app->singleton(CartProcessor::class, CartProcessor::class);
-        $this->app->bind(OrderProcessor::class, OrderProcessor::class);
+        $this->app->singleton(OrderProcessor::class, OrderProcessor::class);
 
         $this->app->bind(CartElementItem::class, CartElementItem::class);
         $this->app->bind(PaymentMethodItem::class, PaymentMethodItem::class);

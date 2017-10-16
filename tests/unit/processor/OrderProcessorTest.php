@@ -73,6 +73,11 @@ class OrderProcessorTest extends CommonTest
 
         $sErrorMessage = 'Method OrderProcessor::create is not correct';
 
+        /** @var CartProcessor $obCartProcessor */
+        $obCartProcessor = CartProcessor::instance();
+        $obCartProcessor->init();
+        $obCartProcessor->clear();
+
         /** @var OrderProcessor $obOrderProcessor */
         $obOrderProcessor = App::make(OrderProcessor::class);
         $obOrder = $obOrderProcessor->create([]);
@@ -101,7 +106,8 @@ class OrderProcessorTest extends CommonTest
         ];
 
         /** @var CartProcessor $obCartProcessor */
-        $obCartProcessor = App::make(CartProcessor::class);
+        $obCartProcessor = CartProcessor::instance();
+        $obCartProcessor->init();
         $obCartProcessor->add($arOfferList);
 
         /** @var OrderProcessor $obOrderProcessor */
@@ -111,6 +117,8 @@ class OrderProcessorTest extends CommonTest
         self::assertInstanceOf(Order::class, $obOrder, $sErrorMessage);
         self::assertEquals(true, Result::status(), $sErrorMessage);
         self::assertEquals($this->obUser->id, $obOrder->user_id, $sErrorMessage);
+
+        $obCartProcessor->clear();
     }
 
     /**
@@ -132,7 +140,8 @@ class OrderProcessorTest extends CommonTest
         ];
 
         /** @var CartProcessor $obCartProcessor */
-        $obCartProcessor = App::make(CartProcessor::class);
+        $obCartProcessor = CartProcessor::instance();
+        $obCartProcessor->init();
         $obCartProcessor->add($arOfferList);
 
         $arOrderData = [
@@ -161,6 +170,8 @@ class OrderProcessorTest extends CommonTest
 
 
         self::assertEquals(['id' => $obOrder->id, 'number' => $obOrder->order_number], Result::data(), $sErrorMessage);
+
+        $obCartProcessor->clear();
     }
 
     /**
@@ -182,7 +193,8 @@ class OrderProcessorTest extends CommonTest
         ];
 
         /** @var CartProcessor $obCartProcessor */
-        $obCartProcessor = App::make(CartProcessor::class);
+        $obCartProcessor = CartProcessor::instance();
+        $obCartProcessor->init();
         $obCartProcessor->add($arOfferList);
 
         /** @var OrderProcessor $obOrderProcessor */
@@ -195,7 +207,8 @@ class OrderProcessorTest extends CommonTest
         Settings::set('check_offer_quantity', true);
 
         /** @var CartProcessor $obCartProcessor */
-        $obCartProcessor = App::make(CartProcessor::class);
+        $obCartProcessor = CartProcessor::instance();
+        $obCartProcessor->init();
         $obCartProcessor->add($arOfferList);
 
         /** @var OrderProcessor $obOrderProcessor */
@@ -209,6 +222,8 @@ class OrderProcessorTest extends CommonTest
         self::assertEquals($sMessage, Result::message(), $sErrorMessage);
 
         self::assertEquals(['offer_id' => $this->obOffer->id], Result::data(), $sErrorMessage);
+
+        $obCartProcessor->clear();
     }
 
     /**
@@ -230,7 +245,8 @@ class OrderProcessorTest extends CommonTest
         ];
 
         /** @var CartProcessor $obCartProcessor */
-        $obCartProcessor = App::make(CartProcessor::class);
+        $obCartProcessor = CartProcessor::instance();
+        $obCartProcessor->init();
         $obCartProcessor->add($arOfferList);
 
         /** @var OrderProcessor $obOrderProcessor */
@@ -247,7 +263,8 @@ class OrderProcessorTest extends CommonTest
         Settings::set('decrement_offer_quantity', true);
 
         /** @var CartProcessor $obCartProcessor */
-        $obCartProcessor = App::make(CartProcessor::class);
+        $obCartProcessor = CartProcessor::instance();
+        $obCartProcessor->init();
         $obCartProcessor->add($arOfferList);
 
         /** @var OrderProcessor $obOrderProcessor */
@@ -262,7 +279,8 @@ class OrderProcessorTest extends CommonTest
         self::assertEquals(2, $obOffer->quantity, $sErrorMessage);
 
         /** @var CartProcessor $obCartProcessor */
-        $obCartProcessor = App::make(CartProcessor::class);
+        $obCartProcessor = CartProcessor::instance();
+        $obCartProcessor->init();
         $obCartProcessor->add($arOfferList);
 
         /** @var OrderProcessor $obOrderProcessor */
@@ -276,6 +294,8 @@ class OrderProcessorTest extends CommonTest
         self::assertEquals($sMessage, Result::message(), $sErrorMessage);
 
         self::assertEquals(['offer_id' => $this->obOffer->id], Result::data(), $sErrorMessage);
+
+        $obCartProcessor->clear();
     }
 
     /**
