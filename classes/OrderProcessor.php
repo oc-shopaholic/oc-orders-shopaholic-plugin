@@ -125,6 +125,12 @@ class OrderProcessor
         
         if(!Result::status() || !$bOrderHasOffers) {
             DB::rollBack();
+
+            if(!$bOrderHasOffers) {
+                $sMessage = Lang::get('lovata.ordersshopaholic::lang.message.empty_cart');
+                Result::setMessage($sMessage);
+            }
+
             return null;
         }
 

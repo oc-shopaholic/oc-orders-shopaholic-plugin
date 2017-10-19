@@ -5,9 +5,9 @@
     ],
     'component'      => [
         'cart_name'                       => 'Корзина',
-        'cart_description'                => 'Работа с корзиной пользователя',
-        'make_order_name'                 => 'Заказы',
-        'make_order_description'          => 'Оформление и получение данных по заказам',
+        'cart_description'                => '',
+        'make_order_name'                 => 'Создание заказа',
+        'make_order_description'          => '',
         'payment_method_list_name'        => 'Методы оплаты',
         'payment_method_list_description' => '',
         'shipping_type_list_name'         => 'Способы доставки',

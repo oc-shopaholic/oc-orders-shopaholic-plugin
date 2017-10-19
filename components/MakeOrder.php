@@ -2,9 +2,9 @@
 
 use App;
 use Input;
-use Cms\Classes\ComponentBase;
 
 use Kharanenka\Helper\Result;
+use Lovata\Toolbox\Classes\Component\ComponentSubmitForm;
 use Lovata\Toolbox\Traits\Helpers\TraitValidationHelper;
 
 use Lovata\Buddies\Models\User;
@@ -17,7 +17,7 @@ use Lovata\OrdersShopaholic\Classes\OrderProcessor;
  * @package Lovata\OrdersShopaholic\Components
  * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  */
-class MakeOrder extends ComponentBase
+class MakeOrder extends ComponentSubmitForm
 {
     use TraitValidationHelper;
     
@@ -44,6 +44,33 @@ class MakeOrder extends ComponentBase
     }
 
     /**
+     * @return array
+     */
+    public function defineProperties()
+    {
+        $arResult = $this->getModeProperty();
+        return $arResult;
+    }
+
+    /**
+     * Get redirect page property list
+     * @return array
+     */
+    protected function getRedirectPageProperties()
+    {
+        if(!Result::status()) {
+            return [];
+        }
+
+        $arResult = Result::data();
+        if(empty($arResult) || !is_array($arResult)) {
+            return [];
+        }
+
+        return $arResult;
+    }
+
+    /**
      * Init plugin method
      */
     public function init()
@@ -52,25 +79,49 @@ class MakeOrder extends ComponentBase
         $this->obUser = AuthHelper::getUser();
 
         $this->obOrderProcessor = App::make(OrderProcessor::class);
+
+        parent::init();
     }
 
     /**
-     * Order create
-     * @return array
+     * Create new order
+     * @return \Illuminate\Http\RedirectResponse|null
+     */
+    public function onRun()
+    {
+        if($this->sMode != self::MODE_SUBMIT) {
+            return null;
+        }
+
+        $arOrderData = Input::get('order');
+        $arUserData = Input::get('user');
+        if(empty($arOrderData) && empty($arUserData)) {
+            return null;
+        }
+
+        $this->create($arOrderData, $arUserData);
+
+        return $this->getResponseModeForm();
+    }
+
+    /**
+     * Create new order (AJAX)
+     * @return \Illuminate\Http\RedirectResponse|array
      */
     public function onCreate()
     {
         $arOrderData = Input::get('order');
         $arUserData = Input::get('user');
 
-        return $this->create($arOrderData, $arUserData);
+        $this->create($arOrderData, $arUserData);
+
+        return $this->getResponseModeAjax();
     }
 
     /**
      * Create new order
      * @param array $arOrderData
      * @param array $arUserData
-     * @return array
      */
     public function create($arOrderData, $arUserData)
     {
@@ -80,7 +131,7 @@ class MakeOrder extends ComponentBase
         //Find or create new user
         if(empty($this->obUser) && $this->bCreateNewUser) {
             $this->findOrCreateUser();
-        } else {
+        } else if(!empty($this->obUser)) {
 
             $this->arUserData = [
                 'email'       => $this->obUser->email,
@@ -92,7 +143,7 @@ class MakeOrder extends ComponentBase
         }
 
         if(!Result::status()) {
-            return Result::get();
+            return;
         }
 
         $arOrderData = $this->arOrderData;
@@ -105,8 +156,6 @@ class MakeOrder extends ComponentBase
         }
 
         $this->obOrderProcessor->create($arOrderData, $this->obUser);
-
-        return Result::get();
     }
 
     /**

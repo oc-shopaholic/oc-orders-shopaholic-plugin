@@ -1,6 +1,5 @@
 <?php namespace Lovata\OrdersShopaholic\Tests\Unit\Component;
 
-use App;
 use Kharanenka\Helper\Result;
 use Lovata\Buddies\Facades\AuthHelper;
 use Lovata\OrdersShopaholic\Components\MakeOrder;

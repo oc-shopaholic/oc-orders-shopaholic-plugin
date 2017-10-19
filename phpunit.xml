@@ -13,8 +13,8 @@
     <testsuites>
         <testsuite name="Plugin 'Orders for Shopaholic' Unit Test Suite">
             <directory>./tests/unit</directory>
-            <!--<directory>./../shopaholic/tests/unit</directory>-->
-            <!--<directory>./../toolbox/tests/unit</directory>-->
+            <directory>./../shopaholic/tests/unit</directory>
+            <directory>./../toolbox/tests/unit</directory>
         </testsuite>
     </testsuites>
     <filter>

@@ -6,7 +6,7 @@
     'component'      => [
         'cart_name'                       => 'Cart',
         'cart_description'                => '',
-        'make_order_name'                 => 'Ordering',
+        'make_order_name'                 => 'Make order',
         'make_order_description'          => 'Create new order',
         'payment_method_list_name'        => 'Payment methods',
         'payment_method_list_description' => '',
