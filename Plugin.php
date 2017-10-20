@@ -4,7 +4,6 @@ use Event;
 use System\Classes\PluginBase;
 
 //Helpers
-use Lovata\OrdersShopaholic\Console\RemoveOldCarts;
 use Lovata\OrdersShopaholic\Classes\CartProcessor;
 use Lovata\OrdersShopaholic\Classes\OrderProcessor;
 
@@ -48,14 +47,6 @@ class Plugin extends PluginBase
             'Lovata\OrdersShopaholic\Components\ShippingTypeList'  => 'ShippingTypeList',
             'Lovata\OrdersShopaholic\Components\PaymentMethodList' => 'PaymentMethodList',
         ];
-    }
-
-    /**
-     * Register command plugin method
-     */
-    public function register()
-    {
-        $this->registerConsoleCommand('shopaholic:remove-old-cart', RemoveOldCarts::class);
     }
 
     /**
