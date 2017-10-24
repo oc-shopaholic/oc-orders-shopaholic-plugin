@@ -13,11 +13,10 @@
         'shipping_type_list_name'         => 'Shipping types',
         'shipping_type_list_description'  => '',
     ],
-    'tab'            => [
-        'info'        => 'Данные заказа',
-        'client_info' => 'Данные клиента',
-        'offers_info' => 'Список товаров',
-        'order_settings' => 'Корзина и заказы',
+    'tab' => [
+        'info'           => 'Order data',
+        'offers_info'    => 'Offer list',
+        'order_settings' => 'Order and cart',
     ],
     'message'        => [
         'empty_cart'          => 'Cart is empty',
@@ -42,11 +41,11 @@
         'shipping_type'      => 'Shipping type',
         'payment_method'     => 'Payment method',
     ],
-    'settings'       => [
-        'cart_cookie_lifetime'           => 'Life time of cart ID in cookie (min.)',
-        'check_offer_quantity'        => 'When checking the available quantity of offers when creating an order',
+    'settings' => [
+        'cart_cookie_lifetime'     => 'Life time of cart ID in cookie (min.)',
+        'check_offer_quantity'     => 'When checking the available quantity of offers when creating an order',
         'decrement_offer_quantity' => 'Automatic reduction of the available quantity of offers when creating an order',
-        'create_new_user'                => 'Automatically create a new user when creating an order',
+        'create_new_user'          => 'Automatically create a new user when creating an order',
 
         'order_create_email' => 'Email for sending mail when creating an order',
     ],
