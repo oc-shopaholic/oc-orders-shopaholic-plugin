@@ -23,6 +23,7 @@ class TableCreateOrder extends Migration
             $obTable->integer('user_id')->nullable()->unsigned();
             $obTable->integer('status_id')->nullable();
             $obTable->string('order_number')->nullable();
+            $obTable->string('secret_key')->nullable();
             $obTable->decimal('total_price', 15, 2)->nullable();
             $obTable->decimal('shipping_price', 15, 2)->nullable();
             $obTable->integer('shipping_type_id')->nullable();

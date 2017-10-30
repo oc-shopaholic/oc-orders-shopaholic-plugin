@@ -27,7 +27,6 @@ use Kharanenka\Scope\CodeField;
  * Omnipay for Shopaholic plugin
  * @property string $gateway_id
  * @property string $gateway_currency
- * @property string $payment_page
  * @property array $gateway_property
  * @property int $before_status_id
  * @property int $after_status_id

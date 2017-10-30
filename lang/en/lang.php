@@ -12,6 +12,8 @@
         'payment_method_list_description' => '',
         'shipping_type_list_name'         => 'Shipping types',
         'shipping_type_list_description'  => '',
+        'order_page_name'                 => 'Order page',
+        'order_page_description'          => '',
     ],
     'tab' => [
         'info'           => 'Order data',

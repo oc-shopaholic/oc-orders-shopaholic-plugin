@@ -3,7 +3,7 @@
         'name'        => 'Orders for Shopaholic',
         'description' => 'Корзина и оформление заказа',
     ],
-    'component'      => [
+    'component' => [
         'cart_name'                       => 'Корзина',
         'cart_description'                => '',
         'make_order_name'                 => 'Создание заказа',
@@ -12,6 +12,8 @@
         'payment_method_list_description' => '',
         'shipping_type_list_name'         => 'Способы доставки',
         'shipping_type_list_description'  => '',
+        'order_page_name'                 => 'Страница заказа',
+        'order_page_description'          => '',
     ],
     'tab'            => [
         'info'        => 'Данные заказа',

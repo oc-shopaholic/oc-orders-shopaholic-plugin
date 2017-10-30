@@ -20,6 +20,7 @@ use Lovata\Shopaholic\Classes\Helper\PriceHelper;
  * 
  * @property int $id
  * @property string $order_number
+ * @property string $secret_key
  * @property int $user_id
  * @property int $status_id
  * @property int $payment_method_id
@@ -52,6 +53,7 @@ use Lovata\Shopaholic\Classes\Helper\PriceHelper;
  * @method static PaymentMethod|\October\Rain\Database\Relations\BelongsTo payment_method()
  *
  * @method static $this getByNumber(string $sNumber)
+ * @method static $this getBySecretKey(string $sNumber)
  */
 class Order extends Model
 {
@@ -111,6 +113,21 @@ class Order extends Model
             $obQuery->where('order_number', $sData);
         }
         
+        return $obQuery;
+    }
+
+    /**
+     * Get orders by secret_key field
+     * @param Order $obQuery
+     * @param string $sData
+     * @return Order
+     */
+    public function scopeGetBySecretKey($obQuery, $sData)
+    {
+        if(!empty($sData)) {
+            $obQuery->where('secret_key', $sData);
+        }
+
         return $obQuery;
     }
 
@@ -243,6 +260,8 @@ class Order extends Model
                 $iTodayOrdersCount++;
             }
         } while (!$bAvailableNumber);
+
+        $this->secret_key = Hash::make($this->order_number);
     }
 
     /**
@@ -271,17 +290,5 @@ class Order extends Model
         }
 
         return (float) $fTotalPrice;
-    }
-
-    /**
-     * Get order secret key
-     * @return string
-     */
-    public function getSecretKey()
-    {
-        $sSecretKey = Hash::make($this->id);
-        $sSecretKey = $this->id . '!' . $sSecretKey;
-
-        return $sSecretKey;
     }
 }

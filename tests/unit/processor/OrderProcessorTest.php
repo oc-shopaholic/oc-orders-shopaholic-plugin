@@ -168,8 +168,13 @@ class OrderProcessorTest extends CommonTest
         self::assertEquals('22.2', $obOrder->total_price, $sErrorMessage);
         self::assertEquals(22.2, $obOrder->getTotalPriceValue(), $sErrorMessage);
 
+        $arRouteData = [
+            'id'     => $obOrder->id,
+            'number' => $obOrder->order_number,
+            'key'    => $obOrder->secret_key,
+        ];
 
-        self::assertEquals(['id' => $obOrder->id, 'number' => $obOrder->order_number], Result::data(), $sErrorMessage);
+        self::assertEquals($arRouteData, Result::data(), $sErrorMessage);
 
         $obCartProcessor->clear();
     }

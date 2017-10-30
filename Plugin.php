@@ -44,6 +44,7 @@ class Plugin extends PluginBase
         return [
             'Lovata\OrdersShopaholic\Components\Cart'              => 'Cart',
             'Lovata\OrdersShopaholic\Components\MakeOrder'         => 'MakeOrder',
+            'Lovata\OrdersShopaholic\Components\OrderPage'         => 'OrderPage',
             'Lovata\OrdersShopaholic\Components\ShippingTypeList'  => 'ShippingTypeList',
             'Lovata\OrdersShopaholic\Components\PaymentMethodList' => 'PaymentMethodList',
         ];
