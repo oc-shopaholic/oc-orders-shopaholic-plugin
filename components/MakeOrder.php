@@ -2,6 +2,7 @@
 
 use App;
 use Input;
+use System\Classes\PluginManager;
 
 use Kharanenka\Helper\Result;
 use Lovata\Toolbox\Classes\Component\ComponentSubmitForm;
@@ -155,7 +156,19 @@ class MakeOrder extends ComponentSubmitForm
             $arOrderData['property'] = array_merge($arOrderData['property'], $this->arUserData);
         }
 
-        $this->obOrderProcessor->create($arOrderData, $this->obUser);
+        $obOrder = $this->obOrderProcessor->create($arOrderData, $this->obUser);
+        if(empty($obOrder)) {
+            return;
+        }
+
+        if(PluginManager::instance()->hasPlugin('Lovata.OmnipayShopaholic')) {
+            
+            $arPaymentData = Input::get('payment');
+            if(!empty($arPaymentData)) {
+                $obOrder->payment_data = $arPaymentData;
+                $obOrder->save();
+            }
+        }
     }
 
     /**

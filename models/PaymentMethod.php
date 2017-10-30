@@ -23,6 +23,14 @@ use Kharanenka\Scope\CodeField;
  * @property int $sort_order
  * @property \October\Rain\Argon\Argon $created_at
  * @property \October\Rain\Argon\Argon $updated_at
+ * 
+ * Omnipay for Shopaholic plugin
+ * @property string $gateway_id
+ * @property string $gateway_currency
+ * @property string $payment_page
+ * @property array $gateway_property
+ * @property int $before_status_id
+ * @property int $after_status_id
  *
  * @property \October\Rain\Database\Collection|Order[] $order
  * @method static Order|\October\Rain\Database\Relations\HasMany order()

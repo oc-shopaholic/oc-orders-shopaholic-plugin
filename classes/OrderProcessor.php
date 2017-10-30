@@ -144,6 +144,7 @@ class OrderProcessor
         $arResult = [
             'id'     => $obOrder->id,
             'number' => $obOrder->order_number,
+            'key'    => $obOrder->getSecretKey(),
         ];
         
         Result::setTrue($arResult);

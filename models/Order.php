@@ -1,6 +1,7 @@
 <?php namespace Lovata\OrdersShopaholic\Models;
 
 use Model;
+use Hash;
 use Carbon\Carbon;
 
 use Kharanenka\Scope\UserBelongsTo;
@@ -30,6 +31,10 @@ use Lovata\Shopaholic\Classes\Helper\PriceHelper;
  *
  * @property \October\Rain\Argon\Argon $created_at
  * @property \October\Rain\Argon\Argon $updated_at
+ * 
+ * Omnipay for Shopaholic plugin
+ * @property array $payment_data
+ * @property array $payment_response
  * 
  * @property \October\Rain\Database\Collection|Offer[] $offer
  * @method static Offer|\October\Rain\Database\Relations\BelongsToMany offer()
@@ -266,5 +271,17 @@ class Order extends Model
         }
 
         return (float) $fTotalPrice;
+    }
+
+    /**
+     * Get order secret key
+     * @return string
+     */
+    public function getSecretKey()
+    {
+        $sSecretKey = Hash::make($this->id);
+        $sSecretKey = $this->id . '!' . $sSecretKey;
+
+        return $sSecretKey;
     }
 }
