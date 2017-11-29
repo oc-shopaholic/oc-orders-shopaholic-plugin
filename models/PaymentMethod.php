@@ -43,6 +43,12 @@ class PaymentMethod extends Model
 
     public $table = 'lovata_orders_shopaholic_payment_methods';
 
+    public $implement = [
+        '@RainLab.Translate.Behaviors.TranslatableModel',
+    ];
+
+    public $translatable = ['name', 'preview_text'];
+
     /** Validation */
     public $rules = [
         'name' => 'required',
