@@ -209,6 +209,27 @@ class OrderProcessorTest extends CommonTest
         self::assertInstanceOf(Order::class, $obOrder, $sErrorMessage);
         self::assertEquals(true, Result::status(), $sErrorMessage);
 
+        $obCartProcessor->clear();
+    }
+
+    /**
+     * Test order creating
+     */
+    public function testCheckingQuantityFail()
+    {
+        $this->createTestData();
+
+        $sErrorMessage = 'Method OrderProcessor::create is not correct';
+
+        AuthHelper::login($this->obUser);
+
+        $arOfferList = [
+            [
+                'offer_id' => $this->obOffer->id,
+                'quantity' => 20,
+            ],
+        ];
+
         Settings::set('check_offer_quantity', true);
 
         /** @var CartProcessor $obCartProcessor */
@@ -264,6 +285,25 @@ class OrderProcessorTest extends CommonTest
         /** @var Offer $obOffer */
         $obOffer = Offer::find($this->obOffer->id);
         self::assertEquals(5, $obOffer->quantity, $sErrorMessage);
+    }
+
+    /**
+     * Test order creating
+     */
+    public function testCheckingDecrementQuantityFail()
+    {
+        $this->createTestData();
+
+        $sErrorMessage = 'Method OrderProcessor::create is not correct';
+
+        AuthHelper::login($this->obUser);
+
+        $arOfferList = [
+            [
+                'offer_id' => $this->obOffer->id,
+                'quantity' => 3,
+            ],
+        ];
 
         Settings::set('decrement_offer_quantity', true);
 

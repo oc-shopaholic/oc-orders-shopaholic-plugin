@@ -6,11 +6,30 @@ columns:
         sortable: true
     status_id:
         label: 'lovata.ordersshopaholic::lang.field.status'
-        type: text
         relation: status
         searchable: true
         sortable: true
         select: name
+    property[email]:
+        label: 'lovata.toolbox::lang.field.email'
+        type: text
+        searchable: true
+        sortable: true
+    property[name]:
+        label: 'lovata.buddies::lang.field.name'
+        type: text
+        searchable: true
+        sortable: true
+    property[last_name]:
+        label: 'lovata.buddies::lang.field.last_name'
+        type: text
+        searchable: true
+        sortable: true
+    property[phone]:
+        label: 'lovata.toolbox::lang.field.phone'
+        type: text
+        searchable: true
+        sortable: true
     total_price:
         label: 'lovata.ordersshopaholic::lang.field.total_price'
         type: text
