@@ -1,9 +1,15 @@
-# Shopaholic plugin for October CMS
+# Orders for Shopaholic plugin for October CMS
 
 ## Description
 
 E-Commerce plugin by [LOVATA](https://lovata.com) for October CMS.
 
+* Components
+  * [Cart](https://github.com/lovata/oc-shopaholic-plugin/wiki/Cart)
+  * [MakeOrder](https://github.com/lovata/oc-shopaholic-plugin/wiki/MakeOrder)
+  * [OrderPage](https://github.com/lovata/oc-shopaholic-plugin/wiki/OrderPage)
+  * [PaymentMethodList](https://github.com/lovata/oc-shopaholic-plugin/wiki/PaymentMethodList)
+  * [ShippingTypeList](https://github.com/lovata/oc-shopaholic-plugin/wiki/ShippingTypeList)
 * Models
   * [CartElement](https://github.com/lovata/oc-shopaholic-plugin/wiki/CartElementModel)
   * [PaymentMethod](https://github.com/lovata/oc-shopaholic-plugin/wiki/PaymentMethodModel)

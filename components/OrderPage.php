@@ -4,7 +4,6 @@ use Cms\Classes\ComponentBase;
 use Lovata\Toolbox\Traits\Helpers\TraitComponentNotFoundResponse;
 
 use Lovata\OrdersShopaholic\Models\Order;
-use Lovata\OrdersShopaholic\Models\PaymentMethod;
 
 /**
  * Class OrderPage
@@ -20,7 +19,7 @@ class OrderPage extends ComponentBase
     /** @var Order */
     public $obElement = null;
 
-    /** @var PaymentMethod */
+    /** @var \Lovata\OrdersShopaholic\Models\PaymentMethod */
     public $obPaymentMethod = null;
 
     /** @var array Component property list */
@@ -43,7 +42,27 @@ class OrderPage extends ComponentBase
     public function defineProperties()
     {
         $this->arPropertyList = array_merge($this->arPropertyList, $this->getElementPageProperties());
+
         return $this->arPropertyList;
+    }
+
+    /**
+     * Get element object
+     * @return \Illuminate\Http\Response|null
+     */
+    public function onRun()
+    {
+        //Get element slug
+        $sElementSlug = $this->property('slug');
+        if (empty($sElementSlug) && !$this->property('slug_required')) {
+            return null;
+        }
+
+        if (empty($this->obElement)) {
+            return $this->getErrorResponse();
+        }
+
+        return null;
     }
 
     /**
@@ -53,13 +72,13 @@ class OrderPage extends ComponentBase
     {
         //Get element slug
         $sElementSlug = $this->property('slug');
-        if(empty($sElementSlug)) {
+        if (empty($sElementSlug)) {
             return;
         }
 
         //Get element by slug
         $obElement = $this->getElementObject($sElementSlug);
-        if(empty($obElement)) {
+        if (empty($obElement)) {
             return;
         }
 
@@ -69,13 +88,31 @@ class OrderPage extends ComponentBase
     }
 
     /**
+     * Get Order object
+     * @return Order
+     */
+    public function get()
+    {
+        return $this->obElement;
+    }
+
+    /**
+     * Get PaymentMethod object
+     * @return \Lovata\OrdersShopaholic\Models\PaymentMethod
+     */
+    public function getPaymentMethod()
+    {
+        return $this->obPaymentMethod;
+    }
+
+    /**
      * Get element object
      * @param string $sElementSlug
      * @return Order
      */
     protected function getElementObject($sElementSlug)
     {
-        if(empty($sElementSlug)) {
+        if (empty($sElementSlug)) {
             return null;
         }
 
