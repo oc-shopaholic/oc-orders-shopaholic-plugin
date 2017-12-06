@@ -1,7 +1,71 @@
-deploy:
-  provider: releases
-  api_key:
-    secure: ELNn1IOyOgMMGtL8lk/V76ZXJynoBYWw9KjLrWTuR7JmUgVtjW7I70gqAeWf/1UwdTQUdLcQxoJ504k3eixPsWJ26sBd9MNJ2Sgiin4Ba4nqrNCTA6DCYZSrsCJDRG3pRYhuHw44Da3sMZh9RhogkqIC7DRzUuOCIaNrtxGDrdHqf1e+0j1EBNp4XymyJXZB4jJgV0l3sirUGkOVE7l9cSgszicvKFGXA/ID7GAnFM09whdnT4Hfyt36M+gfP2GRTVrj4HCbgdnP4ZL2fKMEEQjUVpOFCQmlE6408kK8x7cPpivs4zmbevlnbK4ngtVMhqHU6KVepyw3gozmDsHqwidchQzsUzpI9fA/H3fQhFetjwYdx0kH9RhM+QSpe58cBqXvGGrfO1B9n0K7JfCBPbac1bY1ZgIJDELjrRFNnuV1AC5iYf4f/wPKwdY8y511Z5XL9bjzBy127zCh2R4HxOCqfXZjGuog9y2iBba/M/ouX2UfuzwQI2WwmCH3z0/pD2r8MpALVQ3s3Z/FPF5J93Fgs2+w+tGxbZaAeDw2P4vY8MgjHdqMl1rHHooukYjROcck5ilSNKxRoERO/s0KnNCyI8eIfsJvZt1U00JOI9oGPcsgCar/GSZqLwXA8D0d3LNV5LjkDrLlif5oZL6dq5pk+RwobJcKRvOcMVtZSd0=
-  file: orders.zip
-  on:
-    repo: lovata/oc-orders-shopaholic-plugin
+#language: php
+#
+#cache:
+#  directories:
+#    - $HOME/.composer/cache/files
+#
+#php:
+#  - 7.0
+#  - 7.1
+#  - nightly
+#
+#services:
+#  - mysql
+#  
+#before_install:
+#  - mysql -e 'CREATE DATABASE test CHARACTER SET utf8 COLLATE utf8_general_ci;'
+#
+#matrix:
+#  allow_failures:
+#    - php: nightly
+#
+#sudo: false
+#
+#install:
+#  - if [[ "$BUILD" != true ]]; then
+#      composer require satooshi/php-coveralls:~0.6@stable;
+#    fi
+#
+#before_script:
+#  - if [[ "$BUILD" != true ]]; then
+#      mkdir -p build/logs;
+#      composer create-project october/october october;
+#      sed -i "s/'database'  => 'database',/'database'  => 'test',/" october/config/database.php;
+#      php october/artisan october:up;
+#      php october/artisan plugin:install Lovata.Toolbox;
+#      php october/artisan plugin:install Lovata.Shopaholic;
+#      php october/artisan plugin:install Lovata.Buddies;
+#      mkdir -p ./october/plugins/lovata/ordersshopaholic;
+#      mv !(october) october/plugins/lovata/ordersshopaholic;
+#      cd october/plugins/lovata/ordersshopaholic;
+#    fi
+#
+#script:
+#  - ../../../vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+#after_success:
+#  - if [[ "$BUILD" != true ]]; then
+#      sh -c 'if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then php vendor/bin/coveralls -v; fi;'
+#    fi
+
+jobs:
+  include:
+    - stage: Release
+      env:
+        - BUILD=true
+      script:
+        - NAME="ordersshopaholic"
+        - zip -r $NAME ./ -x .git/\* -x .gitignore -x .travis.yml -x crowdin.yml -x .editorconfig -x .codeclimate.yml -x PHPMD_custom.xml
+        - TAG=$(git describe --tags)
+        - FILE="./$NAME.zip"
+        - if [[ -e $FILE ]]; then
+            NEW_NAME="$NAME-$TAG.$TRAVIS_JOB_ID";
+            mv $NAME.zip $NEW_NAME.zip;
+          fi
+      deploy:
+        provider: releases
+        api_key:
+          secure: ELNn1IOyOgMMGtL8lk/V76ZXJynoBYWw9KjLrWTuR7JmUgVtjW7I70gqAeWf/1UwdTQUdLcQxoJ504k3eixPsWJ26sBd9MNJ2Sgiin4Ba4nqrNCTA6DCYZSrsCJDRG3pRYhuHw44Da3sMZh9RhogkqIC7DRzUuOCIaNrtxGDrdHqf1e+0j1EBNp4XymyJXZB4jJgV0l3sirUGkOVE7l9cSgszicvKFGXA/ID7GAnFM09whdnT4Hfyt36M+gfP2GRTVrj4HCbgdnP4ZL2fKMEEQjUVpOFCQmlE6408kK8x7cPpivs4zmbevlnbK4ngtVMhqHU6KVepyw3gozmDsHqwidchQzsUzpI9fA/H3fQhFetjwYdx0kH9RhM+QSpe58cBqXvGGrfO1B9n0K7JfCBPbac1bY1ZgIJDELjrRFNnuV1AC5iYf4f/wPKwdY8y511Z5XL9bjzBy127zCh2R4HxOCqfXZjGuog9y2iBba/M/ouX2UfuzwQI2WwmCH3z0/pD2r8MpALVQ3s3Z/FPF5J93Fgs2+w+tGxbZaAeDw2P4vY8MgjHdqMl1rHHooukYjROcck5ilSNKxRoERO/s0KnNCyI8eIfsJvZt1U00JOI9oGPcsgCar/GSZqLwXA8D0d3LNV5LjkDrLlif5oZL6dq5pk+RwobJcKRvOcMVtZSd0=
+        file: "$NEW_NAME.zip"
+        skip_cleanup: true
+        on:
+          repo: lovata/oc-orders-shopaholic-plugin
