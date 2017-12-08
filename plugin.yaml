@@ -38,14 +38,14 @@ navigation:
                     - shopaholic-order-status
 permissions:
     shopaholic-order:
-        tab: 'lovata.shopaholic::lang.tabs.permissions'
+        tab: 'lovata.shopaholic::lang.tab.permissions'
         label: 'lovata.ordersshopaholic::lang.permission.order'
     shopaholic-order-status:
-        tab: 'lovata.shopaholic::lang.tabs.permissions'
+        tab: 'lovata.shopaholic::lang.tab.permissions'
         label: 'lovata.ordersshopaholic::lang.permission.status'
     shopaholic-order-payment-type:
-        tab: 'lovata.shopaholic::lang.tabs.permissions'
+        tab: 'lovata.shopaholic::lang.tab.permissions'
         label: 'lovata.ordersshopaholic::lang.permission.payment_type'
     shopaholic-delivery-type:
-        tab: 'lovata.shopaholic::lang.tabs.permissions'
+        tab: 'lovata.shopaholic::lang.tab.permissions'
         label: 'lovata.ordersshopaholic::lang.permission.delivery_type'

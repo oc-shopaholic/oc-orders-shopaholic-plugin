@@ -8,6 +8,7 @@ fields:
     price_block:
         span: full
         type: partial
+        path: ~/plugins/lovata/ordersshopaholic/controllers/orders/_price_block.htm
         context:
             - update
             - preview
@@ -53,6 +54,7 @@ tabs:
                 - update
                 - preview
             type: partial
+            path: ~/plugins/lovata/ordersshopaholic/controllers/orders/_offer.htm
             tab: 'lovata.ordersshopaholic::lang.tab.offers_info'
         property[email]:
            label: 'lovata.toolbox::lang.field.email'
