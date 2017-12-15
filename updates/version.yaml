@@ -10,3 +10,5 @@
     - seeder_default_status.php
 1.0.1:
     - 'Fix permission tab label in config'
+1.0.2:
+    - 'Remove php short tags from orders/_price_block.htm'
