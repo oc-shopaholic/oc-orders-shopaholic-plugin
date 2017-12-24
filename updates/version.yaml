@@ -12,3 +12,6 @@
     - 'Fix permission tab label in config'
 1.0.2:
     - 'Remove php short tags from orders/_price_block.htm'
+1.0.3:
+    - 'Change method for generation secret_key field in Order model'
+    - seeder_update_order_secret_key.php

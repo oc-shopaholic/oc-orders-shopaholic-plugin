@@ -1,7 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Models;
 
 use Model;
-use Hash;
 use Carbon\Carbon;
 
 use Kharanenka\Scope\UserBelongsTo;
@@ -261,7 +260,16 @@ class Order extends Model
             }
         } while (!$bAvailableNumber);
 
-        $this->secret_key = Hash::make($this->order_number);
+        $this->secret_key = $this->generateSecretKey();
+    }
+
+    /**
+     * Generate secret key
+     * @return string
+     */
+    public function generateSecretKey()
+    {
+        return md5($this->order_number . (string) microtime(true));
     }
 
     /**
