@@ -35,7 +35,9 @@ class PaymentMethods extends Controller
      */
     public function onReorder()
     {
+        $obResult = parent::onReorder();
         Event::fire('shopaholic.payment_method.update.sorting');
-        return parent::onReorder();
+
+        return $obResult;
     }
 }

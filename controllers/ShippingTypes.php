@@ -14,6 +14,7 @@ class ShippingTypes extends Controller
     public $implement = [
         'Backend.Behaviors.ListController',
         'Backend.Behaviors.FormController',
+        'Backend.Behaviors.ReorderController',
     ];
 
     public $listConfig = 'config_list.yaml';
@@ -34,7 +35,9 @@ class ShippingTypes extends Controller
      */
     public function onReorder()
     {
+        $obResult =  parent::onReorder();
         Event::fire('shopaholic.shipping_type.update.sorting');
-        return parent::onReorder();
+
+        return $obResult;
     }
 }
