@@ -67,10 +67,7 @@ class Order extends Model
         'offers_total_price',
     ];
 
-    protected $casts = [
-        'property' => 'array',
-    ];
-
+    public $jsonable = ['property'];
     protected $dates = ['created_at', 'updated_at'];
 
     public $fillable = [
