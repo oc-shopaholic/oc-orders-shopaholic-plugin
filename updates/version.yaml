@@ -16,3 +16,5 @@
     - 'Change method for generation secret_key field in Order model'
     - seeder_update_order_secret_key.php
 1.0.4: !!! Adding additional cache cleaning for the sorted list of payment methods and shipping types, after the creation of a new element. Requires Toolbox plugin version 1.3.0 and later.
+1.1.0:
+    - 'The "rewrite" and "increase" flags are removed from the method of updating the quantity of items in the cart'
