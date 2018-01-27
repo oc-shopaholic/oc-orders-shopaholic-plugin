@@ -36,6 +36,12 @@ navigation:
                 icon: icon-random
                 permissions:
                     - shopaholic-order-status
+            orders-shopaholic-menu-property:
+                label: 'lovata.ordersshopaholic::lang.menu.property'
+                url: lovata/ordersshopaholic/properties
+                icon: icon-list
+                permissions:
+                    - shopaholic-order-property
 permissions:
     shopaholic-order:
         tab: 'lovata.shopaholic::lang.tab.permissions'
@@ -49,3 +55,6 @@ permissions:
     shopaholic-delivery-type:
         tab: 'lovata.shopaholic::lang.tab.permissions'
         label: 'lovata.ordersshopaholic::lang.permission.delivery_type'
+    shopaholic-order-property:
+        tab: 'lovata.shopaholic::lang.tab.permissions'
+        label: 'lovata.ordersshopaholic::lang.permission.property'

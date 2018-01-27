@@ -85,6 +85,8 @@ class OrderProcessor
                 continue;
             }
 
+            $bOrderHasOffers = true;
+
             //Get offer object
             /** @var \Lovata\Shopaholic\Models\Offer $obOffer */
             $obOffer = $obOfferItem->getObject();
@@ -120,7 +122,6 @@ class OrderProcessor
             
             //Attach offer to order
             $obOrder->offer()->attach($obOffer->id, $arPivotData);
-            $bOrderHasOffers = true;
         }
         
         if(!Result::status() || !$bOrderHasOffers) {

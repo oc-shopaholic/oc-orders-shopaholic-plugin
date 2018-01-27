@@ -23,7 +23,7 @@
     'message'        => [
         'empty_cart'          => 'Cart is empty',
         'offer_not_found'     => 'Offer not found',
-        'insufficient_amount' => 'The offer is out of stock',
+        'insufficient_amount' => 'Offer is not available',
     ],
     'field'          => [
         'status'       => 'Status',
@@ -45,9 +45,10 @@
     ],
     'settings' => [
         'cart_cookie_lifetime'     => 'Life time of cart ID in cookie (min.)',
-        'check_offer_quantity'     => 'When checking the available quantity of offers when creating an order',
+        'check_offer_quantity'     => 'Check the available quantity of the product when creating an order',
         'decrement_offer_quantity' => 'Automatic reduction of the available quantity of offers when creating an order',
         'create_new_user'          => 'Automatically create a new user when creating an order',
+        'generate_fake_email'      => 'When creating a new user, generate a fake email, if the email field is empty',
 
         'order_create_email' => 'Email for sending mail when creating an order',
     ],
@@ -56,6 +57,7 @@
         'statuses'        => 'Statuses',
         'payment_methods' => 'Payment methods',
         'shipping_types'  => 'Shipping types',
+        'property'        => 'Addition properties',
     ],
     'order'         => [
         'name'          => 'order',
@@ -73,10 +75,15 @@
         'name'          => 'shipping type',
         'list_title'    => 'Shipping types',
     ],
+    'property' => [
+        'name'       => 'property',
+        'list_title' => 'Property list',
+    ],
     'permission'     => [
         'order'         => 'Manage orders',
         'status'        => 'Manage status list',
         'payment_type'  => 'Manage payment methods',
         'delivery_type' => 'Manage payment methods',
+        'property'      => 'Manage additional properties of order',
     ],
 ];

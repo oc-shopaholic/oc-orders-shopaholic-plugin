@@ -1,0 +1,16 @@
+name: 'lovata.ordersshopaholic::lang.property.name'
+modelClass: Lovata\OrdersShopaholic\Models\Property
+form: $/lovata/ordersshopaholic/models/property/fields.yaml
+defaultRedirect: lovata/ordersshopaholic/properties
+create:
+    title: 'backend::lang.form.create_title'
+    redirect: 'lovata/ordersshopaholic/properties/update/:id'
+    redirectClose: lovata/ordersshopaholic/properties
+    flashSave: 'lovata.toolbox::lang.message.create_success'
+update:
+    title: 'backend::lang.form.update_title'
+    redirect: lovata/ordersshopaholic/properties
+    redirectClose: lovata/ordersshopaholic/properties
+    flashSave: 'lovata.toolbox::lang.message.update_success'
+    flashDelete: 'lovata.toolbox::lang.message.delete_success'
+preview: {  }

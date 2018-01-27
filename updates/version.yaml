@@ -21,3 +21,7 @@
     - '$casts property is replaced with $jsonable property in the Order model'
 1.1.0:
     - 'The "rewrite" and "increase" flags are removed from the method of updating the quantity of items in the cart'
+1.2.0:
+    - 'Add additional properties for Order model. Add settings for validation the email field as required.'
+    - table_create_addition_properties.php
+    - seeder_default_order_properties.php
