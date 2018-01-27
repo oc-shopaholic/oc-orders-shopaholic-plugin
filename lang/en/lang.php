@@ -23,7 +23,7 @@
     'message'        => [
         'empty_cart'          => 'Cart is empty',
         'offer_not_found'     => 'Offer not found',
-        'insufficient_amount' => 'The offer is out of stock',
+        'insufficient_amount' => 'Offer is not available',
     ],
     'field'          => [
         'status'       => 'Status',
@@ -48,6 +48,7 @@
         'check_offer_quantity'     => 'Check the available quantity of the product when creating an order',
         'decrement_offer_quantity' => 'Automatic reduction of the available quantity of offers when creating an order',
         'create_new_user'          => 'Automatically create a new user when creating an order',
+        'generate_fake_email'      => 'When creating a new user, generate a fake email, if the email field is empty',
 
         'order_create_email' => 'Email for sending mail when creating an order',
     ],

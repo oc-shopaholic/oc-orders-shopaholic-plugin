@@ -64,6 +64,12 @@ class ExtendFieldHandler
                 'span'          => 'left',
                 'type'          => 'checkbox',
             ],
+            'generate_fake_email' => [
+                'tab'           => 'lovata.ordersshopaholic::lang.tab.order_settings',
+                'label'         => 'lovata.ordersshopaholic::lang.settings.generate_fake_email',
+                'span'          => 'left',
+                'type'          => 'checkbox',
+            ],
         ]);
     }
 }

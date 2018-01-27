@@ -94,8 +94,8 @@ class MakeOrder extends ComponentSubmitForm
             return null;
         }
 
-        $arOrderData = Input::get('order');
-        $arUserData = Input::get('user');
+        $arOrderData = (array) Input::get('order');
+        $arUserData = (array) Input::get('user');
         if(empty($arOrderData) && empty($arUserData)) {
             return null;
         }
@@ -111,8 +111,8 @@ class MakeOrder extends ComponentSubmitForm
      */
     public function onCreate()
     {
-        $arOrderData = Input::get('order');
-        $arUserData = Input::get('user');
+        $arOrderData = (array) Input::get('order');
+        $arUserData = (array) Input::get('user');
 
         $this->create($arOrderData, $arUserData);
 
@@ -126,8 +126,8 @@ class MakeOrder extends ComponentSubmitForm
      */
     public function create($arOrderData, $arUserData)
     {
-        $this->arOrderData = $arOrderData;
-        $this->arUserData = $arUserData;
+        $this->arOrderData = (array) $arOrderData;
+        $this->arUserData = (array) $arUserData;
 
         //Find or create new user
         if(empty($this->obUser) && $this->bCreateNewUser) {
@@ -264,15 +264,11 @@ class MakeOrder extends ComponentSubmitForm
         $sPassword = md5(microtime(true));
 
         //Get user email
-        if(isset($this->arUserData['email']) && !empty($this->arUserData['email'])) {
-            $sEmail = $this->arUserData['email'];
-        } else {
-            $sEmail = 'fake' . $sPassword . '@fake.com';
+        if(Settings::getValue('generate_fake_email') && (!isset($this->arUserData['email']) || empty($this->arUserData['email']))) {
+            $this->arUserData['email'] = 'fake' . $sPassword . '@fake.com';
         }
 
         $arUserData = $this->arUserData;
-        
-        $arUserData['email'] = $sEmail;
         $arUserData['password'] = $sPassword;
         $arUserData['password_confirmation'] = $sPassword;
 
