@@ -52,10 +52,8 @@ class Cart extends ComponentBase
     public function onUpdate()
     {
         $arRequestData = Input::get('cart');
-        $bRewrite = Input::get('rewrite');
-        $bIncrement = Input::get('increment');
         
-        $this->obCartData->update($arRequestData, $bRewrite, $bIncrement);
+        $this->obCartData->update($arRequestData);
         return Result::get();
     }
 

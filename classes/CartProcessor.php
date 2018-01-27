@@ -180,11 +180,9 @@ class CartProcessor
     /**
      * Updates offer quantity in current shopping cart (rewrite or increment/decrement).
      * @param $arOfferList
-     * @param bool $bRewriteQuantity
-     * @param bool $bIncrement
      * @return bool
      */
-    public function update($arOfferList, $bRewriteQuantity = true, $bIncrement = true)
+    public function update($arOfferList)
     {
         if(empty($this->obCart) || empty($arOfferList) || !is_array($arOfferList)) {
             $sMessage = Lang::get('lovata.toolbox::lang.message.e_not_correct_request');
@@ -205,21 +203,7 @@ class CartProcessor
                 continue;
             }
 
-            //if rewrite quantity flag is true offer quantity in cart will be rewritten
-            if($bRewriteQuantity) {
-                $obCartElement->quantity = $arOfferData['quantity'];
-            } elseif($bIncrement) {
-                //depending on increment flag set in method params we increment or decrement offer quantity
-                $obCartElement->quantity += $arOfferData['quantity'];
-            } elseif(!$bIncrement) {
-
-                if($arOfferData['quantity'] < $obCartElement->quantity) {
-                    $obCartElement->quantity -= $arOfferData['quantity'];
-                } else {
-                    $obCartElement->quantity = 1;
-                }
-            }
-
+            $obCartElement->quantity = $arOfferData['quantity'];
             $obCartElement->save();
         }
 

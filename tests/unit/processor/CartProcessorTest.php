@@ -182,55 +182,6 @@ class CartProcessorTest extends CommonTest
         self::assertEquals($this->obOffer->id, $obCartElementItem->offer_id, $sErrorMessage);
         self::assertEquals(10, $obCartElementItem->quantity, $sErrorMessage);
 
-        $arOfferList = [
-            [
-                'offer_id' => $this->obOffer->id,
-                'quantity' => 20,
-            ],
-        ];
-
-        $obCartProcessor->update($arOfferList, true, true);
-
-        $obCartElementList = $obCartProcessor->get();
-        $obCartElementItem = $obCartElementList->first();
-
-        self::assertEquals(20, $obCartElementItem->quantity, $sErrorMessage);
-
-        $arOfferList = [
-            [
-                'offer_id' => $this->obOffer->id,
-                'quantity' => 5,
-            ],
-        ];
-
-        $obCartProcessor->update($arOfferList, false, true);
-
-        $obCartElementList = $obCartProcessor->get();
-        $obCartElementItem = $obCartElementList->first();
-
-        self::assertEquals(25, $obCartElementItem->quantity, $sErrorMessage);
-
-        $obCartProcessor->update($arOfferList, false, false);
-
-        $obCartElementList = $obCartProcessor->get();
-        $obCartElementItem = $obCartElementList->first();
-
-        self::assertEquals(20, $obCartElementItem->quantity, $sErrorMessage);
-
-        $arOfferList = [
-            [
-                'offer_id' => $this->obOffer->id,
-                'quantity' => 30,
-            ],
-        ];
-
-        $obCartProcessor->update($arOfferList, false, false);
-
-        $obCartElementList = $obCartProcessor->get();
-        $obCartElementItem = $obCartElementList->first();
-
-        self::assertEquals(1, $obCartElementItem->quantity, $sErrorMessage);
-
         $obCartProcessor->clear();
     }
 
