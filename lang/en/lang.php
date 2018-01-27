@@ -57,6 +57,7 @@
         'statuses'        => 'Statuses',
         'payment_methods' => 'Payment methods',
         'shipping_types'  => 'Shipping types',
+        'property'        => 'Addition properties',
     ],
     'order'         => [
         'name'          => 'order',
@@ -74,10 +75,15 @@
         'name'          => 'shipping type',
         'list_title'    => 'Shipping types',
     ],
+    'property' => [
+        'name'       => 'property',
+        'list_title' => 'Property list',
+    ],
     'permission'     => [
         'order'         => 'Manage orders',
         'status'        => 'Manage status list',
         'payment_type'  => 'Manage payment methods',
         'delivery_type' => 'Manage payment methods',
+        'property'      => 'Manage additional properties of order',
     ],
 ];

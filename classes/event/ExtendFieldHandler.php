@@ -1,6 +1,9 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Event;
 
 use Lovata\Shopaholic\Models\Settings;
+use Lovata\OrdersShopaholic\Models\Order;
+use Lovata\OrdersShopaholic\Models\Property;
+use Lovata\OrdersShopaholic\Controllers\Orders;
 use Lovata\OrdersShopaholic\Classes\CartProcessor;
 
 /**
@@ -18,6 +21,7 @@ class ExtendFieldHandler
     {
         $obEvent->listen('backend.form.extendFields', function($obWidget) {
             $this->extendSettingsFields($obWidget);
+            $this->extendOrderFields($obWidget);
         });
     }
 
@@ -71,5 +75,41 @@ class ExtendFieldHandler
                 'type'          => 'checkbox',
             ],
         ]);
+    }
+
+    /**
+     * Extend fields for Order model
+     * @param \Backend\Widgets\Form $obWidget
+     */
+    public function extendOrderFields($obWidget)
+    {
+        if (!$obWidget->getController() instanceof Orders) {
+            return;
+        }
+
+        // Only for the Order model
+        if (!$obWidget->model instanceof Order || $obWidget->context != 'update') {
+            return;
+        }
+
+        $obPropertyList = Property::active()->orderBy('sort_order', 'asc')->get();
+        if ($obPropertyList->isEmpty()) {
+            return;
+        }
+
+        //Get widget data for properties
+        $arAdditionPropertyData = [];
+        /** @var Property $obProperty */
+        foreach ($obPropertyList as $obProperty) {
+            $arPropertyData = $obProperty->getWidgetData();
+            if (!empty($arPropertyData)) {
+                $arAdditionPropertyData[Property::NAME.'['.$obProperty->code.']'] = $arPropertyData;
+            }
+        }
+
+        // Add fields
+        if (!empty($arAdditionPropertyData)) {
+            $obWidget->addTabFields($arAdditionPropertyData);
+        }
     }
 }

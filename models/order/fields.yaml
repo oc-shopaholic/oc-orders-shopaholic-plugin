@@ -56,31 +56,3 @@ tabs:
             type: partial
             path: ~/plugins/lovata/ordersshopaholic/controllers/orders/_offer.htm
             tab: 'lovata.ordersshopaholic::lang.tab.offers_info'
-        property[email]:
-           label: 'lovata.toolbox::lang.field.email'
-           span: left
-           oc.commentPosition: ''
-           disabled: 1
-           type: text
-           tab: 'lovata.ordersshopaholic::lang.field.user'
-        property[name]:
-           label: 'lovata.buddies::lang.field.name'
-           span: left
-           oc.commentPosition: ''
-           disabled: 1
-           type: text
-           tab: 'lovata.ordersshopaholic::lang.field.user'
-        property[last_name]:
-           label: 'lovata.buddies::lang.field.last_name'
-           span: left
-           oc.commentPosition: ''
-           disabled: 1
-           type: text
-           tab: 'lovata.ordersshopaholic::lang.field.user'
-        property[phone]:
-           label: 'lovata.toolbox::lang.field.phone'
-           span: left
-           oc.commentPosition: ''
-           disabled: 1
-           type: text
-           tab: 'lovata.ordersshopaholic::lang.field.user'
