@@ -45,7 +45,7 @@
     ],
     'settings' => [
         'cart_cookie_lifetime'     => 'Life time of cart ID in cookie (min.)',
-        'check_offer_quantity'     => 'When checking the available quantity of offers when creating an order',
+        'check_offer_quantity'     => 'Check the available quantity of the product when creating an order',
         'decrement_offer_quantity' => 'Automatic reduction of the available quantity of offers when creating an order',
         'create_new_user'          => 'Automatically create a new user when creating an order',
 
