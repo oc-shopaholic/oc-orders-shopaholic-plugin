@@ -1,4 +1,4 @@
-<?
+<?php
 
 /** @var \Lovata\OrdersShopaholic\Models\Order $formModel */
 /** @var \Lovata\OrdersShopaholic\Models\Order $obOrder */
@@ -22,4 +22,4 @@ if(!isset($obOrder) && isset($formModel)) {
         <p><strong><span class="order-shopaholic-total-price"><?= $obOrder->total_price ?></span> <?= \Lovata\Shopaholic\Models\Settings::getValue('currency')?></strong></p>
     </div>
 </div>
-<?}?>
+<?php }?>

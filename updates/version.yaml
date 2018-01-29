@@ -25,3 +25,5 @@
     - 'Add additional properties for Order model. Add settings for validation the email field as required.'
     - table_create_addition_properties.php
     - seeder_default_order_properties.php
+1.2.1:
+    - 'Remove php short tags from orders/_price_block.htm'
