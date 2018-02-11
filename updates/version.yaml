@@ -27,3 +27,6 @@
     - seeder_default_order_properties.php
 1.2.1:
     - 'Remove php short tags from orders/_price_block.htm'
+1.3.0:
+    - 'Add "price" field in ShippingType model'
+    - table_update_shipping_type_add_price_filed.php

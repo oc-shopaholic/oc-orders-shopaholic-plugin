@@ -3,17 +3,22 @@
 use Lovata\Toolbox\Classes\Item\ElementItem;
 
 use Lovata\Shopaholic\Plugin;
+use Lovata\Shopaholic\Models\Settings;
 use Lovata\OrdersShopaholic\Models\ShippingType;
 
 /**
  * Class ShippingTypeItem
  * @package Lovata\Shopaholic\Classes\Item
- * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
+ * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  *
  * @property        $id
  * @property string $name
  * @property string $code
  * @property string $preview_text
+ *
+ * @property string $price
+ * @property float  $price_value
+ * @property string $currency
  */
 class ShippingTypeItem extends ElementItem
 {
@@ -59,12 +64,23 @@ class ShippingTypeItem extends ElementItem
         }
 
         $arResult = [
-            'id'            => $this->obElement->id,
-            'name'          => $this->obElement->name,
-            'code'          => $this->obElement->code,
-            'preview_text'  => $this->obElement->preview_text,
+            'id'           => $this->obElement->id,
+            'name'         => $this->obElement->name,
+            'code'         => $this->obElement->code,
+            'price'        => $this->obElement->price,
+            'price_value'  => $this->obElement->getPriceValue(),
+            'preview_text' => $this->obElement->preview_text,
         ];
 
         return $arResult;
+    }
+
+    /**
+     * Get currency value
+     * @return null|string
+     */
+    protected function getCurrencyAttribute()
+    {
+        return Settings::getValue('currency');
     }
 }

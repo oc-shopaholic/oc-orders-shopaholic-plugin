@@ -129,14 +129,14 @@ class Order extends Model
 
     /**
      * Get total price value
-     * @return double
+     * @return float
      */
     public function getTotalPriceValue()
     {
         if(isset($this->attributes['total_price'])) {
             return (float) $this->attributes['total_price'];
         }
-        
+
         return 0;
     }
     
@@ -153,7 +153,7 @@ class Order extends Model
 
     /**
      * Get total price value
-     * @return double
+     * @return float
      */
     public function getOffersTotalPriceValue()
     {
@@ -174,15 +174,11 @@ class Order extends Model
 
     /**
      * Get shipping price value
-     * @return double
+     * @return float
      */
     public function getShippingPriceValue()
     {
-        if(isset($this->attributes['shipping_price'])) {
-            return $this->attributes['shipping_price'];
-        }
-        
-        return 0;
+        return $this->getAttributeFromArray('shipping_price');
     }
 
     /**
