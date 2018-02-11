@@ -21,6 +21,7 @@ class ShippingTypeItemTest extends CommonTest
         'name'         => 'name',
         'code'         => 'code',
         'preview_text' => 'preview_text',
+        'price'        => '1 200,45',
     ];
 
     /**
@@ -37,6 +38,8 @@ class ShippingTypeItemTest extends CommonTest
 
         $arCreatedData = $this->arCreateData;
         $arCreatedData['id'] = $this->obElement->id;
+        $arCreatedData['price'] = '1200.45';
+        $arCreatedData['price_value'] = 1200.45;
 
         //Check item fields
         $obItem = ShippingTypeItem::make($this->obElement->id);

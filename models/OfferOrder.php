@@ -45,20 +45,20 @@ class OfferOrder extends Pivot
     
     /**
      * Get price value
-     * @return double
+     * @return float
      */
     public function getPriceValue()
     {
-        return $this->attributes['price'];
+        return $this->getAttributeFromArray('price');
     }
 
     /**
      * Get price value
-     * @return double
+     * @return float
      */
     public function getOldPriceValue()
     {
-        return $this->attributes['old_price'];
+        return $this->getAttributeFromArray('old_price');
     }
 
     /**

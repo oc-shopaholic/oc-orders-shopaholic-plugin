@@ -14,6 +14,10 @@ fields:
         oc.commentPosition: ''
         span: full
         type: text
+    price:
+        label: 'lovata.shopaholic::lang.field.price'
+        span: full
+        type: text
     preview_text:
         label: 'lovata.toolbox::lang.field.description'
         span: full

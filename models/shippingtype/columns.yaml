@@ -13,6 +13,11 @@ columns:
         type: text
         searchable: true
         sortable: true
+    price:
+        label: 'lovata.shopaholic::lang.field.price'
+        type: text
+        searchable: false
+        sortable: true
     id:
         label: 'lovata.toolbox::lang.field.id'
         type: text
