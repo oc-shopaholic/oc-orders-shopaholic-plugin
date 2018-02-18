@@ -32,7 +32,7 @@ class ExtendFieldHandler
     protected function extendSettingsFields($obWidget)
     {
         // Only for the Settings controller
-        if (!$obWidget->getController() instanceof \System\Controllers\Settings) {
+        if (!$obWidget->getController() instanceof \System\Controllers\Settings || $obWidget->isNested) {
             return;
         }
 
@@ -83,7 +83,7 @@ class ExtendFieldHandler
      */
     public function extendOrderFields($obWidget)
     {
-        if (!$obWidget->getController() instanceof Orders) {
+        if (!$obWidget->getController() instanceof Orders || $obWidget->isNested) {
             return;
         }
 
