@@ -5,7 +5,7 @@ use Carbon\Carbon;
 
 use Kharanenka\Scope\UserBelongsTo;
 
-use Lovata\Buddies\Models\User;
+use Lovata\Toolbox\Classes\Helper\UserHelper;
 use Lovata\Shopaholic\Models\Offer;
 use Lovata\Shopaholic\Classes\Helper\PriceHelper;
 
@@ -42,8 +42,8 @@ use Lovata\Shopaholic\Classes\Helper\PriceHelper;
  * @property Status $status
  * @method static Status|\October\Rain\Database\Relations\BelongsTo status()
  *
- * @property User $user
- * @method static User|\October\Rain\Database\Relations\BelongsTo user()
+ * @property \Lovata\Buddies\Models\User $user
+ * @method static \Lovata\Buddies\Models\User|\October\Rain\Database\Relations\BelongsTo user()
  *
  * @property ShippingType $shipping_type
  * @method static ShippingType|\October\Rain\Database\Relations\BelongsTo shipping_type()
@@ -92,10 +92,23 @@ class Order extends Model
 
     public $belongsTo = [
         'status'         => [Status::class, 'order' => 'sort_order asc'],
-        'user'           => [User::class],
         'payment_method' => [PaymentMethod::class, 'order' => 'sort_order asc'],
         'shipping_type'  => [ShippingType::class, 'order' => 'sort_order asc'],
     ];
+
+    /**
+     * Order constructor.
+     * @param array $attributes
+     */
+    public function __construct(array $attributes = [])
+    {
+        $sUserModelClass = UserHelper::instance()->getUserModel();
+        if (!empty($sUserModelClass)) {
+            $this->belongsTo['user'] = [$sUserModelClass];
+        }
+
+        parent::__construct($attributes);
+    }
 
     /**
      * Get orders by number

@@ -33,7 +33,7 @@ use Lovata\OrdersShopaholic\Classes\Event\ProductModelHandler;
  */
 class Plugin extends PluginBase
 {
-    public $require = ['Lovata.Shopaholic', 'Lovata.Toolbox', 'Lovata.Buddies'];
+    public $require = ['Lovata.Shopaholic', 'Lovata.Toolbox'];
 
     /**
      * Register component plugin method

@@ -5,11 +5,10 @@ use Input;
 use System\Classes\PluginManager;
 
 use Kharanenka\Helper\Result;
+use Lovata\Toolbox\Classes\Helper\UserHelper;
 use Lovata\Toolbox\Classes\Component\ComponentSubmitForm;
 use Lovata\Toolbox\Traits\Helpers\TraitValidationHelper;
 
-use Lovata\Buddies\Models\User;
-use Lovata\Buddies\Facades\AuthHelper;
 use Lovata\Shopaholic\Models\Settings;
 use Lovata\OrdersShopaholic\Classes\OrderProcessor;
 
@@ -32,7 +31,10 @@ class MakeOrder extends ComponentSubmitForm
 
     /** @var \Lovata\OrdersShopaholic\Classes\OrderProcessor */
     protected $obOrderProcessor;
-    
+
+    /** @var UserHelper */
+    protected $obUserHelper;
+
     /**
      * @return array
      */
@@ -76,8 +78,10 @@ class MakeOrder extends ComponentSubmitForm
      */
     public function init()
     {
+        $this->obUserHelper = UserHelper::instance();
+
         $this->bCreateNewUser = Settings::getValue('create_new_user');
-        $this->obUser = AuthHelper::getUser();
+        $this->obUser = $this->obUserHelper->getUser();
 
         $this->obOrderProcessor = App::make(OrderProcessor::class);
 
@@ -176,7 +180,8 @@ class MakeOrder extends ComponentSubmitForm
      */
     protected function findOrCreateUser()
     {
-        if(!empty($this->obUser) || empty($this->arUserData)) {
+        $sUserPluginName = UserHelper::instance()->getPluginName();
+        if(!empty($this->obUser) || empty($this->arUserData) || empty($sUserPluginName)) {
             return;
         }
 
@@ -200,9 +205,13 @@ class MakeOrder extends ComponentSubmitForm
 
         //Find user by email
         $sEmail = $this->arUserData['email'];
-        $this->obUser = User::getByEmail($sEmail)->first();
-        $this->processUserPhone();
-        $this->processUserPhoneList();
+        $this->obUser = $this->obUserHelper->findUserByEmail($sEmail);
+
+        //if Buddies plugin is installed, then we need to process "phone" field
+        if ($this->obUserHelper->getPluginName() == 'Lovata.Buddies') {
+            $this->processUserPhone();
+            $this->processUserPhoneList();
+        }
     }
 
     /**
@@ -274,7 +283,7 @@ class MakeOrder extends ComponentSubmitForm
 
         try {
             //Create new user
-            $this->obUser = AuthHelper::register($arUserData, true);
+            $this->obUser = $this->obUserHelper->register($arUserData, true);
         } catch (\October\Rain\Database\ModelException $obException) {
             $this->processValidationError($obException);
             return;

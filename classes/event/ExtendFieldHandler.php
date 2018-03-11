@@ -1,5 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Event;
 
+use Lovata\Toolbox\Classes\Helper\UserHelper;
 use Lovata\Shopaholic\Models\Settings;
 use Lovata\OrdersShopaholic\Models\Order;
 use Lovata\OrdersShopaholic\Models\Property;
@@ -41,8 +42,7 @@ class ExtendFieldHandler
             return;
         }
 
-        // Add an extra birthday field
-        $obWidget->addTabFields([
+        $arAdditionFieldList = [
             'cart_cookie_lifetime' => [
                 'tab'           => 'lovata.ordersshopaholic::lang.tab.order_settings',
                 'label'         => 'lovata.ordersshopaholic::lang.settings.cart_cookie_lifetime',
@@ -62,6 +62,16 @@ class ExtendFieldHandler
                 'span'          => 'left',
                 'type'          => 'checkbox',
             ],
+        ];
+
+        $obWidget->addTabFields($arAdditionFieldList);
+        $sUserPluginName = UserHelper::instance()->getPluginName();
+        if (empty($sUserPluginName)) {
+            return;
+        }
+
+        // Add an extra birthday field
+        $obWidget->addTabFields([
             'create_new_user' => [
                 'tab'           => 'lovata.ordersshopaholic::lang.tab.order_settings',
                 'label'         => 'lovata.ordersshopaholic::lang.settings.create_new_user',

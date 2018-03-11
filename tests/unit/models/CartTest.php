@@ -53,6 +53,6 @@ class CartTest extends PluginTestCase
         $obModel = new Cart();
         self::assertNotEmpty($obModel->belongsTo, $sErrorMessage);
         self::assertArrayHasKey('user', $obModel->belongsTo, $sErrorMessage);
-        self::assertEquals(User::class, $obModel->belongsTo['user'], $sErrorMessage);
+        self::assertEquals(User::class, array_shift($obModel->belongsTo['user']), $sErrorMessage);
     }
 }

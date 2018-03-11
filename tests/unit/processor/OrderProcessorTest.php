@@ -56,12 +56,14 @@ class OrderProcessorTest extends CommonTest
     ];
 
     protected $arUserData = [
-        'email'       => 'email@email.com',
-        'name'        => 'name',
-        'last_name'   => 'last_name',
-        'middle_name' => 'middle_name',
-        'phone_list'  => ['123', '321'],
-        'property'    => ['birthday' => '2017-10-21'],
+        'email'                 => 'email@email.com',
+        'name'                  => 'name',
+        'last_name'             => 'last_name',
+        'middle_name'           => 'middle_name',
+        'phone_list'            => ['123', '321'],
+        'property'              => ['birthday' => '2017-10-21'],
+        'password'              => 'test',
+        'password_confirmation' => 'test',
     ];
 
     /**
