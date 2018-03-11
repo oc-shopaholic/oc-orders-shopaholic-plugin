@@ -17,6 +17,10 @@ use Lovata\Shopaholic\Classes\Item\OfferItem;
  */
 class OrderProcessor
 {
+    const EVENT_ORDER_CREATED = 'shopaholic.order.created';
+    const EVENT_ORDER_CREATED_USER_MAIL_DATA = 'shopaholic.order.created.user.template.data';
+    const EVENT_ORDER_CREATED_MANAGER_MAIL_DATA = 'shopaholic.order.created.manager.template.data';
+
     /** @var \Lovata\Buddies\Models\User */
     protected $obUser;
     
@@ -138,7 +142,7 @@ class OrderProcessor
         DB::commit();
         $obOrder->save();
 
-        Event::fire('shopaholic.order.created', $obOrder);
+        Event::fire(self::EVENT_ORDER_CREATED, $obOrder);
         
         $this->obCartProcessor->clear();
         
