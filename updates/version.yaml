@@ -16,7 +16,7 @@
     - 'Change method for generation secret_key field in Order model'
     - seeder_update_order_secret_key.php
 1.0.4:
-    - '!!! Adding additional cache cleaning for the sorted list of payment methods and shipping types, after the creation of a new element. Requires Toolbox plugin version 1.3.0 and later.'
+    - 'Adding additional cache cleaning for the sorted list of payment methods and shipping types, after the creation of a new element. Requires Toolbox plugin version 1.3.0 and later.'
 1.0.5:
     - '$casts property is replaced with $jsonable property in the Order model'
 1.1.0:
@@ -32,3 +32,5 @@
     - table_update_shipping_type_add_price_filed.php
 1.3.1:
     - 'Added check for isNested flag when expanding forms'
+1.4.0:
+    - 'Add integration with RainLab.User plugin. Added sending emails to the user and managers after the order was created. Add events "shopaholic.order.created", "shopaholic.order.created.user.template.data", "shopaholic.order.created.manager.template.data". Requires Toolbox plugin version 1.7.0 and later.'
