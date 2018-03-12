@@ -25,7 +25,7 @@
         'offer_not_found'     => 'Offer not found',
         'insufficient_amount' => 'Offer is not available',
     ],
-    'field'          => [
+    'field'    => [
         'status'       => 'Status',
         'order_number' => 'Order number',
         'user'         => 'Buyer',
@@ -44,11 +44,15 @@
         'payment_method'     => 'Payment method',
     ],
     'settings' => [
-        'cart_cookie_lifetime'     => 'Life time of cart ID in cookie (min.)',
-        'check_offer_quantity'     => 'Check the available quantity of the product when creating an order',
-        'decrement_offer_quantity' => 'Automatic reduction of the available quantity of offers when creating an order',
-        'create_new_user'          => 'Automatically create a new user when creating an order',
-        'generate_fake_email'      => 'When creating a new user, generate a fake email, if the email field is empty',
+        'cart_cookie_lifetime'                 => 'Life time of cart ID in cookie (min.)',
+        'check_offer_quantity'                 => 'Check the available quantity of the product when creating an order',
+        'decrement_offer_quantity'             => 'Automatic reduction of the available quantity of offers when creating an order',
+        'create_new_user'                      => 'Automatically create a new user when creating an order',
+        'generate_fake_email'                  => 'When creating a new user, generate a fake email, if the email field is empty',
+        'send_email_after_creating_order'      => 'Send email after creating an order',
+        'creating_order_mail_template'         => 'Mail template of creating orders (for users)',
+        'creating_order_manager_mail_template' => 'Mail template of creating orders (for managers)',
+        'creating_order_manager_email_list'    => 'Managers email list',
 
         'order_create_email' => 'Email for sending mail when creating an order',
     ],

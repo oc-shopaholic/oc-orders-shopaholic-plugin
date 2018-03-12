@@ -6,8 +6,7 @@ use Event;
 use October\Rain\Support\Traits\Singleton;
 use Kharanenka\Helper\Result;
 
-use Lovata\Buddies\Facades\AuthHelper;
-
+use Lovata\Toolbox\Classes\Helper\UserHelper;
 use Lovata\Shopaholic\Classes\Item\OfferItem;
 use Lovata\Shopaholic\Models\Settings;
 use Lovata\OrdersShopaholic\Models\Cart;
@@ -61,7 +60,7 @@ class CartProcessor
     public function init($iCartID = null)
     {
         //Get auth user
-        $this->obUser = AuthHelper::getUser();
+        $this->obUser = UserHelper::instance()->getUser();
 
         $this->obCart = null;
         if(!empty($this->obUser)) {

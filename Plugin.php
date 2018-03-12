@@ -1,5 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic;
 
+use Lang;
 use Event;
 use System\Classes\PluginBase;
 
@@ -24,6 +25,7 @@ use Lovata\OrdersShopaholic\Classes\Event\ShippingTypeModelHandler;
 use Lovata\OrdersShopaholic\Classes\Event\ExtendFieldHandler;
 use Lovata\OrdersShopaholic\Classes\Event\OfferModelHandler;
 use Lovata\OrdersShopaholic\Classes\Event\ProductModelHandler;
+use Lovata\OrdersShopaholic\Classes\Event\OrderModelHandler;
 
 /**
  *
@@ -33,7 +35,7 @@ use Lovata\OrdersShopaholic\Classes\Event\ProductModelHandler;
  */
 class Plugin extends PluginBase
 {
-    public $require = ['Lovata.Shopaholic', 'Lovata.Toolbox', 'Lovata.Buddies'];
+    public $require = ['Lovata.Shopaholic', 'Lovata.Toolbox'];
 
     /**
      * Register component plugin method
@@ -47,6 +49,17 @@ class Plugin extends PluginBase
             'Lovata\OrdersShopaholic\Components\OrderPage'         => 'OrderPage',
             'Lovata\OrdersShopaholic\Components\ShippingTypeList'  => 'ShippingTypeList',
             'Lovata\OrdersShopaholic\Components\PaymentMethodList' => 'PaymentMethodList',
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function registerMailTemplates()
+    {
+        return [
+            'lovata.ordersshopaholic::mail.create_order_manager' => Lang::get('lovata.ordersshopaholic::mail.create_order_manager'),
+            'lovata.ordersshopaholic::mail.create_order_user'    => Lang::get('lovata.ordersshopaholic::mail.create_order_user'),
         ];
     }
 
@@ -80,5 +93,6 @@ class Plugin extends PluginBase
         Event::subscribe(ExtendFieldHandler::class);
         Event::subscribe(OfferModelHandler::class);
         Event::subscribe(ProductModelHandler::class);
+        Event::subscribe(OrderModelHandler::class);
     }
 }

@@ -1,5 +1,8 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Event;
 
+use System\Models\MailTemplate;
+
+use Lovata\Toolbox\Classes\Helper\UserHelper;
 use Lovata\Shopaholic\Models\Settings;
 use Lovata\OrdersShopaholic\Models\Order;
 use Lovata\OrdersShopaholic\Models\Property;
@@ -9,7 +12,7 @@ use Lovata\OrdersShopaholic\Classes\CartProcessor;
 /**
  * Class ExtendCategoryModel
  * @package Lovata\OrdersShopaholic\Classes\Event
- * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
+ * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  */
 class ExtendFieldHandler
 {
@@ -19,7 +22,7 @@ class ExtendFieldHandler
      */
     public function subscribe($obEvent)
     {
-        $obEvent->listen('backend.form.extendFields', function($obWidget) {
+        $obEvent->listen('backend.form.extendFields', function ($obWidget) {
             $this->extendSettingsFields($obWidget);
             $this->extendOrderFields($obWidget);
         });
@@ -41,38 +44,91 @@ class ExtendFieldHandler
             return;
         }
 
+        $arAdditionFieldList = [
+            'cart_cookie_lifetime'                 => [
+                'tab'     => 'lovata.ordersshopaholic::lang.tab.order_settings',
+                'label'   => 'lovata.ordersshopaholic::lang.settings.cart_cookie_lifetime',
+                'span'    => 'left',
+                'type'    => 'number',
+                'default' => CartProcessor::$iCookieLifeTime,
+            ],
+            'check_offer_quantity'                 => [
+                'tab'   => 'lovata.ordersshopaholic::lang.tab.order_settings',
+                'label' => 'lovata.ordersshopaholic::lang.settings.check_offer_quantity',
+                'span'  => 'left',
+                'type'  => 'checkbox',
+            ],
+            'decrement_offer_quantity'             => [
+                'tab'   => 'lovata.ordersshopaholic::lang.tab.order_settings',
+                'label' => 'lovata.ordersshopaholic::lang.settings.decrement_offer_quantity',
+                'span'  => 'left',
+                'type'  => 'checkbox',
+            ],
+            'send_email_after_creating_order'      => [
+                'tab'   => 'lovata.ordersshopaholic::lang.tab.order_settings',
+                'label' => 'lovata.ordersshopaholic::lang.settings.send_email_after_creating_order',
+                'span'  => 'left',
+                'type'  => 'checkbox',
+            ],
+            'creating_order_mail_template'         => [
+                'tab'         => 'lovata.ordersshopaholic::lang.tab.order_settings',
+                'label'       => 'lovata.ordersshopaholic::lang.settings.creating_order_mail_template',
+                'span'        => 'left',
+                'type'        => 'dropdown',
+                'emptyOption' => 'lovata.toolbox::lang.field.empty',
+                'options'     => MailTemplate::listAllTemplates(),
+                'trigger'     => [
+                    'action'    => 'show',
+                    'field'     => 'send_email_after_creating_order',
+                    'condition' => 'checked',
+                ],
+            ],
+            'creating_order_manager_mail_template' => [
+                'tab'         => 'lovata.ordersshopaholic::lang.tab.order_settings',
+                'label'       => 'lovata.ordersshopaholic::lang.settings.creating_order_manager_mail_template',
+                'span'        => 'left',
+                'type'        => 'dropdown',
+                'emptyOption' => 'lovata.toolbox::lang.field.empty',
+                'options'     => MailTemplate::listAllTemplates(),
+                'trigger'     => [
+                    'action'    => 'show',
+                    'field'     => 'send_email_after_creating_order',
+                    'condition' => 'checked',
+                ],
+            ],
+            'creating_order_manager_email_list'    => [
+                'tab'     => 'lovata.ordersshopaholic::lang.tab.order_settings',
+                'label'   => 'lovata.ordersshopaholic::lang.settings.creating_order_manager_email_list',
+                'comment' => 'lovata.toolbox::lang.field.email_list_description',
+                'span'    => 'left',
+                'type'    => 'text',
+                'trigger' => [
+                    'action'    => 'show',
+                    'field'     => 'send_email_after_creating_order',
+                    'condition' => 'checked',
+                ],
+            ],
+        ];
+
+        $obWidget->addTabFields($arAdditionFieldList);
+        $sUserPluginName = UserHelper::instance()->getPluginName();
+        if (empty($sUserPluginName)) {
+            return;
+        }
+
         // Add an extra birthday field
         $obWidget->addTabFields([
-            'cart_cookie_lifetime' => [
-                'tab'           => 'lovata.ordersshopaholic::lang.tab.order_settings',
-                'label'         => 'lovata.ordersshopaholic::lang.settings.cart_cookie_lifetime',
-                'span'          => 'left',
-                'type'          => 'number',
-                'default'       => CartProcessor::$iCookieLifeTime,
-            ],
-            'check_offer_quantity' => [
-                'tab'           => 'lovata.ordersshopaholic::lang.tab.order_settings',
-                'label'         => 'lovata.ordersshopaholic::lang.settings.check_offer_quantity',
-                'span'          => 'left',
-                'type'          => 'checkbox',
-            ],
-            'decrement_offer_quantity' => [
-                'tab'           => 'lovata.ordersshopaholic::lang.tab.order_settings',
-                'label'         => 'lovata.ordersshopaholic::lang.settings.decrement_offer_quantity',
-                'span'          => 'left',
-                'type'          => 'checkbox',
-            ],
-            'create_new_user' => [
-                'tab'           => 'lovata.ordersshopaholic::lang.tab.order_settings',
-                'label'         => 'lovata.ordersshopaholic::lang.settings.create_new_user',
-                'span'          => 'left',
-                'type'          => 'checkbox',
+            'create_new_user'     => [
+                'tab'   => 'lovata.ordersshopaholic::lang.tab.order_settings',
+                'label' => 'lovata.ordersshopaholic::lang.settings.create_new_user',
+                'span'  => 'left',
+                'type'  => 'checkbox',
             ],
             'generate_fake_email' => [
-                'tab'           => 'lovata.ordersshopaholic::lang.tab.order_settings',
-                'label'         => 'lovata.ordersshopaholic::lang.settings.generate_fake_email',
-                'span'          => 'left',
-                'type'          => 'checkbox',
+                'tab'   => 'lovata.ordersshopaholic::lang.tab.order_settings',
+                'label' => 'lovata.ordersshopaholic::lang.settings.generate_fake_email',
+                'span'  => 'left',
+                'type'  => 'checkbox',
             ],
         ]);
     }

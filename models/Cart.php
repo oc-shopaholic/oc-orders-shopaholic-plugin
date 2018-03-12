@@ -1,8 +1,8 @@
 <?php namespace Lovata\OrdersShopaholic\Models;
 
 use Model;
-use Lovata\Buddies\Models\User;
 use Kharanenka\Scope\UserBelongsTo;
+use Lovata\Toolbox\Classes\Helper\UserHelper;
 
 /**
  * Class Cart
@@ -17,8 +17,8 @@ use Kharanenka\Scope\UserBelongsTo;
  * @property \October\Rain\Argon\Argon $created_at
  * @property \October\Rain\Argon\Argon $updated_at
  * 
- * @property User $user
- * @method static User|\October\Rain\Database\Relations\BelongsTo user()
+ * @property \Lovata\Buddies\Models\User $user
+ * @method static \Lovata\Buddies\Models\User|\October\Rain\Database\Relations\BelongsTo user()
  * @property \October\Rain\Database\Collection|CartElement[] $item
  * @method static CartElement|\October\Rain\Database\Relations\HasMany item()
  */
@@ -34,6 +34,20 @@ class Cart extends Model
 
     protected $dates = ['created_at', 'updated_at'];
     
-    public $belongsTo = ['user' => User::class];
+    public $belongsTo = [];
     public $hasMany = ['item' => CartElement::class];
+
+    /**
+     * Cart constructor.
+     * @param array $attributes
+     */
+    public function __construct(array $attributes = [])
+    {
+        $sUserModelClass = UserHelper::instance()->getUserModel();
+        if (!empty($sUserModelClass)) {
+            $this->belongsTo['user'] = [$sUserModelClass];
+        }
+
+        parent::__construct($attributes);
+    }
 }
