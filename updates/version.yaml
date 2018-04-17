@@ -34,3 +34,5 @@
     - 'Added check for isNested flag when expanding forms'
 1.4.0:
     - 'Add integration with RainLab.User plugin. Added sending emails to the user and managers after the order was created. Add events "shopaholic.order.created", "shopaholic.order.created.user.template.data", "shopaholic.order.created.manager.template.data". Requires Toolbox plugin version 1.7.0 and later.'
+1.5.0:
+    - 'Update logic for new version of CResult class. Requires Toolbox plugin version 1.9.1 and later.'
