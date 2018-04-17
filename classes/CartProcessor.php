@@ -139,7 +139,7 @@ class CartProcessor
     {
         if(empty($this->obCart) || empty($arOfferList) || !is_array($arOfferList)) {
             $sMessage = Lang::get('lovata.toolbox::lang.message.e_not_correct_request');
-            Result::setMessage($sMessage);
+            Result::setFalse()->setMessage($sMessage);
             return false;
         }
 
@@ -185,7 +185,7 @@ class CartProcessor
     {
         if(empty($this->obCart) || empty($arOfferList) || !is_array($arOfferList)) {
             $sMessage = Lang::get('lovata.toolbox::lang.message.e_not_correct_request');
-            Result::setMessage($sMessage);
+            Result::setFalse()->setMessage($sMessage);
             return false;
         }
         
@@ -219,7 +219,7 @@ class CartProcessor
     {
         if(empty($this->obCart) || empty($arOfferList) || !is_array($arOfferList)) {
             $sMessage = Lang::get('lovata.toolbox::lang.message.e_not_correct_request');
-            Result::setMessage($sMessage);
+            Result::setFalse()->setMessage($sMessage);
             return false;
         }
         

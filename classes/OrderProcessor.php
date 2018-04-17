@@ -56,7 +56,7 @@ class OrderProcessor
         if($obCartElementList->isEmpty()) {
 
             $sMessage = Lang::get('lovata.ordersshopaholic::lang.message.empty_cart');
-            Result::setMessage($sMessage);
+            Result::setFalse()->setMessage($sMessage);
             return null;
         }
 
@@ -133,7 +133,7 @@ class OrderProcessor
 
             if(!$bOrderHasOffers) {
                 $sMessage = Lang::get('lovata.ordersshopaholic::lang.message.empty_cart');
-                Result::setMessage($sMessage);
+                Result::setFalse()->setMessage($sMessage);
             }
 
             return null;
