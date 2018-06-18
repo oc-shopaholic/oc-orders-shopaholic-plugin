@@ -1,6 +1,5 @@
 <?php namespace Lovata\OrdersShopaholic\Components;
 
-use App;
 use Input;
 use System\Classes\PluginManager;
 
@@ -10,17 +9,17 @@ use Lovata\Toolbox\Classes\Component\ComponentSubmitForm;
 use Lovata\Toolbox\Traits\Helpers\TraitValidationHelper;
 
 use Lovata\Shopaholic\Models\Settings;
-use Lovata\OrdersShopaholic\Classes\OrderProcessor;
+use Lovata\OrdersShopaholic\Classes\Processor\OrderProcessor;
 
 /**
  * Class MakeOrder
  * @package Lovata\OrdersShopaholic\Components
- * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
+ * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  */
 class MakeOrder extends ComponentSubmitForm
 {
     use TraitValidationHelper;
-    
+
     protected $bCreateNewUser = true;
 
     protected $arOrderData;
@@ -28,9 +27,6 @@ class MakeOrder extends ComponentSubmitForm
 
     /** @var \Lovata\Buddies\Models\User */
     protected $obUser;
-
-    /** @var \Lovata\OrdersShopaholic\Classes\OrderProcessor */
-    protected $obOrderProcessor;
 
     /** @var UserHelper */
     protected $obUserHelper;
@@ -52,6 +48,7 @@ class MakeOrder extends ComponentSubmitForm
     public function defineProperties()
     {
         $arResult = $this->getModeProperty();
+
         return $arResult;
     }
 
@@ -61,12 +58,12 @@ class MakeOrder extends ComponentSubmitForm
      */
     protected function getRedirectPageProperties()
     {
-        if(!Result::status()) {
+        if (!Result::status()) {
             return [];
         }
 
         $arResult = Result::data();
-        if(empty($arResult) || !is_array($arResult)) {
+        if (empty($arResult) || !is_array($arResult)) {
             return [];
         }
 
@@ -83,24 +80,23 @@ class MakeOrder extends ComponentSubmitForm
         $this->bCreateNewUser = Settings::getValue('create_new_user');
         $this->obUser = $this->obUserHelper->getUser();
 
-        $this->obOrderProcessor = App::make(OrderProcessor::class);
-
         parent::init();
     }
 
     /**
      * Create new order
      * @return \Illuminate\Http\RedirectResponse|null
+     * @throws \Exception
      */
     public function onRun()
     {
-        if($this->sMode != self::MODE_SUBMIT) {
+        if ($this->sMode != self::MODE_SUBMIT) {
             return null;
         }
 
         $arOrderData = (array) Input::get('order');
         $arUserData = (array) Input::get('user');
-        if(empty($arOrderData) && empty($arUserData)) {
+        if (empty($arOrderData) && empty($arUserData)) {
             return null;
         }
 
@@ -112,6 +108,7 @@ class MakeOrder extends ComponentSubmitForm
     /**
      * Create new order (AJAX)
      * @return \Illuminate\Http\RedirectResponse|array
+     * @throws \Exception
      */
     public function onCreate()
     {
@@ -127,6 +124,7 @@ class MakeOrder extends ComponentSubmitForm
      * Create new order
      * @param array $arOrderData
      * @param array $arUserData
+     * @throws \Exception
      */
     public function create($arOrderData, $arUserData)
     {
@@ -134,9 +132,9 @@ class MakeOrder extends ComponentSubmitForm
         $this->arUserData = (array) $arUserData;
 
         //Find or create new user
-        if(empty($this->obUser) && $this->bCreateNewUser) {
+        if (empty($this->obUser) && $this->bCreateNewUser) {
             $this->findOrCreateUser();
-        } else if(!empty($this->obUser)) {
+        } else if (!empty($this->obUser)) {
 
             $this->arUserData = [
                 'email'       => $this->obUser->email,
@@ -147,28 +145,28 @@ class MakeOrder extends ComponentSubmitForm
             ];
         }
 
-        if(!Result::status()) {
+        if (!Result::status()) {
             return;
         }
 
         $arOrderData = $this->arOrderData;
-        if(!isset($arOrderData['property']) || !is_array($arOrderData['property'])) {
+        if (!isset($arOrderData['property']) || !is_array($arOrderData['property'])) {
             $arOrderData['property'] = [];
         }
 
-        if(!empty($this->arUserData)) {
+        if (!empty($this->arUserData)) {
             $arOrderData['property'] = array_merge($arOrderData['property'], $this->arUserData);
         }
 
-        $obOrder = $this->obOrderProcessor->create($arOrderData, $this->obUser);
-        if(empty($obOrder)) {
+        $obOrder = OrderProcessor::instance()->create($arOrderData, $this->obUser);
+        if (empty($obOrder)) {
             return;
         }
 
-        if(PluginManager::instance()->hasPlugin('Lovata.OmnipayShopaholic')) {
-            
+        if (PluginManager::instance()->hasPlugin('Lovata.OmnipayShopaholic')) {
+
             $arPaymentData = Input::get('payment');
-            if(!empty($arPaymentData)) {
+            if (!empty($arPaymentData)) {
                 $obOrder->payment_data = $arPaymentData;
                 $obOrder->save();
             }
@@ -181,12 +179,12 @@ class MakeOrder extends ComponentSubmitForm
     protected function findOrCreateUser()
     {
         $sUserPluginName = UserHelper::instance()->getPluginName();
-        if(!empty($this->obUser) || empty($this->arUserData) || empty($sUserPluginName)) {
+        if (!empty($this->obUser) || empty($this->arUserData) || empty($sUserPluginName)) {
             return;
         }
 
         $this->findUserByEmail();
-        if(!empty($this->obUser) || !$this->bCreateNewUser) {
+        if (!empty($this->obUser) || !$this->bCreateNewUser) {
             return;
         }
 
@@ -199,7 +197,7 @@ class MakeOrder extends ComponentSubmitForm
      */
     protected function findUserByEmail()
     {
-        if(empty($this->arUserData) || !isset($this->arUserData['email']) || empty($this->arUserData['email'])) {
+        if (empty($this->arUserData) || !isset($this->arUserData['email']) || empty($this->arUserData['email'])) {
             return;
         }
 
@@ -219,43 +217,43 @@ class MakeOrder extends ComponentSubmitForm
      */
     protected function processUserPhone()
     {
-        if(empty($this->obUser) || empty($this->arUserData)) {
+        if (empty($this->obUser) || empty($this->arUserData)) {
             return;
         }
-        
-        if(!isset($this->arUserData['phone']) || empty($this->arUserData['phone'])) {
+
+        if (!isset($this->arUserData['phone']) || empty($this->arUserData['phone'])) {
             return;
         }
-        
+
         $sPhone = $this->arUserData['phone'];
-        
+
         $arPhoneList = $this->obUser->phone_list;
         $arPhoneList[] = $sPhone;
         $arPhoneList = array_unique($arPhoneList);
-        
+
         $this->obUser->phone_list = $arPhoneList;
         $this->obUser->save();
     }
-    
+
     /**
      * Process user phone list
      */
     protected function processUserPhoneList()
     {
-        if(empty($this->obUser) || empty($this->arUserData)) {
+        if (empty($this->obUser) || empty($this->arUserData)) {
             return;
         }
-        
-        if(!isset($this->arUserData['phone_list']) || empty($this->arUserData['phone_list'])) {
+
+        if (!isset($this->arUserData['phone_list']) || empty($this->arUserData['phone_list'])) {
             return;
         }
-        
+
         $arRequestPhoneList = $this->arUserData['phone_list'];
-        
+
         $arPhoneList = $this->obUser->phone_list;
         $arPhoneList = array_merge($arPhoneList, $arRequestPhoneList);
         $arPhoneList = array_unique($arPhoneList);
-        
+
         $this->obUser->phone_list = $arPhoneList;
         $this->obUser->save();
     }
@@ -266,15 +264,15 @@ class MakeOrder extends ComponentSubmitForm
      */
     protected function createUser()
     {
-        if(empty($this->arUserData)) {
+        if (empty($this->arUserData)) {
             return;
         }
-        
+
         $sPassword = md5(microtime(true));
 
         //Get user email
-        if(Settings::getValue('generate_fake_email') && (!isset($this->arUserData['email']) || empty($this->arUserData['email']))) {
-            $this->arUserData['email'] = 'fake' . $sPassword . '@fake.com';
+        if (Settings::getValue('generate_fake_email') && (!isset($this->arUserData['email']) || empty($this->arUserData['email']))) {
+            $this->arUserData['email'] = 'fake'.$sPassword.'@fake.com';
         }
 
         $arUserData = $this->arUserData;

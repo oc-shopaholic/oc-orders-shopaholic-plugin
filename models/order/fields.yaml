@@ -1,24 +1,23 @@
 fields:
     order_number:
-       label: 'lovata.ordersshopaholic::lang.field.order_number'
-       span: left
-       oc.commentPosition: ''
-       disabled: 1
-       type: text
+        label: 'lovata.ordersshopaholic::lang.field.order_number'
+        span: left
+        disabled: 1
+        type: text
+        context:
+            - update
+            - preview
     price_block:
         span: full
         type: partial
         path: ~/plugins/lovata/ordersshopaholic/controllers/orders/_price_block.htm
-        context:
-            - update
-            - preview
         path: price_block
+        dependsOn: shipping_price
 tabs:
     fields:
         status:
             label: 'lovata.ordersshopaholic::lang.field.status'
             span: auto
-            oc.commentPosition: ''
             nameFrom: name
             descriptionFrom: description
             type: relation
@@ -26,33 +25,39 @@ tabs:
         payment_method:
             label: 'lovata.ordersshopaholic::lang.field.payment_method'
             span: left
-            oc.commentPosition: ''
             nameFrom: name
             descriptionFrom: description
             emptyOption: 'lovata.toolbox::lang.field.empty'
-            context:
-                - update
-                - preview
             type: relation
             tab: 'lovata.ordersshopaholic::lang.tab.info'
         shipping_type:
             label: 'lovata.ordersshopaholic::lang.field.shipping_type'
             span: left
-            oc.commentPosition: ''
             nameFrom: name
             descriptionFrom: description
             emptyOption: 'lovata.toolbox::lang.field.empty'
-            context:
-                - update
-                - preview
             type: relation
             tab: 'lovata.ordersshopaholic::lang.tab.info'
-        offer:
-            span: full
-            path: offer
+        shipping_price:
+            label: 'lovata.ordersshopaholic::lang.field.shipping_price'
+            span: left
+            type: text
+            tab: 'lovata.ordersshopaholic::lang.tab.info'
+        user:
+            span: right
+            path: $/lovata/ordersshopaholic/controllers/orders/_user.htm
             context:
                 - update
                 - preview
             type: partial
-            path: ~/plugins/lovata/ordersshopaholic/controllers/orders/_offer.htm
+            path: ~/plugins/lovata/ordersshopaholic/controllers/orders/_order_offer.htm
+            tab: 'lovata.ordersshopaholic::lang.field.user'
+        order_offer:
+            span: full
+            path: $/lovata/ordersshopaholic/controllers/orders/_order_offer.htm
+            context:
+                - update
+                - preview
+            type: partial
+            path: ~/plugins/lovata/ordersshopaholic/controllers/orders/_order_offer.htm
             tab: 'lovata.ordersshopaholic::lang.tab.offers_info'

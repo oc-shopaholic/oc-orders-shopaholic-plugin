@@ -9,6 +9,11 @@ columns:
         type: text
         searchable: true
         sortable: true
+    is_user_show:
+        label: 'lovata.ordersshopaholic::lang.field.is_user_show'
+        type: switch
+        searchable: false
+        sortable: true
     id:
         label: 'lovata.toolbox::lang.field.id'
         type: text
@@ -18,6 +23,7 @@ columns:
     sort_order:
         label: 'lovata.toolbox::lang.field.sort_order'
         type: text
+        searchable: false
         sortable: true
         width: 150px
     created_at:

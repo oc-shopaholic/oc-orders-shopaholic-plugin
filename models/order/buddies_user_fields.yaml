@@ -1,0 +1,26 @@
+fields:
+    name:
+        label: 'lovata.buddies::lang.field.name'
+        span: full
+        type: text
+        tab: 'lovata.buddies::lang.tab.data'
+    last_name:
+        label: 'lovata.buddies::lang.field.last_name'
+        span: full
+        type: text
+        tab: 'lovata.buddies::lang.tab.data'
+    middle_name:
+        label: 'lovata.buddies::lang.field.middle_name'
+        span: full
+        type: text
+        tab: 'lovata.buddies::lang.tab.data'
+    email:
+        label: 'lovata.toolbox::lang.field.email'
+        span: full
+        type: text
+        tab: 'lovata.buddies::lang.tab.data'
+    phone:
+        label: 'lovata.toolbox::lang.field.phone'
+        span: full
+        type: text
+        tab: 'lovata.buddies::lang.tab.data'

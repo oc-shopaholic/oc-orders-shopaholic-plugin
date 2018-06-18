@@ -1,0 +1,18 @@
+<?php
+/** @var \Lovata\OrdersShopaholic\Models\OrderPosition $formModel */
+/** @var \Lovata\Shopaholic\Models\Offer $obOffer */
+/** @var \Lovata\Shopaholic\Models\Product $obProduct */
+$obOffer = $formModel->offer;
+$obProduct = null;
+?>
+<?php if (!empty($obOffer)) { ?>
+    <?php $obProduct = $obOffer->product ?>
+    <div>
+        <?= trans('lovata.ordersshopaholic::lang.label.offer'); ?>: <a href="<?= Backend::url('lovata/shopaholic/offers/update/'.$obOffer->id) ?>"><?= $obOffer->name ?></a>
+    </div>
+<?php } ?>
+<?php if (!empty($obProduct)) { ?>
+    <div>
+        <?= trans('lovata.ordersshopaholic::lang.label.product'); ?>: <a href="<?= Backend::url('lovata/shopaholic/products/update/'.$obProduct->id) ?>"><?= $obProduct->name ?></a>
+    </div>
+<?php } ?>

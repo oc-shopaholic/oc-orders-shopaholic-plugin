@@ -1,15 +1,30 @@
 fields:
     name:
         label: 'lovata.toolbox::lang.field.name'
-        span: full
-        oc.commentPosition: ''
+        span: left
         type: text
     code:
         label: 'lovata.toolbox::lang.field.code'
-        oc.commentPosition: ''
-        span: full
+        span: right
         trigger:
             action: disable
             field: code
             condition: 'value[new] || value[canceled] || value[in_progress] || value[complete]'
         type: text
+    preview_text:
+        label: 'lovata.toolbox::lang.field.description'
+        span: left
+        type: textarea
+        size: small
+    is_user_show:
+        label: 'lovata.ordersshopaholic::lang.field.is_user_show'
+        span: right
+        type: checkbox
+    user_status:
+        label: 'lovata.ordersshopaholic::lang.field.user_status'
+        span: right
+        type: relation
+        trigger:
+            action: show
+            field: is_user_show
+            condition: checked

@@ -1,0 +1,61 @@
+fields:
+    active:
+        label: 'lovata.toolbox::lang.field.active'
+        span: left
+        default: 1
+        type: switch
+    name:
+        label: 'lovata.toolbox::lang.field.name'
+        span: left
+        required: 1
+        type: text
+    type:
+        label: 'lovata.toolbox::lang.field.type'
+        span: right
+        type: dropdown
+    code:
+        label: 'lovata.toolbox::lang.field.code'
+        span: left
+        type: text
+    settings[tab]:
+        label: 'lovata.toolbox::lang.field.property_tab'
+        span: right
+        type: text
+    'settings[list]':
+        label: 'lovata.toolbox::lang.field.property_list_value'
+        prompt: 'lovata.toolbox::lang.button.add_property_value'
+        span: right
+        type: repeater
+        trigger:
+            action: show
+            field: type
+            condition: 'value[select] || value[checkbox]'
+        form:
+            fields:
+                value:
+                    label: 'lovata.toolbox::lang.field.value'
+                    span: full
+                    type: text
+    'settings[datepicker]':
+        label: 'lovata.toolbox::lang.field.mode'
+        span: right
+        options:
+            date: 'lovata.toolbox::lang.field.date'
+            datetime: 'lovata.toolbox::lang.field.datetime'
+            time: 'lovata.toolbox::lang.field.time'
+        trigger:
+            action: show
+            field: type
+            condition: 'value[date]'
+        type: dropdown
+    'settings[mediafinder]':
+        label: 'lovata.toolbox::lang.field.mode'
+        span: right
+        options:
+            file: 'lovata.toolbox::lang.field.file'
+            image: 'lovata.toolbox::lang.field.image'
+        trigger:
+            action: show
+            field: type
+            condition: 'value[mediafinder]'
+        type: dropdown

@@ -8,7 +8,7 @@ use Lovata\Buddies\Models\User;
 use Lovata\Shopaholic\Models\Offer;
 use Lovata\OrdersShopaholic\Models\Order;
 use Lovata\OrdersShopaholic\Models\Status;
-use Lovata\OrdersShopaholic\Models\OfferOrder;
+use Lovata\OrdersShopaholic\Models\OrderPosition;
 use Lovata\OrdersShopaholic\Models\PaymentMethod;
 use Lovata\OrdersShopaholic\Models\ShippingType;
 
@@ -33,18 +33,20 @@ class OrderTest extends PluginTestCase
     }
 
     /**
-     * Check model "offer" relation config
+     * Check model "order_position" relation config
      */
-    public function testHasOfferRelation()
+    public function testHasOrderPositionRelation()
     {
-        $sErrorMessage = $this->sModelClass.' model has not correct "offer" relation config';
+        $sErrorMessage = $this->sModelClass.' model has not correct "order_position" relation config';
 
         /** @var Order $obModel */
         $obModel = new Order();
-        self::assertNotEmpty($obModel->belongsToMany, $sErrorMessage);
-        self::assertArrayHasKey('offer', $obModel->belongsToMany, $sErrorMessage);
-        self::assertEquals(Offer::class, array_shift($obModel->belongsToMany['offer']), $sErrorMessage);
-        self::assertEquals(OfferOrder::class, $obModel->belongsToMany['offer']['pivotModel'], $sErrorMessage);
+        self::assertNotEmpty($obModel->hasMany, $sErrorMessage);
+        self::assertArrayHasKey('order_position', $obModel->hasMany, $sErrorMessage);
+        self::assertEquals(OrderPosition::class, array_shift($obModel->hasMany['order_position']), $sErrorMessage);
+
+        self::assertArrayHasKey('order_offer', $obModel->hasMany, $sErrorMessage);
+        self::assertEquals(OrderPosition::class, array_shift($obModel->hasMany['order_offer']), $sErrorMessage);
     }
 
     /**

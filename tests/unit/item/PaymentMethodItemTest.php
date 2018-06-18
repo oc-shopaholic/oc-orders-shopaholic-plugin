@@ -88,7 +88,7 @@ class PaymentMethodItemTest extends CommonTest
         $this->obElement->save();
 
         $obItem = PaymentMethodItem::make($this->obElement->id);
-        self::assertEquals(true, $obItem->isEmpty(), $sErrorMessage);
+        self::assertEquals(false, $obItem->isEmpty(), $sErrorMessage);
     }
 
     /**

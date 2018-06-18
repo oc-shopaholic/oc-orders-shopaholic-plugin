@@ -18,12 +18,10 @@ class PaymentMethodModelHandler extends ModelHandler
 
     /**
      * PaymentMethodModelHandler constructor.
-     *
-     * @param PaymentMethodListStore $obPaymentMethodListStore
      */
-    public function __construct(PaymentMethodListStore $obPaymentMethodListStore)
+    public function __construct()
     {
-        $this->obListStore = $obPaymentMethodListStore;
+        $this->obListStore = PaymentMethodListStore::instance();
     }
 
     /**
@@ -67,12 +65,26 @@ class PaymentMethodModelHandler extends ModelHandler
     }
 
     /**
+     * After save event handler
+     */
+    protected function afterSave()
+    {
+        parent::afterSave();
+
+        $this->checkFieldChanges('active', $this->obListStore->active);
+    }
+
+    /**
      * After delete event handler
      */
     protected function afterDelete()
     {
         parent::afterDelete();
         $this->clearSortingList();
+
+        if ($this->obListStore->active) {
+            $this->obListStore->active->clear();
+        }
     }
 
     /**
@@ -80,6 +92,6 @@ class PaymentMethodModelHandler extends ModelHandler
      */
     public function clearSortingList()
     {
-        $this->obListStore->clearSortingList();
+        $this->obListStore->sorting->clear();
     }
 }

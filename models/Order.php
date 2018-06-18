@@ -1,74 +1,84 @@
 <?php namespace Lovata\OrdersShopaholic\Models;
 
 use Model;
-use Carbon\Carbon;
+use October\Rain\Argon\Argon;
 
 use Kharanenka\Scope\UserBelongsTo;
 
 use Lovata\Toolbox\Classes\Helper\UserHelper;
-use Lovata\Shopaholic\Models\Offer;
-use Lovata\Shopaholic\Classes\Helper\PriceHelper;
+use Lovata\Toolbox\Traits\Helpers\TraitCached;
+use Lovata\Toolbox\Classes\Helper\PriceHelper;
+use Lovata\Toolbox\Traits\Helpers\PriceHelperTrait;
+use Lovata\Toolbox\Traits\Models\SetPropertyAttributeTrait;
 
 /**
  * Class Order
  * @package Lovata\Shopaholic\Models
- * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
+ * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  *
  * @mixin \October\Rain\Database\Builder
  * @mixin \Eloquent
- * 
- * @property int $id
- * @property string $order_number
- * @property string $secret_key
- * @property int $user_id
- * @property int $status_id
- * @property int $payment_method_id
- * @property int $shipping_type_id
- * @property string $shipping_price
- * @property string $total_price
- * @property string $offers_total_price
- * @property array $property
  *
- * @property \October\Rain\Argon\Argon $created_at
- * @property \October\Rain\Argon\Argon $updated_at
- * 
+ * @property int                                       $id
+ * @property string                                    $order_number
+ * @property string                                    $secret_key
+ * @property int                                       $user_id
+ * @property int                                       $status_id
+ * @property int                                       $payment_method_id
+ * @property int                                       $shipping_type_id
+ * @property string                                    $shipping_price
+ * @property float                                     $shipping_price_value
+ * @property string                                    $total_price
+ * @property float                                     $total_price_value
+ * @property string                                    $position_total_price
+ * @property float                                     $position_total_price_value
+ * @property array                                     $property
+ *
+ * @property \October\Rain\Argon\Argon                 $created_at
+ * @property \October\Rain\Argon\Argon                 $updated_at
+ *
  * Omnipay for Shopaholic plugin
- * @property array $payment_data
- * @property array $payment_response
- * 
- * @property \October\Rain\Database\Collection|Offer[] $offer
- * @method static Offer|\October\Rain\Database\Relations\BelongsToMany offer()
- * 
- * @property Status $status
+ * @property array                                     $payment_data
+ * @property array                                     $payment_response
+ *
+ * @property \October\Rain\Database\Collection|OrderPosition[] $order_position
+ * @method static \October\Rain\Database\Relations\HasMany|OrderPosition order_position()
+ *
+ * @property Status                                    $status
  * @method static Status|\October\Rain\Database\Relations\BelongsTo status()
  *
- * @property \Lovata\Buddies\Models\User $user
+ * @property \Lovata\Buddies\Models\User               $user
  * @method static \Lovata\Buddies\Models\User|\October\Rain\Database\Relations\BelongsTo user()
  *
- * @property ShippingType $shipping_type
+ * @property ShippingType                              $shipping_type
  * @method static ShippingType|\October\Rain\Database\Relations\BelongsTo shipping_type()
  *
- * @property PaymentMethod $payment_method
+ * @property PaymentMethod                             $payment_method
  * @method static PaymentMethod|\October\Rain\Database\Relations\BelongsTo payment_method()
  *
  * @method static $this getByNumber(string $sNumber)
+ * @method static $this getByStatus(int $iStatusID)
+ * @method static $this getByShippingType(int $iShippingTypeID)
+ * @method static $this getByPaymentMethod(int $iPaymentMethodID)
  * @method static $this getBySecretKey(string $sNumber)
  */
 class Order extends Model
 {
     use UserBelongsTo;
+    use TraitCached;
+    use PriceHelperTrait;
+    use SetPropertyAttributeTrait;
 
     public $table = 'lovata_orders_shopaholic_orders';
 
-    protected $appends = [
+    public $arPriceField = [
         'total_price',
-        'quantity',
         'shipping_price',
-        'offers_total_price',
+        'position_total_price',
     ];
 
     public $jsonable = ['property'];
-    protected $dates = ['created_at', 'updated_at'];
+    public $dates = ['created_at', 'updated_at'];
 
     public $fillable = [
         'user_id',
@@ -79,16 +89,31 @@ class Order extends Model
         'property',
     ];
 
-    public $belongsToMany = [
-        'offer' => [
-            Offer::class,
-            'table'      => 'lovata_orders_shopaholic_offer_order',
-            'pivot'      => ['price', 'old_price', 'quantity', 'code'],
-            'key'        => 'order_id',
-            'otherKey'   => 'offer_id',
-            'pivotModel' => OfferOrder::class,
-        ]
+    public $cached = [
+        'id',
+        'order_number',
+        'user_id',
+        'status_id',
+        'payment_method_id',
+        'shipping_type_id',
+        'shipping_price_value',
+        'total_price_value',
+        'position_total_price_value',
+        'property',
+        'created_at',
+        'updated_at',
     ];
+
+    public $hasMany = [
+        'order_position' => [
+            OrderPosition::class,
+        ],
+        'order_offer' => [
+            OrderPosition::class,
+            'condition' => 'item_type = \Lovata\Shopaholic\Models\Offer',
+        ],
+    ];
+    public $belongsToMany = [];
 
     public $belongsTo = [
         'status'         => [Status::class, 'order' => 'sort_order asc'],
@@ -112,28 +137,73 @@ class Order extends Model
 
     /**
      * Get orders by number
-     * @param Order $obQuery
+     * @param Order  $obQuery
      * @param string $sData
      * @return Order
      */
     public function scopeGetByNumber($obQuery, $sData)
     {
-        if(!empty($sData)) {
+        if (!empty($sData)) {
             $obQuery->where('order_number', $sData);
         }
-        
+
+        return $obQuery;
+    }
+
+    /**
+     * Get orders by status
+     * @param Order  $obQuery
+     * @param string $sData
+     * @return Order
+     */
+    public function scopeGetByStatus($obQuery, $sData)
+    {
+        if (!empty($sData)) {
+            $obQuery->where('status_id', $sData);
+        }
+
+        return $obQuery;
+    }
+
+    /**
+     * Get orders by shipping type
+     * @param Order  $obQuery
+     * @param string $sData
+     * @return Order
+     */
+    public function scopeGetByShippingType($obQuery, $sData)
+    {
+        if (!empty($sData)) {
+            $obQuery->where('shipping_type_id', $sData);
+        }
+
+        return $obQuery;
+    }
+
+    /**
+     * Get orders by payment method
+     * @param Order  $obQuery
+     * @param string $sData
+     * @return Order
+     */
+    public function scopeGetByPaymentMethod($obQuery, $sData)
+    {
+        if (!empty($sData)) {
+            $obQuery->where('payment_method_id', $sData);
+        }
+
         return $obQuery;
     }
 
     /**
      * Get orders by secret_key field
-     * @param Order $obQuery
+     * @param Order  $obQuery
      * @param string $sData
      * @return Order
      */
     public function scopeGetBySecretKey($obQuery, $sData)
     {
-        if(!empty($sData)) {
+        if (!empty($sData)) {
             $obQuery->where('secret_key', $sData);
         }
 
@@ -141,87 +211,48 @@ class Order extends Model
     }
 
     /**
-     * Get total price value
+     * Get position total price value
      * @return float
      */
-    public function getTotalPriceValue()
+    public function getPositionTotalPriceValueAttribute()
     {
-        if(isset($this->attributes['total_price'])) {
-            return (float) $this->attributes['total_price'];
+        $fTotalPrice = 0;
+
+        //Get position list
+        $obPositionList = $this->order_position;
+
+        if ($obPositionList->isEmpty()) {
+            return $fTotalPrice;
         }
 
-        return 0;
-    }
-    
-    /**
-     * @param  float  $dPrice
-     * @return string
-     */
-    public function getTotalPriceAttribute($dPrice)
-    {
-        /** @var PriceHelper $obPriceHelper */
-        $obPriceHelper = app()->make(PriceHelper::class);
-        return $obPriceHelper->get($dPrice);
+        foreach ($obPositionList as $obPosition) {
+            $fTotalPrice += $obPosition->total_price_value;
+        }
+
+        $fTotalPrice = PriceHelper::round($fTotalPrice);
+
+        return $fTotalPrice;
     }
 
     /**
      * Get total price value
      * @return float
      */
-    public function getOffersTotalPriceValue()
+    public function getTotalPriceValueAttribute()
     {
-        return $this->getTotalPriceValue() - $this->getShippingPriceValue();
-    }
-    
-    /**
-     * @param  float  $dPrice
-     * @return string
-     */
-    public function getOffersTotalPriceAttribute($dPrice)
-    {
-        /** @var PriceHelper $obPriceHelper */
-        $obPriceHelper = app()->make(PriceHelper::class);
-        return $obPriceHelper->get($this->getOffersTotalPriceValue());
-    }
-    public function setOffersTotalPriceAttribute($iPrice) {}
+        $fTotalPrice = $this->shipping_price_value + $this->position_total_price_value;
+        $fTotalPrice = PriceHelper::round($fTotalPrice);
 
-    /**
-     * Get shipping price value
-     * @return float
-     */
-    public function getShippingPriceValue()
-    {
-        return $this->getAttributeFromArray('shipping_price');
+        return $fTotalPrice;
     }
 
     /**
-     * @param  float  $dPrice
-     * @return string
-     */
-    public function getShippingPriceAttribute($dPrice)
-    {
-        /** @var PriceHelper $obPriceHelper */
-        $obPriceHelper = app()->make(PriceHelper::class);
-        return $obPriceHelper->get($dPrice);
-    }
-    
-    /**
-     * @param  string
-     */
-    public function setShippingPriceAttribute($sPrice)
-    {
-        $sPrice = str_replace(',', '.', $sPrice);
-        $sPrice = (float) preg_replace("/[^0-9\.]/", "",$sPrice);
-        $this->attributes['shipping_price'] = $sPrice;
-    }
-    
-    /**
-     * Get offer count
+     * Get position count
      * @return int
      */
     public function getQuantityAttribute()
     {
-        return $this->offer->count();
+        return $this->order_position->count();
     }
 
     /**
@@ -231,42 +262,6 @@ class Order extends Model
     {
         //Generate new order number
         $this->generateOrderNumber();
-
-        //count and set total order price
-        $iOffersTotalPrice = $this->getOffersTotalPrice();
-                
-        $iTotalPrice = (float) $this->getShippingPriceValue() + $iOffersTotalPrice;
-        $this->attributes['total_price'] = $iTotalPrice;
-    }
-
-    /**
-     * Generate new order number
-     */
-    protected function generateOrderNumber()
-    {
-        // if there is no saved order number create the new one
-        if(!empty($this->order_number)) {
-            return;
-        }
-
-        $obDate = Carbon::today()->startOfDay();
-        $bAvailableNumber = false;
-        $iTodayOrdersCount = $this->where('created_at', '>=', $obDate->toDateTimeString())->count() + 1;
-
-        do {
-            while(strlen($iTodayOrdersCount) < 4) {
-                $iTodayOrdersCount = '0'.$iTodayOrdersCount;
-            }
-
-            $this->order_number = Carbon::today()->format('ymd') . '-' . $iTodayOrdersCount;
-            if(empty($this->getByNumber($this->order_number)->first())){
-                $bAvailableNumber = true;
-            }else{
-                $iTodayOrdersCount++;
-            }
-        } while (!$bAvailableNumber);
-
-        $this->secret_key = $this->generateSecretKey();
     }
 
     /**
@@ -275,60 +270,36 @@ class Order extends Model
      */
     public function generateSecretKey()
     {
-        return md5($this->order_number . (string) microtime(true));
+        return md5($this->order_number.(string) microtime(true));
     }
 
     /**
-     * Get offers total price
-     * @return float
+     * Generate new order number
      */
-    public function getOffersTotalPrice()
+    protected function generateOrderNumber()
     {
-        $fTotalPrice = 0;
-
-        //Get offers list
-        $this->setRelations([]);
-        $obOfferList = $this->offer;
-        
-        if($obOfferList->isEmpty()) {
-            return $fTotalPrice;
-        }
-
-        /** @var Offer $obOffer */
-        foreach ($obOfferList as $obOffer) {
-
-            /** @var OfferOrder $obPivot */
-            $obPivot = $obOffer->pivot;
-
-            $fTotalPrice += $obPivot->getTotalPriceValue();
-        }
-
-        return (float) $fTotalPrice;
-    }
-
-    /**
-     * Set property attribute, nerge new values with old values
-     * @param array $arValue
-     */
-    protected function setPropertyAttribute($arValue)
-    {
-        if(is_string($arValue)) {
-            $arValue = $this->fromJson($arValue);
-        }
-
-        if(empty($arValue) || !is_array($arValue)) {
+        // if there is no saved order number create the new one
+        if (!empty($this->order_number)) {
             return;
         }
 
-        $arPropertyList = $this->property;
-        if(empty($arPropertyList)) {
-            $arPropertyList = [];
-        }
+        $obDate = Argon::today()->startOfDay();
+        $bAvailableNumber = false;
+        $iTodayOrdersCount = $this->where('created_at', '>=', $obDate->toDateTimeString())->count() + 1;
 
-        foreach ($arValue as $sKey => $sValue) {
-            $arPropertyList[$sKey] = $sValue;
-        }
+        do {
+            while (strlen($iTodayOrdersCount) < 4) {
+                $iTodayOrdersCount = '0'.$iTodayOrdersCount;
+            }
 
-        $this->attributes['property'] = $this->asJson($arPropertyList);
+            $this->order_number = Argon::today()->format('ymd').'-'.$iTodayOrdersCount;
+            if (empty($this->getByNumber($this->order_number)->first())) {
+                $bAvailableNumber = true;
+            } else {
+                $iTodayOrdersCount++;
+            }
+        } while (!$bAvailableNumber);
+
+        $this->secret_key = $this->generateSecretKey();
     }
 }

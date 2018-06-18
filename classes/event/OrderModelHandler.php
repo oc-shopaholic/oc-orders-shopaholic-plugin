@@ -1,20 +1,34 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Event;
 
+use Lovata\Toolbox\Classes\Event\ModelHandler;
 use Lovata\Toolbox\Classes\Helper\SendMailHelper;
 
 use Lovata\Shopaholic\Models\Settings;
 use Lovata\OrdersShopaholic\Models\Order;
-use Lovata\OrdersShopaholic\Classes\OrderProcessor;
+use Lovata\OrdersShopaholic\Classes\Item\OrderItem;
+use Lovata\OrdersShopaholic\Classes\Processor\OrderProcessor;
+use Lovata\OrdersShopaholic\Classes\Store\OrderListStore;
 
 /**
  * Class OrderModelHandler
  * @package Lovata\OrdersShopaholic\Classes\Event
- * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
+ * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  */
-class OrderModelHandler
+class OrderModelHandler extends ModelHandler
 {
     /** @var  Order */
     protected $obElement;
+
+    /** @var  OrderListStore */
+    protected $obListStore;
+
+    /**
+     * OrderModelHandler constructor.
+     */
+    public function __construct()
+    {
+        $this->obListStore = OrderListStore::instance();
+    }
 
     /**
      * Add listeners
@@ -22,6 +36,8 @@ class OrderModelHandler
      */
     public function subscribe($obEvent)
     {
+        parent::subscribe($obEvent);
+
         $obEvent->listen(OrderProcessor::EVENT_ORDER_CREATED, function ($obOrder) {
             $this->obElement = $obOrder;
 
@@ -42,6 +58,48 @@ class OrderModelHandler
     protected function getModelClass()
     {
         return Order::class;
+    }
+
+    /**
+     * Get item class name
+     * @return string
+     */
+    protected function getItemClass()
+    {
+        return OrderItem::class;
+    }
+
+    /**
+     * After save event handler
+     */
+    protected function afterSave()
+    {
+        parent::afterSave();
+
+        $this->checkFieldChanges('user_id', $this->obListStore->user);
+
+        $this->checkFieldChangesTwoParam('status_id', 'user_id', $this->obListStore->status);
+        $this->checkFieldChangesTwoParam('shipping_type_id', 'user_id', $this->obListStore->shipping_type);
+        $this->checkFieldChangesTwoParam('payment_method_id', 'user_id', $this->obListStore->payment_method);
+    }
+
+    /**
+     * After delete event handler
+     */
+    protected function afterDelete()
+    {
+        parent::afterDelete();
+
+        $this->obListStore->user->clear($this->obElement->user_id);
+
+        $this->obListStore->status->clear($this->obElement->status_id);
+        $this->obListStore->status->clear($this->obElement->status_id, $this->obElement->user_id);
+
+        $this->obListStore->shipping_type->clear($this->obElement->shipping_type_id);
+        $this->obListStore->shipping_type->clear($this->obElement->shipping_type_id, $this->obElement->user_id);
+
+        $this->obListStore->payment_method->clear($this->obElement->payment_method_id);
+        $this->obListStore->payment_method->clear($this->obElement->payment_method_id, $this->obElement->user_id);
     }
 
     /**

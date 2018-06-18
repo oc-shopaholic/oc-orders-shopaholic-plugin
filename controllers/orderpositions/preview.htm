@@ -1,0 +1,33 @@
+<?php Block::put('breadcrumb') ?>
+    <ul>
+        <li><a href="<?= Backend::url('lovata/ordersshopaholic/orders') ?>"><?= e(trans('lovata.ordersshopaholic::lang.order.list_title')) ?></a></li>
+        <?php
+                    $obOrder = $formModel->order;
+        if(!empty($obOrder)) {
+        ?>
+            <li>
+                <a href="<?= Backend::url('lovata/ordersshopaholic/orders/update/'.$obOrder->id) ?>">
+                    <?= trans('lovata.ordersshopaholic::lang.label.order'); ?>
+                    <?= $obOrder->order_number ?>
+                </a>
+            </li>
+        <?php } ?>
+        <li><?= e($this->pageTitle) ?></li>
+    </ul>
+<?php Block::endPut() ?>
+
+<?php if (!$this->fatalError): ?>
+
+    <div class="form-preview">
+        <?= $this->formRenderPreview() ?>
+    </div>
+
+<?php else: ?>
+    <p class="flash-message static error"><?= e($this->fatalError) ?></p>
+<?php endif ?>
+
+<p>
+    <a href="<?= Backend::url('lovata/ordersshopaholic/orderpositions') ?>" class="btn btn-default oc-icon-chevron-left">
+        <?= e(trans('backend::lang.form.return_to_list')) ?>
+    </a>
+</p>

@@ -28,4 +28,25 @@ class Orders extends Controller
         parent::__construct();
         BackendMenu::setContext('Lovata.OrdersShopaholic', 'orders-shopaholic-menu', 'orders-shopaholic-menu-orders');
     }
+
+    /**
+     * Create relation object handler
+     * @return mixed
+     */
+    public function onRelationManageCreate()
+    {
+        $arResult = parent::onRelationManageCreate();
+        if (empty($arResult) || !is_array($arResult)) {
+            $arResult = [];
+        }
+
+        //Get order object
+        $obOrder = $this->relationObject->getParent();
+
+        //Update price block partial
+        $this->initForm($obOrder, 'update');
+        $arResult['#Form-field-Order-price_block-group'] = $this->formGetWidget()->renderField('price_block', ['useContainer' => false]);
+
+        return $arResult;
+    }
 }

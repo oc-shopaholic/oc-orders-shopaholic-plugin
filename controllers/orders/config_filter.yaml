@@ -8,3 +8,21 @@ scopes:
         modelClass: Lovata\OrdersShopaholic\Models\Status
         nameFrom: name
         conditions: status_id in (:filtered)
+    payment_method:
+        label: 'lovata.ordersshopaholic::lang.field.payment_method'
+        modelClass: Lovata\OrdersShopaholic\Models\PaymentMethod
+        nameFrom: name
+        conditions: payment_method_id in (:filtered)
+    shipping_type:
+        label: 'lovata.ordersshopaholic::lang.field.shipping_type'
+        modelClass: Lovata\OrdersShopaholic\Models\ShippingType
+        nameFrom: name
+        conditions: shipping_type_id in (:filtered)
+    created_at:
+        label: 'lovata.toolbox::lang.field.created_at'
+        type: daterange
+        conditions: created_at >= ':after' AND created_at <= ':before'
+    updated_at:
+        label: 'lovata.toolbox::lang.field.updated_at'
+        type: daterange
+        conditions: updated_at >= ':after' AND updated_at <= ':before'

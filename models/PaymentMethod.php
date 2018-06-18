@@ -7,29 +7,31 @@ use October\Rain\Database\Traits\Validation;
 use Kharanenka\Scope\ActiveField;
 use Kharanenka\Scope\CodeField;
 
+use Lovata\Toolbox\Traits\Helpers\TraitCached;
+
 /**
  * Class PaymentMethod
  * @package Lovata\Shopaholic\Models
- * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
- * 
+ * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
+ *
  * @mixin \October\Rain\Database\Builder
  * @mixin \Eloquent
  *
- * @property $id
- * @property bool $active
- * @property string $code
- * @property string $name
- * @property string $preview_text
- * @property int $sort_order
- * @property \October\Rain\Argon\Argon $created_at
- * @property \October\Rain\Argon\Argon $updated_at
- * 
+ * @property                                           $id
+ * @property bool                                      $active
+ * @property string                                    $code
+ * @property string                                    $name
+ * @property string                                    $preview_text
+ * @property int                                       $sort_order
+ * @property \October\Rain\Argon\Argon                 $created_at
+ * @property \October\Rain\Argon\Argon                 $updated_at
+ *
  * Omnipay for Shopaholic plugin
- * @property string $gateway_id
- * @property string $gateway_currency
- * @property array $gateway_property
- * @property int $before_status_id
- * @property int $after_status_id
+ * @property string                                    $gateway_id
+ * @property string                                    $gateway_currency
+ * @property array                                     $gateway_property
+ * @property int                                       $before_status_id
+ * @property int                                       $after_status_id
  *
  * @property \October\Rain\Database\Collection|Order[] $order
  * @method static Order|\October\Rain\Database\Relations\HasMany order()
@@ -40,6 +42,7 @@ class PaymentMethod extends Model
     use CodeField;
     use Validation;
     use Sortable;
+    use TraitCached;
 
     public $table = 'lovata_orders_shopaholic_payment_methods';
 
@@ -56,11 +59,11 @@ class PaymentMethod extends Model
     ];
 
     public $attributeNames = [
-        'lovata.toolbox::lang.field.name',
-        'lovata.toolbox::lang.field.code',
+        'name' => 'lovata.toolbox::lang.field.name',
+        'code' => 'lovata.toolbox::lang.field.code',
     ];
 
-    protected $fillable = [
+    public $fillable = [
         'active',
         'code',
         'name',
@@ -68,7 +71,14 @@ class PaymentMethod extends Model
         'preview_text',
     ];
 
-    protected $dates = ['created_at', 'updated_at'];
+    public $cached = [
+        'id',
+        'name',
+        'code',
+        'preview_text',
+    ];
+
+    public $dates = ['created_at', 'updated_at'];
 
     public $hasMany = ['order' => Order::class];
 }

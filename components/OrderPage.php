@@ -1,6 +1,7 @@
 <?php namespace Lovata\OrdersShopaholic\Components;
 
-use Cms\Classes\ComponentBase;
+use Lovata\OrdersShopaholic\Classes\Item\OrderItem;
+use Lovata\Toolbox\Classes\Component\ElementPage;
 use Lovata\Toolbox\Traits\Helpers\TraitComponentNotFoundResponse;
 
 use Lovata\OrdersShopaholic\Models\Order;
@@ -12,7 +13,7 @@ use Lovata\OrdersShopaholic\Models\Order;
  *
  * @link https://github.com/lovata/oc-shopaholic-plugin/wiki/OrderPage
  */
-class OrderPage extends ComponentBase
+class OrderPage extends ElementPage
 {
     use TraitComponentNotFoundResponse;
 
@@ -47,53 +48,15 @@ class OrderPage extends ComponentBase
     }
 
     /**
-     * Get element object
-     * @return \Illuminate\Http\Response|null
-     */
-    public function onRun()
-    {
-        //Get element slug
-        $sElementSlug = $this->property('slug');
-        if (empty($sElementSlug) && !$this->property('slug_required')) {
-            return null;
-        }
-
-        if (empty($this->obElement)) {
-            return $this->getErrorResponse();
-        }
-
-        return null;
-    }
-
-    /**
      * Init plugin method
      */
     public function init()
     {
-        //Get element slug
-        $sElementSlug = $this->property('slug');
-        if (empty($sElementSlug)) {
-            return;
+        parent::init();
+
+        if (!empty($this->obElement)) {
+            $this->obPaymentMethod = $this->obElement->payment_method;
         }
-
-        //Get element by slug
-        $obElement = $this->getElementObject($sElementSlug);
-        if (empty($obElement)) {
-            return;
-        }
-
-        $this->obElement = $obElement;
-
-        $this->obPaymentMethod = $obElement->payment_method;
-    }
-
-    /**
-     * Get Order object
-     * @return Order
-     */
-    public function get()
-    {
-        return $this->obElement;
     }
 
     /**
@@ -119,5 +82,15 @@ class OrderPage extends ComponentBase
         $obElement = Order::getBySecretKey($sElementSlug)->first();
 
         return $obElement;
+    }
+
+    /**
+     * @param int    $iElementID
+     * @param Order $obElement
+     * @return OrderItem
+     */
+    protected function makeItem($iElementID, $obElement)
+    {
+        return OrderPage::makeItem($iElementID, $obElement);
     }
 }

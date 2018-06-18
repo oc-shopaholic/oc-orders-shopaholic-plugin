@@ -7,11 +7,9 @@ fields:
     name:
         label: 'lovata.toolbox::lang.field.name'
         span: full
-        oc.commentPosition: ''
         type: text
     code:
         label: 'lovata.toolbox::lang.field.code'
-        oc.commentPosition: ''
         span: full
         type: text
     price:
@@ -21,6 +19,5 @@ fields:
     preview_text:
         label: 'lovata.toolbox::lang.field.description'
         span: full
-        oc.commentPosition: ''
         type: textarea
         size: small

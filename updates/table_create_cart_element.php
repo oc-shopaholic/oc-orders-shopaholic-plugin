@@ -5,10 +5,10 @@ use October\Rain\Database\Schema\Blueprint;
 use October\Rain\Database\Updates\Migration;
 
 /**
- * Class TableCreateCartElement
+ * Class TableCreateCartPosition
  * @package Lovata\OrdersShopaholic\Updates
  */
-class TableCreateCartElement extends Migration
+class TableCreateCartPosition extends Migration
 {
     public function up()
     {

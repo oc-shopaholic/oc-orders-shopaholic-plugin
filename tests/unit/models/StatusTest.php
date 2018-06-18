@@ -65,5 +65,4 @@ class StatusTest extends PluginTestCase
         self::assertArrayHasKey('order', $obModel->hasMany, $sErrorMessage);
         self::assertEquals(Order::class, $obModel->hasMany['order'], $sErrorMessage);
     }
-
 }

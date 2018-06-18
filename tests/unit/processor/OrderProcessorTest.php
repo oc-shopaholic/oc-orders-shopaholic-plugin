@@ -1,11 +1,12 @@
 <?php namespace Lovata\OrdersShopaholic\Tests\Unit\Processor;
 
 use Lang;
-use App;
 use Kharanenka\Helper\Result;
 use Lovata\Buddies\Facades\AuthHelper;
-use Lovata\OrdersShopaholic\Classes\OrderProcessor;
+use Lovata\OrdersShopaholic\Classes\Processor\OfferCartPositionProcessor;
+use Lovata\OrdersShopaholic\Classes\Processor\OrderProcessor;
 use Lovata\OrdersShopaholic\Models\Order;
+use Lovata\OrdersShopaholic\Models\OrderPosition;
 use Lovata\Shopaholic\Models\Settings;
 use Lovata\Toolbox\Tests\CommonTest;
 
@@ -13,7 +14,7 @@ use Lovata\Shopaholic\Models\Offer;
 use Lovata\Shopaholic\Models\Product;
 use Lovata\Buddies\Models\User;
 use Lovata\OrdersShopaholic\Models\Cart;
-use Lovata\OrdersShopaholic\Classes\CartProcessor;
+use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
 
 /**
  * Class OrderProcessorTest
@@ -66,6 +67,12 @@ class OrderProcessorTest extends CommonTest
         'password_confirmation' => 'test',
     ];
 
+    public function setUp()
+    {
+        parent::setUp();
+        $this->runPluginRefreshCommand('lovata.popularityshopaholic', false);
+    }
+
     /**
      * Test order creating
      */
@@ -77,11 +84,10 @@ class OrderProcessorTest extends CommonTest
 
         /** @var CartProcessor $obCartProcessor */
         $obCartProcessor = CartProcessor::instance();
-        $obCartProcessor->init();
         $obCartProcessor->clear();
 
         /** @var OrderProcessor $obOrderProcessor */
-        $obOrderProcessor = App::make(OrderProcessor::class);
+        $obOrderProcessor = OrderProcessor::instance();
         $obOrder = $obOrderProcessor->create([]);
 
         self::assertEquals(null, $obOrder, $sErrorMessage);
@@ -109,11 +115,10 @@ class OrderProcessorTest extends CommonTest
 
         /** @var CartProcessor $obCartProcessor */
         $obCartProcessor = CartProcessor::instance();
-        $obCartProcessor->init();
-        $obCartProcessor->add($arOfferList);
+        $obCartProcessor->add($arOfferList, OfferCartPositionProcessor::class);
 
         /** @var OrderProcessor $obOrderProcessor */
-        $obOrderProcessor = App::make(OrderProcessor::class);
+        $obOrderProcessor = OrderProcessor::instance();
         $obOrder = $obOrderProcessor->create([], $this->obUser);
 
         self::assertInstanceOf(Order::class, $obOrder, $sErrorMessage);
@@ -138,13 +143,13 @@ class OrderProcessorTest extends CommonTest
             [
                 'offer_id' => $this->obOffer->id,
                 'quantity' => 2,
+                'property' => ['comment' => 'test'],
             ],
         ];
 
         /** @var CartProcessor $obCartProcessor */
         $obCartProcessor = CartProcessor::instance();
-        $obCartProcessor->init();
-        $obCartProcessor->add($arOfferList);
+        $obCartProcessor->add($arOfferList, OfferCartPositionProcessor::class);
 
         $arOrderData = [
             'payment_method_id' => 1,
@@ -153,7 +158,7 @@ class OrderProcessorTest extends CommonTest
         ];
 
         /** @var OrderProcessor $obOrderProcessor */
-        $obOrderProcessor = App::make(OrderProcessor::class);
+        $obOrderProcessor = OrderProcessor::instance();
         $obOrder = $obOrderProcessor->create($arOrderData, $this->obUser);
 
         self::assertInstanceOf(Order::class, $obOrder, $sErrorMessage);
@@ -162,13 +167,21 @@ class OrderProcessorTest extends CommonTest
         self::assertEquals(1, $obOrder->shipping_type_id, $sErrorMessage);
 
         self::assertEquals('1.1', $obOrder->shipping_price, $sErrorMessage);
-        self::assertEquals(1.1, $obOrder->getShippingPriceValue(), $sErrorMessage);
+        self::assertEquals(1.1, $obOrder->shipping_price_value, $sErrorMessage);
 
-        self::assertEquals('21.1', $obOrder->offers_total_price, $sErrorMessage);
-        self::assertEquals(21.1, $obOrder->getOffersTotalPriceValue(), $sErrorMessage);
+        self::assertEquals('21.1', $obOrder->position_total_price, $sErrorMessage);
+        self::assertEquals(21.1, $obOrder->position_total_price_value, $sErrorMessage);
 
         self::assertEquals('22.2', $obOrder->total_price, $sErrorMessage);
-        self::assertEquals(22.2, $obOrder->getTotalPriceValue(), $sErrorMessage);
+        self::assertEquals(22.2, $obOrder->total_price_value, $sErrorMessage);
+
+        //Get order position
+        /** @var OrderPosition $obOrderPosition */
+        $obOrderPosition = $obOrder->order_position->first();
+
+        self::assertInstanceOf(OrderPosition::class, $obOrderPosition, $sErrorMessage);
+        self::assertEquals(2, $obOrderPosition->quantity, $sErrorMessage);
+        self::assertEquals(['comment' => 'test'], $obOrderPosition->property, $sErrorMessage);
 
         $arRouteData = [
             'id'     => $obOrder->id,
@@ -201,11 +214,10 @@ class OrderProcessorTest extends CommonTest
 
         /** @var CartProcessor $obCartProcessor */
         $obCartProcessor = CartProcessor::instance();
-        $obCartProcessor->init();
-        $obCartProcessor->add($arOfferList);
+        $obCartProcessor->add($arOfferList, OfferCartPositionProcessor::class);
 
         /** @var OrderProcessor $obOrderProcessor */
-        $obOrderProcessor = App::make(OrderProcessor::class);
+        $obOrderProcessor = OrderProcessor::instance();
         $obOrder = $obOrderProcessor->create([], $this->obUser);
 
         self::assertInstanceOf(Order::class, $obOrder, $sErrorMessage);
@@ -236,11 +248,10 @@ class OrderProcessorTest extends CommonTest
 
         /** @var CartProcessor $obCartProcessor */
         $obCartProcessor = CartProcessor::instance();
-        $obCartProcessor->init();
-        $obCartProcessor->add($arOfferList);
+        $obCartProcessor->add($arOfferList, OfferCartPositionProcessor::class);
 
         /** @var OrderProcessor $obOrderProcessor */
-        $obOrderProcessor = App::make(OrderProcessor::class);
+        $obOrderProcessor = OrderProcessor::instance();
         $obOrder = $obOrderProcessor->create([], $this->obUser);
 
         self::assertEquals(null, $obOrder, $sErrorMessage);
@@ -249,7 +260,7 @@ class OrderProcessorTest extends CommonTest
         $sMessage = Lang::get('lovata.ordersshopaholic::lang.message.insufficient_amount');
         self::assertEquals($sMessage, Result::message(), $sErrorMessage);
 
-        self::assertEquals(['offer_id' => $this->obOffer->id], Result::data(), $sErrorMessage);
+        self::assertEquals(['cart_position_id' => 1], Result::data(), $sErrorMessage);
 
         $obCartProcessor->clear();
     }
@@ -274,11 +285,10 @@ class OrderProcessorTest extends CommonTest
 
         /** @var CartProcessor $obCartProcessor */
         $obCartProcessor = CartProcessor::instance();
-        $obCartProcessor->init();
-        $obCartProcessor->add($arOfferList);
+        $obCartProcessor->add($arOfferList, OfferCartPositionProcessor::class);
 
         /** @var OrderProcessor $obOrderProcessor */
-        $obOrderProcessor = App::make(OrderProcessor::class);
+        $obOrderProcessor = OrderProcessor::instance();
         $obOrder = $obOrderProcessor->create([], $this->obUser);
 
         self::assertInstanceOf(Order::class, $obOrder, $sErrorMessage);
@@ -311,11 +321,10 @@ class OrderProcessorTest extends CommonTest
 
         /** @var CartProcessor $obCartProcessor */
         $obCartProcessor = CartProcessor::instance();
-        $obCartProcessor->init();
-        $obCartProcessor->add($arOfferList);
+        $obCartProcessor->add($arOfferList, OfferCartPositionProcessor::class);
 
         /** @var OrderProcessor $obOrderProcessor */
-        $obOrderProcessor = App::make(OrderProcessor::class);
+        $obOrderProcessor = OrderProcessor::instance();
         $obOrder = $obOrderProcessor->create([], $this->obUser);
 
         self::assertInstanceOf(Order::class, $obOrder, $sErrorMessage);
@@ -324,23 +333,6 @@ class OrderProcessorTest extends CommonTest
         /** @var Offer $obOffer */
         $obOffer = Offer::find($this->obOffer->id);
         self::assertEquals(2, $obOffer->quantity, $sErrorMessage);
-
-        /** @var CartProcessor $obCartProcessor */
-        $obCartProcessor = CartProcessor::instance();
-        $obCartProcessor->init();
-        $obCartProcessor->add($arOfferList);
-
-        /** @var OrderProcessor $obOrderProcessor */
-        $obOrderProcessor = App::make(OrderProcessor::class);
-        $obOrder = $obOrderProcessor->create([], $this->obUser);
-
-        self::assertEquals(null, $obOrder, $sErrorMessage);
-        self::assertEquals(false, Result::status(), $sErrorMessage);
-
-        $sMessage = Lang::get('lovata.ordersshopaholic::lang.message.insufficient_amount');
-        self::assertEquals($sMessage, Result::message(), $sErrorMessage);
-
-        self::assertEquals(['offer_id' => $this->obOffer->id], Result::data(), $sErrorMessage);
 
         $obCartProcessor->clear();
     }

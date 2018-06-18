@@ -1,0 +1,13 @@
+# ===================================
+#  Relation Behavior Config
+# ===================================
+
+user:
+    label: 'lovata.ordersshopaholic::lang.buyer.name'
+    view:
+        form: $/lovata/ordersshopaholic/models/order/buddies_user_fields.yaml
+        toolbarButtons: add|update|remove
+    manage:
+        list: $/lovata/buddies/models/user/columns.yaml
+        form: $/lovata/buddies/models/user/fields.yaml
+        recordsPerPage: 10

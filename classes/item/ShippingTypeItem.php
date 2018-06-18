@@ -2,9 +2,9 @@
 
 use Lovata\Toolbox\Classes\Item\ElementItem;
 
-use Lovata\Shopaholic\Plugin;
 use Lovata\Shopaholic\Models\Settings;
 use Lovata\OrdersShopaholic\Models\ShippingType;
+use Lovata\Toolbox\Traits\Helpers\PriceHelperTrait;
 
 /**
  * Class ShippingTypeItem
@@ -22,58 +22,14 @@ use Lovata\OrdersShopaholic\Models\ShippingType;
  */
 class ShippingTypeItem extends ElementItem
 {
-    const CACHE_TAG_ELEMENT = 'order-shopaholic-shipping-type-element';
+    use PriceHelperTrait;
+
+    const MODEL_CLASS = ShippingType::class;
+
+    public $arPriceField = ['price'];
 
     /** @var ShippingType */
     protected $obElement = null;
-
-    /**
-     * Set element object
-     */
-    protected function setElementObject()
-    {
-        if(!empty($this->obElement) && ! $this->obElement instanceof ShippingType) {
-            $this->obElement = null;
-        }
-
-        if(!empty($this->obElement) || empty($this->iElementID)) {
-            return;
-        }
-
-        $this->obElement = ShippingType::active()->find($this->iElementID);
-    }
-
-    /**
-     * Get cache tag array for model
-     * @return array
-     */
-    protected static function getCacheTag()
-    {
-        return [Plugin::CACHE_TAG, self::CACHE_TAG_ELEMENT];
-    }
-
-    /**
-     * Set element data from model object
-     *
-     * @return array
-     */
-    protected function getElementData()
-    {
-        if(empty($this->obElement)) {
-            return null;
-        }
-
-        $arResult = [
-            'id'           => $this->obElement->id,
-            'name'         => $this->obElement->name,
-            'code'         => $this->obElement->code,
-            'price'        => $this->obElement->price,
-            'price_value'  => $this->obElement->getPriceValue(),
-            'preview_text' => $this->obElement->preview_text,
-        ];
-
-        return $arResult;
-    }
 
     /**
      * Get currency value

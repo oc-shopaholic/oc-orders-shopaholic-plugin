@@ -4,7 +4,7 @@ use Lovata\Toolbox\Classes\Event\ModelHandler;
 
 use Lovata\Shopaholic\Models\Offer;
 use Lovata\Shopaholic\Classes\Item\OfferItem;
-use Lovata\OrdersShopaholic\Models\CartElement;
+use Lovata\OrdersShopaholic\Models\CartPosition;
 
 /**
  * Class OfferModelHandler
@@ -44,6 +44,7 @@ class OfferModelHandler extends ModelHandler
 
     /**
      * After delete event handler
+     * @throws
      */
     protected function afterDelete()
     {
@@ -52,35 +53,37 @@ class OfferModelHandler extends ModelHandler
             return;
         }
 
-        $obCartElementList = CartElement::getByOffer($this->obElement->id)->get();
-        if($obCartElementList->isEmpty()) {
-            return;
-        }
-
-        /** @var CartElement $obCartElement */
-        foreach ($obCartElementList as $obCartElement) {
-            $obCartElement->delete();
-        }
+        $this->removeCartPositionList();
     }
 
     /**
      * Check offer active field
+     * @throws
      */
     protected function checkActiveField()
     {
         //check offer "active" field
-        if($this->obElement->getOriginal('active') == $this->obElement->active || $this->obElement->active) {
+        if(!$this->isFieldChanged('active') || $this->obElement->active) {
             return;
         }
 
-        $obCartElementList = CartElement::getByOffer($this->obElement->id)->get();
-        if($obCartElementList->isEmpty()) {
+        $this->removeCartPositionList();
+    }
+
+    /**
+     * Remove cart elements with offers
+     * @throws \Exception
+     */
+    protected function removeCartPositionList()
+    {
+        $obCartPositionList = CartPosition::getByItemID($this->obElement->id)->getByItemType(Offer::class)->get();
+        if($obCartPositionList->isEmpty()) {
             return;
         }
 
-        /** @var CartElement $obCartElement */
-        foreach ($obCartElementList as $obCartElement) {
-            $obCartElement->delete();
+        /** @var CartPosition $obCartPosition */
+        foreach ($obCartPositionList as $obCartPosition) {
+            $obCartPosition->delete();
         }
     }
 }

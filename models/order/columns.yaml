@@ -4,10 +4,22 @@ columns:
         type: number
         searchable: true
         sortable: true
-    status_id:
+    status_name:
         label: 'lovata.ordersshopaholic::lang.field.status'
         relation: status
-        searchable: true
+        searchable: false
+        sortable: true
+        select: name
+    payment_method_name:
+        label: 'lovata.ordersshopaholic::lang.field.payment_method'
+        relation: payment_method
+        searchable: false
+        sortable: true
+        select: name
+    shipping_type_name:
+        label: 'lovata.ordersshopaholic::lang.field.shipping_type'
+        relation: shipping_type
+        searchable: false
         sortable: true
         select: name
     property[email]:
@@ -33,8 +45,8 @@ columns:
     total_price:
         label: 'lovata.ordersshopaholic::lang.field.total_price'
         type: text
-        searchable: true
-        sortable: true
+        searchable: false
+        sortable: false
     id:
         label: 'lovata.toolbox::lang.field.id'
         type: text
