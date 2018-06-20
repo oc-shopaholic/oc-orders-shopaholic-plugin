@@ -11,7 +11,8 @@ use Lovata\Shopaholic\Models\Offer;
 use Lovata\Shopaholic\Models\Product;
 use Lovata\Buddies\Models\User;
 use Lovata\OrdersShopaholic\Models\Cart;
-use Lovata\OrdersShopaholic\Classes\CartProcessor;
+use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
+use Lovata\OrdersShopaholic\Classes\Processor\OfferCartPositionProcessor;
 
 /**
  * Class MakeOrderTest
@@ -64,6 +65,12 @@ class MakeOrderTest extends CommonTest
         'password_confirmation' => 'test',
     ];
 
+    public function setUp()
+    {
+        parent::setUp();
+        $this->runPluginRefreshCommand('lovata.popularityshopaholic', false);
+    }
+
     /**
      * Test order creating
      */
@@ -79,13 +86,15 @@ class MakeOrderTest extends CommonTest
             [
                 'offer_id' => $this->obOffer->id,
                 'quantity' => 2,
+                'property' => [
+                    'comment' => 'test',
+                ],
             ],
         ];
 
         /** @var CartProcessor $obCartProcessor */
         $obCartProcessor = CartProcessor::instance();
-        $obCartProcessor->init();
-        $obCartProcessor->add($arOfferList);
+        $obCartProcessor->add($arOfferList, OfferCartPositionProcessor::class);
 
         $arOrderData = [
             'payment_method_id' => 1,
@@ -105,13 +114,13 @@ class MakeOrderTest extends CommonTest
         self::assertEquals(1, $obOrder->shipping_type_id, $sErrorMessage);
 
         self::assertEquals('1.1', $obOrder->shipping_price, $sErrorMessage);
-        self::assertEquals(1.1, $obOrder->getShippingPriceValue(), $sErrorMessage);
+        self::assertEquals(1.1, $obOrder->shipping_price_value, $sErrorMessage);
 
-        self::assertEquals('21.1', $obOrder->offers_total_price, $sErrorMessage);
-        self::assertEquals(21.1, $obOrder->getOffersTotalPriceValue(), $sErrorMessage);
+        self::assertEquals('21.1', $obOrder->position_total_price, $sErrorMessage);
+        self::assertEquals(21.1, $obOrder->position_total_price_value, $sErrorMessage);
 
         self::assertEquals('22.2', $obOrder->total_price, $sErrorMessage);
-        self::assertEquals(22.2, $obOrder->getTotalPriceValue(), $sErrorMessage);
+        self::assertEquals(22.2, $obOrder->total_price_value, $sErrorMessage);
 
         $arOrderProperty = $obOrder->property;
 
@@ -140,11 +149,11 @@ class MakeOrderTest extends CommonTest
         ];
 
         $obCart = Cart::create([]);
+        CartProcessor::$iTestCartID = $obCart->id;
 
         /** @var CartProcessor $obCartProcessor */
         $obCartProcessor = CartProcessor::instance();
-        $obCartProcessor->init($obCart->id);
-        $obCartProcessor->add($arOfferList);
+        $obCartProcessor->add($arOfferList, OfferCartPositionProcessor::class);
 
         $arOrderData = [
             'payment_method_id' => 1,
@@ -172,13 +181,13 @@ class MakeOrderTest extends CommonTest
         self::assertEquals(1, $obOrder->shipping_type_id, $sErrorMessage);
 
         self::assertEquals('1.1', $obOrder->shipping_price, $sErrorMessage);
-        self::assertEquals(1.1, $obOrder->getShippingPriceValue(), $sErrorMessage);
+        self::assertEquals(1.1, $obOrder->shipping_price_value, $sErrorMessage);
 
-        self::assertEquals('21.1', $obOrder->offers_total_price, $sErrorMessage);
-        self::assertEquals(21.1, $obOrder->getOffersTotalPriceValue(), $sErrorMessage);
+        self::assertEquals('21.1', $obOrder->position_total_price, $sErrorMessage);
+        self::assertEquals(21.1, $obOrder->position_total_price_value, $sErrorMessage);
 
         self::assertEquals('22.2', $obOrder->total_price, $sErrorMessage);
-        self::assertEquals(22.2, $obOrder->getTotalPriceValue(), $sErrorMessage);
+        self::assertEquals(22.2, $obOrder->total_price_value, $sErrorMessage);
 
         $arOrderProperty = $obOrder->property;
 
@@ -207,11 +216,11 @@ class MakeOrderTest extends CommonTest
         ];
 
         $obCart = Cart::create([]);
+        CartProcessor::$iTestCartID = $obCart->id;
 
         /** @var CartProcessor $obCartProcessor */
         $obCartProcessor = CartProcessor::instance();
-        $obCartProcessor->init($obCart->id);
-        $obCartProcessor->add($arOfferList);
+        $obCartProcessor->add($arOfferList, OfferCartPositionProcessor::class);
 
         $arOrderData = [
             'payment_method_id' => 1,
@@ -241,13 +250,13 @@ class MakeOrderTest extends CommonTest
         self::assertEquals(1, $obOrder->shipping_type_id, $sErrorMessage);
 
         self::assertEquals('1.1', $obOrder->shipping_price, $sErrorMessage);
-        self::assertEquals(1.1, $obOrder->getShippingPriceValue(), $sErrorMessage);
+        self::assertEquals(1.1, $obOrder->shipping_price_value, $sErrorMessage);
 
-        self::assertEquals('21.1', $obOrder->offers_total_price, $sErrorMessage);
-        self::assertEquals(21.1, $obOrder->getOffersTotalPriceValue(), $sErrorMessage);
+        self::assertEquals('21.1', $obOrder->position_total_price, $sErrorMessage);
+        self::assertEquals(21.1, $obOrder->position_total_price_value, $sErrorMessage);
 
         self::assertEquals('22.2', $obOrder->total_price, $sErrorMessage);
-        self::assertEquals(22.2, $obOrder->getTotalPriceValue(), $sErrorMessage);
+        self::assertEquals(22.2, $obOrder->total_price_value, $sErrorMessage);
 
         $arOrderProperty = $obOrder->property;
 

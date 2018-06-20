@@ -2,13 +2,15 @@
 #  Relation Behavior Config
 # ===================================
 
-offer:
-    label: 'lovata.ordersshopaholic::lang.field.offer_list'
+order_offer:
+    label: 'lovata.ordersshopaholic::lang.order_position.name'
     view:
-        list: $/lovata/ordersshopaholic/models/offerorder/columns.yaml
+        list: $/lovata/ordersshopaholic/models/orderposition/order_offer_columns.yaml
         showSearch: true
         showSorting: true
         showCheckboxes: true
         recordsPerPage: 10
-        recordUrl: lovata/shopaholic/products/update/:product_id
-        toolbarButtons: remove
+        recordUrl: lovata/ordersshopaholic/orderpositions/update/:id
+        toolbarButtons: create|delete
+    manage:
+        form: $/lovata/ordersshopaholic/models/orderposition/order_offer_fields.yaml

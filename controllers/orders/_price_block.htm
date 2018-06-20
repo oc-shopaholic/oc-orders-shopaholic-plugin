@@ -14,8 +14,8 @@ if(!isset($obOrder) && isset($formModel)) {
         <p><span class="order-shopaholic-delivery-price"><?= $obOrder->shipping_price ?></span> <?= \Lovata\Shopaholic\Models\Settings::getValue('currency');?></p>
     </div>
     <div class="scoreboard-item title-value">
-        <h4><strong><?= e(trans('lovata.ordersshopaholic::lang.field.offers_total_price')) ?></strong></h4>
-        <p><span class="order-shopaholic-offers-total-price"><?= $obOrder->offers_total_price ?></span> <?= \Lovata\Shopaholic\Models\Settings::getValue('currency');?></p>
+        <h4><strong><?= e(trans('lovata.ordersshopaholic::lang.field.position_total_price')) ?></strong></h4>
+        <p><span class="order-shopaholic-offers-total-price"><?= $obOrder->position_total_price ?></span> <?= \Lovata\Shopaholic\Models\Settings::getValue('currency');?></p>
     </div>
     <div class="scoreboard-item title-value">
         <h4><strong><?= e(trans('lovata.ordersshopaholic::lang.field.total_price')) ?></strong></h4>

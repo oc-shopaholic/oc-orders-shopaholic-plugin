@@ -1,13 +1,17 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Event;
 
+use Lovata\OrdersShopaholic\Controllers\OrderPositions;
+use Lovata\OrdersShopaholic\Models\OrderPosition;
+use Lovata\OrdersShopaholic\Models\OrderPositionProperty;
 use System\Models\MailTemplate;
 
 use Lovata\Toolbox\Classes\Helper\UserHelper;
+
 use Lovata\Shopaholic\Models\Settings;
 use Lovata\OrdersShopaholic\Models\Order;
-use Lovata\OrdersShopaholic\Models\Property;
+use Lovata\OrdersShopaholic\Models\OrderProperty;
 use Lovata\OrdersShopaholic\Controllers\Orders;
-use Lovata\OrdersShopaholic\Classes\CartProcessor;
+use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
 
 /**
  * Class ExtendCategoryModel
@@ -25,6 +29,7 @@ class ExtendFieldHandler
         $obEvent->listen('backend.form.extendFields', function ($obWidget) {
             $this->extendSettingsFields($obWidget);
             $this->extendOrderFields($obWidget);
+            $this->extendOrderPositionFields($obWidget);
         });
     }
 
@@ -137,29 +142,41 @@ class ExtendFieldHandler
      * Extend fields for Order model
      * @param \Backend\Widgets\Form $obWidget
      */
-    public function extendOrderFields($obWidget)
+    protected function extendOrderFields($obWidget)
     {
         if (!$obWidget->getController() instanceof Orders || $obWidget->isNested) {
             return;
         }
 
         // Only for the Order model
-        if (!$obWidget->model instanceof Order || $obWidget->context != 'update') {
+        if (!$obWidget->model instanceof Order) {
             return;
         }
 
-        $obPropertyList = Property::active()->orderBy('sort_order', 'asc')->get();
+        $obPropertyList = OrderProperty::active()->orderBy('sort_order', 'asc')->get();
+
+        $this->addOrderPropertyField($obWidget, $obPropertyList);
+        $this->removeOrderUserRelationField($obWidget);
+    }
+
+    /**
+     * Add additional order properties
+     * @param \Backend\Widgets\Form $obWidget
+     * @param \October\Rain\Database\Collection|OrderProperty[]|OrderPositionProperty[] $obPropertyList
+     */
+    protected function addOrderPropertyField($obWidget, $obPropertyList)
+    {
         if ($obPropertyList->isEmpty()) {
             return;
         }
 
         //Get widget data for properties
         $arAdditionPropertyData = [];
-        /** @var Property $obProperty */
+        /** @var OrderProperty $obProperty */
         foreach ($obPropertyList as $obProperty) {
             $arPropertyData = $obProperty->getWidgetData();
             if (!empty($arPropertyData)) {
-                $arAdditionPropertyData[Property::NAME.'['.$obProperty->code.']'] = $arPropertyData;
+                $arAdditionPropertyData[OrderProperty::NAME.'['.$obProperty->code.']'] = $arPropertyData;
             }
         }
 
@@ -167,5 +184,39 @@ class ExtendFieldHandler
         if (!empty($arAdditionPropertyData)) {
             $obWidget->addTabFields($arAdditionPropertyData);
         }
+    }
+
+    /**
+     * Add user relation field
+     * @param \Backend\Widgets\Form $obWidget
+     */
+    protected function removeOrderUserRelationField($obWidget)
+    {
+        $sUserModelClass = UserHelper::instance()->getUserModel();
+        if (empty($sUserModelClass)) {
+            $obWidget->removeField('user');
+        }
+
+        $obWidget->removeField('property[company]');
+    }
+
+    /**
+     * Extend fields for OrderPosition model
+     * @param \Backend\Widgets\Form $obWidget
+     */
+    protected function extendOrderPositionFields($obWidget)
+    {
+        if (!$obWidget->getController() instanceof OrderPositions || $obWidget->isNested) {
+            return;
+        }
+
+        // Only for the OrderPosition model
+        if (!$obWidget->model instanceof OrderPosition) {
+            return;
+        }
+
+        $obPropertyList = OrderPositionProperty::active()->orderBy('sort_order', 'asc')->get();
+
+        $this->addOrderPropertyField($obWidget, $obPropertyList);
     }
 }

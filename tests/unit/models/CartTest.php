@@ -6,7 +6,7 @@ include_once __DIR__.'/../../../../../../tests/PluginTestCase.php';
 use PluginTestCase;
 use Lovata\Buddies\Models\User;
 use Lovata\OrdersShopaholic\Models\Cart;
-use Lovata\OrdersShopaholic\Models\CartElement;
+use Lovata\OrdersShopaholic\Models\CartPosition;
 
 /**
  * Class CartTest
@@ -29,17 +29,17 @@ class CartTest extends PluginTestCase
     }
 
     /**
-     * Check model "item" relation config
+     * Check model "position" relation config
      */
-    public function testHasItemRelation()
+    public function testHasPositionRelation()
     {
-        $sErrorMessage = $this->sModelClass.' model has not correct "item" relation config';
+        $sErrorMessage = $this->sModelClass.' model has not correct "position" relation config';
 
         /** @var Cart $obModel */
         $obModel = new Cart();
         self::assertNotEmpty($obModel->hasMany, $sErrorMessage);
-        self::assertArrayHasKey('item', $obModel->hasMany, $sErrorMessage);
-        self::assertEquals(CartElement::class, $obModel->hasMany['item'], $sErrorMessage);
+        self::assertArrayHasKey('position', $obModel->hasMany, $sErrorMessage);
+        self::assertEquals(CartPosition::class, $obModel->hasMany['position'], $sErrorMessage);
     }
 
     /**
@@ -49,7 +49,7 @@ class CartTest extends PluginTestCase
     {
         $sErrorMessage = $this->sModelClass.' model has not correct "user" relation config';
 
-        /** @var CartElement $obModel */
+        /** @var CartPosition $obModel */
         $obModel = new Cart();
         self::assertNotEmpty($obModel->belongsTo, $sErrorMessage);
         self::assertArrayHasKey('user', $obModel->belongsTo, $sErrorMessage);

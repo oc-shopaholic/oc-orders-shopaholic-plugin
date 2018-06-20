@@ -1,0 +1,9 @@
+<?php
+/** @var \Lovata\Shopaholic\Models\Offer $obOffer */
+/** @var \Lovata\OrdersShopaholic\Models\OrderPosition $record */
+//Get offer object
+
+$obOffer = $record->offer;
+if (!empty($obOffer)) {
+    echo $obOffer->price;
+}

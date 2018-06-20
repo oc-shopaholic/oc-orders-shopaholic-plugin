@@ -1,7 +1,7 @@
 <?php namespace Lovata\OrdersShopaholic\Updates;
 
 use Seeder;
-use Lovata\OrdersShopaholic\Models\Property;
+use Lovata\OrdersShopaholic\Models\OrderProperty;
 
 /**
  * Class SeederDefaultOrderProperties
@@ -48,7 +48,7 @@ class SeederDefaultOrderProperties extends Seeder
         ];
 
         foreach ($arPropertyList as $arPropertyData) {
-            Property::create($arPropertyData);
+            OrderProperty::create($arPropertyData);
         }
     }
 }

@@ -11,15 +11,15 @@ E-Commerce plugin by [LOVATA](https://lovata.com) for October CMS.
   * [PaymentMethodList](https://github.com/lovata/oc-shopaholic-plugin/wiki/PaymentMethodList)
   * [ShippingTypeList](https://github.com/lovata/oc-shopaholic-plugin/wiki/ShippingTypeList)
 * Models
-  * [CartElement](https://github.com/lovata/oc-shopaholic-plugin/wiki/CartElementModel)
+  * [CartPosition](https://github.com/lovata/oc-shopaholic-plugin/wiki/CartPositionModel)
   * [PaymentMethod](https://github.com/lovata/oc-shopaholic-plugin/wiki/PaymentMethodModel)
   * [ShippingType](https://github.com/lovata/oc-shopaholic-plugin/wiki/ShippingTypeModel)
 * Items
-  * [CartElementItem](https://github.com/lovata/oc-shopaholic-plugin/wiki/CartElementItem)
+  * [CartPositionItem](https://github.com/lovata/oc-shopaholic-plugin/wiki/CartPositionItem)
   * [PaymentMethodItem](https://github.com/lovata/oc-shopaholic-plugin/wiki/PaymentMethodItem)
   * [ShippingTypeItem](https://github.com/lovata/oc-shopaholic-plugin/wiki/ShippingTypeItem)
 * Collections
-  * [CartElementCollection](https://github.com/lovata/oc-shopaholic-plugin/wiki/CartElementCollection)
+  * [CartPositionCollection](https://github.com/lovata/oc-shopaholic-plugin/wiki/CartPositionCollection)
   * [PaymentMethodCollection](https://github.com/lovata/oc-shopaholic-plugin/wiki/PaymentMethodCollection)
   * [ShippingTypeCollection](https://github.com/lovata/oc-shopaholic-plugin/wiki/ShippingTypeCollection)
   

@@ -3,26 +3,28 @@
 use Input;
 use Cms\Classes\ComponentBase;
 use Kharanenka\Helper\Result;
-use Lovata\OrdersShopaholic\Classes\CartProcessor;
+
+use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
+use Lovata\OrdersShopaholic\Classes\Processor\OfferCartPositionProcessor;
 
 /**
  * Class Cart
  * @package Lovata\OrdersShopaholic\Components
- * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
+ * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  */
 class Cart extends ComponentBase
 {
     /** @var  CartProcessor */
     protected $obCartData;
-    
+
     /**
      * @return array
      */
     public function componentDetails()
     {
         return [
-            'name'          => 'lovata.ordersshopaholic::lang.component.cart_name',
-            'description'   => 'lovata.ordersshopaholic::lang.component.cart_description',
+            'name'        => 'lovata.ordersshopaholic::lang.component.cart_name',
+            'description' => 'lovata.ordersshopaholic::lang.component.cart_description',
         ];
     }
 
@@ -41,7 +43,8 @@ class Cart extends ComponentBase
     public function onAdd()
     {
         $arRequestData = Input::get('cart');
-        $this->obCartData->add($arRequestData);
+        $this->obCartData->add($arRequestData, OfferCartPositionProcessor::class);
+
         return Result::get();
     }
 
@@ -52,8 +55,9 @@ class Cart extends ComponentBase
     public function onUpdate()
     {
         $arRequestData = Input::get('cart');
-        
-        $this->obCartData->update($arRequestData);
+
+        $this->obCartData->update($arRequestData, OfferCartPositionProcessor::class);
+
         return Result::get();
     }
 
@@ -64,7 +68,8 @@ class Cart extends ComponentBase
     public function onRemove()
     {
         $arRequestData = Input::get('cart');
-        $this->obCartData->remove($arRequestData);
+        $this->obCartData->remove($arRequestData, OfferCartPositionProcessor::class);
+
         return Result::get();
     }
 
@@ -78,7 +83,7 @@ class Cart extends ComponentBase
 
     /**
      * Get offers list from cart
-     * @return \Lovata\OrdersShopaholic\Classes\Collection\CartElementCollection
+     * @return \Lovata\OrdersShopaholic\Classes\Collection\CartPositionCollection
      */
     public function get()
     {

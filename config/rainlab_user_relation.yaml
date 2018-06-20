@@ -1,0 +1,13 @@
+# ===================================
+#  Relation Behavior Config
+# ===================================
+
+user:
+    label: 'lovata.ordersshopaholic::lang.buyer.name'
+    view:
+        form: $/lovata/ordersshopaholic/models/order/rainlab_user_fields.yaml
+        toolbarButtons: add|update|remove
+    manage:
+        list: $/rainlab/user/models/user/columns.yaml
+        form: $/rainlab/user/models/user/fields.yaml
+        recordsPerPage: 10

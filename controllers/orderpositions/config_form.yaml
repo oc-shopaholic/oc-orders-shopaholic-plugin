@@ -1,0 +1,15 @@
+name: 'lovata.ordersshopaholic::lang.order_position.name'
+form: $/lovata/ordersshopaholic/models/orderposition/fields.yaml
+modelClass: Lovata\OrdersShopaholic\Models\OrderPosition
+defaultRedirect: lovata/ordersshopaholic/orders
+create:
+    title: 'backend::lang.form.create_title'
+    redirect: 'lovata/ordersshopaholic/orderpositions/update/:id'
+    redirectClose: lovata/ordersshopaholic/orders/update/:order_id
+    flashSave: 'lovata.toolbox::lang.message.create_success'
+update:
+    title: 'backend::lang.form.update_title'
+    redirect: lovata/ordersshopaholic/orders/update/:order_id
+    redirectClose: lovata/ordersshopaholic/orders/update/:order_id
+    flashSave: 'lovata.toolbox::lang.message.update_success'
+    flashDelete: 'lovata.toolbox::lang.message.delete_success'

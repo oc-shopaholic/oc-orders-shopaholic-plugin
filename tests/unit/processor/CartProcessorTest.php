@@ -1,22 +1,22 @@
 <?php namespace Lovata\OrdersShopaholic\Tests\Unit\Processor;
 
 use Lang;
-use App;
 use Kharanenka\Helper\Result;
-use Lovata\OrdersShopaholic\Classes\Collection\CartElementCollection;
-use Lovata\OrdersShopaholic\Classes\Item\CartElementItem;
+use Lovata\OrdersShopaholic\Classes\Collection\CartPositionCollection;
+use Lovata\OrdersShopaholic\Classes\Item\CartPositionItem;
+use Lovata\OrdersShopaholic\Classes\Processor\OfferCartPositionProcessor;
 use Lovata\Toolbox\Tests\CommonTest;
 
 use Lovata\Shopaholic\Models\Offer;
 use Lovata\Shopaholic\Models\Product;
 use Lovata\Buddies\Models\User;
 use Lovata\OrdersShopaholic\Models\Cart;
-use Lovata\OrdersShopaholic\Classes\CartProcessor;
+use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
 
 /**
  * Class CartProcessorTest
  * @package Lovata\OrdersShopaholic\Tests\Unit\Processor
- * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
+ * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  *
  * @mixin \PHPUnit\Framework\Assert
  */
@@ -64,6 +64,12 @@ class CartProcessorTest extends CommonTest
         'password_confirmation' => 'test',
     ];
 
+    public function setUp()
+    {
+        parent::setUp();
+        $this->runPluginRefreshCommand('lovata.popularityshopaholic', false);
+    }
+
     /**
      * Test add method
      */
@@ -73,10 +79,12 @@ class CartProcessorTest extends CommonTest
 
         $sErrorMessage = 'Method CartProcessor::add is not correct';
 
+        $obCart = Cart::create([]);
+        CartProcessor::$iTestCartID = $obCart->id;
+
         /** @var CartProcessor $obCartProcessor */
         $obCartProcessor = CartProcessor::instance();
-        $obCartProcessor->init();
-        $bResult = $obCartProcessor->add([]);
+        $bResult = $obCartProcessor->add([], OfferCartPositionProcessor::class);
 
         self::assertEquals(false, $bResult, $sErrorMessage);
         self::assertEquals(false, Result::status(), $sErrorMessage);
@@ -86,6 +94,7 @@ class CartProcessorTest extends CommonTest
             [
                 'offer_id' => $this->obOffer->id,
                 'quantity' => 10,
+                'property' => ['comment' => 'test'],
             ],
             [
                 'offer_id' => $this->obOffer->id + 2,
@@ -97,19 +106,20 @@ class CartProcessorTest extends CommonTest
             ],
         ];
 
-        $bResult = $obCartProcessor->add($arOfferList);
+        $bResult = $obCartProcessor->add($arOfferList, OfferCartPositionProcessor::class);
 
         self::assertEquals(true, $bResult, $sErrorMessage);
         self::assertEquals(true, Result::status(), $sErrorMessage);
 
-        $obCartElementList = $obCartProcessor->get();
+        $obCartPositionList = $obCartProcessor->get();
 
-        self::assertEquals(1, $obCartElementList->count(), $sErrorMessage);
+        self::assertEquals(1, $obCartPositionList->count(), $sErrorMessage);
 
-        /** @var CartElementItem $obCartElementItem */
-        $obCartElementItem = $obCartElementList->first();
-        self::assertEquals($this->obOffer->id, $obCartElementItem->offer_id, $sErrorMessage);
-        self::assertEquals(10, $obCartElementItem->quantity, $sErrorMessage);
+        /** @var CartPositionItem $obCartPositionItem */
+        $obCartPositionItem = $obCartPositionList->first();
+        self::assertEquals($this->obOffer->id, $obCartPositionItem->item_id, $sErrorMessage);
+        self::assertEquals(10, $obCartPositionItem->quantity, $sErrorMessage);
+        self::assertEquals(['comment' => 'test'], $obCartPositionItem->property, $sErrorMessage);
 
         $arOfferList = [
             [
@@ -118,12 +128,12 @@ class CartProcessorTest extends CommonTest
             ],
         ];
 
-        $obCartProcessor->add($arOfferList);
-        $obCartElementList = $obCartProcessor->get();
+        $obCartProcessor->add($arOfferList, OfferCartPositionProcessor::class);
+        $obCartPositionList = $obCartProcessor->get();
 
-        /** @var CartElementItem $obCartElementItem */
-        $obCartElementItem = $obCartElementList->first();
-        self::assertEquals(5, $obCartElementItem->quantity, $sErrorMessage);
+        /** @var CartPositionItem $obCartPositionItem */
+        $obCartPositionItem = $obCartPositionList->first();
+        self::assertEquals(5, $obCartPositionItem->quantity, $sErrorMessage);
 
         $obCartProcessor->clear();
     }
@@ -137,10 +147,12 @@ class CartProcessorTest extends CommonTest
 
         $sErrorMessage = 'Method CartProcessor::update is not correct';
 
+        $obCart = Cart::create([]);
+        CartProcessor::$iTestCartID = $obCart->id;
+
         /** @var CartProcessor $obCartProcessor */
         $obCartProcessor = CartProcessor::instance();
-        $obCartProcessor->init();
-        $bResult = $obCartProcessor->update([]);
+        $bResult = $obCartProcessor->update([], OfferCartPositionProcessor::class);
 
         self::assertEquals(false, $bResult, $sErrorMessage);
         self::assertEquals(false, Result::status(), $sErrorMessage);
@@ -153,12 +165,13 @@ class CartProcessorTest extends CommonTest
             ],
         ];
 
-        $obCartProcessor->add($arOfferList);
+        $obCartProcessor->add($arOfferList, OfferCartPositionProcessor::class);
 
         $arOfferList = [
             [
                 'offer_id' => $this->obOffer->id,
                 'quantity' => 10,
+                'property' => ['comment' => 'test1'],
             ],
             [
                 'offer_id' => $this->obOffer->id,
@@ -170,19 +183,20 @@ class CartProcessorTest extends CommonTest
             ],
         ];
 
-        $bResult = $obCartProcessor->update($arOfferList);
+        $bResult = $obCartProcessor->update($arOfferList, OfferCartPositionProcessor::class);
 
         self::assertEquals(true, $bResult, $sErrorMessage);
         self::assertEquals(true, Result::status(), $sErrorMessage);
 
-        $obCartElementList = $obCartProcessor->get();
+        $obCartPositionList = $obCartProcessor->get();
 
-        self::assertEquals(1, $obCartElementList->count(), $sErrorMessage);
+        self::assertEquals(1, $obCartPositionList->count(), $sErrorMessage);
 
-        /** @var CartElementItem $obCartElementItem */
-        $obCartElementItem = $obCartElementList->first();
-        self::assertEquals($this->obOffer->id, $obCartElementItem->offer_id, $sErrorMessage);
-        self::assertEquals(10, $obCartElementItem->quantity, $sErrorMessage);
+        /** @var CartPositionItem $obCartPositionItem */
+        $obCartPositionItem = $obCartPositionList->first();
+        self::assertEquals($this->obOffer->id, $obCartPositionItem->item_id, $sErrorMessage);
+        self::assertEquals(10, $obCartPositionItem->quantity, $sErrorMessage);
+        self::assertEquals(['comment' => 'test1'], $obCartPositionItem->property, $sErrorMessage);
 
         $obCartProcessor->clear();
     }
@@ -196,10 +210,12 @@ class CartProcessorTest extends CommonTest
 
         $sErrorMessage = 'Method CartProcessor::remove is not correct';
 
+        $obCart = Cart::create([]);
+        CartProcessor::$iTestCartID = $obCart->id;
+
         /** @var CartProcessor $obCartProcessor */
         $obCartProcessor = CartProcessor::instance();
-        $obCartProcessor->init();
-        $bResult = $obCartProcessor->remove([]);
+        $bResult = $obCartProcessor->remove([], OfferCartPositionProcessor::class);
 
         self::assertEquals(false, $bResult, $sErrorMessage);
         self::assertEquals(false, Result::status(), $sErrorMessage);
@@ -212,32 +228,32 @@ class CartProcessorTest extends CommonTest
             ],
         ];
 
-        $obCartProcessor->add($arOfferList);
+        $obCartProcessor->add($arOfferList, OfferCartPositionProcessor::class);
 
         $arOfferList = [$this->obOffer->id + 1];
-        $bResult = $obCartProcessor->remove($arOfferList);
+        $bResult = $obCartProcessor->remove($arOfferList, OfferCartPositionProcessor::class);
 
         self::assertEquals(true, $bResult, $sErrorMessage);
         self::assertEquals(true, Result::status(), $sErrorMessage);
 
-        $obCartElementList = $obCartProcessor->get();
+        $obCartPositionList = $obCartProcessor->get();
 
-        self::assertEquals(1, $obCartElementList->count(), $sErrorMessage);
+        self::assertEquals(1, $obCartPositionList->count(), $sErrorMessage);
 
-        /** @var CartElementItem $obCartElementItem */
-        $obCartElementItem = $obCartElementList->first();
-        self::assertEquals($this->obOffer->id, $obCartElementItem->offer_id, $sErrorMessage);
-        self::assertEquals(10, $obCartElementItem->quantity, $sErrorMessage);
+        /** @var CartPositionItem $obCartPositionItem */
+        $obCartPositionItem = $obCartPositionList->first();
+        self::assertEquals($this->obOffer->id, $obCartPositionItem->item_id, $sErrorMessage);
+        self::assertEquals(10, $obCartPositionItem->quantity, $sErrorMessage);
 
         $arOfferList = [$this->obOffer->id];
-        $bResult = $obCartProcessor->remove($arOfferList);
+        $bResult = $obCartProcessor->remove($arOfferList, OfferCartPositionProcessor::class);
 
         self::assertEquals(true, $bResult, $sErrorMessage);
         self::assertEquals(true, Result::status(), $sErrorMessage);
 
-        $obCartElementList = $obCartProcessor->get();
+        $obCartPositionList = $obCartProcessor->get();
 
-        self::assertEquals(0, $obCartElementList->count(), $sErrorMessage);
+        self::assertEquals(0, $obCartPositionList->count(), $sErrorMessage);
 
         $obCartProcessor->clear();
     }
@@ -253,12 +269,11 @@ class CartProcessorTest extends CommonTest
 
         /** @var CartProcessor $obCartProcessor */
         $obCartProcessor = CartProcessor::instance();
-        $obCartProcessor->init();
         $obCartProcessor->clear();
 
-        $obCartElementList = $obCartProcessor->get();
+        $obCartPositionList = $obCartProcessor->get();
 
-        self::assertEquals(0, $obCartElementList->count(), $sErrorMessage);
+        self::assertEquals(0, $obCartPositionList->count(), $sErrorMessage);
 
         $arOfferList = [
             [
@@ -267,12 +282,12 @@ class CartProcessorTest extends CommonTest
             ],
         ];
 
-        $obCartProcessor->add($arOfferList);
+        $obCartProcessor->add($arOfferList, OfferCartPositionProcessor::class);
         $obCartProcessor->clear();
 
-        $obCartElementList = $obCartProcessor->get();
+        $obCartPositionList = $obCartProcessor->get();
 
-        self::assertEquals(0, $obCartElementList->count(), $sErrorMessage);
+        self::assertEquals(0, $obCartPositionList->count(), $sErrorMessage);
     }
 
     /**
@@ -286,7 +301,6 @@ class CartProcessorTest extends CommonTest
 
         /** @var CartProcessor $obCartProcessor */
         $obCartProcessor = CartProcessor::instance();
-        $obCartProcessor->init();
 
         $arOfferList = [
             [
@@ -295,21 +309,21 @@ class CartProcessorTest extends CommonTest
             ],
         ];
 
-        $obCartProcessor->add($arOfferList);
+        $obCartProcessor->add($arOfferList, OfferCartPositionProcessor::class);
 
-        $obCartElementList = $obCartProcessor->get();
+        $obCartPositionList = $obCartProcessor->get();
 
-        self::assertInstanceOf(CartElementCollection::class, $obCartElementList, $sErrorMessage);
-        self::assertEquals(1, $obCartElementList->count(), $sErrorMessage);
+        self::assertInstanceOf(CartPositionCollection::class, $obCartPositionList, $sErrorMessage);
+        self::assertEquals(1, $obCartPositionList->count(), $sErrorMessage);
 
-        /** @var CartElementItem $obCartElementItem */
-        $obCartElementItem = $obCartElementList->first();
-        self::assertEquals($this->obOffer->id, $obCartElementItem->offer_id, $sErrorMessage);
-        self::assertEquals(10, $obCartElementItem->quantity, $sErrorMessage);
+        /** @var CartPositionItem $obCartPositionItem */
+        $obCartPositionItem = $obCartPositionList->first();
+        self::assertEquals($this->obOffer->id, $obCartPositionItem->item_id, $sErrorMessage);
+        self::assertEquals(10, $obCartPositionItem->quantity, $sErrorMessage);
 
         $obCartProcessor->clear();
     }
-    
+
     /**
      * Create shipping type object for test
      */

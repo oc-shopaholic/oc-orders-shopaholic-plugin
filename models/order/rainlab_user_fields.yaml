@@ -1,0 +1,11 @@
+fields:
+    name:
+        label: rainlab.user::lang.user.name
+        span: auto
+    surname:
+        label: rainlab.user::lang.user.surname
+        span: auto
+    email:
+        label: rainlab.user::lang.user.email
+        tab: rainlab.user::lang.user.account
+        span: full
