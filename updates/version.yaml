@@ -37,7 +37,7 @@
 1.5.0:
     - 'Update logic for new version of CResult class. Requires Toolbox plugin version 1.9.1 and later.'
 1.6.0:
-    - 'Toolbox plugin version 1.10.0 and later.'
+    - 'Add classes: OrderCollection, OrderPositionCollection, StatusCollection,  OrderItem, OrderPositionItem, StatusItem. Add StatusList component. Adding the ability to create custom properties for order positions. Adding the ability to attach users with orders. Adding the ability to create/update order positions in backend. Add filter order list (backend) by payment method, shipping type, created_at/update_at fields. Add "hasMany" relation in User model with Order model. Add "user_list" property in User model. Add "order" in UserItem class. Refactoring CartProcessor, OrderProcessor classes. Rename classes: CartElementCollection => CartPositionCollection, CartElementItem => CartPositionItem. Requires Toolbox plugin version 1.10.0 and later.'
     - table_update_status_add_is_user_show_field.php
     - table_create_order_positions.php
     - table_create_cart_positions.php
