@@ -80,6 +80,7 @@ class UserItemTest extends CommonTest
         $this->obElement->user_id = $this->obUser->id;
         $this->obElement->save();
 
+        UserItem::clearCache($this->obUser->id);
         $obItem = UserItem::make($this->obUser->id);
         $obItem->setAttribute('order', null);
 
@@ -110,6 +111,7 @@ class UserItemTest extends CommonTest
         //Remove element
         $this->obElement->delete();
 
+        UserItem::clearCache($this->obUser->id);
         $obItem = UserItem::make($this->obUser->id);
         $obItem->setAttribute('order', null);
         $obOrderList = $obItem->order;
