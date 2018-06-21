@@ -91,6 +91,6 @@ class OrderPage extends ElementPage
      */
     protected function makeItem($iElementID, $obElement)
     {
-        return OrderPage::makeItem($iElementID, $obElement);
+        return OrderItem::make($iElementID, $obElement);
     }
 }
