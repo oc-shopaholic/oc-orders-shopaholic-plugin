@@ -44,4 +44,6 @@
     - table_create_order_position_addition_properties.php
     - table_update_orders_remove_total_price_field.php
 1.6.1:
-    - 'Fix error in OrderPage::get() method'
+    - 'Fix error in OrderPage::get() method.'
+1.6.2:
+    - 'Fix error in OfferOrderPositionProcessor class.'
