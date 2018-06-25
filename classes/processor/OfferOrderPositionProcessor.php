@@ -30,7 +30,6 @@ class OfferOrderPositionProcessor extends AbstractOrderPositionProcessor
     public function validate()
     {
         //Get offer item and check "active" flag
-        $this->obOfferItem = $this->obCartPosition->item;
         $bResult = $this->obOfferItem->isActive() && $this->obOfferItem->product->isActive();
 
         return $bResult;
@@ -77,6 +76,8 @@ class OfferOrderPositionProcessor extends AbstractOrderPositionProcessor
         // Get order behavior flags from settings
         $this->bCheckOfferQuantity = (bool) Settings::getValue('check_offer_quantity');
         $this->bDecrementOfferQuantity = (bool) Settings::getValue('decrement_offer_quantity');
+
+        $this->obOfferItem = $this->obCartPosition->item;
     }
 
     /**
