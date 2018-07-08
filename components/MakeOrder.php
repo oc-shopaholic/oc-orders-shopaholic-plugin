@@ -28,9 +28,6 @@ class MakeOrder extends ComponentSubmitForm
     /** @var \Lovata\Buddies\Models\User */
     protected $obUser;
 
-    /** @var UserHelper */
-    protected $obUserHelper;
-
     /**
      * @return array
      */
@@ -75,10 +72,8 @@ class MakeOrder extends ComponentSubmitForm
      */
     public function init()
     {
-        $this->obUserHelper = UserHelper::instance();
-
         $this->bCreateNewUser = Settings::getValue('create_new_user');
-        $this->obUser = $this->obUserHelper->getUser();
+        $this->obUser = UserHelper::instance()->getUser();
 
         parent::init();
     }
@@ -203,10 +198,10 @@ class MakeOrder extends ComponentSubmitForm
 
         //Find user by email
         $sEmail = $this->arUserData['email'];
-        $this->obUser = $this->obUserHelper->findUserByEmail($sEmail);
+        $this->obUser = UserHelper::instance()->findUserByEmail($sEmail);
 
         //if Buddies plugin is installed, then we need to process "phone" field
-        if ($this->obUserHelper->getPluginName() == 'Lovata.Buddies') {
+        if (UserHelper::instance()->getPluginName() == 'Lovata.Buddies') {
             $this->processUserPhone();
             $this->processUserPhoneList();
         }
@@ -281,7 +276,7 @@ class MakeOrder extends ComponentSubmitForm
 
         try {
             //Create new user
-            $this->obUser = $this->obUserHelper->register($arUserData, true);
+            $this->obUser = UserHelper::instance()->register($arUserData, true);
         } catch (\October\Rain\Database\ModelException $obException) {
             $this->processValidationError($obException);
             return;

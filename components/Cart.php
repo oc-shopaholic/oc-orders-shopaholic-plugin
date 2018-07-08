@@ -14,9 +14,6 @@ use Lovata\OrdersShopaholic\Classes\Processor\OfferCartPositionProcessor;
  */
 class Cart extends ComponentBase
 {
-    /** @var  CartProcessor */
-    protected $obCartData;
-
     /**
      * @return array
      */
@@ -29,21 +26,13 @@ class Cart extends ComponentBase
     }
 
     /**
-     * Init plugin method
-     */
-    public function init()
-    {
-        $this->obCartData = CartProcessor::instance();
-    }
-
-    /**
      * Add product to cart
      * @return array
      */
     public function onAdd()
     {
         $arRequestData = Input::get('cart');
-        $this->obCartData->add($arRequestData, OfferCartPositionProcessor::class);
+        CartProcessor::instance()->add($arRequestData, OfferCartPositionProcessor::class);
 
         return Result::get();
     }
@@ -56,7 +45,7 @@ class Cart extends ComponentBase
     {
         $arRequestData = Input::get('cart');
 
-        $this->obCartData->update($arRequestData, OfferCartPositionProcessor::class);
+        CartProcessor::instance()->update($arRequestData, OfferCartPositionProcessor::class);
 
         return Result::get();
     }
@@ -68,7 +57,7 @@ class Cart extends ComponentBase
     public function onRemove()
     {
         $arRequestData = Input::get('cart');
-        $this->obCartData->remove($arRequestData, OfferCartPositionProcessor::class);
+        CartProcessor::instance()->remove($arRequestData, OfferCartPositionProcessor::class);
 
         return Result::get();
     }
@@ -78,7 +67,7 @@ class Cart extends ComponentBase
      */
     public function onClear()
     {
-        $this->obCartData->clear();
+        CartProcessor::instance()->clear();
     }
 
     /**
@@ -87,6 +76,6 @@ class Cart extends ComponentBase
      */
     public function get()
     {
-        return $this->obCartData->get();
+        return CartProcessor::instance()->get();
     }
 }

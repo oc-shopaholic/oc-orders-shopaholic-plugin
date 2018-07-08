@@ -19,17 +19,6 @@ class OrderModelHandler extends ModelHandler
     /** @var  Order */
     protected $obElement;
 
-    /** @var  OrderListStore */
-    protected $obListStore;
-
-    /**
-     * OrderModelHandler constructor.
-     */
-    public function __construct()
-    {
-        $this->obListStore = OrderListStore::instance();
-    }
-
     /**
      * Add listeners
      * @param \Illuminate\Events\Dispatcher $obEvent
@@ -76,11 +65,11 @@ class OrderModelHandler extends ModelHandler
     {
         parent::afterSave();
 
-        $this->checkFieldChanges('user_id', $this->obListStore->user);
+        $this->checkFieldChanges('user_id', OrderListStore::instance()->user);
 
-        $this->checkFieldChangesTwoParam('status_id', 'user_id', $this->obListStore->status);
-        $this->checkFieldChangesTwoParam('shipping_type_id', 'user_id', $this->obListStore->shipping_type);
-        $this->checkFieldChangesTwoParam('payment_method_id', 'user_id', $this->obListStore->payment_method);
+        $this->checkFieldChangesTwoParam('status_id', 'user_id', OrderListStore::instance()->status);
+        $this->checkFieldChangesTwoParam('shipping_type_id', 'user_id', OrderListStore::instance()->shipping_type);
+        $this->checkFieldChangesTwoParam('payment_method_id', 'user_id', OrderListStore::instance()->payment_method);
     }
 
     /**
@@ -90,16 +79,16 @@ class OrderModelHandler extends ModelHandler
     {
         parent::afterDelete();
 
-        $this->obListStore->user->clear($this->obElement->user_id);
+        OrderListStore::instance()->user->clear($this->obElement->user_id);
 
-        $this->obListStore->status->clear($this->obElement->status_id);
-        $this->obListStore->status->clear($this->obElement->status_id, $this->obElement->user_id);
+        OrderListStore::instance()->status->clear($this->obElement->status_id);
+        OrderListStore::instance()->status->clear($this->obElement->status_id, $this->obElement->user_id);
 
-        $this->obListStore->shipping_type->clear($this->obElement->shipping_type_id);
-        $this->obListStore->shipping_type->clear($this->obElement->shipping_type_id, $this->obElement->user_id);
+        OrderListStore::instance()->shipping_type->clear($this->obElement->shipping_type_id);
+        OrderListStore::instance()->shipping_type->clear($this->obElement->shipping_type_id, $this->obElement->user_id);
 
-        $this->obListStore->payment_method->clear($this->obElement->payment_method_id);
-        $this->obListStore->payment_method->clear($this->obElement->payment_method_id, $this->obElement->user_id);
+        OrderListStore::instance()->payment_method->clear($this->obElement->payment_method_id);
+        OrderListStore::instance()->payment_method->clear($this->obElement->payment_method_id, $this->obElement->user_id);
     }
 
     /**
