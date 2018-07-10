@@ -13,16 +13,8 @@ use Lovata\OrdersShopaholic\Classes\Store\StatusListStore;
  */
 class StatusModelHandler extends ModelHandler
 {
-    /** @var  StatusListStore */
-    protected $obListStore;
-
-    /**
-     * StatusModelHandler constructor.
-     */
-    public function __construct()
-    {
-        $this->obListStore = StatusListStore::instance();
-    }
+    /** @var Status */
+    protected $obElement;
 
     /**
      * Add listeners
@@ -71,7 +63,7 @@ class StatusModelHandler extends ModelHandler
     {
         parent::afterSave();
 
-        $this->checkFieldChanges('is_user_show', $this->obListStore->is_user_show);
+        $this->checkFieldChanges('is_user_show', StatusListStore::instance()->is_user_show);
     }
 
     /**
@@ -82,8 +74,8 @@ class StatusModelHandler extends ModelHandler
         parent::afterDelete();
         $this->clearSortingList();
 
-        if ($this->obListStore->is_user_show) {
-            $this->obListStore->is_user_show->clear();
+        if ($this->obElement->is_user_show) {
+            StatusListStore::instance()->is_user_show->clear();
         }
     }
 
@@ -92,6 +84,6 @@ class StatusModelHandler extends ModelHandler
      */
     public function clearSortingList()
     {
-        $this->obListStore->sorting->clear();
+        StatusListStore::instance()->sorting->clear();
     }
 }

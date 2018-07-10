@@ -13,16 +13,8 @@ use Lovata\OrdersShopaholic\Classes\Store\PaymentMethodListStore;
  */
 class PaymentMethodModelHandler extends ModelHandler
 {
-    /** @var  PaymentMethodListStore */
-    protected $obListStore;
-
-    /**
-     * PaymentMethodModelHandler constructor.
-     */
-    public function __construct()
-    {
-        $this->obListStore = PaymentMethodListStore::instance();
-    }
+    /** @var PaymentMethod */
+    protected $obElement;
 
     /**
      * Add listeners
@@ -71,7 +63,7 @@ class PaymentMethodModelHandler extends ModelHandler
     {
         parent::afterSave();
 
-        $this->checkFieldChanges('active', $this->obListStore->active);
+        $this->checkFieldChanges('active', PaymentMethodListStore::instance()->active);
     }
 
     /**
@@ -82,8 +74,8 @@ class PaymentMethodModelHandler extends ModelHandler
         parent::afterDelete();
         $this->clearSortingList();
 
-        if ($this->obListStore->active) {
-            $this->obListStore->active->clear();
+        if ($this->obElement->active) {
+            PaymentMethodListStore::instance()->active->clear();
         }
     }
 
@@ -92,6 +84,6 @@ class PaymentMethodModelHandler extends ModelHandler
      */
     public function clearSortingList()
     {
-        $this->obListStore->sorting->clear();
+        PaymentMethodListStore::instance()->sorting->clear();
     }
 }

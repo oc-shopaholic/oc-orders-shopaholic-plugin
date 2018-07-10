@@ -13,16 +13,8 @@ use Lovata\OrdersShopaholic\Classes\Store\ShippingTypeListStore;
  */
 class ShippingTypeModelHandler extends ModelHandler
 {
-    /** @var  ShippingTypeListStore */
-    protected $obListStore;
-
-    /**
-     * ShippingTypeModelHandler constructor.
-     */
-    public function __construct()
-    {
-        $this->obListStore = ShippingTypeListStore::instance();
-    }
+    /** @var ShippingType */
+    protected $obElement;
 
     /**
      * Add listeners
@@ -71,7 +63,7 @@ class ShippingTypeModelHandler extends ModelHandler
     {
         parent::afterSave();
 
-        $this->checkFieldChanges('active', $this->obListStore->active);
+        $this->checkFieldChanges('active', ShippingTypeListStore::instance()->active);
     }
 
     /**
@@ -82,8 +74,8 @@ class ShippingTypeModelHandler extends ModelHandler
         parent::afterDelete();
         $this->clearSortingList();
 
-        if ($this->obListStore->active) {
-            $this->obListStore->active->clear();
+        if ($this->obElement->active) {
+            ShippingTypeListStore::instance()->active->clear();
         }
     }
 
@@ -92,6 +84,6 @@ class ShippingTypeModelHandler extends ModelHandler
      */
     public function clearSortingList()
     {
-        $this->obListStore->sorting->clear();
+        ShippingTypeListStore::instance()->sorting->clear();
     }
 }

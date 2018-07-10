@@ -47,3 +47,5 @@
     - 'Fix error in OrderPage::get() method.'
 1.6.2:
     - 'Fix error in OfferOrderPositionProcessor class.'
+1.6.3:
+    - 'Fix work with *Store classes in *Handler classes'

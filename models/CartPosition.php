@@ -31,7 +31,7 @@ use Lovata\Toolbox\Traits\Models\SetPropertyAttributeTrait;
  *
  * @method static $this getByCart(int $iCartID)
  * @method static $this getByItemID(int $iItemID)
- * @method static $this getByItemType(string $iItemType)
+ * @method static $this getByItemType(string $sItemType)
  */
 class CartPosition extends Model
 {
