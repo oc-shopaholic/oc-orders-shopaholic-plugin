@@ -91,7 +91,7 @@ abstract class AbstractPositionItem extends ElementItem
     {
         $sModelClass = $this->item_type;
         if (!isset($this->arItemTypeList[$sModelClass])) {
-            return ElementItem::make(null);
+            return OfferItem::make(null);
         }
 
         $sItemClass = $this->arItemTypeList[$sModelClass]['item'];

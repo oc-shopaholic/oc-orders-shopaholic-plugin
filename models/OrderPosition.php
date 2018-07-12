@@ -43,6 +43,9 @@ use Lovata\Shopaholic\Models\Product;
  *
  * @property Offer $offer
  * @method \October\Rain\Database\Relations\BelongsTo|Offer offer()
+ *
+ * @method static $this getByItemID(int $iItemID)
+ * @method static $this getByItemType(string $sItemType)
  */
 class OrderPosition extends Model
 {
@@ -116,6 +119,36 @@ class OrderPosition extends Model
     public function beforeSave()
     {
         $this->saveNewPositionData();
+    }
+
+    /**
+     * Get element by item ID
+     * @param CartPosition $obQuery
+     * @param string       $sData
+     * @return CartPosition
+     */
+    public function scopeGetByItemID($obQuery, $sData)
+    {
+        if (!empty($sData)) {
+            $obQuery->where('item_id', $sData);
+        }
+
+        return $obQuery;
+    }
+
+    /**
+     * Get element by item type
+     * @param CartPosition $obQuery
+     * @param string       $sData
+     * @return CartPosition
+     */
+    public function scopeGetByItemType($obQuery, $sData)
+    {
+        if (!empty($sData)) {
+            $obQuery->where('item_type', $sData);
+        }
+
+        return $obQuery;
     }
 
     /**

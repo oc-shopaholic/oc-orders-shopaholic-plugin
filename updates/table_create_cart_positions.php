@@ -37,7 +37,7 @@ class TableCreateCartPositions extends Migration
             $obTable->increments('id')->unsigned();
             $obTable->integer('cart_id')->unsigned()->default(0);
             $obTable->integer('item_id')->unsigned()->default(0);
-            $obTable->string('item_type')->default('\\Lovata\\Shopaholic\\Models\\Offer');
+            $obTable->string('item_type')->default('Lovata\\Shopaholic\\Models\\Offer');
             $obTable->integer('quantity')->unsigned()->default(0);
             $obTable->text('property')->nullable();
             $obTable->timestamps();
@@ -45,7 +45,7 @@ class TableCreateCartPositions extends Migration
             $obTable->index('cart_id');
         });
     }
-    
+
     protected function removeNewTable()
     {
         Schema::dropIfExists('lovata_orders_shopaholic_cart_positions');
@@ -53,12 +53,11 @@ class TableCreateCartPositions extends Migration
 
     protected function createOldTable()
     {
-        if(Schema::hasTable('lovata_orders_shopaholic_cart_element')) {
+        if (Schema::hasTable('lovata_orders_shopaholic_cart_element')) {
             return;
         }
 
-        Schema::create('lovata_orders_shopaholic_cart_element', function(Blueprint $obTable)
-        {
+        Schema::create('lovata_orders_shopaholic_cart_element', function (Blueprint $obTable) {
             $obTable->engine = 'InnoDB';
             $obTable->increments('id')->unsigned();
             $obTable->integer('cart_id')->unsigned()->default(0);
@@ -93,10 +92,10 @@ class TableCreateCartPositions extends Migration
 
             $arInsetRowList[] = [
                 'id'        => $iKey + 1,
-                'cart_id'  => $obElement->cart_id,
-                'item_id'  => $obElement->offer_id,
+                'cart_id'   => $obElement->cart_id,
+                'item_id'   => $obElement->offer_id,
                 'quantity'  => $obElement->quantity,
-                'item_type' => '\\Lovata\\Shopaholic\\Models\\Offer',
+                'item_type' => 'Lovata\\Shopaholic\\Models\\Offer',
             ];
         }
 
@@ -119,10 +118,10 @@ class TableCreateCartPositions extends Migration
         foreach ($obElementList as $iKey => $obElement) {
 
             $arInsetRowList[] = [
-                'id'        => $iKey + 1,
+                'id'       => $iKey + 1,
                 'cart_id'  => $obElement->cart_id,
-                'offer_id'  => $obElement->item_id,
-                'quantity'  => $obElement->quantity,
+                'offer_id' => $obElement->item_id,
+                'quantity' => $obElement->quantity,
             ];
 
         }

@@ -2,6 +2,7 @@
 
 use Model;
 use October\Rain\Argon\Argon;
+use October\Rain\Database\Traits\Encryptable;
 
 use Kharanenka\Scope\UserBelongsTo;
 
@@ -68,6 +69,7 @@ class Order extends Model
     use TraitCached;
     use PriceHelperTrait;
     use SetPropertyAttributeTrait;
+    use Encryptable;
 
     public $table = 'lovata_orders_shopaholic_orders';
 
@@ -79,6 +81,7 @@ class Order extends Model
 
     public $jsonable = ['property'];
     public $dates = ['created_at', 'updated_at'];
+    public $encryptable = [];
 
     public $fillable = [
         'user_id',
