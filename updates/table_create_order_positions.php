@@ -92,7 +92,7 @@ class TableCreateOrderPositions extends Migration
                 'old_price' => $obOfferOrder->old_price,
                 'quantity'  => $obOfferOrder->quantity,
                 'code'      => $obOfferOrder->code,
-                'item_type' => '\\Lovata\\Shopaholic\\Models\\Offer',
+                'item_type' => 'Lovata\\Shopaholic\\Models\\Offer',
             ];
         }
 
