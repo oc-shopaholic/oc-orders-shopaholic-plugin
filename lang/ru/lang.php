@@ -16,11 +16,14 @@
         'status_list_description'         => '',
         'order_page_name'                 => 'Страница заказа',
         'order_page_description'          => '',
+        'send_payment_purchase'           => 'Отправить запрос в платежную систему после создания заказа',
     ],
     'tab'            => [
-        'info'           => 'Данные заказа',
-        'offers_info'    => 'Список товаров',
-        'order_settings' => 'Корзина и заказы',
+        'info'             => 'Данные заказа',
+        'offers_info'      => 'Список товаров',
+        'order_settings'   => 'Корзина и заказы',
+        'gateway'          => 'Платежная система',
+        'payment_data'     => 'Данные платежа',
     ],
     'message'        => [
         'empty_cart'          => 'Корзина пуста',
@@ -49,6 +52,15 @@
         'payment_method'       => 'Способ оплаты',
         'is_user_show'         => 'Показывать статус пользователю',
         'user_status'          => 'Для пользователя статус будет показан как',
+        'gateway_id'           => 'Платежная система',
+        'gateway_currency'     => 'Валюта платежной системы',
+        'before_status_id'     => 'Статус заказа до оплаты',
+        'after_status_id'      => 'Статус заказа после оплаты',
+        'cancel_status_id'     => 'Статус заказа после отмены оплаты',
+        'fail_status_id'       => 'Статус заказа после ошибки оплаты',
+        'transaction_id'       => 'Transaction ID',
+        'payment_data'         => 'Данные, отправленные платежному шлюзу',
+        'payment_response'     => 'Данные, полученные из платежного шлюза',
     ],
     'settings'       => [
         'cart_cookie_lifetime'                 => 'Время жизни ID корзины в cookie (мин.)',
@@ -95,7 +107,7 @@
         'name'       => 'способа доставки',
         'list_title' => 'Способы доставки',
     ],
-    'order_property'       => [
+    'order_property' => [
         'name'       => 'свойства',
         'list_title' => 'Список свойств',
     ],

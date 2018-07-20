@@ -1,7 +1,7 @@
 <?php namespace Lovata\OrdersShopaholic\Components;
 
 use Input;
-use System\Classes\PluginManager;
+use Redirect;
 
 use Kharanenka\Helper\Result;
 use Lovata\Toolbox\Classes\Helper\UserHelper;
@@ -28,6 +28,9 @@ class MakeOrder extends ComponentSubmitForm
     /** @var \Lovata\Buddies\Models\User */
     protected $obUser;
 
+    /** @var \Lovata\OrdersShopaholic\Classes\Helper\AbstractPaymentGateway|null */
+    protected $obPaymentGateway;
+
     /**
      * @return array
      */
@@ -45,6 +48,10 @@ class MakeOrder extends ComponentSubmitForm
     public function defineProperties()
     {
         $arResult = $this->getModeProperty();
+        $arResult['send_payment_purchase'] = [
+            'title' => 'lovata.ordersshopaholic::lang.component.send_payment_purchase',
+            'type'  => 'checkbox',
+        ];
 
         return $arResult;
     }
@@ -96,6 +103,11 @@ class MakeOrder extends ComponentSubmitForm
         }
 
         $this->create($arOrderData, $arUserData);
+        if (!empty($this->obPaymentGateway) && $this->obPaymentGateway->isRedirect()) {
+            $sRedirectURL = $this->obPaymentGateway->getRedirectURL();
+
+            return Redirect::to($sRedirectURL);
+        }
 
         return $this->getResponseModeForm();
     }
@@ -111,6 +123,11 @@ class MakeOrder extends ComponentSubmitForm
         $arUserData = (array) Input::get('user');
 
         $this->create($arOrderData, $arUserData);
+        if (!empty($this->obPaymentGateway) && $this->obPaymentGateway->isRedirect()) {
+            $sRedirectURL = $this->obPaymentGateway->getRedirectURL();
+
+            return Redirect::to($sRedirectURL);
+        }
 
         return $this->getResponseModeAjax();
     }
@@ -120,6 +137,7 @@ class MakeOrder extends ComponentSubmitForm
      * @param array $arOrderData
      * @param array $arUserData
      * @throws \Exception
+     * @return \Lovata\OrdersShopaholic\Models\Order|null
      */
     public function create($arOrderData, $arUserData)
     {
@@ -141,7 +159,7 @@ class MakeOrder extends ComponentSubmitForm
         }
 
         if (!Result::status()) {
-            return;
+            return null;
         }
 
         $arOrderData = $this->arOrderData;
@@ -153,19 +171,15 @@ class MakeOrder extends ComponentSubmitForm
             $arOrderData['property'] = array_merge($arOrderData['property'], $this->arUserData);
         }
 
-        $obOrder = OrderProcessor::instance()->create($arOrderData, $this->obUser);
-        if (empty($obOrder)) {
-            return;
+        $arPaymentData = Input::get('payment');
+        if (!empty($arPaymentData) && is_array($arPaymentData)) {
+            $arOrderData['payment_data'] = $arPaymentData;
         }
 
-        if (PluginManager::instance()->hasPlugin('Lovata.OmnipayShopaholic')) {
+        $obOrder = OrderProcessor::instance()->create($arOrderData, $this->obUser, $this->property('send_payment_purchase'));
+        $this->obPaymentGateway = OrderProcessor::instance()->getPaymentGateway();
 
-            $arPaymentData = Input::get('payment');
-            if (!empty($arPaymentData)) {
-                $obOrder->payment_data = $arPaymentData;
-                $obOrder->save();
-            }
-        }
+        return $obOrder;
     }
 
     /**

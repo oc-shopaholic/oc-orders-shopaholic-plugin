@@ -7,11 +7,18 @@ fields:
         context:
             - update
             - preview
+    transaction_id:
+        label: 'lovata.ordersshopaholic::lang.field.transaction_id'
+        span: right
+        disabled: 1
+        type: text
+        context:
+            - update
+            - preview
     price_block:
         span: full
         type: partial
         path: ~/plugins/lovata/ordersshopaholic/controllers/orders/_price_block.htm
-        path: price_block
         dependsOn: shipping_price
 tabs:
     fields:
@@ -61,3 +68,15 @@ tabs:
             type: partial
             path: ~/plugins/lovata/ordersshopaholic/controllers/orders/_order_offer.htm
             tab: 'lovata.ordersshopaholic::lang.tab.offers_info'
+        payment_data_json:
+            label: 'lovata.ordersshopaholic::lang.field.payment_data'
+            span: left
+            type: partial
+            path: ~/plugins/lovata/ordersshopaholic/controllers/orders/_payment_data_json.htm
+            tab: 'lovata.ordersshopaholic::lang.tab.payment_data'
+        payment_response_json:
+            label: 'lovata.ordersshopaholic::lang.field.payment_response'
+            span: right
+            type: partial
+            path: ~/plugins/lovata/ordersshopaholic/controllers/orders/_payment_response_json.htm
+            tab: 'lovata.ordersshopaholic::lang.tab.payment_data'

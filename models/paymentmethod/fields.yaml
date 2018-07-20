@@ -6,11 +6,11 @@ fields:
         type: switch
     name:
         label: 'lovata.toolbox::lang.field.name'
-        span: full
+        span: left
         type: text
     code:
         label: 'lovata.toolbox::lang.field.code'
-        span: full
+        span: right
         type: text
     preview_text:
         label: 'lovata.toolbox::lang.field.description'

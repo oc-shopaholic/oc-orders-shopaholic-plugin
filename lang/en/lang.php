@@ -16,11 +16,14 @@
         'status_list_description'         => '',
         'order_page_name'                 => 'Order page',
         'order_page_description'          => '',
+        'send_payment_purchase'           => 'Send payment purchase after creating order',
     ],
     'tab'            => [
-        'info'           => 'Order data',
-        'offers_info'    => 'Offer list',
-        'order_settings' => 'Order and cart',
+        'info'             => 'Order data',
+        'offers_info'      => 'Offer list',
+        'order_settings'   => 'Order and cart',
+        'gateway'          => 'Gateway',
+        'payment_data'     => 'Payment data',
     ],
     'message'        => [
         'empty_cart'          => 'Cart is empty',
@@ -49,6 +52,15 @@
         'payment_method'       => 'Payment method',
         'is_user_show'         => 'Show status to user',
         'user_status'          => 'For user, status will be shown as',
+        'gateway_id'           => 'Payment gateway',
+        'gateway_currency'     => 'Gateway currency',
+        'before_status_id'     => 'Order status before payment',
+        'after_status_id'      => 'Order status after payment success',
+        'cancel_status_id'     => 'Order status after payment cancel',
+        'fail_status_id'       => 'Order status after payment fail/error',
+        'transaction_id'       => 'Transaction ID',
+        'payment_data'         => 'Data that was sent to payment gateway',
+        'payment_response'     => 'Data that was received from payment gateway',
     ],
     'settings'       => [
         'cart_cookie_lifetime'                 => 'Life time of cart ID in cookie (min.)',
@@ -95,7 +107,7 @@
         'name'       => 'shipping type',
         'list_title' => 'Shipping types',
     ],
-    'order_property'       => [
+    'order_property' => [
         'name'       => 'property',
         'list_title' => 'Property list',
     ],
