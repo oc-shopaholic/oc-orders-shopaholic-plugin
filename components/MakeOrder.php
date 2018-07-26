@@ -9,6 +9,7 @@ use Lovata\Toolbox\Classes\Component\ComponentSubmitForm;
 use Lovata\Toolbox\Traits\Helpers\TraitValidationHelper;
 
 use Lovata\Shopaholic\Models\Settings;
+use Lovata\OrdersShopaholic\Models\ShippingType;
 use Lovata\OrdersShopaholic\Classes\Processor\OrderProcessor;
 
 /**
@@ -28,7 +29,7 @@ class MakeOrder extends ComponentSubmitForm
     /** @var \Lovata\Buddies\Models\User */
     protected $obUser;
 
-    /** @var \Lovata\OrdersShopaholic\Classes\Helper\AbstractPaymentGateway|null */
+    /** @var \Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface|null */
     protected $obPaymentGateway;
 
     /**
@@ -48,10 +49,6 @@ class MakeOrder extends ComponentSubmitForm
     public function defineProperties()
     {
         $arResult = $this->getModeProperty();
-        $arResult['send_payment_purchase'] = [
-            'title' => 'lovata.ordersshopaholic::lang.component.send_payment_purchase',
-            'type'  => 'checkbox',
-        ];
 
         return $arResult;
     }
@@ -103,11 +100,21 @@ class MakeOrder extends ComponentSubmitForm
         }
 
         $this->create($arOrderData, $arUserData);
-        if (!empty($this->obPaymentGateway) && $this->obPaymentGateway->isRedirect()) {
+        if (empty($this->obPaymentGateway) || !Result::status()) {
+            return $this->getResponseModeForm();
+        }
+
+        if ($this->obPaymentGateway->isRedirect()) {
             $sRedirectURL = $this->obPaymentGateway->getRedirectURL();
 
             return Redirect::to($sRedirectURL);
+        } else if ($this->obPaymentGateway->isSuccessful()) {
+            Result::setTrue($this->obPaymentGateway->getResponse());
+        } else {
+            Result::setFalse($this->obPaymentGateway->getResponse());
         }
+
+        Result::setMessage($this->obPaymentGateway->getMessage())->get();
 
         return $this->getResponseModeForm();
     }
@@ -123,11 +130,21 @@ class MakeOrder extends ComponentSubmitForm
         $arUserData = (array) Input::get('user');
 
         $this->create($arOrderData, $arUserData);
-        if (!empty($this->obPaymentGateway) && $this->obPaymentGateway->isRedirect()) {
+        if (empty($this->obPaymentGateway) || !Result::status()) {
+            return $this->getResponseModeAjax();
+        }
+
+        if ($this->obPaymentGateway->isRedirect()) {
             $sRedirectURL = $this->obPaymentGateway->getRedirectURL();
 
             return Redirect::to($sRedirectURL);
+        } else if ($this->obPaymentGateway->isSuccessful()) {
+            Result::setTrue($this->obPaymentGateway->getResponse());
+        } else {
+            Result::setFalse($this->obPaymentGateway->getResponse());
         }
+
+        Result::setMessage($this->obPaymentGateway->getMessage())->get();
 
         return $this->getResponseModeAjax();
     }
@@ -176,7 +193,9 @@ class MakeOrder extends ComponentSubmitForm
             $arOrderData['payment_data'] = $arPaymentData;
         }
 
-        $obOrder = OrderProcessor::instance()->create($arOrderData, $this->obUser, $this->property('send_payment_purchase'));
+        $arOrderData['shipping_price'] = $this->getShippingTypePrice();
+
+        $obOrder = OrderProcessor::instance()->create($arOrderData, $this->obUser);
         $this->obPaymentGateway = OrderProcessor::instance()->getPaymentGateway();
 
         return $obOrder;
@@ -295,5 +314,32 @@ class MakeOrder extends ComponentSubmitForm
             $this->processValidationError($obException);
             return;
         }
+    }
+
+    /**
+     * Get shipping type price
+     * @return float|string
+     */
+    protected function getShippingTypePrice()
+    {
+        //Get shipping price from request
+        $fPrice =  Input::get('order.shipping_price');
+        if ($fPrice !== null) {
+            return $fPrice;
+        }
+
+        //Get shipping type ID
+        $iShippingTypeID = Input::get('order.shipping_type_id');
+        if (empty($iShippingTypeID)) {
+            return 0;
+        }
+
+        //Get shipping type object
+        $obShippingType = ShippingType::find($iShippingTypeID);
+        if (empty($obShippingType)) {
+            return 0;
+        }
+
+        return $obShippingType->price_value;
     }
 }

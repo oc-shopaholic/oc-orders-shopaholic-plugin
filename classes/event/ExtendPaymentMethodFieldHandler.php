@@ -104,6 +104,12 @@ class ExtendPaymentMethodFieldHandler
                 'span'        => 'right',
                 'type'        => 'relation',
             ],
+            'send_purchase_request'    => [
+                'tab'         => 'lovata.ordersshopaholic::lang.tab.gateway',
+                'label'       => 'lovata.ordersshopaholic::lang.field.send_purchase_request',
+                'span'        => 'left',
+                'type'        => 'switch',
+            ],
         ];
 
         $obWidget->addTabFields($arFieldList);
@@ -129,6 +135,8 @@ class ExtendPaymentMethodFieldHandler
 
             $arResult = array_merge($arResult, $arGatewayList);
         }
+
+        asort($arResult);
 
         return $arResult;
     }

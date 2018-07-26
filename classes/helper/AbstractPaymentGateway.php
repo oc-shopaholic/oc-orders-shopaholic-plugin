@@ -3,13 +3,14 @@
 use Event;
 use Redirect;
 use Lovata\OrdersShopaholic\Models\Order;
+use Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface;
 
 /**
  * Class AbstractPaymentGateway
  * @package Lovata\OrdersShopaholic\Classes\Helper
  * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  */
-abstract class AbstractPaymentGateway
+abstract class AbstractPaymentGateway implements PaymentGatewayInterface
 {
     /** @var \Lovata\OrdersShopaholic\Models\Order */
     protected $obOrder;
@@ -48,31 +49,37 @@ abstract class AbstractPaymentGateway
      * Return true, if response has redirect URL
      * @return bool
      */
-    public function isRedirect()
+    public function isRedirect() : bool
     {
-        return $this->bIsRedirect;
+        return (bool) $this->bIsRedirect;
     }
 
     /**
      * Return true, if result of purchase is successful
      * @return bool
      */
-    public function isSuccessful()
+    public function isSuccessful() : bool
     {
-        return $this->bIsSuccessful;
+        return (bool) $this->bIsSuccessful;
     }
 
     /**
-     * Get gateway code
+     * Get response array
      * @return string
      */
-    abstract public function getCode();
+    abstract public function getResponse() : array;
 
     /**
      * Get redirect URL
      * @return string
      */
-    abstract public function getRedirectURL();
+    abstract public function getRedirectURL() : string;
+
+    /**
+     * Get response message
+     * @return string
+     */
+    abstract public function getMessage() : string;
 
     /**
      * Get gateway property value from array

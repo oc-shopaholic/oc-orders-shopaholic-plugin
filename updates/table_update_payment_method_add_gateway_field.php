@@ -28,6 +28,7 @@ class TableUpdatePaymentMethodAddTypeField extends Migration
             {
                 $obTable->integer('cancel_status_id')->nullable()->default(0);
                 $obTable->integer('fail_status_id')->nullable()->default(0);
+                $obTable->boolean('send_purchase_request')->default(0);
             });
         }
 

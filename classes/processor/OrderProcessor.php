@@ -38,23 +38,18 @@ class OrderProcessor
     /** @var \Lovata\OrdersShopaholic\Classes\Collection\CartPositionCollection|\Lovata\OrdersShopaholic\Classes\Item\CartPositionItem[] */
     protected $obCartPositionList;
 
-    protected $bSendPaymentRequest = false;
-
-    /** @var \Lovata\OrdersShopaholic\Classes\Helper\AbstractPaymentGateway|null */
+    /** @var \Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface|null */
     protected $obPaymentGateway;
 
     /**
      * Create new order
      * @param                             $arOrderData
      * @param \Lovata\Buddies\Models\User $obUser
-     * @param bool                        $bSendPaymentRequest
      * @return Order|null
      * @throws \Exception
      */
-    public function create($arOrderData, $obUser = null, $bSendPaymentRequest = false)
+    public function create($arOrderData, $obUser = null)
     {
-        $this->bSendPaymentRequest = $bSendPaymentRequest;
-
         $this->initOrderData($arOrderData);
         $this->initUser($obUser);
         $this->setOrderStatus();
@@ -94,7 +89,7 @@ class OrderProcessor
 
     /**
      * Get payment gateway object
-     * @return \Lovata\OrdersShopaholic\Classes\Helper\AbstractPaymentGateway|null
+     * @return \Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface|null
      */
     public function getPaymentGateway()
     {
@@ -235,25 +230,27 @@ class OrderProcessor
 
     /**
      * Check payment type, send purchase if need
-     * @return \Lovata\OrdersShopaholic\Classes\Helper\AbstractPaymentGateway|null
      */
     protected function sendPaymentPurchase()
     {
         //Get order payment
-        if (empty($this->obOrder) || !$this->bSendPaymentRequest) {
-            return null;
+        if (empty($this->obOrder)) {
+            return;
         }
 
         $obPaymentMethod = $this->obOrder->payment_method;
-        if (empty($obPaymentMethod)) {
-            return null;
+        if (empty($obPaymentMethod) || !$obPaymentMethod->send_purchase_request) {
+            return;
         }
 
         $this->obPaymentGateway = $this->obOrder->payment_method->gateway;
         if (empty($this->obPaymentGateway)) {
-            return null;
+            return;
         }
 
         $this->obPaymentGateway->purchase($this->obOrder);
+        if (!$this->obPaymentGateway->isRedirect() && !$this->obPaymentGateway->isSuccessful()) {
+            Result::setFalse($this->obPaymentGateway->getResponse())->setMessage($this->obPaymentGateway->getMessage());
+        }
     }
 }

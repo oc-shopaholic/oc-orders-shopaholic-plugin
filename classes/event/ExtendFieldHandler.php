@@ -157,6 +157,7 @@ class ExtendFieldHandler
 
         $this->addOrderPropertyField($obWidget, $obPropertyList);
         $this->removeOrderUserRelationField($obWidget);
+        $this->removePaymentDataField($obWidget);
     }
 
     /**
@@ -198,6 +199,24 @@ class ExtendFieldHandler
         }
 
         $obWidget->removeField('property[company]');
+    }
+
+    /**
+     * Add user relation field
+     * @param \Backend\Widgets\Form $obWidget
+     */
+    protected function removePaymentDataField($obWidget)
+    {
+        //Get payment gateway
+        /** @var \Lovata\OrdersShopaholic\Models\PaymentMethod $obPaymentMethod */
+        $obPaymentMethod = $obWidget->model->payment_method;
+        if (!empty($obPaymentMethod) && !empty($obPaymentMethod->gateway)) {
+            return;
+        }
+
+        $obWidget->removeField('transaction_id');
+        $obWidget->removeField('payment_data_json');
+        $obWidget->removeField('payment_response_json');
     }
 
     /**

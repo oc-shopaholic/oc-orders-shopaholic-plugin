@@ -9,7 +9,7 @@ use Kharanenka\Scope\ActiveField;
 use Kharanenka\Scope\CodeField;
 
 use Lovata\Toolbox\Traits\Helpers\TraitCached;
-use Lovata\OrdersShopaholic\Classes\Helper\AbstractPaymentGateway;
+use Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface;
 
 /**
  * Class PaymentMethod
@@ -35,6 +35,7 @@ use Lovata\OrdersShopaholic\Classes\Helper\AbstractPaymentGateway;
  * @property int                                                            $after_status_id
  * @property int                                                            $cancel_status_id
  * @property int                                                            $fail_status_id
+ * @property bool                                                           $send_purchase_request
  *
  * @property \October\Rain\Database\Collection|Order[]                      $order
  * @method static Order|\October\Rain\Database\Relations\HasMany order()
@@ -49,7 +50,7 @@ use Lovata\OrdersShopaholic\Classes\Helper\AbstractPaymentGateway;
  * @method static Status|\October\Rain\Database\Relations\BelongsTo cancel_status()
  * @method static Status|\October\Rain\Database\Relations\BelongsTo fail_status()
  *
- * @property \Lovata\OrdersShopaholic\Classes\Helper\AbstractPaymentGateway $gateway
+ * @property \Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface $gateway
  */
 class PaymentMethod extends Model
 {
@@ -121,7 +122,7 @@ class PaymentMethod extends Model
     protected $arGatewayClassList = [];
 
     /**
-     * @return null|\Lovata\OrdersShopaholic\Classes\Helper\AbstractPaymentGateway
+     * @return null|\Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface
      */
     public function getGatewayAttribute()
     {
@@ -136,7 +137,7 @@ class PaymentMethod extends Model
         }
 
         $obGatewayClass = new $sGatewayClass();
-        if (!$obGatewayClass instanceof AbstractPaymentGateway) {
+        if (!$obGatewayClass instanceof PaymentGatewayInterface) {
             return null;
         }
 
@@ -150,7 +151,7 @@ class PaymentMethod extends Model
      */
     public function addGatewayClass($sCode, $sClassName)
     {
-        if (empty($sCode) || empty($sClassName) || !class_exists($sClassName)) {
+        if (empty($sCode) || empty($sClassName) || !class_exists($sClassName) || isset($this->arGatewayClassList[$sCode])) {
             return;
         }
 
