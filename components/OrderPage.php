@@ -1,7 +1,7 @@
 <?php namespace Lovata\OrdersShopaholic\Components;
 
-use Kharanenka\Helper\Result;
 use Redirect;
+use Kharanenka\Helper\Result;
 use Lovata\Toolbox\Classes\Component\ElementPage;
 use Lovata\Toolbox\Traits\Helpers\TraitComponentNotFoundResponse;
 

@@ -233,6 +233,10 @@ class OrderProcessor
      */
     protected function sendPaymentPurchase()
     {
+        if (!Result::status()) {
+            return;
+        }
+
         //Get order payment
         if (empty($this->obOrder)) {
             return;
