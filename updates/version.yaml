@@ -53,6 +53,6 @@
     - 'Fix position type default value'
     - seeder_fix_position_type_value.php
 1.7.0:
-    - 'Improved integration with payment systems'
+    - 'Improved integration with payment systems. Added filling of shipping price from shipping type object, if request has not shipping_price field value.'
     - table_update_payment_method_add_gateway_field.php
     - table_update_orders_add_payment_data_fields.php
