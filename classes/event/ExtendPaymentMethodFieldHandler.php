@@ -29,7 +29,7 @@ class ExtendPaymentMethodFieldHandler
      */
     protected function extendBackendFields($obWidget)
     {
-        if (!$obWidget->getController() instanceof PaymentMethods) {
+        if (!$obWidget->getController() instanceof PaymentMethods || $obWidget->isNested) {
             return;
         }
 
