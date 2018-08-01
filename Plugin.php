@@ -7,6 +7,7 @@ use System\Classes\PluginBase;
 //Events
 use Lovata\OrdersShopaholic\Classes\Event\CartPositionModelHandler;
 use Lovata\OrdersShopaholic\Classes\Event\ExtendFieldHandler;
+use Lovata\OrdersShopaholic\Classes\Event\ExtendPaymentMethodFieldHandler;
 use Lovata\OrdersShopaholic\Classes\Event\ExtendUserModelHandler;
 use Lovata\OrdersShopaholic\Classes\Event\OfferModelHandler;
 use Lovata\OrdersShopaholic\Classes\Event\OrdersControllerHandler;
@@ -69,6 +70,7 @@ class Plugin extends PluginBase
     {
         Event::subscribe(CartPositionModelHandler::class);
         Event::subscribe(ExtendFieldHandler::class);
+        Event::subscribe(ExtendPaymentMethodFieldHandler::class);
         Event::subscribe(ExtendUserModelHandler::class);
         Event::subscribe(OfferModelHandler::class);
         Event::subscribe(OrdersControllerHandler::class);

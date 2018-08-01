@@ -27,6 +27,9 @@ class Orders extends Controller
     {
         parent::__construct();
         BackendMenu::setContext('Lovata.OrdersShopaholic', 'orders-shopaholic-menu', 'orders-shopaholic-menu-orders');
+
+        $this->addCss('/plugins/lovata/ordersshopaholic/assets/css/jjsonviewer.css');
+        $this->addJs('/plugins/lovata/ordersshopaholic/assets/js/jjsonviewer.js');
     }
 
     /**

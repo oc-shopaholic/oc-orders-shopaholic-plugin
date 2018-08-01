@@ -1,0 +1,7 @@
+<?php
+/** @var \Lovata\OrdersShopaholic\Models\Order $formModel */
+?>
+<div id="payment_data_json_field"></div>
+<script>
+    $("#payment_data_json_field").jJsonViewer(<?= json_encode($formModel->payment_data) ?>);
+</script>

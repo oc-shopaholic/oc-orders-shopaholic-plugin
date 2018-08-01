@@ -1,7 +1,7 @@
 <?php namespace Lovata\OrdersShopaholic\Components;
 
 use Input;
-use System\Classes\PluginManager;
+use Redirect;
 
 use Kharanenka\Helper\Result;
 use Lovata\Toolbox\Classes\Helper\UserHelper;
@@ -9,6 +9,7 @@ use Lovata\Toolbox\Classes\Component\ComponentSubmitForm;
 use Lovata\Toolbox\Traits\Helpers\TraitValidationHelper;
 
 use Lovata\Shopaholic\Models\Settings;
+use Lovata\OrdersShopaholic\Models\ShippingType;
 use Lovata\OrdersShopaholic\Classes\Processor\OrderProcessor;
 
 /**
@@ -27,6 +28,9 @@ class MakeOrder extends ComponentSubmitForm
 
     /** @var \Lovata\Buddies\Models\User */
     protected $obUser;
+
+    /** @var \Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface|null */
+    protected $obPaymentGateway;
 
     /**
      * @return array
@@ -96,6 +100,21 @@ class MakeOrder extends ComponentSubmitForm
         }
 
         $this->create($arOrderData, $arUserData);
+        if (empty($this->obPaymentGateway) || !Result::status()) {
+            return $this->getResponseModeForm();
+        }
+
+        if ($this->obPaymentGateway->isRedirect()) {
+            $sRedirectURL = $this->obPaymentGateway->getRedirectURL();
+
+            return Redirect::to($sRedirectURL);
+        } else if ($this->obPaymentGateway->isSuccessful()) {
+            Result::setTrue($this->obPaymentGateway->getResponse());
+        } else {
+            Result::setFalse($this->obPaymentGateway->getResponse());
+        }
+
+        Result::setMessage($this->obPaymentGateway->getMessage())->get();
 
         return $this->getResponseModeForm();
     }
@@ -111,6 +130,21 @@ class MakeOrder extends ComponentSubmitForm
         $arUserData = (array) Input::get('user');
 
         $this->create($arOrderData, $arUserData);
+        if (empty($this->obPaymentGateway) || !Result::status()) {
+            return $this->getResponseModeAjax();
+        }
+
+        if ($this->obPaymentGateway->isRedirect()) {
+            $sRedirectURL = $this->obPaymentGateway->getRedirectURL();
+
+            return Redirect::to($sRedirectURL);
+        } else if ($this->obPaymentGateway->isSuccessful()) {
+            Result::setTrue($this->obPaymentGateway->getResponse());
+        } else {
+            Result::setFalse($this->obPaymentGateway->getResponse());
+        }
+
+        Result::setMessage($this->obPaymentGateway->getMessage())->get();
 
         return $this->getResponseModeAjax();
     }
@@ -120,6 +154,7 @@ class MakeOrder extends ComponentSubmitForm
      * @param array $arOrderData
      * @param array $arUserData
      * @throws \Exception
+     * @return \Lovata\OrdersShopaholic\Models\Order|null
      */
     public function create($arOrderData, $arUserData)
     {
@@ -141,7 +176,7 @@ class MakeOrder extends ComponentSubmitForm
         }
 
         if (!Result::status()) {
-            return;
+            return null;
         }
 
         $arOrderData = $this->arOrderData;
@@ -153,19 +188,17 @@ class MakeOrder extends ComponentSubmitForm
             $arOrderData['property'] = array_merge($arOrderData['property'], $this->arUserData);
         }
 
+        $arPaymentData = Input::get('payment');
+        if (!empty($arPaymentData) && is_array($arPaymentData)) {
+            $arOrderData['payment_data'] = $arPaymentData;
+        }
+
+        $arOrderData['shipping_price'] = $this->getShippingTypePrice($arOrderData);
+
         $obOrder = OrderProcessor::instance()->create($arOrderData, $this->obUser);
-        if (empty($obOrder)) {
-            return;
-        }
+        $this->obPaymentGateway = OrderProcessor::instance()->getPaymentGateway();
 
-        if (PluginManager::instance()->hasPlugin('Lovata.OmnipayShopaholic')) {
-
-            $arPaymentData = Input::get('payment');
-            if (!empty($arPaymentData)) {
-                $obOrder->payment_data = $arPaymentData;
-                $obOrder->save();
-            }
-        }
+        return $obOrder;
     }
 
     /**
@@ -281,5 +314,30 @@ class MakeOrder extends ComponentSubmitForm
             $this->processValidationError($obException);
             return;
         }
+    }
+
+    /**
+     * Get shipping type price
+     * @param array $arOrderData
+     * @return float|string
+     */
+    protected function getShippingTypePrice($arOrderData)
+    {
+        //Get shipping price from request
+        if (!empty($arOrderData) && array_key_exists('shipping_price', $arOrderData) && $arOrderData['shipping_price'] !== null) {
+            return $arOrderData['shipping_price'];
+        }
+
+        if (!isset($arOrderData['shipping_type_id']) || empty($arOrderData['shipping_type_id'])) {
+            return 0;
+        }
+
+        //Get shipping type object
+        $obShippingType = ShippingType::find($arOrderData['shipping_type_id']);
+        if (empty($obShippingType)) {
+            return 0;
+        }
+
+        return $obShippingType->price_value;
     }
 }

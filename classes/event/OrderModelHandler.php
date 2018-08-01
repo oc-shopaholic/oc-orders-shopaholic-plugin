@@ -103,6 +103,9 @@ class OrderModelHandler extends ModelHandler
         }
 
         $sEmail = $arOrderProeprtyList['email'];
+        if (preg_match('%^fake.*@fake\.com$%', $sEmail)) {
+            return;
+        }
 
         //Get mail data
         $arMailData = $this->getDefaultEmailData();

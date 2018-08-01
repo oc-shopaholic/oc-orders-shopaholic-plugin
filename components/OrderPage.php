@@ -1,10 +1,12 @@
 <?php namespace Lovata\OrdersShopaholic\Components;
 
-use Lovata\OrdersShopaholic\Classes\Item\OrderItem;
+use Redirect;
+use Kharanenka\Helper\Result;
 use Lovata\Toolbox\Classes\Component\ElementPage;
 use Lovata\Toolbox\Traits\Helpers\TraitComponentNotFoundResponse;
 
 use Lovata\OrdersShopaholic\Models\Order;
+use Lovata\OrdersShopaholic\Classes\Item\OrderItem;
 
 /**
  * Class OrderPage
@@ -66,6 +68,37 @@ class OrderPage extends ElementPage
     public function getPaymentMethod()
     {
         return $this->obPaymentMethod;
+    }
+
+    /**
+     * Send purchase request to payment gateway
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|array
+     * @throws \Exception
+     */
+    public function onPurchase()
+    {
+        if (empty($this->obElement) || empty($this->obPaymentMethod)) {
+            return $this->getErrorResponse();
+        }
+
+        //Get gateway payment object
+        $obPaymentGateway = $this->obPaymentMethod->gateway;
+        if (empty($obPaymentGateway)) {
+            return $this->getErrorResponse();
+        }
+
+        $obPaymentGateway->purchase($this->obElement);
+        if ($obPaymentGateway->isRedirect()) {
+            $sRedirectURL = $obPaymentGateway->getRedirectURL();
+
+            return Redirect::to($sRedirectURL);
+        } else if ($obPaymentGateway->isSuccessful()) {
+            Result::setTrue($this->obPaymentGateway->getResponse());
+        } else {
+            Result::setFalse($this->obPaymentGateway->getResponse());
+        }
+
+        return Result::setMessage($obPaymentGateway->getMessage())->get();
     }
 
     /**

@@ -20,41 +20,41 @@ use Lovata\Toolbox\Traits\Models\SetPropertyAttributeTrait;
  * @mixin \October\Rain\Database\Builder
  * @mixin \Eloquent
  *
- * @property int                                       $id
- * @property string                                    $order_number
- * @property string                                    $secret_key
- * @property int                                       $user_id
- * @property int                                       $status_id
- * @property int                                       $payment_method_id
- * @property int                                       $shipping_type_id
- * @property string                                    $shipping_price
- * @property float                                     $shipping_price_value
- * @property string                                    $total_price
- * @property float                                     $total_price_value
- * @property string                                    $position_total_price
- * @property float                                     $position_total_price_value
- * @property array                                     $property
+ * @property int                       $id
+ * @property string                    $order_number
+ * @property string                    $secret_key
+ * @property int                       $user_id
+ * @property int                       $status_id
+ * @property int                       $payment_method_id
+ * @property int                       $shipping_type_id
+ * @property string                    $shipping_price
+ * @property float                     $shipping_price_value
+ * @property string                    $total_price
+ * @property float                     $total_price_value
+ * @property string                    $position_total_price
+ * @property float                     $position_total_price_value
+ * @property array                     $property
  *
- * @property \October\Rain\Argon\Argon                 $created_at
- * @property \October\Rain\Argon\Argon                 $updated_at
+ * @property \October\Rain\Argon\Argon $created_at
+ * @property \October\Rain\Argon\Argon $updated_at
  *
- * Omnipay for Shopaholic plugin
- * @property array                                     $payment_data
- * @property array                                     $payment_response
+ * @property string                    $transaction_id
+ * @property array                     $payment_data
+ * @property array                     $payment_response
  *
  * @property \October\Rain\Database\Collection|OrderPosition[] $order_position
  * @method static \October\Rain\Database\Relations\HasMany|OrderPosition order_position()
  *
- * @property Status                                    $status
+ * @property Status                                            $status
  * @method static Status|\October\Rain\Database\Relations\BelongsTo status()
  *
- * @property \Lovata\Buddies\Models\User               $user
+ * @property \Lovata\Buddies\Models\User                       $user
  * @method static \Lovata\Buddies\Models\User|\October\Rain\Database\Relations\BelongsTo user()
  *
- * @property ShippingType                              $shipping_type
+ * @property ShippingType                                      $shipping_type
  * @method static ShippingType|\October\Rain\Database\Relations\BelongsTo shipping_type()
  *
- * @property PaymentMethod                             $payment_method
+ * @property PaymentMethod                                     $payment_method
  * @method static PaymentMethod|\October\Rain\Database\Relations\BelongsTo payment_method()
  *
  * @method static $this getByNumber(string $sNumber)
@@ -62,6 +62,7 @@ use Lovata\Toolbox\Traits\Models\SetPropertyAttributeTrait;
  * @method static $this getByShippingType(int $iShippingTypeID)
  * @method static $this getByPaymentMethod(int $iPaymentMethodID)
  * @method static $this getBySecretKey(string $sNumber)
+ * @method static $this getByTransactionID(string $sTransactionID)
  */
 class Order extends Model
 {
@@ -81,7 +82,8 @@ class Order extends Model
 
     public $jsonable = ['property'];
     public $dates = ['created_at', 'updated_at'];
-    public $encryptable = [];
+    public $encryptable = ['payment_data', 'payment_response'];
+    public $hidden = ['payment_data', 'payment_response'];
 
     public $fillable = [
         'user_id',
@@ -111,7 +113,7 @@ class Order extends Model
         'order_position' => [
             OrderPosition::class,
         ],
-        'order_offer' => [
+        'order_offer'    => [
             OrderPosition::class,
             'condition' => 'item_type = \Lovata\Shopaholic\Models\Offer',
         ],
@@ -208,6 +210,21 @@ class Order extends Model
     {
         if (!empty($sData)) {
             $obQuery->where('secret_key', $sData);
+        }
+
+        return $obQuery;
+    }
+
+    /**
+     * Get order by transaction ID
+     * @param Order $obQuery
+     * @param string $sData
+     * @return Order
+     */
+    public function scopeGetByTransactionID($obQuery, $sData)
+    {
+        if(!empty($sData)) {
+            $obQuery->where('transaction_id', $sData);
         }
 
         return $obQuery;

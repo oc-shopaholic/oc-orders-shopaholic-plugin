@@ -38,6 +38,9 @@ class OrderProcessor
     /** @var \Lovata\OrdersShopaholic\Classes\Collection\CartPositionCollection|\Lovata\OrdersShopaholic\Classes\Item\CartPositionItem[] */
     protected $obCartPositionList;
 
+    /** @var \Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface|null */
+    protected $obPaymentGateway;
+
     /**
      * Create new order
      * @param                             $arOrderData
@@ -58,6 +61,7 @@ class OrderProcessor
 
         $this->createOrder();
         $this->processOrderPositionList();
+        $this->sendPaymentPurchase();
 
         if (!Result::status()) {
             DB::rollBack();
@@ -81,6 +85,15 @@ class OrderProcessor
         Result::setTrue($arResult);
 
         return $this->obOrder;
+    }
+
+    /**
+     * Get payment gateway object
+     * @return \Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface|null
+     */
+    public function getPaymentGateway()
+    {
+        return $this->obPaymentGateway;
     }
 
     /**
@@ -212,6 +225,36 @@ class OrderProcessor
         } catch (\October\Rain\Database\ModelException $obException) {
             $this->processValidationError($obException);
             return;
+        }
+    }
+
+    /**
+     * Check payment type, send purchase if need
+     */
+    protected function sendPaymentPurchase()
+    {
+        if (!Result::status()) {
+            return;
+        }
+
+        //Get order payment
+        if (empty($this->obOrder)) {
+            return;
+        }
+
+        $obPaymentMethod = $this->obOrder->payment_method;
+        if (empty($obPaymentMethod) || !$obPaymentMethod->send_purchase_request) {
+            return;
+        }
+
+        $this->obPaymentGateway = $this->obOrder->payment_method->gateway;
+        if (empty($this->obPaymentGateway)) {
+            return;
+        }
+
+        $this->obPaymentGateway->purchase($this->obOrder);
+        if (!$this->obPaymentGateway->isRedirect() && !$this->obPaymentGateway->isSuccessful()) {
+            Result::setFalse($this->obPaymentGateway->getResponse())->setMessage($this->obPaymentGateway->getMessage());
         }
     }
 }

@@ -1,5 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Tests\Unit\Item;
 
+use Lovata\Toolbox\Models\Settings;
 use Lovata\Toolbox\Tests\CommonTest;
 
 use Lovata\Shopaholic\Models\Offer;
@@ -145,6 +146,8 @@ class OrderPositionItemTest extends CommonTest
      */
     protected function createTestData()
     {
+        Settings::set('decimals', 2);
+
         $this->obOffer = Offer::create($this->arOfferData);
         $this->obOrder = Order::create($this->arOrderData);
 
