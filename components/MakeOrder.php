@@ -193,7 +193,7 @@ class MakeOrder extends ComponentSubmitForm
             $arOrderData['payment_data'] = $arPaymentData;
         }
 
-        $arOrderData['shipping_price'] = $this->getShippingTypePrice();
+        $arOrderData['shipping_price'] = $this->getShippingTypePrice($arOrderData);
 
         $obOrder = OrderProcessor::instance()->create($arOrderData, $this->obUser);
         $this->obPaymentGateway = OrderProcessor::instance()->getPaymentGateway();
@@ -318,24 +318,22 @@ class MakeOrder extends ComponentSubmitForm
 
     /**
      * Get shipping type price
+     * @param array $arOrderData
      * @return float|string
      */
-    protected function getShippingTypePrice()
+    protected function getShippingTypePrice($arOrderData)
     {
         //Get shipping price from request
-        $fPrice =  Input::get('order.shipping_price');
-        if ($fPrice !== null) {
-            return $fPrice;
+        if (!empty($arOrderData) && array_key_exists('shipping_price', $arOrderData) && $arOrderData['shipping_price'] !== null) {
+            return $arOrderData['shipping_price'];
         }
 
-        //Get shipping type ID
-        $iShippingTypeID = Input::get('order.shipping_type_id');
-        if (empty($iShippingTypeID)) {
+        if (!isset($arOrderData['shipping_type_id']) || empty($arOrderData['shipping_type_id'])) {
             return 0;
         }
 
         //Get shipping type object
-        $obShippingType = ShippingType::find($iShippingTypeID);
+        $obShippingType = ShippingType::find($arOrderData['shipping_type_id']);
         if (empty($obShippingType)) {
             return 0;
         }

@@ -342,6 +342,8 @@ class OrderProcessorTest extends CommonTest
      */
     protected function createTestData()
     {
+        \Lovata\Toolbox\Models\Settings::set('decimals', 2);
+
         //Create product data
         $arCreateData = $this->arProductData;
         $arCreateData['active'] = true;

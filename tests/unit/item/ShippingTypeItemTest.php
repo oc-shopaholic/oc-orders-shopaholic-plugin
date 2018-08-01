@@ -1,5 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Tests\Unit\Item;
 
+use Lovata\Toolbox\Models\Settings;
 use Lovata\Toolbox\Tests\CommonTest;
 
 use Lovata\OrdersShopaholic\Models\ShippingType;
@@ -98,6 +99,8 @@ class ShippingTypeItemTest extends CommonTest
      */
     protected function createTestData()
     {
+        Settings::set('decimals', 2);
+
         //Create new element data
         $arCreateData = $this->arCreateData;
         $arCreateData['active'] = true;

@@ -1,5 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Tests\Unit\Item;
 
+use Lovata\Toolbox\Models\Settings;
 use Lovata\Toolbox\Tests\CommonTest;
 
 use Lovata\Shopaholic\Models\Offer;
@@ -128,6 +129,8 @@ class CartPositionItemTest extends CommonTest
      */
     protected function createTestData()
     {
+        Settings::set('decimals', 2);
+
         //Create product data
         $arCreateData = $this->arProductData;
         $arCreateData['active'] = true;
