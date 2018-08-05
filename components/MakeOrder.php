@@ -29,6 +29,9 @@ class MakeOrder extends ComponentSubmitForm
     /** @var \Lovata\Buddies\Models\User */
     protected $obUser;
 
+    /** @var \Lovata\OrdersShopaholic\Models\Order */
+    protected $obOrder;
+
     /** @var \Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface|null */
     protected $obPaymentGateway;
 
@@ -59,14 +62,15 @@ class MakeOrder extends ComponentSubmitForm
      */
     protected function getRedirectPageProperties()
     {
-        if (!Result::status()) {
+        if (!Result::status() || empty($this->obOrder)) {
             return [];
         }
 
-        $arResult = Result::data();
-        if (empty($arResult) || !is_array($arResult)) {
-            return [];
-        }
+        $arResult = [
+            'id'     => $this->obOrder->id,
+            'number' => $this->obOrder->order_number,
+            'key'    => $this->obOrder->secret_key,
+        ];
 
         return $arResult;
     }
@@ -154,7 +158,6 @@ class MakeOrder extends ComponentSubmitForm
      * @param array $arOrderData
      * @param array $arUserData
      * @throws \Exception
-     * @return \Lovata\OrdersShopaholic\Models\Order|null
      */
     public function create($arOrderData, $arUserData)
     {
@@ -176,7 +179,7 @@ class MakeOrder extends ComponentSubmitForm
         }
 
         if (!Result::status()) {
-            return null;
+            return;
         }
 
         $arOrderData = $this->arOrderData;
@@ -195,10 +198,8 @@ class MakeOrder extends ComponentSubmitForm
 
         $arOrderData['shipping_price'] = $this->getShippingTypePrice($arOrderData);
 
-        $obOrder = OrderProcessor::instance()->create($arOrderData, $this->obUser);
+        $this->obOrder = OrderProcessor::instance()->create($arOrderData, $this->obUser);
         $this->obPaymentGateway = OrderProcessor::instance()->getPaymentGateway();
-
-        return $obOrder;
     }
 
     /**
