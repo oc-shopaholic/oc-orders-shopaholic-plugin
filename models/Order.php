@@ -39,6 +39,7 @@ use Lovata\Toolbox\Traits\Models\SetPropertyAttributeTrait;
  * @property \October\Rain\Argon\Argon $updated_at
  *
  * @property string                    $transaction_id
+ * @property string                    $payment_token
  * @property array                     $payment_data
  * @property array                     $payment_response
  *
@@ -225,6 +226,21 @@ class Order extends Model
     {
         if(!empty($sData)) {
             $obQuery->where('transaction_id', $sData);
+        }
+
+        return $obQuery;
+    }
+
+    /**
+     * Get order by payment token
+     * @param Order $obQuery
+     * @param string $sData
+     * @return Order
+     */
+    public function scopeGetByPaymentToken($obQuery, $sData)
+    {
+        if(!empty($sData)) {
+            $obQuery->where('payment_token', $sData);
         }
 
         return $obQuery;
