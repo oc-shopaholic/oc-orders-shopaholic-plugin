@@ -215,6 +215,7 @@ class ExtendFieldHandler
         }
 
         $obWidget->removeField('transaction_id');
+        $obWidget->removeField('payment_token');
         $obWidget->removeField('payment_data_json');
         $obWidget->removeField('payment_response_json');
     }

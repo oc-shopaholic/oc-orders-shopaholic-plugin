@@ -59,6 +59,7 @@
         'cancel_status_id'      => 'Статус заказа после отмены оплаты',
         'fail_status_id'        => 'Статус заказа после ошибки оплаты',
         'transaction_id'        => 'Transaction ID',
+        'payment_token'         => 'Payment token',
         'payment_data'          => 'Данные, отправленные платежному шлюзу',
         'payment_response'      => 'Данные, полученные из платежного шлюза',
         'send_purchase_request' => 'Отправлять запрос в платежный шлюз при создании заказа',

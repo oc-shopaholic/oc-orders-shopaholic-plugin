@@ -59,6 +59,7 @@
         'cancel_status_id'      => 'Order status after payment cancel',
         'fail_status_id'        => 'Order status after payment fail/error',
         'transaction_id'        => 'Transaction ID',
+        'payment_token'         => 'Payment token',
         'payment_data'          => 'Data that was sent to payment gateway',
         'payment_response'      => 'Data that was received from payment gateway',
         'send_purchase_request' => 'Send request to payment gateway when creating order',

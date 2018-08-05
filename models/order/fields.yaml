@@ -16,10 +16,18 @@ fields:
             - update
             - preview
     price_block:
-        span: full
+        span: left
         type: partial
         path: ~/plugins/lovata/ordersshopaholic/controllers/orders/_price_block.htm
         dependsOn: shipping_price
+    payment_token:
+        label: 'lovata.ordersshopaholic::lang.field.payment_token'
+        span: right
+        disabled: 1
+        type: text
+        context:
+            - update
+            - preview
 tabs:
     fields:
         status:

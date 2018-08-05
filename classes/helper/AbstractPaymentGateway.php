@@ -217,9 +217,12 @@ abstract class AbstractPaymentGateway implements PaymentGatewayInterface
             return;
         }
 
-        $this->obOrder = Order::find($iOrderID);
+        $this->obOrder = Order::getBySecretKey($iOrderID)->first();
         if (empty($this->obOrder)) {
-            return;
+            $this->obOrder = Order::find($iOrderID);
+            if (empty($this->obOrder)) {
+                return;
+            }
         }
 
         $this->obPaymentMethod = $this->obOrder->payment_method;
