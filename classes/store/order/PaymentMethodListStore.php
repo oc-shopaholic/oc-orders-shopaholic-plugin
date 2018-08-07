@@ -17,7 +17,7 @@ class PaymentMethodListStore extends AbstractStoreWithTwoParam
      * Get ID list from database
      * @return array
      */
-    protected function getIDListFromDB()
+    protected function getIDListFromDB() : array
     {
         if (empty($this->sAdditionParam)) {
             $arElementIDList = (array) Order::getByPaymentMethod($this->sValue)->lists('id');
