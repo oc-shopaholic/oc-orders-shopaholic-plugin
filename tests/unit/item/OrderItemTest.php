@@ -92,6 +92,7 @@ class OrderItemTest extends CommonTest
         $arCreatedData = $this->arOrderData;
         $arCreatedData['id'] = $this->obElement->id;
         $arCreatedData['status_id'] = 1;
+        $arCreatedData['secret_key'] = 'test';
         $arCreatedData['payment_method_id'] = $this->obPaymentMethod->id;
         $arCreatedData['shipping_type_id'] = $this->obShippingType->id;
         $arCreatedData['shipping_price'] = $this->obShippingType->price;
@@ -192,6 +193,8 @@ class OrderItemTest extends CommonTest
         $this->arOrderData['shipping_price'] = $this->obShippingType->price;
 
         $this->obElement= Order::create($this->arOrderData);
+        $this->obElement->secret_key = 'test';
+        $this->obElement->save();
 
         //Create new element data
         $arCreateData = $this->arOrderPositionData;
