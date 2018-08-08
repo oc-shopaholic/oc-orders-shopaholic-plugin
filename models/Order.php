@@ -97,6 +97,7 @@ class Order extends Model
 
     public $cached = [
         'id',
+        'secret_key',
         'order_number',
         'user_id',
         'status_id',
