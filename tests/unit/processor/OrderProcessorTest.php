@@ -334,6 +334,20 @@ class OrderProcessorTest extends CommonTest
         $obOffer = Offer::find($this->obOffer->id);
         self::assertEquals(2, $obOffer->quantity, $sErrorMessage);
 
+        /** @var CartProcessor $obCartProcessor */
+        $obCartProcessor = CartProcessor::instance();
+        $obCartProcessor->add($arOfferList, OfferCartPositionProcessor::class);
+
+        /** @var OrderProcessor $obOrderProcessor */
+        $obOrderProcessor = OrderProcessor::instance();
+        $obOrder = $obOrderProcessor->create([], $this->obUser);
+
+        self::assertEquals(null, $obOrder, $sErrorMessage);
+        self::assertEquals(false, Result::status(), $sErrorMessage);
+
+        $sMessage = Lang::get('lovata.ordersshopaholic::lang.message.insufficient_amount');
+        self::assertEquals($sMessage, Result::message(), $sErrorMessage);
+
         $obCartProcessor->clear();
     }
 

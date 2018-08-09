@@ -2,6 +2,7 @@
 
 use Model;
 use October\Rain\Argon\Argon;
+use October\Rain\Database\Traits\Validation;
 use October\Rain\Database\Traits\Encryptable;
 
 use Kharanenka\Scope\UserBelongsTo;
@@ -69,11 +70,15 @@ class Order extends Model
 {
     use UserBelongsTo;
     use TraitCached;
+    use Validation;
     use PriceHelperTrait;
     use SetPropertyAttributeTrait;
     use Encryptable;
 
     public $table = 'lovata_orders_shopaholic_orders';
+
+    public $rules = [];
+    public $attributeNames = [];
 
     public $arPriceField = [
         'total_price',

@@ -109,9 +109,8 @@ class OfferOrderPositionProcessor extends AbstractOrderPositionProcessor
         }
 
         try {
-            DB::table('lovata_shopaholic_offers')
-                ->where('id', $this->obOffer->id)
-                ->decrement('quantity', $this->obCartPosition->quantity);
+            $this->obOffer->quantity -= $this->obCartPosition->quantity;
+            $this->obOffer->save();
         } catch (\Exception $obException) {
 
             $sMessage = Lang::get('lovata.ordersshopaholic::lang.message.insufficient_amount');

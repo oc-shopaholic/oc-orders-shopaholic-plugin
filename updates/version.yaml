@@ -60,6 +60,8 @@
     - 'Add payment_token field to Order model'
     - table_update_orders_add_payment_token_field.php
 1.9.0:
-    - 'Added type returned by methods in AbstractStore * classes'
+    - 'Added type returned by methods in AbstractStore * classes.'
 1.9.1:
-    - 'Adds secret_key field to OrderItem object'
+    - 'Adds secret_key field to OrderItem object.'
+1.10.0:
+    - 'Add Validation trait to Order model.'
