@@ -64,6 +64,10 @@
         'payment_response'      => 'Data that was received from payment gateway',
         'send_purchase_request' => 'Send request to payment gateway when creating order',
         'gateway_field_value'   => 'Get value of ":field" field from value of order property field',
+
+        'name'                  => 'Name',
+        'last_name'             => 'Last name',
+        'middle_name'           => 'Middle name',
     ],
     'settings'       => [
         'cart_cookie_lifetime'                 => 'Life time of cart ID in cookie (min.)',

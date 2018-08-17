@@ -28,12 +28,12 @@ columns:
         searchable: true
         sortable: true
     property[name]:
-        label: 'lovata.buddies::lang.field.name'
+        label: 'lovata.ordersshopaholic::lang.field.name'
         type: text
         searchable: true
         sortable: true
     property[last_name]:
-        label: 'lovata.buddies::lang.field.last_name'
+        label: 'lovata.ordersshopaholic::lang.field.last_name'
         type: text
         searchable: true
         sortable: true
