@@ -305,8 +305,12 @@ class MakeOrder extends ComponentSubmitForm
         }
 
         $arUserData = $this->arUserData;
-        $arUserData['password'] = $sPassword;
-        $arUserData['password_confirmation'] = $sPassword;
+
+        if (!isset($arUserData['password']) || empty($arUserData['password'])) {
+            $arUserData['password'] = $sPassword;
+        }
+
+        $arUserData['password_confirmation'] = $arUserData['password'];
 
         try {
             //Create new user
