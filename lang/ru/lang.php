@@ -64,6 +64,10 @@
         'payment_response'      => 'Данные, полученные из платежного шлюза',
         'send_purchase_request' => 'Отправлять запрос в платежный шлюз при создании заказа',
         'gateway_field_value'   => 'Получить значение свойства ":field" из значения свайства заказа',
+
+        'name'                  => 'Имя',
+        'last_name'             => 'Фамилия',
+        'middle_name'           => 'Отчество',
     ],
     'settings'       => [
         'cart_cookie_lifetime'                 => 'Время жизни ID корзины в cookie (мин.)',
