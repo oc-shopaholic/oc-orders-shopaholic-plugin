@@ -22,7 +22,7 @@ class SeederDefaultOrderProperties extends Seeder
                 'sort_order' => 1
             ], [
                 'active' => true,
-                'name' => 'lovata.buddies::lang.field.name',
+                'name' => 'lovata.ordersshopaholic::lang.field.name',
                 'code' => 'name',
                 'slug' => 'name',
                 'type' => 'input',
@@ -30,7 +30,7 @@ class SeederDefaultOrderProperties extends Seeder
                 'sort_order' => 2
             ], [
                 'active' => true,
-                'name' => 'lovata.buddies::lang.field.last_name',
+                'name' => 'lovata.ordersshopaholic::lang.field.last_name',
                 'code' => 'last_name',
                 'slug' => 'last_name',
                 'type' => 'input',
