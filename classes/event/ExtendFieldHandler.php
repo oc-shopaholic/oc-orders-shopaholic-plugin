@@ -197,8 +197,6 @@ class ExtendFieldHandler
         if (empty($sUserModelClass)) {
             $obWidget->removeField('user');
         }
-
-        $obWidget->removeField('property[company]');
     }
 
     /**
