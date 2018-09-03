@@ -113,13 +113,13 @@ class MakeOrderTest extends CommonTest
         self::assertEquals(1, $obOrder->payment_method_id, $sErrorMessage);
         self::assertEquals(1, $obOrder->shipping_type_id, $sErrorMessage);
 
-        self::assertEquals('1.1', $obOrder->shipping_price, $sErrorMessage);
+        self::assertEquals('1.10', $obOrder->shipping_price, $sErrorMessage);
         self::assertEquals(1.1, $obOrder->shipping_price_value, $sErrorMessage);
 
-        self::assertEquals('21.1', $obOrder->position_total_price, $sErrorMessage);
+        self::assertEquals('21.10', $obOrder->position_total_price, $sErrorMessage);
         self::assertEquals(21.1, $obOrder->position_total_price_value, $sErrorMessage);
 
-        self::assertEquals('22.2', $obOrder->total_price, $sErrorMessage);
+        self::assertEquals('22.20', $obOrder->total_price, $sErrorMessage);
         self::assertEquals(22.2, $obOrder->total_price_value, $sErrorMessage);
 
         $arOrderProperty = $obOrder->property;
@@ -180,13 +180,13 @@ class MakeOrderTest extends CommonTest
         self::assertEquals(1, $obOrder->payment_method_id, $sErrorMessage);
         self::assertEquals(1, $obOrder->shipping_type_id, $sErrorMessage);
 
-        self::assertEquals('1.1', $obOrder->shipping_price, $sErrorMessage);
+        self::assertEquals('1.10', $obOrder->shipping_price, $sErrorMessage);
         self::assertEquals(1.1, $obOrder->shipping_price_value, $sErrorMessage);
 
-        self::assertEquals('21.1', $obOrder->position_total_price, $sErrorMessage);
+        self::assertEquals('21.10', $obOrder->position_total_price, $sErrorMessage);
         self::assertEquals(21.1, $obOrder->position_total_price_value, $sErrorMessage);
 
-        self::assertEquals('22.2', $obOrder->total_price, $sErrorMessage);
+        self::assertEquals('22.20', $obOrder->total_price, $sErrorMessage);
         self::assertEquals(22.2, $obOrder->total_price_value, $sErrorMessage);
 
         $arOrderProperty = $obOrder->property;
@@ -249,13 +249,13 @@ class MakeOrderTest extends CommonTest
         self::assertEquals(1, $obOrder->payment_method_id, $sErrorMessage);
         self::assertEquals(1, $obOrder->shipping_type_id, $sErrorMessage);
 
-        self::assertEquals('1.1', $obOrder->shipping_price, $sErrorMessage);
+        self::assertEquals('1.10', $obOrder->shipping_price, $sErrorMessage);
         self::assertEquals(1.1, $obOrder->shipping_price_value, $sErrorMessage);
 
-        self::assertEquals('21.1', $obOrder->position_total_price, $sErrorMessage);
+        self::assertEquals('21.10', $obOrder->position_total_price, $sErrorMessage);
         self::assertEquals(21.1, $obOrder->position_total_price_value, $sErrorMessage);
 
-        self::assertEquals('22.2', $obOrder->total_price, $sErrorMessage);
+        self::assertEquals('22.20', $obOrder->total_price, $sErrorMessage);
         self::assertEquals(22.2, $obOrder->total_price_value, $sErrorMessage);
 
         $arOrderProperty = $obOrder->property;

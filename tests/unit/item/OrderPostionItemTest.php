@@ -75,7 +75,7 @@ class OrderPositionItemTest extends CommonTest
         $arCreatedData['price_value'] = $this->obOffer->price_value;
         $arCreatedData['old_price'] = $this->obOffer->old_price;
         $arCreatedData['old_price_value'] = $this->obOffer->old_price_value;
-        $arCreatedData['total_price'] = '21.1';
+        $arCreatedData['total_price'] = '21.10';
         $arCreatedData['total_price_value'] = 21.1;
         $arCreatedData['item_type'] = Offer::class;
         $arCreatedData['order_id'] = $this->obOrder->id;

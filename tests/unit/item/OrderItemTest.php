@@ -97,9 +97,9 @@ class OrderItemTest extends CommonTest
         $arCreatedData['shipping_type_id'] = $this->obShippingType->id;
         $arCreatedData['shipping_price'] = $this->obShippingType->price;
         $arCreatedData['shipping_price_value'] = $this->obShippingType->price_value;
-        $arCreatedData['total_price'] = '26.6';
+        $arCreatedData['total_price'] = '26.60';
         $arCreatedData['total_price_value'] = 26.6;
-        $arCreatedData['position_total_price'] = '21.1';
+        $arCreatedData['position_total_price'] = '21.10';
         $arCreatedData['position_total_price_value'] = 21.1;
         $arCreatedData['order_position_id'] = [$this->obOrderPosition->id];
 
