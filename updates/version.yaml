@@ -69,3 +69,6 @@
     - 'Remove links on lang file of Buddies plugin.'
 1.10.2:
     - 'Fixed labels in ShippingType controller breadcrumbs.'
+1.11.0:
+    - 'Added PromoMechanism model. Added of opportunity to change price of order positions, shipping price, order total price, using promo mechanisms.'
+    - table_create_promo_mechanism.php

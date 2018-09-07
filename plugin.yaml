@@ -64,3 +64,6 @@ permissions:
     shopaholic-order-property:
         tab: 'lovata.shopaholic::lang.tab.permissions'
         label: 'lovata.ordersshopaholic::lang.permission.property'
+    shopaholic-promo-mechanism:
+        tab: 'lovata.shopaholic::lang.tab.permissions'
+        label: 'lovata.ordersshopaholic::lang.permission.promo_mechanism'

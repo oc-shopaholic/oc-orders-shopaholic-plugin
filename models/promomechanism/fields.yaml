@@ -1,0 +1,37 @@
+fields:
+    name:
+        label: 'lovata.toolbox::lang.field.name'
+        span: left
+        type: text
+    priority:
+        label: 'lovata.toolbox::lang.field.priority'
+        comment: 'lovata.ordersshopaholic::lang.field.priority_description'
+        commentHtml: true
+        default: 0
+        span: right
+        type: text
+    type:
+        label: 'lovata.toolbox::lang.field.type'
+        span: full
+        type: dropdown
+        dependsOn: type
+        commentHtml: true
+    discount_value:
+        label: 'lovata.toolbox::lang.field.discount_value'
+        span: left
+        type: text
+    discount_type:
+        label: 'lovata.toolbox::lang.field.discount_value'
+        span: right
+        type: dropdown
+    max_discount:
+        label: 'lovata.ordersshopaholic::lang.field.max_discount'
+        comment: 'lovata.ordersshopaholic::lang.field.max_discount_description'
+        span: left
+        type: text
+    final_discount:
+        label: 'lovata.ordersshopaholic::lang.field.final_discount'
+        comment: 'lovata.ordersshopaholic::lang.field.final_discount_description'
+        commentHtml: true
+        span: left
+        type: checkbox
