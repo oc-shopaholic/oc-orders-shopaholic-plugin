@@ -1,13 +1,13 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\PromoMechanism;
 
 /**
- * Class AbstractDiscountShippingPrice
+ * Class AbstractDiscountPositionTotalPrice
  * @package Lovata\OrdersShopaholic\Classes\PromoMechanism
  * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  */
-abstract class AbstractDiscountShippingPrice extends AbstractPromoMechanism implements InterfacePromoMechanism
+abstract class AbstractDiscountPositionTotalPrice extends AbstractPromoMechanism implements InterfacePromoMechanism
 {
-    const TYPE = 'shipping';
+    const TYPE = 'total_position';
 
     /**
      * @param float $fPrice

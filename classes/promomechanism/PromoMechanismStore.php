@@ -3,7 +3,8 @@
 use Event;
 use October\Rain\Support\Traits\Singleton;
 
-use Lovata\OrdersShopaholic\Classes\PromoMechanism\WithoutCondition\WithoutConditionDiscountOrderPosition;
+use Lovata\OrdersShopaholic\Classes\PromoMechanism\WithoutCondition\WithoutConditionDiscountPosition;
+use Lovata\OrdersShopaholic\Classes\PromoMechanism\WithoutCondition\WithoutConditionDiscountPositionTotalPrice;
 use Lovata\OrdersShopaholic\Classes\PromoMechanism\WithoutCondition\WithoutConditionDiscountShippingPrice;
 use Lovata\OrdersShopaholic\Classes\PromoMechanism\WithoutCondition\WithoutConditionDiscountTotalPrice;
 
@@ -43,7 +44,8 @@ class PromoMechanismStore
      */
     protected function init()
     {
-        $this->addMechanism(WithoutConditionDiscountOrderPosition::class);
+        $this->addMechanism(WithoutConditionDiscountPosition::class);
+        $this->addMechanism(WithoutConditionDiscountPositionTotalPrice::class);
         $this->addMechanism(WithoutConditionDiscountShippingPrice::class);
         $this->addMechanism(WithoutConditionDiscountTotalPrice::class);
 

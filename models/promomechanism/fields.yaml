@@ -24,11 +24,6 @@ fields:
         label: 'lovata.toolbox::lang.field.discount_value'
         span: right
         type: dropdown
-    max_discount:
-        label: 'lovata.ordersshopaholic::lang.field.max_discount'
-        comment: 'lovata.ordersshopaholic::lang.field.max_discount_description'
-        span: left
-        type: text
     final_discount:
         label: 'lovata.ordersshopaholic::lang.field.final_discount'
         comment: 'lovata.ordersshopaholic::lang.field.final_discount_description'

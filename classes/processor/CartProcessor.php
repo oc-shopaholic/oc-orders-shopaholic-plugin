@@ -9,7 +9,9 @@ use Lovata\Toolbox\Classes\Helper\UserHelper;
 use Lovata\Shopaholic\Models\Settings;
 use Lovata\OrdersShopaholic\Models\Cart;
 use Lovata\OrdersShopaholic\Models\CartPosition;
+use Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer;
 use Lovata\OrdersShopaholic\Classes\Collection\CartPositionCollection;
+use Lovata\OrdersShopaholic\Classes\PromoMechanism\CartPromoMechanismProcessor;
 
 /**
  * Class CartProcessor
@@ -34,14 +36,29 @@ class CartProcessor
     /** @var \Lovata\Buddies\Models\User */
     protected $obUser = null;
 
-    /** @var  CartPositionCollection */
+    /** @var  CartPositionCollection|\Lovata\OrdersShopaholic\Classes\Item\CartPositionItem[] */
     protected $obCartPositionList;
+
+    /** @var \Lovata\OrdersShopaholic\Models\ShippingType */
+    protected $obShippingType;
+
+    /** @var CartPromoMechanismProcessor */
+    protected $obPromoProcessor;
+
+    /**
+     * Get cart object
+     * @return Cart
+     */
+    public function getCartObject()
+    {
+        return $this->obCart;
+    }
 
     /**
      * Add position list in current cart
-     * @param array $arPositionList
+     * @param array  $arPositionList
      * @param string $sPositionProcessor
-     * @return bool1
+     * @return bool
      */
     public function add($arPositionList, $sPositionProcessor)
     {
@@ -57,12 +74,15 @@ class CartProcessor
             $obPositionProcessor->add($arPositionData);
         }
 
+        $this->initCartPositionList();
+        $this->initPromoProcessor();
+
         return $this->prepareSuccessResponse();
     }
 
     /**
      * Updates position data in current cart (rewrite).
-     * @param array $arPositionList
+     * @param array  $arPositionList
      * @param string $sPositionProcessor
      * @return bool
      */
@@ -80,13 +100,16 @@ class CartProcessor
             $obPositionProcessor->update($arPositionData);
         }
 
+        $this->initCartPositionList();
+        $this->initPromoProcessor();
+
         return $this->prepareSuccessResponse();
     }
 
     /**
      * Remove position from current cart
-     * @param array $arPositionList
-     * @param string  $sPositionProcessor
+     * @param array  $arPositionList
+     * @param string $sPositionProcessor
      * @return bool
      * @throws
      */
@@ -103,6 +126,9 @@ class CartProcessor
         foreach ($arPositionList as $iPositionID) {
             $obPositionProcessor->remove($iPositionID);
         }
+
+        $this->initCartPositionList();
+        $this->initPromoProcessor();
 
         return $this->prepareSuccessResponse();
     }
@@ -126,29 +152,134 @@ class CartProcessor
         }
 
         $this->obCartPositionList = null;
+
+        $this->initCartPositionList();
+        $this->initPromoProcessor();
     }
 
     /**
      * Get cart item collection
-     * @return CartPositionCollection
+     * @return CartPositionCollection|\Lovata\OrdersShopaholic\Classes\Item\CartPositionItem[]
      */
     public function get()
     {
-        if (empty($this->obCart)) {
-            return CartPositionCollection::make();
-        }
-
         if (!empty($this->obCartPositionList)) {
             return $this->obCartPositionList;
         }
 
-        /** @var array $arCartPositionIDList */
-        $arCartPositionIDList = CartPosition::getByCart($this->obCart->id)->lists('id');
-        $this->obCartPositionList = CartPositionCollection::make($arCartPositionIDList);
+        $this->initCartPositionList();
+        $this->initPromoProcessor();
 
         return $this->obCartPositionList;
     }
 
+    /**
+     * Set active shipping type
+     * @param \Lovata\OrdersShopaholic\Models\ShippingType $obShippingType
+     */
+    public function setActiveShippingType($obShippingType)
+    {
+        $this->obShippingType = $obShippingType;
+
+        $this->initPromoProcessor();
+    }
+
+    /**
+     * Get cart position price data
+     * @param int $iPositionID
+     * @return PriceContainer
+     */
+    public function getCartPositionPriceData($iPositionID) : PriceContainer
+    {
+        if (empty($this->obPromoProcessor)) {
+            return new PriceContainer(0, 0);
+        }
+
+        $obPriceData = $this->obPromoProcessor->getPositionPrice($iPositionID);
+
+        return $obPriceData;
+    }
+
+    /**
+     * Get cart position total price data
+     * @return PriceContainer
+     */
+    public function getCartPositionTotalPriceData() : PriceContainer
+    {
+        if (empty($this->obPromoProcessor)) {
+            return new PriceContainer(0, 0);
+        }
+
+        $obPriceData = $this->obPromoProcessor->getPositionTotalPrice();
+
+        return $obPriceData;
+    }
+
+    /**
+     * Get shipping price data
+     * @return PriceContainer
+     */
+    public function getShippingPriceData() : PriceContainer
+    {
+        if (empty($this->obPromoProcessor)) {
+            return new PriceContainer(0, 0);
+        }
+
+        $obPriceData = $this->obPromoProcessor->getShippingPrice();
+
+        return $obPriceData;
+    }
+
+    /**
+     * Get cart total price data
+     * @return PriceContainer
+     */
+    public function getCartTotalPriceData() : PriceContainer
+    {
+        if (empty($this->obPromoProcessor)) {
+            return new PriceContainer(0, 0);
+        }
+
+        $obPriceData = $this->obPromoProcessor->getTotalPrice();
+
+        return $obPriceData;
+    }
+
+    /**
+     * Get cart data
+     * @return array
+     */
+    public function getCartData()
+    {
+        $arResult = [
+            'position'             => [],
+            'shipping_type_id'     => null,
+            'shipping_price'       => $this->getShippingPriceData()->getData(),
+            'position_total_price' => $this->getCartPositionTotalPriceData()->getData(),
+            'total_price'          => $this->getCartTotalPriceData()->getData(),
+        ];
+
+        $obCartPositionList = $this->get();
+        if ($obCartPositionList->isEmpty()) {
+            return $arResult;
+        }
+
+        foreach ($obCartPositionList as $obCartPositionItem) {
+            $arPositionData = [
+                'id'        => $obCartPositionItem->id,
+                'item_id'   => $obCartPositionItem->item_id,
+                'item_type' => $obCartPositionItem->item_type,
+                'quantity'  => $obCartPositionItem->quantity,
+                'property'  => $obCartPositionItem->property,
+            ];
+
+            $arPositionData = $this->getCartPositionPriceData($obCartPositionItem->id)->getData($arPositionData);
+
+            $arResult['position'][] = $arPositionData;
+        }
+
+        return $arResult;
+    }
 
     /**Init cart data
      */
@@ -179,6 +310,28 @@ class CartProcessor
         if (empty($this->obCart)) {
             $this->createNewCart();
         }
+    }
+
+    /**
+     * Init promo processor
+     */
+    protected function initPromoProcessor()
+    {
+        $this->obPromoProcessor = new CartPromoMechanismProcessor($this->obCart, $this->obCartPositionList, $this->obShippingType);
+    }
+
+    /**
+     * Init cart position list
+     */
+    protected function initCartPositionList()
+    {
+        if (empty($this->obCart)) {
+            $this->obCartPositionList = CartPositionCollection::make();
+        }
+
+        /** @var array $arCartPositionIDList */
+        $arCartPositionIDList = CartPosition::getByCart($this->obCart->id)->lists('id');
+        $this->obCartPositionList = CartPositionCollection::make($arCartPositionIDList);
     }
 
     /**
@@ -237,7 +390,7 @@ class CartProcessor
 
     /**
      * Validate request data
-     * @param array $arPositionList
+     * @param array  $arPositionList
      * @param string $sPositionProcessor
      * @return bool
      */

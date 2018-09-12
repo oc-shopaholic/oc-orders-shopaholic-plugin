@@ -2,46 +2,57 @@
 
 use Lang;
 use Model;
+use Event;
 use October\Rain\Database\Traits\Validation;
 
 use Kharanenka\Scope\NameField;
 use Lovata\Toolbox\Classes\Helper\PriceHelper;
 
-use Lovata\OrdersShopaholic\Classes\PromoMechanism\PromoMechanismStore;
-
 /**
- * Class PromoMechanism
+ * Class OrderPromoMechanism
  * @package Lovata\OrdersShopaholic\Models
  * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  *
  * @mixin \October\Rain\Database\Builder
  * @mixin \Eloquent
  *
- * @property                                           $id
- * @property string                                    $name
- * @property string                                    $type
- * @property int                                       $priority
- * @property float                                     $discount_value
- * @property string                                    $discount_type
- * @property bool                                      $final_discount
- * @property array                                     $property
- * @property \October\Rain\Argon\Argon                 $created_at
- * @property \October\Rain\Argon\Argon                 $updated_at
+ * @property int                       $id
+ * @property int                       $order_id
+ * @property int                       $mechanism_id
+ * @property string                    $name
+ * @property string                    $type
+ * @property int                       $priority
+ * @property float                     $discount_value
+ * @property string                    $discount_type
+ * @property bool                      $final_discount
+ * @property array                     $property
+ * @property int                       $element_id
+ * @property string                    $element_type
+ * @property array                     $element_data
+ * @property string                    $description
+ * @property \October\Rain\Argon\Argon $created_at
+ * @property \October\Rain\Argon\Argon $updated_at
+ *
+ * @property Order                     $order
+ * @method static Order|\October\Rain\Database\Relations\BelongsTo order()
+ * @property PromoMechanism       $mechanism
+ * @method static PromoMechanism|\October\Rain\Database\Relations\BelongsTo mechanism()
  */
-class PromoMechanism extends Model
+class OrderPromoMechanism extends Model
 {
     use Validation;
     use NameField;
 
-    const FIXED_TYPE = 'fixed';
-    const PERCENT_TYPE = 'percent';
+    const EVENT_GET_DESCRIPTION = 'shopaholic.order.promo_mechanism.description';
 
-    public $table = 'lovata_orders_shopaholic_promo_mechanism';
+    public $table = 'lovata_orders_shopaholic_order_promo_mechanism';
 
     /** Validation */
     public $rules = [
-        'name' => 'required',
-        'type' => 'required',
+        'order_id'     => 'required',
+        'mechanism_id' => 'required',
+        'name'         => 'required',
+        'type'         => 'required',
     ];
 
     public $attributeNames = [
@@ -50,6 +61,8 @@ class PromoMechanism extends Model
     ];
 
     public $fillable = [
+        'order_id',
+        'mechanism_id',
         'name',
         'type',
         'priority',
@@ -57,11 +70,19 @@ class PromoMechanism extends Model
         'discount_type',
         'final_discount',
         'property',
+        'element_id',
+        'element_type',
+        'element_data',
     ];
 
-    public $jsonable = ['property'];
+    public $jsonable = ['property', 'element_data'];
 
     public $dates = ['created_at', 'updated_at'];
+
+    public $belongsTo = [
+        'order'           => [Order::class],
+        'promo_mechanism' => [PromoMechanism::class, 'key' => 'mechanism_id'],
+    ];
 
     /**
      * Get promo mechanism class object by type value
@@ -78,41 +99,14 @@ class PromoMechanism extends Model
     }
 
     /**
-     * Get promo mechanism list for backend
-     * @return array
-     */
-    public function getTypeOptions() : array
-    {
-        return PromoMechanismStore::instance()->getMechanismOptions();
-    }
-
-    /**
-     * Change field properties (backend)
-     * @param      $obFieldList
-     * @param null $sContext
-     */
-    public function filterFields($obFieldList, $sContext = null)
-    {
-        $sTypeClass = $obFieldList->type->value;
-        if (empty($sTypeClass)) {
-            $arClassList = array_keys(PromoMechanismStore::instance()->getMechanismOptions());
-            $sTypeClass = array_shift($arClassList);
-        }
-
-        if (!empty($sTypeClass) && class_exists($sTypeClass)) {
-            $obFieldList->type->comment = $sTypeClass::getDescription();
-        }
-    }
-
-    /**
      * Get discount type options (backend)
      * @return array
      */
     public function getDiscountTypeOptions() : array
     {
         return [
-            self::PERCENT_TYPE => Lang::get('lovata.ordersshopaholic::lang.field.discount_type_'.self::PERCENT_TYPE),
-            self::FIXED_TYPE   => Lang::get('lovata.ordersshopaholic::lang.field.discount_type_'.self::FIXED_TYPE),
+            PromoMechanism::PERCENT_TYPE => Lang::get('lovata.ordersshopaholic::lang.field.discount_type_'.PromoMechanism::PERCENT_TYPE),
+            PromoMechanism::FIXED_TYPE   => Lang::get('lovata.ordersshopaholic::lang.field.discount_type_'.PromoMechanism::FIXED_TYPE),
         ];
     }
 
@@ -136,11 +130,11 @@ class PromoMechanism extends Model
      */
     protected function getDiscountTypeNameAttribute()
     {
-        if ($this->discount_type == self::PERCENT_TYPE) {
-            return Lang::get('lovata.ordersshopaholic::lang.field.discount_type_'.self::PERCENT_TYPE);
+        if ($this->discount_type == PromoMechanism::PERCENT_TYPE) {
+            return Lang::get('lovata.ordersshopaholic::lang.field.discount_type_'.PromoMechanism::PERCENT_TYPE);
         }
 
-        return Lang::get('lovata.ordersshopaholic::lang.field.discount_type_'.self::FIXED_TYPE);
+        return Lang::get('lovata.ordersshopaholic::lang.field.discount_type_'.PromoMechanism::FIXED_TYPE);
     }
 
     /**
@@ -170,6 +164,17 @@ class PromoMechanism extends Model
         }
 
         return $sResult;
+    }
+
+    /**
+     * Get description attribute value
+     * @return string
+     */
+    protected function getDescriptionAttribute()
+    {
+        $sDescription = Event::fire(self::EVENT_GET_DESCRIPTION, $this, true);
+
+        return $sDescription;
     }
 
     /**

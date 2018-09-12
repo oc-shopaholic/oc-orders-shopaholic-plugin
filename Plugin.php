@@ -5,7 +5,9 @@ use Event;
 use System\Classes\PluginBase;
 
 //Events
-use Lovata\OrdersShopaholic\Classes\Event\CartPositionModelHandler;
+//CartPosition events
+use Lovata\OrdersShopaholic\Classes\Event\CartPosition\CartPositionModelHandler;
+//Extend Backend menu events
 use Lovata\OrdersShopaholic\Classes\Event\ExtendBackendMenuHandler;
 use Lovata\OrdersShopaholic\Classes\Event\ExtendFieldHandler;
 use Lovata\OrdersShopaholic\Classes\Event\ExtendPaymentMethodFieldHandler;
@@ -69,7 +71,9 @@ class Plugin extends PluginBase
      */
     protected function addEventListener()
     {
+        //CartPosition events
         Event::subscribe(CartPositionModelHandler::class);
+        //Extend Backend menu events
         Event::subscribe(ExtendBackendMenuHandler::class);
         Event::subscribe(ExtendFieldHandler::class);
         Event::subscribe(ExtendPaymentMethodFieldHandler::class);

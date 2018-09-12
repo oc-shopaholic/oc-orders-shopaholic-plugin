@@ -22,6 +22,10 @@ use Lovata\Toolbox\Classes\Helper\UserHelper;
  * @method static \Lovata\Buddies\Models\User|\October\Rain\Database\Relations\BelongsTo user()
  * @property \October\Rain\Database\Collection|CartPosition[] $position
  * @method static CartPosition|\October\Rain\Database\Relations\HasMany position()
+ *
+ * Coupons for Shopaholic
+ * @property \October\Rain\Database\Collection|\Lovata\CouponsShopaholic\Models\Coupon[] $coupon
+ * @method static \October\Rain\Database\Relations\BelongsToMany|\Lovata\CouponsShopaholic\Models\Coupon coupon()
  */
 class Cart extends Model
 {
@@ -37,6 +41,7 @@ class Cart extends Model
 
     public $belongsTo = [];
     public $hasMany = ['position' => CartPosition::class];
+    public $belongsToMany = [];
 
     /**
      * Cart constructor.

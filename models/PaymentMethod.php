@@ -13,7 +13,7 @@ use Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface;
 
 /**
  * Class PaymentMethod
- * @package Lovata\Shopaholic\Models
+ * @package Lovata\OrdersShopaholic\Models
  * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  *
  * @mixin \October\Rain\Database\Builder

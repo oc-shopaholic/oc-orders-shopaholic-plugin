@@ -6,6 +6,7 @@ use Kharanenka\Helper\Result;
 
 use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
 use Lovata\OrdersShopaholic\Classes\Processor\OfferCartPositionProcessor;
+use Lovata\OrdersShopaholic\Models\ShippingType;
 
 /**
  * Class Cart
@@ -33,6 +34,9 @@ class Cart extends ComponentBase
     {
         $arRequestData = Input::get('cart');
         CartProcessor::instance()->add($arRequestData, OfferCartPositionProcessor::class);
+        if (Result::status()) {
+            Result::setTrue(CartProcessor::instance()->getCartData());
+        }
 
         return Result::get();
     }
@@ -46,6 +50,9 @@ class Cart extends ComponentBase
         $arRequestData = Input::get('cart');
 
         CartProcessor::instance()->update($arRequestData, OfferCartPositionProcessor::class);
+        if (Result::status()) {
+            Result::setTrue(CartProcessor::instance()->getCartData());
+        }
 
         return Result::get();
     }
@@ -58,6 +65,9 @@ class Cart extends ComponentBase
     {
         $arRequestData = Input::get('cart');
         CartProcessor::instance()->remove($arRequestData, OfferCartPositionProcessor::class);
+        if (Result::status()) {
+            Result::setTrue(CartProcessor::instance()->getCartData());
+        }
 
         return Result::get();
     }
@@ -71,11 +81,72 @@ class Cart extends ComponentBase
     }
 
     /**
+     * Clear cart
+     */
+    public function onSetShippingType()
+    {
+        $iShippingTypeID = Input::get('shipping_type_id');
+        if (empty($iShippingTypeID)) {
+            $sMessage = Lang::get('lovata.toolbox::lang.message.e_not_correct_request');
+            Result::setFalse()->setMessage($sMessage);
+            return Result::get();
+        }
+
+        //Get shipping type object
+        $obShippingType = ShippingType::active()->find($iShippingTypeID);
+        if (empty($obShippingType)) {
+            $sMessage = Lang::get('lovata.toolbox::lang.message.e_not_correct_request');
+            Result::setFalse()->setMessage($sMessage);
+            return Result::get();
+        }
+
+        CartProcessor::instance()->setActiveShippingType($obShippingType);
+        if (Result::status()) {
+            Result::setTrue(CartProcessor::instance()->getCartData());
+        }
+
+        return Result::get();
+    }
+
+    /**
      * Get offers list from cart
      * @return \Lovata\OrdersShopaholic\Classes\Collection\CartPositionCollection
      */
     public function get()
     {
         return CartProcessor::instance()->get();
+    }
+
+    /**
+     * Get total price string
+     * @return string
+     */
+    public function getTotalPrice()
+    {
+        $obPriceData = $this->getTotalPriceData();
+
+        return $obPriceData->price;
+    }
+
+    /**
+     * Get total price value
+     * @return float
+     */
+    public function getTotalPriceValue()
+    {
+        $obPriceData = $this->getTotalPriceData();
+
+        return $obPriceData->price_value;
+    }
+
+    /**
+     * Get total position price data
+     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer
+     */
+    public function getTotalPriceData()
+    {
+        $obPriceData = CartProcessor::instance()->getCartTotalPriceData();
+
+        return $obPriceData;
     }
 }

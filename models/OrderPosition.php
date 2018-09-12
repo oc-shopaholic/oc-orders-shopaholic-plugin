@@ -1,5 +1,7 @@
 <?php namespace Lovata\OrdersShopaholic\Models;
 
+use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
+use Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer;
 use Model;
 use October\Rain\Database\Traits\Validation;
 
@@ -31,6 +33,8 @@ use Lovata\Shopaholic\Models\Product;
  * @property float  $old_price_value
  * @property string $total_price
  * @property float  $total_price_value
+ * @property string $old_total_price
+ * @property float  $old_total_price_value
  * @property int    $quantity
  * @property string $code
  * @property array  $property
@@ -111,7 +115,7 @@ class OrderPosition extends Model
         'property',
     ];
 
-    public $arPriceField = ['price', 'old_price', 'total_price'];
+    public $arPriceField = ['price', 'old_price', 'total_price', 'old_total_price'];
 
     /**
      * Before save model event
@@ -157,10 +161,48 @@ class OrderPosition extends Model
      */
     public function getTotalPriceValueAttribute()
     {
-        $fPrice = $this->quantity * $this->price_value;
-        $fPrice = PriceHelper::round($fPrice);
+        $obPriceData = $this->getTotalPriceData();
 
-        return $fPrice;
+        return $obPriceData->price_value;
+    }
+
+    /**
+     * Get total price value
+     * @return float
+     */
+    public function getOldTotalPriceValueAttribute()
+    {
+        $obPriceData = $this->getTotalPriceData();
+
+        return $obPriceData->old_price_value;
+    }
+
+    /**
+     * Get total price value
+     * @return float
+     */
+    public function getDiscountPriceValueAttribute()
+    {
+        $obPriceData = $this->getTotalPriceData();
+
+        return $obPriceData->discount_price_value;
+    }
+
+    /**
+     * Get total price value
+     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer
+     */
+    public function getTotalPriceData()
+    {
+        $obOrder = $this->order;
+        if (empty($obOrder)) {
+            return new PriceContainer(0, 0);
+        }
+
+        $obMechanismProcessor = OrderPromoMechanismProcessor::get($obOrder);
+        $obPriceData = $obMechanismProcessor->getPositionPrice($this->id);
+
+        return $obPriceData;
     }
 
     /**

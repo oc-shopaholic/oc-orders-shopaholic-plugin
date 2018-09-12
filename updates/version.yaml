@@ -72,3 +72,4 @@
 1.11.0:
     - 'Added PromoMechanism model. Added of opportunity to change price of order positions, shipping price, order total price, using promo mechanisms.'
     - table_create_promo_mechanism.php
+    - table_create_order_promo_mechanism.php

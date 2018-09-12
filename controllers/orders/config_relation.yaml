@@ -14,3 +14,12 @@ order_offer:
         toolbarButtons: create|delete
     manage:
         form: $/lovata/ordersshopaholic/models/orderposition/order_offer_fields.yaml
+order_promo_mechanism:
+    label: 'lovata.ordersshopaholic::lang.promo_mechanism.name'
+    view:
+        list: $/lovata/ordersshopaholic/models/order/order_promo_mechanism_columns.yaml
+        showCheckboxes: false
+        defaultSort:
+            column: priority
+            direction: desc
+        toolbarButtons: false

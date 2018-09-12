@@ -198,6 +198,8 @@ class MakeOrder extends ComponentSubmitForm
 
         $arOrderData['shipping_price'] = $this->getShippingTypePrice($arOrderData);
 
+
+
         $this->obOrder = OrderProcessor::instance()->create($arOrderData, $this->obUser);
         $this->obPaymentGateway = OrderProcessor::instance()->getPaymentGateway();
     }

@@ -93,4 +93,20 @@ class Status extends Model
     {
         return $obQuery->where('is_user_show', true);
     }
+
+    /**
+     * Find status by code and return Status object
+     * @param string $sCode
+     * @return \Illuminate\Database\Eloquent\Model|Status|null
+     */
+    public static function getFirstByCode($sCode)
+    {
+        if (empty($sCode)) {
+            return null;
+        }
+
+        $obStatus = Status::getByCode(Status::STATUS_NEW)->first();
+
+        return $obStatus;
+    }
 }

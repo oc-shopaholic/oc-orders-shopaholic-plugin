@@ -9,6 +9,11 @@ columns:
         type: text
         searchable: false
         sortable: false
+    description:
+        label: 'lovata.toolbox::lang.field.description'
+        type: text
+        searchable: false
+        sortable: false
     priority:
         label: 'lovata.toolbox::lang.field.priority'
         type: text
@@ -35,13 +40,3 @@ columns:
         searchable: true
         sortable: true
         width: 100px
-    created_at:
-        label: 'lovata.toolbox::lang.field.created_at'
-        type: timetense
-        sortable: true
-        invisible: true
-    updated_at:
-        label: 'lovata.toolbox::lang.field.updated_at'
-        type: timetense
-        sortable: true
-        invisible: true

@@ -7,5 +7,17 @@
  */
 abstract class AbstractDiscountTotalPrice extends AbstractPromoMechanism implements InterfacePromoMechanism
 {
+    const TYPE = 'total';
 
+    /**
+     * @param float $fPrice
+     * @return float
+     */
+    public function calculate($fPrice)
+    {
+        $this->bApplied = true;
+        $fPrice = $this->applyDiscount($fPrice);
+
+        return $fPrice;
+    }
 }

@@ -1,6 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Item;
 
-use Lovata\Toolbox\Classes\Helper\PriceHelper;
+use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
 
 use Lovata\Shopaholic\Models\Offer;
 use Lovata\Shopaholic\Classes\Item\OfferItem;
@@ -11,17 +11,22 @@ use Lovata\OrdersShopaholic\Models\CartPosition;
  * @package Lovata\OrdersShopaholic\Classes\Item
  * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  *
- * @property string                                    $price
- * @property float                                     $price_value
+ * @property string                                                         $price
+ * @property float                                                          $price_value
+ * @property string                                                         $old_price
+ * @property float                                                          $old_price_value
+ * @property string                                                         $discount_price
+ * @property float                                                          $discount_price_value
+ * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer $price_data
  *
- * @property \Lovata\Shopaholic\Classes\Item\OfferItem $item
- * @property \Lovata\Shopaholic\Classes\Item\OfferItem $offer
+ * @property \Lovata\Shopaholic\Classes\Item\OfferItem                      $item
+ * @property \Lovata\Shopaholic\Classes\Item\OfferItem                      $offer
  */
 class CartPositionItem extends AbstractPositionItem
 {
     const MODEL_CLASS = CartPosition::class;
 
-    public $arPriceField = ['price'];
+    public $arPriceField = ['price', 'old_price', 'discount_price'];
 
     /** @var CartPosition */
     protected $obElement = null;
@@ -58,15 +63,42 @@ class CartPositionItem extends AbstractPositionItem
      */
     protected function getPriceValueAttribute()
     {
-        $obItem = $this->item;
-        if ($obItem->isEmpty()) {
-            return 0;
-        }
+        $obPriceData = $this->price_data;
 
-        $fPrice = $obItem->price_value * $this->quantity;
-        $fPrice = PriceHelper::round($fPrice);
+        return $obPriceData->price_value;
+    }
 
-        return $fPrice;
+    /**
+     * Get old price value
+     * @return float
+     */
+    protected function getOldPriceValueAttribute()
+    {
+        $obPriceData = $this->price_data;
+
+        return $obPriceData->old_price_value;
+    }
+
+    /**
+     * Get discount price value
+     * @return float
+     */
+    protected function getDiscountPriceValueAttribute()
+    {
+        $obPriceData = $this->price_data;
+
+        return $obPriceData->discount_price_value;
+    }
+
+    /**
+     * Get price data for position
+     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer
+     */
+    protected function getPriceDataAttribute()
+    {
+        $obPriceData = CartProcessor::instance()->getCartPositionPriceData($this->id);
+
+        return $obPriceData;
     }
 
     /**

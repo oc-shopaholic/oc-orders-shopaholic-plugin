@@ -23,6 +23,9 @@ class OrderProcessor
     use TraitValidationHelper;
 
     const EVENT_ORDER_CREATED = 'shopaholic.order.created';
+    const EVENT_UPDATE_ORDER_DATA = 'shopaholic.order.update_data';
+    const EVENT_UPDATE_ORDER_BEFORE_CREATE = 'shopaholic.order.before_create';
+    const EVENT_UPDATE_ORDER_AFTER_CREATE = 'shopaholic.order.after_create';
     const EVENT_ORDER_CREATED_USER_MAIL_DATA = 'shopaholic.order.created.user.template.data';
     const EVENT_ORDER_CREATED_MANAGER_MAIL_DATA = 'shopaholic.order.created.manager.template.data';
 
@@ -53,15 +56,24 @@ class OrderProcessor
         $this->initOrderData($arOrderData);
         $this->initUser($obUser);
         $this->setOrderStatus();
+        $this->updateOrderData();
 
         $this->initCartPositionList();
 
         //Begin transaction
         DB::beginTransaction();
 
+        //Fire event before create order
+        if (Event::fire(self::EVENT_UPDATE_ORDER_BEFORE_CREATE, [$this->arOrderData, $this->obUser], true) === false) {
+            return null;
+        }
+
         $this->createOrder();
         $this->processOrderPositionList();
         $this->sendPaymentPurchase();
+
+        //Fire event after create order
+        Event::fire(self::EVENT_UPDATE_ORDER_AFTER_CREATE, $this->obOrder);
 
         if (!Result::status()) {
             DB::rollBack();
@@ -129,12 +141,34 @@ class OrderProcessor
      */
     protected function setOrderStatus()
     {
-        $obStatus = Status::getByCode(Status::STATUS_NEW)->first();
+        $obStatus = Status::getFirstByCode(Status::STATUS_NEW);
         if (empty($obStatus)) {
             return;
         }
 
         $this->arOrderData['status_id'] = $obStatus->id;
+    }
+
+    /**
+     * Update order data
+     * Fire event and update order data
+     */
+    protected function updateOrderData()
+    {
+        $arEventDataList = Event::fire(self::EVENT_UPDATE_ORDER_DATA, [$this->arOrderData]);
+        if (empty($arEventDataList)) {
+            return;
+        }
+
+        foreach ($arEventDataList as $arEventData) {
+            if (empty($arEventData) || !is_array($arEventData)) {
+                continue;
+            }
+
+            foreach ($arEventData as $sKey => $sValue) {
+                $this->arOrderData[$sKey] = $sValue;
+            }
+        }
     }
 
     /**

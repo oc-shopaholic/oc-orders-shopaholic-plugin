@@ -8,7 +8,7 @@ use Lovata\Toolbox\Traits\Models\SetPropertyAttributeTrait;
 
 /**
  * Class CartPosition
- * @package Lovata\Shopaholic\Models
+ * @package Lovata\OrdersShopaholic\Models
  * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  *
  * @mixin \October\Rain\Database\Builder
