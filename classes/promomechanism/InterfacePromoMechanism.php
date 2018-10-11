@@ -7,6 +7,13 @@
  */
 interface InterfacePromoMechanism
 {
+
+    /**
+     * Get mechanism type (position|total_position|shipping|total)
+     * @return string
+     */
+    public static function getType() : string;
+
     /**
      * Get promo mechanism name (for backend)
      * @return string
@@ -18,12 +25,6 @@ interface InterfacePromoMechanism
      * @return string
      */
     public static function getDescription() : string;
-
-    /**
-     * Get mechanism type (position|total_position|shipping|total)
-     * @return string
-     */
-    public static function getType() : string;
 
     /**
      * Get priority value
@@ -72,4 +73,32 @@ interface InterfacePromoMechanism
      * @return string
      */
     public function getRelatedDescription();
+
+    /**
+     * Get property value
+     * @param string $sField
+     * @return mixed
+     */
+    public function getProperty($sField);
+
+    /**
+     * Calculate new price value
+     * @param float                                                  $fPrice
+     * @param AbstractPromoMechanismProcessor                        $obProcessor
+     * @param \Lovata\OrdersShopaholic\Classes\Item\CartPositionItem $obPosition
+     * @return float
+     */
+    public function calculate($fPrice, $obProcessor, $obPosition = null);
+
+    /**
+     * Set callback function to check position
+     * @param callable $callbackFunction
+     */
+    public function setCheckPositionCallback($callbackFunction);
+
+    /**
+     * Set callback function to check shipping type
+     * @param callable $callbackFunction
+     */
+    public function setCheckShippingTypeCallback($callbackFunction);
 }

@@ -39,6 +39,15 @@ class OrderPromoMechanismProcessor extends AbstractPromoMechanismProcessor
     }
 
     /**
+     * Get position list
+     * @return \Lovata\OrdersShopaholic\Models\OrderPosition[]|\October\Rain\Database\Collection
+     */
+    public function getPositionList()
+    {
+        return $this->obPositionList;
+    }
+
+    /**
      * Get promo mechanism from static store
      * @param Order $obOrder
      * @return OrderPromoMechanismProcessor
@@ -52,6 +61,20 @@ class OrderPromoMechanismProcessor extends AbstractPromoMechanismProcessor
         self::$arProcessorStore[$obOrder->id] = new OrderPromoMechanismProcessor($obOrder);
 
         return self::$arProcessorStore[$obOrder->id];
+    }
+
+    /**
+     * Clear promo mechanism from
+     * @param Order $obOrder
+     * @return OrderPromoMechanismProcessor
+     */
+    public static function update(Order $obOrder)
+    {
+        if (isset(self::$arProcessorStore[$obOrder->id])) {
+            unset(self::$arProcessorStore[$obOrder->id]);
+        }
+
+        return self::get($obOrder);
     }
 
     /**
@@ -72,11 +95,9 @@ class OrderPromoMechanismProcessor extends AbstractPromoMechanismProcessor
 
             $obMechanism = new $sClassName($obOrderMechanism->priority, $obOrderMechanism->discount_value, $obOrderMechanism->discount_type, $obOrderMechanism->final_discount, $obOrderMechanism->property);
 
-            if ($obMechanism instanceof AbstractDiscountPosition) {
-                $obEventMechanism = Event::fire(self::EVENT_MECHANISM_ADD_CHECK_CALLBACK_METHOD, [$obMechanism, $obOrderMechanism->element_id, $obOrderMechanism->element_type, $obOrderMechanism->element_data], true);
-                if (!empty($obEventMechanism) && $obEventMechanism instanceof AbstractDiscountPosition) {
-                    $obMechanism = $obEventMechanism;
-                }
+            $obEventMechanism = Event::fire(self::EVENT_MECHANISM_ADD_CHECK_CALLBACK_METHOD, [$obMechanism, $obOrderMechanism->element_id, $obOrderMechanism->element_type, $obOrderMechanism->element_data], true);
+            if (!empty($obEventMechanism) && $obEventMechanism instanceof InterfacePromoMechanism) {
+                $obMechanism = $obEventMechanism;
             }
 
             $obMechanism->setRelatedDescription($obOrderMechanism->description);
@@ -100,11 +121,11 @@ class OrderPromoMechanismProcessor extends AbstractPromoMechanismProcessor
             $fPrice = $obOrderPosition->price_value;
             $fPrice = PriceHelper::round($fPrice * $obOrderPosition->quantity);
 
-            $obPriceData = new PriceContainer($fPrice, $fPrice);
+            $obPriceData = new PriceContainer($fPrice, $fPrice, $obOrderPosition->quantity);
 
             if (!empty($this->arDiscountPositionList)) {
                 foreach ($this->arDiscountPositionList as $obMechanism) {
-                    $fNewPrice = $obMechanism->calculate($obOrderPosition, $obPriceData->price_value);
+                    $fNewPrice = $obMechanism->calculate($obPriceData->price_value, $this, $obOrderPosition);
                     if (!$obMechanism->isApplied()) {
                         continue;
                     }
@@ -140,9 +161,9 @@ class OrderPromoMechanismProcessor extends AbstractPromoMechanismProcessor
 
         $this->arDiscountShippingPriceList = $this->applySortingByPriority($this->arDiscountShippingPriceList);
 
-        /** @var AbstractDiscountTotalPrice $obMechanism */
+        /** @var InterfacePromoMechanism $obMechanism */
         foreach ($this->arDiscountShippingPriceList as $obMechanism) {
-            $fNewPrice = $obMechanism->calculate($this->obShippingPriceData->price_value);
+            $fNewPrice = $obMechanism->calculate($this->obShippingPriceData->price_value, $this, $this->obOrder->shipping_type);
             if (!$obMechanism->isApplied()) {
                 continue;
             }

@@ -48,25 +48,18 @@ class PriceContainerLog
         switch ($sField) {
             case ('price_value'):
                 return $this->fPrice;
-                break;
             case ('price'):
                 return PriceHelper::toFloat($this->fPrice);
-                break;
             case ('old_price_value'):
                 return $this->fOldPrice;
-                break;
             case ('old_price'):
                 return PriceHelper::toFloat($this->fOldPrice);
-                break;
             case ('discount_price_value'):
                 return $this->fDiscountPrice;
-                break;
             case ('discount_price'):
                 return PriceHelper::toFloat($this->fDiscountPrice);
-                break;
             case ('mechanism'):
                 return $this->obMechanism;
-                break;
             default:
                 return null;
         }

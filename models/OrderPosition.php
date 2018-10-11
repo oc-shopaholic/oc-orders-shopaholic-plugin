@@ -35,6 +35,8 @@ use Lovata\Shopaholic\Models\Product;
  * @property float  $total_price_value
  * @property string $old_total_price
  * @property float  $old_total_price_value
+ * @property string $discount_price
+ * @property float  $discount_price_value
  * @property int    $quantity
  * @property string $code
  * @property array  $property
@@ -109,13 +111,12 @@ class OrderPosition extends Model
         'item_type',
         'price_value',
         'old_price_value',
-        'total_price_value',
         'quantity',
         'code',
         'property',
     ];
 
-    public $arPriceField = ['price', 'old_price', 'total_price', 'old_total_price'];
+    public $arPriceField = ['price', 'old_price', 'total_price', 'old_total_price', 'discount_price'];
 
     /**
      * Before save model event
@@ -123,6 +124,22 @@ class OrderPosition extends Model
     public function beforeSave()
     {
         $this->saveNewPositionData();
+    }
+
+    /**
+     * After save model event
+     */
+    public function afterSave()
+    {
+        $this->updatePromoMechanism();
+    }
+
+    /**
+     * After delete model event
+     */
+    public function afterDelete()
+    {
+        $this->updatePromoMechanism();
     }
 
     /**
@@ -287,5 +304,18 @@ class OrderPosition extends Model
         $this->price = $obItem->price_value;
         $this->old_price = $obItem->old_price_value;
         $this->code = $obItem->code;
+    }
+
+    /**
+     * Update promo mechanism, after create/update/remove
+     */
+    protected function updatePromoMechanism()
+    {
+        $obOrder = $this->order;
+        if (empty($obOrder)) {
+            return;
+        }
+
+        OrderPromoMechanismProcessor::update($obOrder);
     }
 }

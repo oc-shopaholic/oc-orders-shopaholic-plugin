@@ -1,5 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Components;
 
+use Lang;
 use Input;
 use Cms\Classes\ComponentBase;
 use Kharanenka\Helper\Result;
@@ -12,6 +13,9 @@ use Lovata\OrdersShopaholic\Models\ShippingType;
  * Class Cart
  * @package Lovata\OrdersShopaholic\Components
  * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
+ *
+ * Campaigns for Shopaholic plugin
+ * @method \Lovata\CampaignsShopaholic\Classes\Item\CampaignItem[]|\Lovata\CampaignsShopaholic\Classes\Collection\CampaignCollection getAppliedCampaignList()
  */
 class Cart extends ComponentBase
 {
@@ -34,9 +38,7 @@ class Cart extends ComponentBase
     {
         $arRequestData = Input::get('cart');
         CartProcessor::instance()->add($arRequestData, OfferCartPositionProcessor::class);
-        if (Result::status()) {
-            Result::setTrue(CartProcessor::instance()->getCartData());
-        }
+        Result::setData(CartProcessor::instance()->getCartData());
 
         return Result::get();
     }
@@ -50,9 +52,7 @@ class Cart extends ComponentBase
         $arRequestData = Input::get('cart');
 
         CartProcessor::instance()->update($arRequestData, OfferCartPositionProcessor::class);
-        if (Result::status()) {
-            Result::setTrue(CartProcessor::instance()->getCartData());
-        }
+        Result::setData(CartProcessor::instance()->getCartData());
 
         return Result::get();
     }
@@ -65,9 +65,7 @@ class Cart extends ComponentBase
     {
         $arRequestData = Input::get('cart');
         CartProcessor::instance()->remove($arRequestData, OfferCartPositionProcessor::class);
-        if (Result::status()) {
-            Result::setTrue(CartProcessor::instance()->getCartData());
-        }
+        Result::setData(CartProcessor::instance()->getCartData());
 
         return Result::get();
     }
@@ -101,19 +99,29 @@ class Cart extends ComponentBase
         }
 
         CartProcessor::instance()->setActiveShippingType($obShippingType);
-        if (Result::status()) {
-            Result::setTrue(CartProcessor::instance()->getCartData());
-        }
+        Result::setData(CartProcessor::instance()->getCartData());
 
         return Result::get();
     }
 
     /**
+     * Get cart data (ajax request)
+     * @return array
+     */
+    public function onGetData()
+    {
+        return CartProcessor::instance()->getCartData();
+    }
+
+    /**
      * Get offers list from cart
+     * @param ShippingType|\Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem $obShippingType
      * @return \Lovata\OrdersShopaholic\Classes\Collection\CartPositionCollection
      */
-    public function get()
+    public function get($obShippingType = null)
     {
+        CartProcessor::instance()->setActiveShippingType($obShippingType);
+
         return CartProcessor::instance()->get();
     }
 
@@ -137,6 +145,50 @@ class Cart extends ComponentBase
         $obPriceData = $this->getTotalPriceData();
 
         return $obPriceData->price_value;
+    }
+
+    /**
+     * Get old total price string
+     * @return string
+     */
+    public function getOldTotalPrice()
+    {
+        $obPriceData = $this->getTotalPriceData();
+
+        return $obPriceData->old_price;
+    }
+
+    /**
+     * Get old total price value
+     * @return float
+     */
+    public function getOldTotalPriceValue()
+    {
+        $obPriceData = $this->getTotalPriceData();
+
+        return $obPriceData->old_price_value;
+    }
+
+    /**
+     * Get discount total price string
+     * @return string
+     */
+    public function getDiscountTotalPrice()
+    {
+        $obPriceData = $this->getTotalPriceData();
+
+        return $obPriceData->discount_price;
+    }
+
+    /**
+     * Get discount total price value
+     * @return float
+     */
+    public function getDiscountTotalPriceValue()
+    {
+        $obPriceData = $this->getTotalPriceData();
+
+        return $obPriceData->discount_price_value;
     }
 
     /**

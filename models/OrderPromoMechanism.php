@@ -6,6 +6,7 @@ use Event;
 use October\Rain\Database\Traits\Validation;
 
 use Kharanenka\Scope\NameField;
+use Lovata\Toolbox\Traits\Helpers\TraitCached;
 use Lovata\Toolbox\Classes\Helper\PriceHelper;
 
 /**
@@ -42,6 +43,7 @@ class OrderPromoMechanism extends Model
 {
     use Validation;
     use NameField;
+    use TraitCached;
 
     const EVENT_GET_DESCRIPTION = 'shopaholic.order.promo_mechanism.description';
 
@@ -61,6 +63,22 @@ class OrderPromoMechanism extends Model
     ];
 
     public $fillable = [
+        'order_id',
+        'mechanism_id',
+        'name',
+        'type',
+        'priority',
+        'discount_value',
+        'discount_type',
+        'final_discount',
+        'property',
+        'element_id',
+        'element_type',
+        'element_data',
+    ];
+
+    public $cached = [
+        'id',
         'order_id',
         'mechanism_id',
         'name',

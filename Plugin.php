@@ -3,7 +3,8 @@
 use Lang;
 use Event;
 use System\Classes\PluginBase;
-
+//Console commands
+use Lovata\OrdersShopaholic\Classes\Console\SendManagerNotification;
 //Events
 //CartPosition events
 use Lovata\OrdersShopaholic\Classes\Event\CartPosition\CartPositionModelHandler;
@@ -11,7 +12,6 @@ use Lovata\OrdersShopaholic\Classes\Event\CartPosition\CartPositionModelHandler;
 use Lovata\OrdersShopaholic\Classes\Event\ExtendBackendMenuHandler;
 use Lovata\OrdersShopaholic\Classes\Event\ExtendFieldHandler;
 use Lovata\OrdersShopaholic\Classes\Event\ExtendPaymentMethodFieldHandler;
-use Lovata\OrdersShopaholic\Classes\Event\ExtendUserModelHandler;
 use Lovata\OrdersShopaholic\Classes\Event\OfferModelHandler;
 use Lovata\OrdersShopaholic\Classes\Event\OrdersControllerHandler;
 use Lovata\OrdersShopaholic\Classes\Event\OrderModelHandler;
@@ -20,6 +20,13 @@ use Lovata\OrdersShopaholic\Classes\Event\PaymentMethodModelHandler;
 use Lovata\OrdersShopaholic\Classes\Event\ProductModelHandler;
 use Lovata\OrdersShopaholic\Classes\Event\ShippingTypeModelHandler;
 use Lovata\OrdersShopaholic\Classes\Event\StatusModelHandler;
+//User events
+use Lovata\OrdersShopaholic\Classes\Event\User\UserModelHandler;
+use Lovata\OrdersShopaholic\Classes\Event\User\ExtendUserItemHandler;
+use Lovata\OrdersShopaholic\Classes\Event\User\ExtendUserFieldsHandler;
+use Lovata\OrdersShopaholic\Classes\Event\User\ExtendUserControllerHandler;
+//User address events
+use Lovata\OrdersShopaholic\Classes\Event\UserAddress\UserAddressModelHandler;
 
 /**
  *
@@ -44,6 +51,7 @@ class Plugin extends PluginBase
             'Lovata\OrdersShopaholic\Components\ShippingTypeList'  => 'ShippingTypeList',
             'Lovata\OrdersShopaholic\Components\PaymentMethodList' => 'PaymentMethodList',
             'Lovata\OrdersShopaholic\Components\StatusList'        => 'StatusList',
+            'Lovata\OrdersShopaholic\Components\UserAddress'       => 'UserAddress',
         ];
     }
 
@@ -56,6 +64,14 @@ class Plugin extends PluginBase
             'lovata.ordersshopaholic::mail.create_order_manager' => Lang::get('lovata.ordersshopaholic::mail.create_order_manager'),
             'lovata.ordersshopaholic::mail.create_order_user'    => Lang::get('lovata.ordersshopaholic::mail.create_order_user'),
         ];
+    }
+
+    /**
+     * Register console command
+     */
+    public function register()
+    {
+        $this->registerConsoleCommand('shopaholic:order.send_manager_notification', SendManagerNotification::class);
     }
 
     /**
@@ -77,7 +93,6 @@ class Plugin extends PluginBase
         Event::subscribe(ExtendBackendMenuHandler::class);
         Event::subscribe(ExtendFieldHandler::class);
         Event::subscribe(ExtendPaymentMethodFieldHandler::class);
-        Event::subscribe(ExtendUserModelHandler::class);
         Event::subscribe(OfferModelHandler::class);
         Event::subscribe(OrdersControllerHandler::class);
         Event::subscribe(OrderModelHandler::class);
@@ -86,5 +101,12 @@ class Plugin extends PluginBase
         Event::subscribe(ProductModelHandler::class);
         Event::subscribe(ShippingTypeModelHandler::class);
         Event::subscribe(StatusModelHandler::class);
+        //User events
+        Event::subscribe(UserModelHandler::class);
+        Event::subscribe(ExtendUserItemHandler::class);
+        Event::subscribe(ExtendUserFieldsHandler::class);
+        Event::subscribe(ExtendUserControllerHandler::class);
+        //User address events
+        Event::subscribe(UserAddressModelHandler::class);
     }
 }

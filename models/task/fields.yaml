@@ -1,0 +1,41 @@
+fields:
+    sent:
+        label: 'lovata.ordersshopaholic::lang.field.notification_sent'
+        span: full
+        type: checkbox
+        disabled: true
+    date:
+        label: 'lovata.ordersshopaholic::lang.field.task_date'
+        mode: datetime
+        span: full
+        type: datepicker
+    status:
+        label: 'lovata.ordersshopaholic::lang.field.status'
+        span: full
+        context:
+        - update
+        - preview
+        type: dropdown
+    title:
+        label: 'lovata.toolbox::lang.field.title'
+        span: full
+        type: text
+    description:
+        label: 'lovata.toolbox::lang.field.description'
+        span: full
+        type: textarea
+        size: huge
+    manager:
+        label: 'lovata.ordersshopaholic::lang.field.manager'
+        span: full
+        type: relation
+        select: concat(first_name, ' ', last_name)
+        context:
+            - update
+            - preview
+    mail_template:
+        label: 'lovata.ordersshopaholic::lang.field.task_mail_template'
+        emptyOption: 'lovata.toolbox::lang.field.empty'
+        comment: 'lovata.ordersshopaholic::lang.field.task_mail_template_description'
+        span: full
+        type: dropdown

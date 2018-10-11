@@ -7,16 +7,19 @@ use Lovata\Toolbox\Classes\Helper\PriceHelper;
  * @package Lovata\OrdersShopaholic\Classes\PromoMechanism
  * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  *
- * @property string $price
- * @property float  $price_value
- * @property string $old_price
- * @property float  $old_price_value
- * @property string $discount_price
- * @property float  $discount_price_value
- * @property array|PriceContainerLog[]  $log
+ * @property string                    $price
+ * @property float                     $price_value
+ * @property string                    $old_price
+ * @property float                     $old_price_value
+ * @property string                    $discount_price
+ * @property float                     $discount_price_value
+ * @property string                    $price_per_unit
+ * @property float                     $price_per_unit_value
+ * @property array|PriceContainerLog[] $log
  */
 class PriceContainer
 {
+    protected $iQuantity = 0;
     protected $fPrice = 0;
     protected $fOldPrice = 0;
     protected $fDiscountPrice = 0;
@@ -26,13 +29,15 @@ class PriceContainer
      * PriceData constructor.
      * @param float $fPrice
      * @param float $fOldPrice
+     * @param int   $iQuantity
      */
-    public function __construct($fPrice, $fOldPrice)
+    public function __construct($fPrice, $fOldPrice, $iQuantity = null)
     {
         $this->fOldPrice = PriceHelper::toFloat($fOldPrice);
         $this->fPrice = PriceHelper::toFloat($fPrice);
+        $this->iQuantity = $iQuantity;
 
-        $this->fDiscountPrice = $this->fOldPrice - $this->fPrice;
+        $this->fDiscountPrice = PriceHelper::round($this->fOldPrice - $this->fPrice);
     }
 
     /**
@@ -61,25 +66,33 @@ class PriceContainer
         switch ($sField) {
             case ('price_value'):
                 return $this->fPrice;
-                break;
             case ('price'):
-                return PriceHelper::toFloat($this->fPrice);
-                break;
+                return PriceHelper::format($this->fPrice);
             case ('old_price_value'):
                 return $this->fOldPrice;
-                break;
             case ('old_price'):
-                return PriceHelper::toFloat($this->fOldPrice);
-                break;
+                return PriceHelper::format($this->fOldPrice);
             case ('discount_price_value'):
                 return $this->fDiscountPrice;
-                break;
             case ('discount_price'):
-                return PriceHelper::toFloat($this->fDiscountPrice);
-                break;
+                return PriceHelper::format($this->fDiscountPrice);
+            case ('price_per_unit_value'):
+                if ($this->iQuantity === null) {
+                    return $this->fPrice;
+                }
+
+                $fPricePerUnit = PriceHelper::round($this->fPrice / $this->iQuantity);
+                return $fPricePerUnit;
+            case ('price_per_unit'):
+                if ($this->iQuantity === null) {
+                    return PriceHelper::format($this->fPrice);
+                }
+
+                $fPricePerUnit = PriceHelper::round($this->fPrice / $this->iQuantity);
+
+                return PriceHelper::format($fPricePerUnit);
             case ('log'):
                 return $this->arLogData;
-                break;
             default:
                 return null;
         }
@@ -87,7 +100,7 @@ class PriceContainer
 
     /**
      * @param string $sMethod
-     * @param array $arParamLst
+     * @param array  $arParamLst
      * @return mixed
      */
     public function __call($sMethod, $arParamLst)
@@ -108,8 +121,8 @@ class PriceContainer
 
         $arResult['price'] = $this->price;
         $arResult['price_value'] = $this->price_value;
-        $arResult['old_price'] = $this->price;
-        $arResult['old_price_value'] = $this->price_value;
+        $arResult['old_price'] = $this->old_price;
+        $arResult['old_price_value'] = $this->old_price_value;
         $arResult['discount_price'] = $this->discount_price;
         $arResult['discount_price_value'] = $this->discount_price_value;
         $arResult['log'] = [];
@@ -136,7 +149,7 @@ class PriceContainer
         $this->addLogData($fPrice, $this->fPrice, $fDiscount, $obMechanism);
 
         $this->fPrice = $fPrice;
-        $this->fDiscountPrice = $this->fOldPrice - $this->fPrice;
+        $this->fDiscountPrice = PriceHelper::round($this->fOldPrice - $this->fPrice);
     }
 
     /**

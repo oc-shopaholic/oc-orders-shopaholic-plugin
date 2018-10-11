@@ -31,6 +31,14 @@ use Lovata\Toolbox\Traits\Helpers\PriceHelperTrait;
  *
  * @property \October\Rain\Database\Collection|Order[] $order
  * @method static Order|\October\Rain\Database\Relations\HasMany order()
+ *
+ * Campaign for Shopaholic
+ * @property \October\Rain\Database\Collection|\Lovata\CampaignsShopaholic\Models\Campaign[] $campaign
+ * @method static \October\Rain\Database\Relations\BelongsToMany|\Lovata\CampaignsShopaholic\Models\Campaign campaign()
+ *
+ * Coupons for Shopaholic
+ * @property \October\Rain\Database\Collection|\Lovata\CouponsShopaholic\Models\CouponGroup[] $coupon_group
+ * @method static \October\Rain\Database\Relations\BelongsToMany|\Lovata\CouponsShopaholic\Models\CouponGroup coupon_group()
  */
 class ShippingType extends Model
 {
@@ -80,6 +88,24 @@ class ShippingType extends Model
     public $dates = ['created_at', 'updated_at'];
 
     public $hasMany = ['order' => Order::class];
+    public $belongsToMany = [];
+    public $belongsTo = [];
 
     public $arPriceField = ['price'];
+
+    /**
+     * Find element by code and return element object
+     * @param string $sCode
+     * @return $this
+     */
+    public static function getFirstByCode($sCode)
+    {
+        if (empty($sCode)) {
+            return null;
+        }
+
+        $obStatus = self::getByCode($sCode)->first();
+
+        return $obStatus;
+    }
 }

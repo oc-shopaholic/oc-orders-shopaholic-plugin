@@ -12,6 +12,8 @@ abstract class AbstractPromoMechanismProcessor
      */
     protected $arPositionPrice = [];
 
+    protected $obPositionList;
+
     /** @var PriceContainer */
     protected $obPositionPriceData;
 
@@ -21,17 +23,26 @@ abstract class AbstractPromoMechanismProcessor
     /** @var PriceContainer */
     protected $obTotalPriceData;
 
-    /** @var array|AbstractDiscountPosition[] */
+    /** @var array|InterfacePromoMechanism[] */
     protected $arDiscountPositionList = [];
 
-    /** @var array|AbstractDiscountPositionTotalPrice */
+    /** @var array|InterfacePromoMechanism[] */
+    protected $arDiscountPositionMinPriceList = [];
+
+    /** @var array|InterfacePromoMechanism */
     protected $arDiscountTotalPositionList = [];
 
-    /** @var array|AbstractDiscountShippingPrice */
+    /** @var array|InterfacePromoMechanism */
     protected $arDiscountShippingPriceList = [];
 
-    /** @var array|AbstractDiscountTotalPrice */
+    /** @var array|InterfacePromoMechanism */
     protected $arDiscountTotalPriceList = [];
+
+    /**
+     * Get position list
+     * @return mixed
+     */
+    abstract public function getPositionList();
 
     /**
      * Add mechanism class with params
@@ -46,6 +57,8 @@ abstract class AbstractPromoMechanismProcessor
         $sMechanismType = $obMechanism::getType();
         if ($sMechanismType == AbstractPromoMechanism::TYPE_POSITION) {
             $this->arDiscountPositionList[] = $obMechanism;
+        } elseif ($sMechanismType == AbstractPromoMechanism::TYPE_POSITION_MIN_PRICE) {
+            $this->arDiscountPositionMinPriceList[] = $obMechanism;
         } elseif ($sMechanismType == AbstractPromoMechanism::TYPE_TOTAL_POSITION) {
             $this->arDiscountTotalPositionList[] = $obMechanism;
         } elseif ($sMechanismType == AbstractPromoMechanism::TYPE_SHIPPING) {
@@ -106,6 +119,7 @@ abstract class AbstractPromoMechanismProcessor
         $this->initMechanismList();
 
         $this->applyPositionDiscounts();
+        $this->applyPositionMinPriceDiscounts();
         $this->applyPositionTotalPriceDiscounts();
         $this->applyShippingDiscounts();
         $this->applyTotalPriceDiscounts();
@@ -122,14 +136,68 @@ abstract class AbstractPromoMechanismProcessor
 
         $this->arDiscountTotalPositionList = $this->applySortingByPriority($this->arDiscountTotalPositionList);
 
-        /** @var AbstractDiscountPositionTotalPrice $obMechanism */
+        /** @var InterfacePromoMechanism $obMechanism */
         foreach ($this->arDiscountTotalPositionList as $obMechanism) {
-            $fNewPrice = $obMechanism->calculate($this->obPositionPriceData->price_value);
+            $fNewPrice = $obMechanism->calculate($this->obPositionPriceData->price_value, $this);
             if (!$obMechanism->isApplied()) {
                 continue;
             }
 
             $this->obPositionPriceData->addDiscount($fNewPrice, $obMechanism);
+            if ($obMechanism->isFinal()) {
+                break;
+            }
+        }
+    }
+
+    /**
+     * Find position with min price and apply discounts for position price
+     */
+    protected function applyPositionMinPriceDiscounts()
+    {
+        if (empty($this->arDiscountPositionMinPriceList)) {
+            return;
+        }
+
+        $this->arDiscountPositionMinPriceList = $this->applySortingByPriority($this->arDiscountPositionMinPriceList);
+
+        //Find position with min price
+        $fMinPrice = null;
+        $obPositionMinPrice = null;
+        foreach ($this->obPositionList as $obPosition) {
+            //Get price for position
+            $obPriceData = $this->getPositionPrice($obPosition->id);
+            if ($obPriceData->price_value == 0 || ($fMinPrice !== null && $obPriceData->price_per_unit_value > $fMinPrice)) {
+                continue;
+            }
+
+            $fMinPrice = $obPriceData->price_per_unit_value;
+            $obPositionMinPrice = $obPosition;
+        }
+
+        if (empty($obPositionMinPrice)) {
+            return;
+        }
+
+        /** @var InterfacePromoMechanism $obMechanism */
+        foreach ($this->arDiscountPositionMinPriceList as $obMechanism) {
+            $obPriceData = $this->getPositionPrice($obPositionMinPrice->id);
+            $fNewPrice = $obMechanism->calculate($obPriceData->price_value, $this, $obPositionMinPrice);
+            if (!$obMechanism->isApplied()) {
+                continue;
+            }
+
+            $this->obPositionPriceData->price_value -= $obPriceData->price_value;
+            $this->obPositionPriceData->old_price_value -= $obPriceData->old_price_value;
+            $this->obPositionPriceData->discount_price_value -= $obPriceData->discount_price_value;
+
+            $obPriceData->addDiscount($fNewPrice, $obMechanism);
+
+            $this->obPositionPriceData->price_value += $obPriceData->price_value;
+            $this->obPositionPriceData->old_price_value += $obPriceData->old_price_value;
+            $this->obPositionPriceData->discount_price_value += $obPriceData->discount_price_value;
+
+            $this->arPositionPrice[$obPositionMinPrice->id] = $obPriceData;
             if ($obMechanism->isFinal()) {
                 break;
             }
@@ -151,9 +219,9 @@ abstract class AbstractPromoMechanismProcessor
 
         $this->arDiscountTotalPriceList = $this->applySortingByPriority($this->arDiscountTotalPriceList);
 
-        /** @var AbstractDiscountTotalPrice $obMechanism */
+        /** @var InterfacePromoMechanism $obMechanism */
         foreach ($this->arDiscountTotalPriceList as $obMechanism) {
-            $fNewPrice = $obMechanism->calculate($this->obTotalPriceData->price_value);
+            $fNewPrice = $obMechanism->calculate($this->obTotalPriceData->price_value, $this);
             if (!$obMechanism->isApplied()) {
                 continue;
             }

@@ -95,9 +95,9 @@ class Status extends Model
     }
 
     /**
-     * Find status by code and return Status object
+     * Find element by code and return element object
      * @param string $sCode
-     * @return \Illuminate\Database\Eloquent\Model|Status|null
+     * @return $this
      */
     public static function getFirstByCode($sCode)
     {
@@ -105,7 +105,7 @@ class Status extends Model
             return null;
         }
 
-        $obStatus = Status::getByCode(Status::STATUS_NEW)->first();
+        $obStatus = self::getByCode($sCode)->first();
 
         return $obStatus;
     }

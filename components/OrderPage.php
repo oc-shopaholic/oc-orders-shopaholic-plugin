@@ -1,5 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Components;
 
+use Lovata\Toolbox\Classes\Helper\UserHelper;
 use Redirect;
 use Kharanenka\Helper\Result;
 use Lovata\Toolbox\Classes\Component\ElementPage;
@@ -21,6 +22,9 @@ class OrderPage extends ElementPage
 
     /** @var Order */
     public $obElement = null;
+
+    /** @var \Lovata\Buddies\Models\User */
+    public $obUser;
 
     /** @var \Lovata\OrdersShopaholic\Models\PaymentMethod */
     public $obPaymentMethod = null;
@@ -112,7 +116,12 @@ class OrderPage extends ElementPage
             return null;
         }
 
+        $this->obUser = UserHelper::instance()->getUser();
+
         $obElement = Order::getBySecretKey($sElementSlug)->first();
+        if (!empty($obElement) && !empty($this->obUser) && $obElement->user_id != $this->obUser->id) {
+            $obElement = null;
+        }
 
         return $obElement;
     }

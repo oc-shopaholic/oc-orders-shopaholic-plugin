@@ -6,7 +6,8 @@ columns:
         sortable: true
     type_name:
         label: 'lovata.toolbox::lang.field.type'
-        type: text
+        type: partial
+        path: ~/plugins/lovata/ordersshopaholic/controllers/orders/_promo_type_name.htm
         searchable: false
         sortable: false
     description:

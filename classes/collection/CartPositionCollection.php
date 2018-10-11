@@ -2,7 +2,7 @@
 
 use Lovata\Toolbox\Classes\Collection\ElementCollection;
 
-use Lovata\Shopaholic\Models\Settings;
+use Lovata\Shopaholic\Classes\Helper\CurrencyHelper;
 use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
 use Lovata\OrdersShopaholic\Classes\Item\CartPositionItem;
 
@@ -104,6 +104,24 @@ class CartPositionCollection extends ElementCollection
      */
     public function getCurrency()
     {
-        return Settings::getValue('currency');
+        return CurrencyHelper::instance()->getActive();
+    }
+
+    /**
+     * Get the total count of all order positions
+     * @return int
+     */
+    public function getTotalQuantity()
+    {
+        $iQuantityCount = 0;
+
+        $arCartPositionList = $this->all();
+
+        /** @var \Lovata\OrdersShopaholic\Classes\Item\CartPositionItem $obCartPositionItem */
+        foreach ($arCartPositionList as $obCartPositionItem) {
+            $iQuantityCount += $obCartPositionItem->quantity;
+        }
+
+        return $iQuantityCount;
     }
 }

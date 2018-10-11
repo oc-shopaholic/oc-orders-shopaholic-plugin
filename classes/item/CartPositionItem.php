@@ -11,6 +11,10 @@ use Lovata\OrdersShopaholic\Models\CartPosition;
  * @package Lovata\OrdersShopaholic\Classes\Item
  * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  *
+ * @property int                                                            $item_id
+ * @property string                                                         $item_type
+ * @property array                                                          $property
+ * @property integer                                                        $quantity
  * @property string                                                         $price
  * @property float                                                          $price_value
  * @property string                                                         $old_price

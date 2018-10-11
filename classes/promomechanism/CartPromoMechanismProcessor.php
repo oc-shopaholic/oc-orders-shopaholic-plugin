@@ -1,9 +1,10 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\PromoMechanism;
 
 use Event;
+use Lovata\Toolbox\Classes\Helper\PriceHelper;
+
 use Lovata\OrdersShopaholic\Models\Cart;
 use Lovata\OrdersShopaholic\Classes\Collection\CartPositionCollection;
-use Lovata\Toolbox\Classes\Helper\PriceHelper;
 
 /**
  * Class CartPromoMechanismProcessor
@@ -25,8 +26,8 @@ class CartPromoMechanismProcessor extends AbstractPromoMechanismProcessor
 
     /**
      * CartPromoMechanismProcessor constructor.
-     * @param Cart                   $obCart
-     * @param CartPositionCollection $obCartPositionList
+     * @param Cart                                         $obCart
+     * @param CartPositionCollection                       $obCartPositionList
      * @param \Lovata\OrdersShopaholic\Models\ShippingType $obShippingType
      */
     public function __construct(Cart $obCart, CartPositionCollection $obCartPositionList, $obShippingType)
@@ -43,6 +44,15 @@ class CartPromoMechanismProcessor extends AbstractPromoMechanismProcessor
         }
 
         $this->calculate();
+    }
+
+    /**
+     * Get position list
+     * @return \Lovata\OrdersShopaholic\Classes\Collection\CartPositionCollection|\Lovata\OrdersShopaholic\Classes\Item\CartPositionItem[]
+     */
+    public function getPositionList()
+    {
+        return $this->obPositionList;
     }
 
     /**
@@ -79,11 +89,11 @@ class CartPromoMechanismProcessor extends AbstractPromoMechanismProcessor
             $fPrice = PriceHelper::round($fPrice * $obCartPositionItem->quantity);
             $fOldPrice = PriceHelper::round($fOldPrice * $obCartPositionItem->quantity);
 
-            $obPriceData = new PriceContainer($fPrice, $fOldPrice);
+            $obPriceData = new PriceContainer($fPrice, $fOldPrice, $obCartPositionItem->quantity);
 
             if (!empty($this->arDiscountPositionList)) {
                 foreach ($this->arDiscountPositionList as $obMechanism) {
-                    $fNewPrice = $obMechanism->calculate($obCartPositionItem, $obPriceData->price_value);
+                    $fNewPrice = $obMechanism->calculate($obPriceData->price_value, $this, $obCartPositionItem);
                     if (!$obMechanism->isApplied()) {
                         continue;
                     }
@@ -108,12 +118,14 @@ class CartPromoMechanismProcessor extends AbstractPromoMechanismProcessor
      */
     protected function applyShippingDiscounts()
     {
-        if (!empty($this->obShippingType)) {
-            $fPrice = $this->obShippingType->price_value;
-
-            $this->obShippingPriceData->price_value += $fPrice;
-            $this->obShippingPriceData->old_price_value += $fPrice;
+        if (empty($this->obShippingType)) {
+            return;
         }
+
+        $fPrice = $this->obShippingType->price_value;
+
+        $this->obShippingPriceData->price_value += $fPrice;
+        $this->obShippingPriceData->old_price_value += $fPrice;
 
         if (empty($this->arDiscountShippingPriceList)) {
             return;
@@ -121,9 +133,9 @@ class CartPromoMechanismProcessor extends AbstractPromoMechanismProcessor
 
         $this->arDiscountShippingPriceList = $this->applySortingByPriority($this->arDiscountShippingPriceList);
 
-        /** @var AbstractDiscountTotalPrice $obMechanism */
+        /** @var InterfacePromoMechanism $obMechanism */
         foreach ($this->arDiscountShippingPriceList as $obMechanism) {
-            $fNewPrice = $obMechanism->calculate($this->obShippingPriceData->price_value);
+            $fNewPrice = $obMechanism->calculate($this->obShippingPriceData->price_value, $this, $this->obShippingType);
             if (!$obMechanism->isApplied()) {
                 continue;
             }

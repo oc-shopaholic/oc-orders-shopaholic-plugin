@@ -73,3 +73,8 @@
     - 'Added PromoMechanism model. Added of opportunity to change price of order positions, shipping price, order total price, using promo mechanisms.'
     - table_create_promo_mechanism.php
     - table_create_order_promo_mechanism.php
+    - table_create_user_addresses.php
+    - seeder_address_order_properties.php
+    - table_update_orders_add_currency_field.php
+    - table_update_orders_add_manager_id_field.php
+    - table_create_tasks.php

@@ -4,6 +4,7 @@ use Lang;
 use Model;
 use October\Rain\Database\Traits\Validation;
 
+use Kharanenka\Scope\TypeField;
 use Kharanenka\Scope\NameField;
 use Lovata\Toolbox\Classes\Helper\PriceHelper;
 
@@ -32,6 +33,7 @@ class PromoMechanism extends Model
 {
     use Validation;
     use NameField;
+    use TypeField;
 
     const FIXED_TYPE = 'fixed';
     const PERCENT_TYPE = 'percent';
@@ -40,13 +42,15 @@ class PromoMechanism extends Model
 
     /** Validation */
     public $rules = [
-        'name' => 'required',
-        'type' => 'required',
+        'name'           => 'required',
+        'type'           => 'required',
+        'discount_value' => 'required',
     ];
 
     public $attributeNames = [
-        'name' => 'lovata.toolbox::lang.field.name',
-        'type' => 'lovata.toolbox::lang.field.type',
+        'name'           => 'lovata.toolbox::lang.field.name',
+        'type'           => 'lovata.toolbox::lang.field.type',
+        'discount_value' => 'lovata.toolbox::lang.field.discount_value',
     ];
 
     public $fillable = [

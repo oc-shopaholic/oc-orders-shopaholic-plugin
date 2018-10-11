@@ -58,14 +58,12 @@ tabs:
             span: left
             type: text
             tab: 'lovata.ordersshopaholic::lang.tab.info'
-        user:
-            span: right
-            path: $/lovata/ordersshopaholic/controllers/orders/_user.htm
-            context:
-                - update
-                - preview
-            type: partial
-            tab: 'lovata.ordersshopaholic::lang.field.user'
+        manager_id:
+            label: 'lovata.ordersshopaholic::lang.field.manager'
+            emptyOption: 'lovata.toolbox::lang.field.empty'
+            span: left
+            type: dropdown
+            tab: 'lovata.ordersshopaholic::lang.tab.info'
         order_offer:
             span: full
             path: $/lovata/ordersshopaholic/controllers/orders/_order_offer.htm
@@ -74,6 +72,32 @@ tabs:
                 - preview
             type: partial
             tab: 'lovata.ordersshopaholic::lang.tab.offers_info'
+        user:
+            span: right
+            path: $/lovata/ordersshopaholic/controllers/orders/_user.htm
+            context:
+            - update
+            - preview
+            type: partial
+            tab: 'lovata.ordersshopaholic::lang.field.user'
+        active_task:
+            label: 'lovata.ordersshopaholic::lang.field.active_task'
+            span: full
+            path: $/lovata/ordersshopaholic/controllers/orders/_active_task.htm
+            context:
+            - update
+            - preview
+            type: partial
+            tab: 'lovata.ordersshopaholic::lang.tab.tasks'
+        completed_task:
+            label: 'lovata.ordersshopaholic::lang.field.completed_task'
+            span: full
+            path: $/lovata/ordersshopaholic/controllers/orders/_completed_task.htm
+            context:
+            - update
+            - preview
+            type: partial
+            tab: 'lovata.ordersshopaholic::lang.tab.tasks'
         payment_data_json:
             label: 'lovata.ordersshopaholic::lang.field.payment_data'
             span: left
