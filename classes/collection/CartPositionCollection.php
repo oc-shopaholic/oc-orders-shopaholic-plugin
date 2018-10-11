@@ -87,6 +87,51 @@ class CartPositionCollection extends ElementCollection
         return $obPriceData->price_value;
     }
 
+
+    /**
+     * Get old total price string
+     * @return string
+     */
+    public function getOldTotalPrice()
+    {
+        $obPriceData = $this->getTotalPriceData();
+
+        return $obPriceData->old_price;
+    }
+
+    /**
+     * Get old total price value
+     * @return float
+     */
+    public function getOldTotalPriceValue()
+    {
+        $obPriceData = $this->getTotalPriceData();
+
+        return $obPriceData->old_price_value;
+    }
+
+    /**
+     * Get discount total price string
+     * @return string
+     */
+    public function getDiscountTotalPrice()
+    {
+        $obPriceData = $this->getTotalPriceData();
+
+        return $obPriceData->discount_price;
+    }
+
+    /**
+     * Get discount total price value
+     * @return float
+     */
+    public function getDiscountTotalPriceValue()
+    {
+        $obPriceData = $this->getTotalPriceData();
+
+        return $obPriceData->discount_price_value;
+    }
+
     /**
      * Get total position price data
      * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer
