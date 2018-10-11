@@ -5,6 +5,7 @@ use Kharanenka\Helper\Result;
 use Lovata\Buddies\Facades\AuthHelper;
 use Lovata\OrdersShopaholic\Classes\Processor\OfferCartPositionProcessor;
 use Lovata\OrdersShopaholic\Classes\Processor\OrderProcessor;
+use Lovata\OrdersShopaholic\Models\ShippingType;
 use Lovata\OrdersShopaholic\Models\Order;
 use Lovata\OrdersShopaholic\Models\OrderPosition;
 use Lovata\Shopaholic\Models\Settings;
@@ -37,6 +38,9 @@ class OrderProcessorTest extends CommonTest
     /** @var  User */
     protected $obUser;
 
+    /** @var  ShippingType */
+    protected $obShippingType;
+
     protected $arProductData = [
         'name'         => 'name',
         'slug'         => 'slug',
@@ -65,6 +69,13 @@ class OrderProcessorTest extends CommonTest
         'property'              => ['birthday' => '2017-10-21'],
         'password'              => 'test',
         'password_confirmation' => 'test',
+    ];
+
+    protected $arShippingTypeData = [
+        'name'         => 'name',
+        'code'         => 'code',
+        'preview_text' => 'preview_text',
+        'price'        => '1,10',
     ];
 
     public function setUp()
@@ -153,8 +164,7 @@ class OrderProcessorTest extends CommonTest
 
         $arOrderData = [
             'payment_method_id' => 1,
-            'shipping_type_id'  => 1,
-            'shipping_price'    => '1,1'
+            'shipping_type_id'  => $this->obShippingType->id,
         ];
 
         /** @var OrderProcessor $obOrderProcessor */
@@ -370,6 +380,8 @@ class OrderProcessorTest extends CommonTest
 
         $arCreateData['product_id'] = $this->obProduct->id + 1;
         Offer::create($arCreateData);
+
+        $this->obShippingType = ShippingType::create($this->arShippingTypeData);
 
         $arCreateData = $this->arUserData;
 

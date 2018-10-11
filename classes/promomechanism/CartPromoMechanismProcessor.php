@@ -39,9 +39,6 @@ class CartPromoMechanismProcessor extends AbstractPromoMechanismProcessor
         $this->obCart = $obCart;
         $this->obPositionList = $obCartPositionList;
         $this->obShippingType = $obShippingType;
-        if ($this->obPositionList->isEmpty()) {
-            return;
-        }
 
         $this->calculate();
     }

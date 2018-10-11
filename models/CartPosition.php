@@ -54,6 +54,7 @@ class CartPosition extends Model
     ];
 
     public $fillable = [
+        'cart_id',
         'item_id',
         'item_type',
         'cart_id',

@@ -1,5 +1,7 @@
 <?php namespace Lovata\OrdersShopaholic\Tests\Unit\Item;
 
+use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
+use Lovata\OrdersShopaholic\Models\Cart;
 use Lovata\Toolbox\Models\Settings;
 use Lovata\Toolbox\Tests\CommonTest;
 
@@ -26,6 +28,9 @@ class CartPositionItemTest extends CommonTest
 
     /** @var  Offer */
     protected $obOffer;
+
+    /** @var Cart */
+    protected $obCart;
 
     protected $arCreateData = [
         'quantity' => 10,
@@ -65,8 +70,11 @@ class CartPositionItemTest extends CommonTest
         $arCreatedData = $this->arCreateData;
         $arCreatedData['id'] = $this->obElement->id;
 
+        CartProcessor::$iTestCartID = $this->obCart->id;
+        CartProcessor::forgetInstance();
+
         //Check item fields
-        $obItem = CartPositionItem::make($this->obElement->id);
+        $obItem = CartProcessor::instance()->get()->first();
         foreach ($arCreatedData as $sField => $sValue) {
             self::assertEquals($sValue, $obItem->$sField, $sErrorMessage);
         }
@@ -131,6 +139,8 @@ class CartPositionItemTest extends CommonTest
     {
         Settings::set('decimals', 2);
 
+        $this->obCart = Cart::create();
+
         //Create product data
         $arCreateData = $this->arProductData;
         $arCreateData['active'] = true;
@@ -145,7 +155,7 @@ class CartPositionItemTest extends CommonTest
         $arCreateData = $this->arCreateData;
         $arCreateData['item_id'] = $this->obOffer->id;
         $arCreateData['item_type'] = Offer::class;
-        $arCreateData['cart_id'] = 1;
+        $arCreateData['cart_id'] = $this->obCart->id;
 
         $this->obElement = CartPosition::create($arCreateData);
     }
