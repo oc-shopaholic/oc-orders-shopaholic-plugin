@@ -77,6 +77,23 @@ fields:
                 value[Lovata\OrdersShopaholic\Classes\PromoMechanism\WithoutCondition\WithoutConditionDiscountPosition]
         span: left
         type: text
+    property[quantity_limit_from]:
+        label: 'lovata.ordersshopaholic::lang.promo_mechanism.quantity_limit_from'
+        comment: 'lovata.ordersshopaholic::lang.promo_mechanism.quantity_limit_from_description'
+        trigger:
+            action: show
+            field: type
+            condition: |
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferQuantityGreater\OfferQuantityGreaterDiscountMinPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferQuantityGreater\OfferQuantityGreaterDiscountPosition] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferTotalQuantityGreater\OfferTotalQuantityGreaterDiscountMinPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferTotalQuantityGreater\OfferTotalQuantityGreaterDiscountPosition] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\PositionCountGreater\PositionCountGreaterDiscountMinPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\PositionCountGreater\PositionCountGreaterDiscountPosition] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\WithoutCondition\WithoutConditionDiscountMinPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\WithoutCondition\WithoutConditionDiscountPosition]
+        span: right
+        type: text
     property[position_limit]:
         label: 'lovata.ordersshopaholic::lang.promo_mechanism.position_limit'
         comment: 'lovata.ordersshopaholic::lang.promo_mechanism.position_limit_description'

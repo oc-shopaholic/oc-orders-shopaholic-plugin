@@ -1,5 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Collection;
 
+use Lovata\Toolbox\Classes\Helper\UserHelper;
 use Lovata\Toolbox\Classes\Collection\ElementCollection;
 
 use Lovata\OrdersShopaholic\Classes\Item\UserAddressItem;
@@ -19,8 +20,12 @@ class UserAddressCollection extends ElementCollection
      * @param $iUserID
      * @return $this
      */
-    public function user($iUserID)
+    public function user($iUserID = null)
     {
+        if (empty($iUserID)) {
+            $iUserID = UserHelper::instance()->getUserID();
+        }
+
         $arResultIDList = UserAddressListStore::instance()->user->get($iUserID);
 
         return $this->intersect($arResultIDList);

@@ -107,10 +107,10 @@ class MakeOrder extends ComponentSubmitForm
         }
 
         $this->create($arOrderData, $arUserData);
-        if (empty($this->obPaymentGateway) || !Result::status()) {
-            //Fire event and get redirect URL
-            $sRedirectURL = Event::fire(OrderProcessor::EVENT_ORDER_GET_REDIRECT_URL, $this->obOrder, true);
 
+        //Fire event and get redirect URL
+        $sRedirectURL = Event::fire(OrderProcessor::EVENT_ORDER_GET_REDIRECT_URL, $this->obOrder, true);
+        if (empty($this->obPaymentGateway) || !Result::status()) {
             return $this->getResponseModeForm($sRedirectURL);
         }
 
@@ -126,7 +126,7 @@ class MakeOrder extends ComponentSubmitForm
 
         Result::setMessage($this->obPaymentGateway->getMessage())->get();
 
-        return $this->getResponseModeForm();
+        return $this->getResponseModeForm($sRedirectURL);
     }
 
     /**
@@ -141,10 +141,9 @@ class MakeOrder extends ComponentSubmitForm
 
         $this->create($arOrderData, $arUserData);
 
+        //Fire event and get redirect URL
+        $sRedirectURL = Event::fire(OrderProcessor::EVENT_ORDER_GET_REDIRECT_URL, $this->obOrder, true);
         if (empty($this->obPaymentGateway) || !Result::status()) {
-            //Fire event and get redirect URL
-            $sRedirectURL = Event::fire(OrderProcessor::EVENT_ORDER_GET_REDIRECT_URL, $this->obOrder, true);
-
             return $this->getResponseModeAjax($sRedirectURL);
         }
 
@@ -160,7 +159,7 @@ class MakeOrder extends ComponentSubmitForm
 
         Result::setMessage($this->obPaymentGateway->getMessage())->get();
 
-        return $this->getResponseModeAjax();
+        return $this->getResponseModeAjax($sRedirectURL);
     }
 
     /**

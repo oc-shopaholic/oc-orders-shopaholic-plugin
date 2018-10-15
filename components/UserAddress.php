@@ -35,7 +35,7 @@ class UserAddress extends ComponentBase
      * @return array
      * @throws \Exception
      */
-    public function onUpdateAddressList()
+    public function onUpdateList()
     {
         $arAddressList = Input::all();
 
@@ -88,7 +88,7 @@ class UserAddress extends ComponentBase
      * Add address for user
      * @return array
      */
-    public function onAddAddress()
+    public function onAdd()
     {
         $arAddressData = Input::all();
 
@@ -107,7 +107,7 @@ class UserAddress extends ComponentBase
      * Update address for user
      * @return array
      */
-    public function onUpdateAddress()
+    public function onUpdate()
     {
         $arAddressData = Input::all();
 
@@ -133,7 +133,7 @@ class UserAddress extends ComponentBase
      * Remove address for user by id address
      * @throws \Exception
      */
-    public function onRemoveAddress()
+    public function onRemove()
     {
         $arAddressIDList = Input::get('id');
         $iUserID = UserHelper::instance()->getUserId();
@@ -153,6 +153,26 @@ class UserAddress extends ComponentBase
                 continue;
             }
 
+            $obAddress->delete();
+        }
+
+        return Result::get();
+    }
+
+    /**
+     * Remove all address for user
+     * @throws \Exception
+     */
+    public function onClear()
+    {
+        $obUser = UserHelper::instance()->getUser();
+        if (empty($obUser)) {
+            $sMessage = Lang::get('lovata.toolbox::lang.message.e_not_correct_request');
+            return Result::setFalse()->setMessage($sMessage)->get();
+        }
+
+        $obAddressList = $obUser->address;
+        foreach ($obAddressList as $obAddress) {
             $obAddress->delete();
         }
 

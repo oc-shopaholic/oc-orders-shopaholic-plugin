@@ -23,14 +23,25 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderItemPromoMechanismProces
  * @property int                                                                             $shipping_type_id
  * @property string                                                                          $shipping_price
  * @property float                                                                           $shipping_price_value
+ * @property string                                                                          $old_shipping_price
+ * @property float                                                                           $old_shipping_price_value
+ * @property string                                                                          $discount_shipping_price
+ * @property float                                                                           $discount_shipping_price_value
+ * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer                  $shipping_price_data
  * @property string                                                                          $total_price
  * @property float                                                                           $total_price_value
  * @property string                                                                          $old_total_price
  * @property float                                                                           $old_total_price_value
- * @property string                                                                          $discount_price
- * @property float                                                                           $discount_price_value
+ * @property string                                                                          $discount_total_price
+ * @property float                                                                           $discount_total_price_value
+ * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer                  $total_price_data
  * @property string                                                                          $position_total_price
  * @property float                                                                           $position_total_price_value
+ * @property string                                                                          $old_position_total_price
+ * @property float                                                                           $old_position_total_price_value
+ * @property string                                                                          $discount_position_total_price
+ * @property float                                                                           $discount_position_total_price_value
+ * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer                  $position_total_price_data
  * @property array                                                                           $property
  * @property array                                                                           $order_position_id
  * @property array                                                                           $order_promo_mechanism_id
@@ -53,7 +64,17 @@ class OrderItem extends ElementItem
 
     const MODEL_CLASS = Order::class;
 
-    public $arPriceField = ['shipping_price', 'total_price', 'position_total_price', 'old_total_price', 'discount_price'];
+    public $arPriceField = [
+        'shipping_price',
+        'old_shipping_price',
+        'discount_shipping_price',
+        'total_price',
+        'old_total_price',
+        'discount_total_price',
+        'position_total_price',
+        'old_position_total_price',
+        'discount_position_total_price',
+    ];
 
     public $arRelationList = [
         'status'                => [
@@ -99,17 +120,6 @@ class OrderItem extends ElementItem
     }
 
     /**
-     * Get price container object
-     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer
-     */
-    public function getTotalPriceData()
-    {
-        $obPriceData = $this->getPromoMechanismProcessor()->getTotalPrice();
-
-        return $obPriceData;
-    }
-
-    /**
      * Get shipping price value from model
      * @return float
      */
@@ -135,14 +145,36 @@ class OrderItem extends ElementItem
     }
 
     /**
-     * Get position total price value
-     * @return float
+     * Get price container object for total price
+     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer
      */
-    protected function getPositionTotalPriceValueAttribute()
+    protected function getTotalPriceDataAttribute()
+    {
+        $obPriceData = $this->getPromoMechanismProcessor()->getTotalPrice();
+
+        return $obPriceData;
+    }
+
+    /**
+     * Get price container object for shipping price
+     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer
+     */
+    protected function getShippingPriceDataAttribute()
+    {
+        $obPriceData = $this->getPromoMechanismProcessor()->getShippingPrice();
+
+        return $obPriceData;
+    }
+
+    /**
+     * Get price container object for position total price
+     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer
+     */
+    protected function getPositionTotalPriceDataAttribute()
     {
         $obPriceData = $this->getPromoMechanismProcessor()->getPositionTotalPrice();
 
-        return $obPriceData->price_value;
+        return $obPriceData;
     }
 
     /**
@@ -151,9 +183,52 @@ class OrderItem extends ElementItem
      */
     protected function getShippingPriceValueAttribute()
     {
-        $obPriceData = $this->getPromoMechanismProcessor()->getShippingPrice();
+        return $this->shipping_price_data->price_value;
+    }
 
-        return $obPriceData->price_value;
+    /**
+     * Get shipping old price value
+     * @return float
+     */
+    protected function getOldShippingPriceValueAttribute()
+    {
+        return $this->shipping_price_data->old_price_value;
+    }
+
+    /**
+     * Get shipping discount price value
+     * @return float
+     */
+    protected function getDiscountShippingPriceValueAttribute()
+    {
+        return $this->shipping_price_data->discount_price_value;
+    }
+
+    /**
+     * Get position total price value
+     * @return float
+     */
+    protected function getPositionTotalPriceValueAttribute()
+    {
+        return $this->position_total_price_data->price_value;
+    }
+
+    /**
+     * Get position total old price value
+     * @return float
+     */
+    protected function getOldPositionTotalPriceValueAttribute()
+    {
+        return $this->position_total_price_data->old_price_value;
+    }
+
+    /**
+     * Get position total discount price value
+     * @return float
+     */
+    protected function getDiscountPositionTotalPriceValueAttribute()
+    {
+        return $this->position_total_price_data->discount_price_value;
     }
 
     /**
@@ -162,9 +237,7 @@ class OrderItem extends ElementItem
      */
     protected function getTotalPriceValueAttribute()
     {
-        $obPriceData = $this->getTotalPriceData();
-
-        return $obPriceData->price_value;
+        return $this->total_price_data->price_value;
     }
 
     /**
@@ -173,19 +246,15 @@ class OrderItem extends ElementItem
      */
     protected function getOldTotalPriceValueAttribute()
     {
-        $obPriceData = $this->getTotalPriceData();
-
-        return $obPriceData->old_price_value;
+        return $this->total_price_data->old_price_value;
     }
 
     /**
      * Get total price value
      * @return float
      */
-    protected function getDiscountPriceValueAttribute()
+    protected function getDiscountTotalPriceValueAttribute()
     {
-        $obPriceData = $this->getTotalPriceData();
-
-        return $obPriceData->discount_price_value;
+        return $this->total_price_data->discount_price_value;
     }
 }

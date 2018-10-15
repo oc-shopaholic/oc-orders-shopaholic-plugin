@@ -10,7 +10,7 @@ use Lovata\OrdersShopaholic\Models\UserAddress;
  * @author  Sergey Zakharevich, s.zakharevich@lovata.com, LOVATA Group
  *
  * @property int    $id
- * @property string $user_id
+ * @property int    $user_id
  * @property string $type
  * @property string $country
  * @property string $state

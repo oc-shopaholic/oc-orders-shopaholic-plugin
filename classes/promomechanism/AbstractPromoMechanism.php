@@ -225,7 +225,18 @@ abstract class AbstractPromoMechanism implements InterfacePromoMechanism
      */
     protected function applyQuantityLimitDiscount($fPrice, $iQuantity)
     {
-        $iQuantityLimit = $this->getProperty('quantity_limit');
+        $iQuantityLimit = (int) $this->getProperty('quantity_limit');
+        $iQuantityLimitFrom = (int) $this->getProperty('quantity_limit_from');
+        if (!empty($iQuantityLimitFrom) && $iQuantityLimitFrom > $iQuantity) {
+            return $fPrice;
+        }
+
+
+        if (!empty($iQuantityLimitFrom) && !empty($iQuantityLimit) && $iQuantityLimitFrom > $iQuantityLimit) {
+            $iRepeatCount = floor($iQuantity/$iQuantityLimitFrom);
+            $iQuantityLimit *= $iRepeatCount;
+        }
+
         if (empty($fPrice) || empty($iQuantity) || empty($iQuantityLimit) || $iQuantityLimit >= $iQuantity) {
             return $this->applyDiscount($fPrice);
         }

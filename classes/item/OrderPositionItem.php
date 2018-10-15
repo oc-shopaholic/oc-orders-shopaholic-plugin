@@ -10,30 +10,32 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer;
  * @package Lovata\OrdersShopaholic\Classes\Item
  * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  *
- * @property int                                       $id
- * @property int                                       $order_id
- * @property string                                    $price
- * @property float                                     $price_value
- * @property string                                    $old_price
- * @property float                                     $old_price_value
- * @property string                                    $total_price
- * @property float                                     $total_price_value
- * @property string                                    $old_total_price
- * @property float                                     $old_total_price_value
- * @property string                                    $discount_price
- * @property float                                     $discount_price_value
- * @property string                                    $code
- * @property string                                    $currency
+ * @property int                                                            $id
+ * @property int                                                            $order_id
+ * @property string                                                         $price
+ * @property float                                                          $price_value
+ * @property string                                                         $old_price
+ * @property float                                                          $old_price_value
+ * @property string                                                         $total_price
+ * @property float                                                          $total_price_value
+ * @property string                                                         $old_total_price
+ * @property float                                                          $old_total_price_value
+ * @property string                                                         $discount_total_price
+ * @property float                                                          $discount_total_price_value
+ * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer $price_data
  *
- * @property OrderItem                                 $order
- * @property \Lovata\Shopaholic\Classes\Item\OfferItem $item
- * @property \Lovata\Shopaholic\Classes\Item\OfferItem $offer
+ * @property string                                                         $code
+ * @property string                                                         $currency
+ *
+ * @property OrderItem                                                      $order
+ * @property \Lovata\Shopaholic\Classes\Item\OfferItem                      $item
+ * @property \Lovata\Shopaholic\Classes\Item\OfferItem                      $offer
  */
 class OrderPositionItem extends AbstractPositionItem
 {
     const MODEL_CLASS = OrderPosition::class;
 
-    public $arPriceField = ['price', 'total_price', 'old_price', 'old_total_price', 'discount_price'];
+    public $arPriceField = ['price', 'old_price', 'total_price', 'old_total_price', 'discount_total_price'];
 
     public $arRelationList = [
         'order' => [
@@ -49,7 +51,7 @@ class OrderPositionItem extends AbstractPositionItem
      * Get total price value
      * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer
      */
-    public function getTotalPriceData()
+    protected function getPriceDataAttribute()
     {
         $obPriceData = $this->order->getPromoMechanismProcessor()->getPositionPrice($this->id);
         if (empty($obPriceData)) {
@@ -78,9 +80,7 @@ class OrderPositionItem extends AbstractPositionItem
      */
     protected function getTotalPriceValueAttribute()
     {
-        $obPriceData = $this->getTotalPriceData();
-
-        return $obPriceData->price_value;
+        return $this->price_data->price_value;
     }
 
     /**
@@ -89,20 +89,16 @@ class OrderPositionItem extends AbstractPositionItem
      */
     protected function getOldTotalPriceValueAttribute()
     {
-        $obPriceData = $this->getTotalPriceData();
-
-        return $obPriceData->old_price_value;
+        return $this->price_data->old_price_value;
     }
 
     /**
      * Get total price value
      * @return float
      */
-    protected function getDiscountPriceValueAttribute()
+    protected function getDiscountTotalPriceValueAttribute()
     {
-        $obPriceData = $this->getTotalPriceData();
-
-        return $obPriceData->discount_price_value;
+        return $this->price_data->discount_price_value;
     }
 
     /**
