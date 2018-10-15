@@ -70,7 +70,7 @@
 1.10.2:
     - 'Fixed labels in ShippingType controller breadcrumbs.'
 1.11.0:
-    - 'Added PromoMechanism model. Added of opportunity to change price of order positions, shipping price, order total price, using promo mechanisms.'
+    - 'Added PromoMechanism model. Added of opportunity to change price of order positions, shipping price, order total price, using promo mechanisms. Added user addresses. Added tasks with relation with orders, users.'
     - table_create_promo_mechanism.php
     - table_create_order_promo_mechanism.php
     - table_create_user_addresses.php
