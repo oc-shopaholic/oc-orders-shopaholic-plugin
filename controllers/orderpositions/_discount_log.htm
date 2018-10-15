@@ -1,0 +1,66 @@
+<?php
+
+/** @var \Lovata\OrdersShopaholic\Models\OrderPosition $formModel */
+/** @var \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainerLog $obPriceLogData */
+$obPriceData = $formModel->getTotalPriceData();
+
+$arPriceLog = $obPriceData->log;
+?>
+
+<?php if(!empty($arPriceLog)) {?>
+    <div class="control-list">
+        <table class="table data">
+            <thead>
+            <tr>
+                <th ><span><?= trans('lovata.toolbox::lang.field.type') ?></span></th>
+                <th ><span><?= trans('lovata.toolbox::lang.field.description') ?></span></th>
+                <th ><span><?= trans('lovata.shopaholic::lang.field.old_price') ?></span></th>
+                <th ><span><?= trans('lovata.toolbox::lang.field.discount_value') ?></span></th>
+                <th ><span><?= trans('lovata.toolbox::lang.field.discount_price') ?></span></th>
+                <th ><span><?= trans('lovata.shopaholic::lang.field.price') ?></span></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($arPriceLog as $obPriceLogData) {?>
+                <?php $obMechanism = $obPriceLogData->mechanism ?>
+                <tr>
+                    <td><?= !empty($obMechanism) ? $obMechanism::getName() : trans('lovata.ordersshopaholic::lang.message.without_condition') ?></td>
+                    <td><?= $obMechanism->getRelatedDescription() ?></td>
+                    <td>
+                        <span>
+                            <strong><?= $obPriceLogData->old_price ?></strong>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="text-danger">
+                            <?php if (!empty($obMechanism)) {?>
+                            <strong>
+                                -<?= $obMechanism->getDiscountValue() ?>
+                                <?=  $obMechanism->getDiscountType() == \Lovata\OrdersShopaholic\Models\PromoMechanism::PERCENT_TYPE ? '%' : '' ?>
+                            </strong>
+                            <?php }?>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="text-danger">
+                            <strong>-<?= $obPriceLogData->discount_price ?></strong>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="text-success">
+                            <strong><?= $obPriceLogData->price ?></strong>
+                        </span>
+                    </td>
+                </tr>
+            <?php }?>
+            </tbody>
+        </table>
+    </div>
+<?php } else { ?>
+    <div class="callout fade in callout-info no-subheader">
+        <div class="header">
+            <i class="icon-info"></i>
+            <h3><?= trans('lovata.ordersshopaholic::lang.message.discount_not_applied') ?></h3>
+        </div>
+    </div>
+<?php }?>

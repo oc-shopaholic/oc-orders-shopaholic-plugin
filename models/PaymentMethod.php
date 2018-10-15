@@ -13,7 +13,7 @@ use Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface;
 
 /**
  * Class PaymentMethod
- * @package Lovata\Shopaholic\Models
+ * @package Lovata\OrdersShopaholic\Models
  * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  *
  * @mixin \October\Rain\Database\Builder
@@ -156,5 +156,36 @@ class PaymentMethod extends Model
         }
 
         $this->arGatewayClassList[$sCode] = $sClassName;
+    }
+
+    /**
+     * Get order property value
+     * @param string $sField
+     * @return mixed
+     */
+    public function getProperty($sField)
+    {
+        $arPropertyList = $this->gateway_property;
+        if (empty($arPropertyList) || empty($sField)) {
+            return null;
+        }
+
+        return array_get($arPropertyList, $sField);
+    }
+
+    /**
+     * Find element by code and return element object
+     * @param string $sCode
+     * @return $this
+     */
+    public static function getFirstByCode($sCode)
+    {
+        if (empty($sCode)) {
+            return null;
+        }
+
+        $obStatus = self::getByCode($sCode)->first();
+
+        return $obStatus;
     }
 }

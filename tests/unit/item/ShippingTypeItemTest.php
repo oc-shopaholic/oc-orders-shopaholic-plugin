@@ -3,7 +3,9 @@
 use Lovata\Toolbox\Models\Settings;
 use Lovata\Toolbox\Tests\CommonTest;
 
+use Lovata\OrdersShopaholic\Models\Cart;
 use Lovata\OrdersShopaholic\Models\ShippingType;
+use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
 use Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem;
 
 /**
@@ -17,6 +19,10 @@ class ShippingTypeItemTest extends CommonTest
 {
     /** @var  ShippingType */
     protected $obElement;
+
+    /** @var Cart */
+    protected $obCart;
+
 
     protected $arCreateData = [
         'name'         => 'name',
@@ -41,6 +47,8 @@ class ShippingTypeItemTest extends CommonTest
         $arCreatedData['id'] = $this->obElement->id;
         $arCreatedData['price'] = '1200.45';
         $arCreatedData['price_value'] = 1200.45;
+
+        CartProcessor::$iTestCartID = $this->obCart->id;
 
         //Check item fields
         $obItem = ShippingTypeItem::make($this->obElement->id);
@@ -100,6 +108,8 @@ class ShippingTypeItemTest extends CommonTest
     protected function createTestData()
     {
         Settings::set('decimals', 2);
+
+        $this->obCart = Cart::create();
 
         //Create new element data
         $arCreateData = $this->arCreateData;

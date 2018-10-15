@@ -10,6 +10,7 @@ use Lovata\Toolbox\Traits\Helpers\TraitValidationHelper;
 
 use Lovata\OrdersShopaholic\Models\Order;
 use Lovata\OrdersShopaholic\Models\Status;
+use Lovata\OrdersShopaholic\Models\ShippingType;
 use Lovata\OrdersShopaholic\Models\OrderPosition;
 
 /**
@@ -23,8 +24,15 @@ class OrderProcessor
     use TraitValidationHelper;
 
     const EVENT_ORDER_CREATED = 'shopaholic.order.created';
+    const EVENT_ORDER_FIND_USER_BEFORE_CREATE = 'shopaholic.order.find_user_before_create';
+    const EVENT_ORDER_USER_CREATED = 'shopaholic.order.user_created';
+    const EVENT_ORDER_GET_REDIRECT_URL = 'shopaholic.order.get_redirect_url';
+    const EVENT_UPDATE_ORDER_DATA = 'shopaholic.order.update_data';
+    const EVENT_UPDATE_ORDER_BEFORE_CREATE = 'shopaholic.order.before_create';
+    const EVENT_UPDATE_ORDER_AFTER_CREATE = 'shopaholic.order.after_create';
     const EVENT_ORDER_CREATED_USER_MAIL_DATA = 'shopaholic.order.created.user.template.data';
     const EVENT_ORDER_CREATED_MANAGER_MAIL_DATA = 'shopaholic.order.created.manager.template.data';
+    const EVENT_GET_SHIPPING_PRICE = 'shopaholic.order.get_shipping_price';
 
     /** @var \Lovata\Buddies\Models\User */
     protected $obUser;
@@ -53,15 +61,28 @@ class OrderProcessor
         $this->initOrderData($arOrderData);
         $this->initUser($obUser);
         $this->setOrderStatus();
+        $this->updateOrderData();
+        $this->arOrderData['shipping_price'] = $this->getShippingTypePrice();
 
         $this->initCartPositionList();
 
         //Begin transaction
         DB::beginTransaction();
 
+        //Fire event before create order
+        if (Event::fire(self::EVENT_UPDATE_ORDER_BEFORE_CREATE, [$this->arOrderData, $this->obUser], true) === false) {
+            return null;
+        }
+
         $this->createOrder();
         $this->processOrderPositionList();
-        $this->sendPaymentPurchase();
+
+        //Fire event after create order
+        Event::fire(self::EVENT_UPDATE_ORDER_AFTER_CREATE, $this->obOrder);
+
+        if ($this->obOrder->total_price_value > 0) {
+            $this->sendPaymentPurchase();
+        }
 
         if (!Result::status()) {
             DB::rollBack();
@@ -129,12 +150,59 @@ class OrderProcessor
      */
     protected function setOrderStatus()
     {
-        $obStatus = Status::getByCode(Status::STATUS_NEW)->first();
+        $obStatus = Status::getFirstByCode(Status::STATUS_NEW);
         if (empty($obStatus)) {
             return;
         }
 
         $this->arOrderData['status_id'] = $obStatus->id;
+    }
+
+    /**
+     * Update order data
+     * Fire event and update order data
+     */
+    protected function updateOrderData()
+    {
+        $arEventDataList = Event::fire(self::EVENT_UPDATE_ORDER_DATA, [$this->arOrderData]);
+        if (empty($arEventDataList)) {
+            return;
+        }
+
+        foreach ($arEventDataList as $arEventData) {
+            if (empty($arEventData) || !is_array($arEventData)) {
+                continue;
+            }
+
+            foreach ($arEventData as $sKey => $sValue) {
+                $this->arOrderData[$sKey] = $sValue;
+            }
+        }
+    }
+
+    /**
+     * Get shipping type price
+     * @return float
+     */
+    protected function getShippingTypePrice()
+    {
+        $fShippingPrice = Event::fire(self::EVENT_GET_SHIPPING_PRICE, $this->arOrderData, true);
+        if ($fShippingPrice !== null) {
+            return (float) $fShippingPrice;
+        }
+
+        $iShippingTypeID = array_get($this->arOrderData, 'shipping_type_id');
+        if (empty($iShippingTypeID)) {
+            return 0;
+        }
+
+        //Get shipping type object
+        $obShippingType = ShippingType::find($iShippingTypeID);
+        if (empty($obShippingType)) {
+            return 0;
+        }
+
+        return $obShippingType->price_value;
     }
 
     /**

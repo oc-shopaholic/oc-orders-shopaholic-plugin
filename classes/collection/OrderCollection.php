@@ -1,5 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Collection;
 
+use Lovata\Toolbox\Classes\Helper\UserHelper;
 use Lovata\Toolbox\Classes\Collection\ElementCollection;
 
 use Lovata\OrdersShopaholic\Classes\Item\OrderItem;
@@ -19,8 +20,12 @@ class OrderCollection extends ElementCollection
      * @param int $iUserID
      * @return $this
      */
-    public function user($iUserID)
+    public function user($iUserID = null)
     {
+        if (empty($iUserID)) {
+            $iUserID = UserHelper::instance()->getUserID();
+        }
+
         //Get sorting list
         $arElementIDList = OrderListStore::instance()->user->get($iUserID);
 

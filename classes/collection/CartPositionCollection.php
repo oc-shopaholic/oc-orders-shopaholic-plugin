@@ -1,9 +1,9 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Collection;
 
-use Lovata\Toolbox\Classes\Helper\PriceHelper;
 use Lovata\Toolbox\Classes\Collection\ElementCollection;
 
-use Lovata\Shopaholic\Models\Settings;
+use Lovata\Shopaholic\Classes\Helper\CurrencyHelper;
+use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
 use Lovata\OrdersShopaholic\Classes\Item\CartPositionItem;
 
 /**
@@ -71,9 +71,9 @@ class CartPositionCollection extends ElementCollection
      */
     public function getTotalPrice()
     {
-        $fPrice = $this->getTotalPriceValue();
+        $obPriceData = $this->getTotalPriceData();
 
-        return PriceHelper::format($fPrice);
+        return $obPriceData->price;
     }
 
     /**
@@ -82,20 +82,65 @@ class CartPositionCollection extends ElementCollection
      */
     public function getTotalPriceValue()
     {
-        if ($this->isEmpty()) {
-            return 0;
-        }
+        $obPriceData = $this->getTotalPriceData();
 
-        $fPrice = 0;
-        $arPositionList = $this->all();
-        /** @var CartPositionItem $obPositionItem */
-        foreach ($arPositionList as $obPositionItem) {
-            $fPrice += $obPositionItem->price_value;
-        }
+        return $obPriceData->price_value;
+    }
 
-        $fPrice = PriceHelper::round($fPrice);
 
-        return $fPrice;
+    /**
+     * Get old total price string
+     * @return string
+     */
+    public function getOldTotalPrice()
+    {
+        $obPriceData = $this->getTotalPriceData();
+
+        return $obPriceData->old_price;
+    }
+
+    /**
+     * Get old total price value
+     * @return float
+     */
+    public function getOldTotalPriceValue()
+    {
+        $obPriceData = $this->getTotalPriceData();
+
+        return $obPriceData->old_price_value;
+    }
+
+    /**
+     * Get discount total price string
+     * @return string
+     */
+    public function getDiscountTotalPrice()
+    {
+        $obPriceData = $this->getTotalPriceData();
+
+        return $obPriceData->discount_price;
+    }
+
+    /**
+     * Get discount total price value
+     * @return float
+     */
+    public function getDiscountTotalPriceValue()
+    {
+        $obPriceData = $this->getTotalPriceData();
+
+        return $obPriceData->discount_price_value;
+    }
+
+    /**
+     * Get total position price data
+     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer
+     */
+    public function getTotalPriceData()
+    {
+        $obPriceData = CartProcessor::instance()->getCartPositionTotalPriceData();
+
+        return $obPriceData;
     }
 
     /**
@@ -104,6 +149,24 @@ class CartPositionCollection extends ElementCollection
      */
     public function getCurrency()
     {
-        return Settings::getValue('currency');
+        return CurrencyHelper::instance()->getActive();
+    }
+
+    /**
+     * Get the total count of all order positions
+     * @return int
+     */
+    public function getTotalQuantity()
+    {
+        $iQuantityCount = 0;
+
+        $arCartPositionList = $this->all();
+
+        /** @var \Lovata\OrdersShopaholic\Classes\Item\CartPositionItem $obCartPositionItem */
+        foreach ($arCartPositionList as $obCartPositionItem) {
+            $iQuantityCount += $obCartPositionItem->quantity;
+        }
+
+        return $iQuantityCount;
     }
 }

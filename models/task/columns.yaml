@@ -1,0 +1,45 @@
+columns:
+    sent:
+        label: 'lovata.ordersshopaholic::lang.field.notification_sent'
+        type: switch
+        searchable: false
+        sortable: true
+    date:
+        label: 'lovata.ordersshopaholic::lang.field.task_date'
+        type: datetime
+        searchable: false
+        sortable: true
+    status_name:
+        label: 'lovata.ordersshopaholic::lang.field.status'
+        type: text
+        searchable: false
+        sortable: true
+    title:
+        label: 'lovata.toolbox::lang.field.title'
+        type: text
+        searchable: true
+        sortable: false
+    manager:
+        label: 'lovata.ordersshopaholic::lang.field.manager'
+        relation: manager
+        select: concat(first_name, ' ', last_name)
+    author:
+        label: 'lovata.toolbox::lang.field.author'
+        relation: author
+        select: concat(first_name, ' ', last_name)
+    id:
+        label: 'lovata.toolbox::lang.field.id'
+        type: text
+        searchable: true
+        sortable: true
+        width: 100px
+    created_at:
+        label: 'lovata.toolbox::lang.field.created_at'
+        type: timetense
+        sortable: true
+        invisible: true
+    updated_at:
+        label: 'lovata.toolbox::lang.field.updated_at'
+        type: timetense
+        sortable: true
+        invisible: true

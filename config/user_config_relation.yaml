@@ -1,0 +1,38 @@
+# ===================================
+#  Relation Behavior Config
+# ===================================
+
+order:
+    label: 'lovata.ordersshopaholic::lang.order.name'
+    view:
+        list: $/lovata/ordersshopaholic/models/order/columns.yaml
+        showSearch: true
+        showSorting: true
+        showCheckboxes: false
+        recordsPerPage: 10
+        recordUrl: lovata/ordersshopaholic/orders/update/:id
+        toolbarButtons: false
+active_task:
+    label: 'lovata.ordersshopaholic::lang.task.name'
+    view:
+        list: $/lovata/ordersshopaholic/models/task/columns.yaml
+        showSearch: true
+        showSorting: true
+        showCheckboxes: true
+        recordsPerPage: 10
+        toolbarButtons: create|delete
+    manage:
+        form: $/lovata/ordersshopaholic/models/task/fields.yaml
+        recordsPerPage: 10
+completed_task:
+    label: 'lovata.ordersshopaholic::lang.task.name'
+    view:
+        list: $/lovata/ordersshopaholic/models/task/columns.yaml
+        showSearch: true
+        showSorting: true
+        showCheckboxes: true
+        recordsPerPage: 10
+        toolbarButtons: delete
+    manage:
+        form: $/lovata/ordersshopaholic/models/task/fields.yaml
+        recordsPerPage: 10

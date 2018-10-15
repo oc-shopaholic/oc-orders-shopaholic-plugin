@@ -1,0 +1,48 @@
+columns:
+    name:
+        label: 'lovata.toolbox::lang.field.name'
+        type: text
+        searchable: true
+        sortable: true
+    type_name:
+        label: 'lovata.toolbox::lang.field.type'
+        type: partial
+        path: ~/plugins/lovata/ordersshopaholic/controllers/promomechanisms/_promo_type_name.htm
+        searchable: false
+        sortable: false
+    priority:
+        label: 'lovata.toolbox::lang.field.priority'
+        type: text
+        searchable: false
+        sortable: true
+    discount_value:
+        label: 'lovata.ordersshopaholic::lang.field.discount_value'
+        type: text
+        searchable: false
+        sortable: true
+    discount_type_name:
+        label: 'lovata.ordersshopaholic::lang.field.discount_type'
+        type: text
+        searchable: false
+        sortable: false
+    final_discount:
+        label: 'lovata.ordersshopaholic::lang.field.final_discount'
+        type: switch
+        searchable: false
+        sortable: true
+    id:
+        label: 'lovata.toolbox::lang.field.id'
+        type: text
+        searchable: true
+        sortable: true
+        width: 100px
+    created_at:
+        label: 'lovata.toolbox::lang.field.created_at'
+        type: timetense
+        sortable: true
+        invisible: true
+    updated_at:
+        label: 'lovata.toolbox::lang.field.updated_at'
+        type: timetense
+        sortable: true
+        invisible: true

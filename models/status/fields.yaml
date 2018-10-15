@@ -22,6 +22,7 @@ fields:
         type: checkbox
     user_status:
         label: 'lovata.ordersshopaholic::lang.field.user_status'
+        emptyOption: 'lovata.toolbox::lang.field.empty'
         span: right
         type: relation
         trigger:

@@ -36,3 +36,13 @@ tabs:
             type: text
             disabled: ture
             tab: 'lovata.toolbox::lang.tab.settings'
+        discount_log:
+            label: 'lovata.ordersshopaholic::lang.field.order_discount_list'
+            span: full
+            dependsOn: quantity
+            path: $/lovata/ordersshopaholic/controllers/orderpositions/_discount_log.htm
+            context:
+            - update
+            - preview
+            type: partial
+            tab: 'lovata.ordersshopaholic::lang.tab.discount_info'

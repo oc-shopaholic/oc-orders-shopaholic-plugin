@@ -1,6 +1,7 @@
 <?php namespace Lovata\OrdersShopaholic\Components;
 
 use Input;
+use Event;
 use Redirect;
 
 use Kharanenka\Helper\Result;
@@ -9,7 +10,8 @@ use Lovata\Toolbox\Classes\Component\ComponentSubmitForm;
 use Lovata\Toolbox\Traits\Helpers\TraitValidationHelper;
 
 use Lovata\Shopaholic\Models\Settings;
-use Lovata\OrdersShopaholic\Models\ShippingType;
+use Lovata\Shopaholic\Classes\Helper\CurrencyHelper;
+use Lovata\OrdersShopaholic\Models\UserAddress;
 use Lovata\OrdersShopaholic\Classes\Processor\OrderProcessor;
 
 /**
@@ -23,9 +25,10 @@ class MakeOrder extends ComponentSubmitForm
 
     protected $bCreateNewUser = true;
 
-    protected $arOrderData;
-    protected $arUserData;
-
+    protected $arOrderData = [];
+    protected $arUserData = [];
+    protected $arBillingAddressOrder = [];
+    protected $arShippingAddressOrder = [];
     /** @var \Lovata\Buddies\Models\User */
     protected $obUser;
 
@@ -104,8 +107,11 @@ class MakeOrder extends ComponentSubmitForm
         }
 
         $this->create($arOrderData, $arUserData);
+
+        //Fire event and get redirect URL
+        $sRedirectURL = Event::fire(OrderProcessor::EVENT_ORDER_GET_REDIRECT_URL, $this->obOrder, true);
         if (empty($this->obPaymentGateway) || !Result::status()) {
-            return $this->getResponseModeForm();
+            return $this->getResponseModeForm($sRedirectURL);
         }
 
         if ($this->obPaymentGateway->isRedirect()) {
@@ -120,7 +126,7 @@ class MakeOrder extends ComponentSubmitForm
 
         Result::setMessage($this->obPaymentGateway->getMessage())->get();
 
-        return $this->getResponseModeForm();
+        return $this->getResponseModeForm($sRedirectURL);
     }
 
     /**
@@ -134,8 +140,11 @@ class MakeOrder extends ComponentSubmitForm
         $arUserData = (array) Input::get('user');
 
         $this->create($arOrderData, $arUserData);
+
+        //Fire event and get redirect URL
+        $sRedirectURL = Event::fire(OrderProcessor::EVENT_ORDER_GET_REDIRECT_URL, $this->obOrder, true);
         if (empty($this->obPaymentGateway) || !Result::status()) {
-            return $this->getResponseModeAjax();
+            return $this->getResponseModeAjax($sRedirectURL);
         }
 
         if ($this->obPaymentGateway->isRedirect()) {
@@ -150,7 +159,7 @@ class MakeOrder extends ComponentSubmitForm
 
         Result::setMessage($this->obPaymentGateway->getMessage())->get();
 
-        return $this->getResponseModeAjax();
+        return $this->getResponseModeAjax($sRedirectURL);
     }
 
     /**
@@ -168,7 +177,6 @@ class MakeOrder extends ComponentSubmitForm
         if (empty($this->obUser) && $this->bCreateNewUser) {
             $this->findOrCreateUser();
         } else if (!empty($this->obUser)) {
-
             $this->arUserData = [
                 'email'       => $this->obUser->email,
                 'name'        => $this->obUser->name,
@@ -178,25 +186,24 @@ class MakeOrder extends ComponentSubmitForm
             ];
         }
 
+        $this->processOrderAddress();
+
         if (!Result::status()) {
             return;
         }
 
         $arOrderData = $this->arOrderData;
+        $arOrderData['currency'] = CurrencyHelper::instance()->getActive();
         if (!isset($arOrderData['property']) || !is_array($arOrderData['property'])) {
             $arOrderData['property'] = [];
         }
 
-        if (!empty($this->arUserData)) {
-            $arOrderData['property'] = array_merge($arOrderData['property'], $this->arUserData);
-        }
+        $arOrderData['property'] = array_merge($arOrderData['property'], $this->arUserData, $this->arBillingAddressOrder, $this->arShippingAddressOrder);
 
         $arPaymentData = Input::get('payment');
         if (!empty($arPaymentData) && is_array($arPaymentData)) {
             $arOrderData['payment_data'] = $arPaymentData;
         }
-
-        $arOrderData['shipping_price'] = $this->getShippingTypePrice($arOrderData);
 
         $this->obOrder = OrderProcessor::instance()->create($arOrderData, $this->obUser);
         $this->obPaymentGateway = OrderProcessor::instance()->getPaymentGateway();
@@ -233,6 +240,9 @@ class MakeOrder extends ComponentSubmitForm
         //Find user by email
         $sEmail = $this->arUserData['email'];
         $this->obUser = UserHelper::instance()->findUserByEmail($sEmail);
+        if (empty($this->obUser)) {
+            $this->obUser = Event::fire(OrderProcessor::EVENT_ORDER_FIND_USER_BEFORE_CREATE, $this->arUserData, true);
+        }
 
         //if Buddies plugin is installed, then we need to process "phone" field
         if (UserHelper::instance()->getPluginName() == 'Lovata.Buddies') {
@@ -304,7 +314,7 @@ class MakeOrder extends ComponentSubmitForm
             $this->arUserData['email'] = 'fake'.$sPassword.'@fake.com';
         }
 
-        $arUserData = $this->arUserData;
+        $arUserData = (array) $this->arUserData;
 
         if (!isset($arUserData['password']) || empty($arUserData['password'])) {
             $arUserData['password'] = $sPassword;
@@ -319,30 +329,133 @@ class MakeOrder extends ComponentSubmitForm
             $this->processValidationError($obException);
             return;
         }
+
+        Event::fire(OrderProcessor::EVENT_ORDER_USER_CREATED, $this->obUser);
     }
 
     /**
-     * Get shipping type price
-     * @param array $arOrderData
-     * @return float|string
+     * Process shipping/billing addresses. Create new user address or get data from exist address
      */
-    protected function getShippingTypePrice($arOrderData)
+    protected function processOrderAddress()
     {
-        //Get shipping price from request
-        if (!empty($arOrderData) && array_key_exists('shipping_price', $arOrderData) && $arOrderData['shipping_price'] !== null) {
-            return $arOrderData['shipping_price'];
+        $arShippingAddressData = (array) Input::get('shipping_address');
+        $arBillingAddressData = (array) Input::get('billing_address');
+
+        $this->arShippingAddressOrder = $this->addOrderAddress(UserAddress::ADDRESS_TYPE_SIPPING, $arShippingAddressData);
+        $this->arBillingAddressOrder = $this->addOrderAddress(UserAddress::ADDRESS_TYPE_BILLING, $arBillingAddressData);
+    }
+
+    /**
+     * Add user address data
+     * @param string $sType
+     * @param array  $arAddressData
+     * @return array
+     */
+    protected function addOrderAddress($sType, $arAddressData) : array
+    {
+        if (empty($arAddressData) || empty($sType) || empty($this->obUser)) {
+            return $this->prepareAddressData($sType, $arAddressData);
         }
 
-        if (!isset($arOrderData['shipping_type_id']) || empty($arOrderData['shipping_type_id'])) {
-            return 0;
+        $arResult = $this->findAddressByID($sType, $arAddressData);
+        if (empty($arResult)) {
+            $arResult = $this->createUserAddress($sType, $arAddressData);
         }
 
-        //Get shipping type object
-        $obShippingType = ShippingType::find($arOrderData['shipping_type_id']);
-        if (empty($obShippingType)) {
-            return 0;
+        return $this->prepareAddressData($sType, $arResult);
+    }
+
+    /**
+     * Prepare address array to save in Order properties
+     * @param string $sType
+     * @param array  $arAddressData
+     * @return array
+     */
+    protected function prepareAddressData($sType, $arAddressData) : array
+    {
+        if (empty($arAddressData)) {
+            return [];
         }
 
-        return $obShippingType->price_value;
+        $arResult = [];
+        foreach ($arAddressData as $sKey => $sValue) {
+            $arResult[$sType.'_'.$sKey] = $sValue;
+        }
+
+        return $arResult;
+    }
+
+    /**
+     * Find Address object by ID, type and user_id
+     * @param string $sType
+     * @param array  $arAddressData
+     * @return array
+     */
+    protected function findAddressByID($sType, $arAddressData) : array
+    {
+        $iAddressID = array_get($arAddressData, 'id');
+        if (empty($iAddressID)) {
+            return [];
+        }
+
+        $obAddress = UserAddress::getByUser($this->obUser->id)->getByType($sType)->find($iAddressID);
+        if (empty($obAddress)) {
+            return [];
+        }
+
+        return $this->getAddressData($obAddress);
+    }
+
+    /**
+     * @param string $sType
+     * @param array  $arAddressData
+     * @return array
+     */
+    protected function createUserAddress($sType, $arAddressData) : array
+    {
+        if (empty($arAddressData)) {
+            return [];
+        }
+
+        $arAddressData['type'] = $sType;
+        $arAddressData['user_id'] = $this->obUser->id;
+
+        try {
+            //Create new address for user
+            $obAddress = UserAddress::create($arAddressData);
+        } catch (\October\Rain\Database\ModelException $obException) {
+            $this->processValidationError($obException);
+            return [];
+        }
+
+        return $this->getAddressData($obAddress);
+    }
+
+    /**
+     * Get address data from object
+     * @param UserAddress $obAddress
+     * @return array
+     */
+    protected function getAddressData($obAddress) : array
+    {
+        if (empty($obAddress)) {
+            return [];
+        }
+
+        $arResult = [
+            'country'  => $obAddress->country,
+            'state'    => $obAddress->state,
+            'city'     => $obAddress->city,
+            'street'   => $obAddress->street,
+            'house'    => $obAddress->house,
+            'building' => $obAddress->building,
+            'flat'     => $obAddress->flat,
+            'floor'    => $obAddress->floor,
+            'address1' => $obAddress->address1,
+            'address2' => $obAddress->address2,
+            'postcode' => $obAddress->postcode,
+        ];
+
+        return $arResult;
     }
 }

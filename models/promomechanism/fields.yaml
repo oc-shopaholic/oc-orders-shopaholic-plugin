@@ -1,0 +1,110 @@
+fields:
+    name:
+        label: 'lovata.toolbox::lang.field.name'
+        span: left
+        type: text
+    priority:
+        label: 'lovata.toolbox::lang.field.priority'
+        comment: 'lovata.ordersshopaholic::lang.field.priority_description'
+        commentHtml: true
+        default: 0
+        span: right
+        type: text
+    type:
+        label: 'lovata.toolbox::lang.field.type'
+        span: full
+        type: dropdown
+        dependsOn: type
+        commentHtml: true
+    discount_value:
+        label: 'lovata.toolbox::lang.field.discount_value'
+        span: left
+        type: text
+    discount_type:
+        label: 'lovata.toolbox::lang.field.discount_type'
+        span: right
+        type: dropdown
+    final_discount:
+        label: 'lovata.ordersshopaholic::lang.field.final_discount'
+        comment: 'lovata.ordersshopaholic::lang.field.final_discount_description'
+        commentHtml: true
+        span: left
+        type: checkbox
+    property[amount]:
+        label: 'lovata.toolbox::lang.field.amount'
+        comment: 'lovata.ordersshopaholic::lang.promo_mechanism.amount_description'
+        trigger:
+            action: show
+            field: type
+            condition: |
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\PositionTotalPriceGreater\PositionTotalPriceGreaterDiscountShippingPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\PositionTotalPriceGreater\PositionTotalPriceGreaterDiscountTotalPrice]
+        span: left
+        type: text
+    property[offer_limit]:
+        label: 'lovata.ordersshopaholic::lang.promo_mechanism.offer_limit'
+        comment: 'lovata.ordersshopaholic::lang.promo_mechanism.offer_limit_description'
+        trigger:
+            action: show
+            field: type
+            condition: |
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferQuantityGreater\OfferQuantityGreaterDiscountPosition] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferQuantityGreater\OfferQuantityGreaterDiscountMinPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferQuantityGreater\OfferQuantityGreaterDiscountPositionTotalPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferQuantityGreater\OfferQuantityGreaterDiscountShippingPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferQuantityGreater\OfferQuantityGreaterDiscountTotalPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferTotalQuantityGreater\OfferTotalQuantityGreaterDiscountPosition] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferTotalQuantityGreater\OfferTotalQuantityGreaterDiscountMinPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferTotalQuantityGreater\OfferTotalQuantityGreaterDiscountPositionTotalPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferTotalQuantityGreater\OfferTotalQuantityGreaterDiscountShippingPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferTotalQuantityGreater\OfferTotalQuantityGreaterDiscountTotalPrice]
+        span: left
+        type: text
+    property[quantity_limit]:
+        label: 'lovata.ordersshopaholic::lang.promo_mechanism.quantity_limit'
+        comment: 'lovata.ordersshopaholic::lang.promo_mechanism.quantity_limit_description'
+        trigger:
+            action: show
+            field: type
+            condition: |
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferQuantityGreater\OfferQuantityGreaterDiscountMinPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferQuantityGreater\OfferQuantityGreaterDiscountPosition] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferTotalQuantityGreater\OfferTotalQuantityGreaterDiscountMinPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferTotalQuantityGreater\OfferTotalQuantityGreaterDiscountPosition] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\PositionCountGreater\PositionCountGreaterDiscountMinPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\PositionCountGreater\PositionCountGreaterDiscountPosition] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\WithoutCondition\WithoutConditionDiscountMinPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\WithoutCondition\WithoutConditionDiscountPosition]
+        span: left
+        type: text
+    property[quantity_limit_from]:
+        label: 'lovata.ordersshopaholic::lang.promo_mechanism.quantity_limit_from'
+        comment: 'lovata.ordersshopaholic::lang.promo_mechanism.quantity_limit_from_description'
+        trigger:
+            action: show
+            field: type
+            condition: |
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferQuantityGreater\OfferQuantityGreaterDiscountMinPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferQuantityGreater\OfferQuantityGreaterDiscountPosition] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferTotalQuantityGreater\OfferTotalQuantityGreaterDiscountMinPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferTotalQuantityGreater\OfferTotalQuantityGreaterDiscountPosition] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\PositionCountGreater\PositionCountGreaterDiscountMinPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\PositionCountGreater\PositionCountGreaterDiscountPosition] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\WithoutCondition\WithoutConditionDiscountMinPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\WithoutCondition\WithoutConditionDiscountPosition]
+        span: right
+        type: text
+    property[position_limit]:
+        label: 'lovata.ordersshopaholic::lang.promo_mechanism.position_limit'
+        comment: 'lovata.ordersshopaholic::lang.promo_mechanism.position_limit_description'
+        trigger:
+            action: show
+            field: type
+            condition: |
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\PositionCountGreater\PositionCountGreaterDiscountPosition] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\PositionCountGreater\PositionCountGreaterDiscountMinPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\PositionCountGreater\PositionCountGreaterDiscountPositionTotalPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\PositionCountGreater\PositionCountGreaterDiscountShippingPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\PositionCountGreater\PositionCountGreaterDiscountTotalPrice]
+        span: left
+        type: text

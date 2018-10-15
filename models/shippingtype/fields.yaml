@@ -8,16 +8,21 @@ fields:
         label: 'lovata.toolbox::lang.field.name'
         span: full
         type: text
-    code:
-        label: 'lovata.toolbox::lang.field.code'
-        span: full
-        type: text
-    price:
-        label: 'lovata.shopaholic::lang.field.price'
-        span: full
-        type: text
-    preview_text:
-        label: 'lovata.toolbox::lang.field.description'
-        span: full
-        type: textarea
-        size: small
+tabs:
+    fields:
+        code:
+            label: 'lovata.toolbox::lang.field.code'
+            tab: 'lovata.toolbox::lang.tab.settings'
+            span: full
+            type: text
+        price:
+            label: 'lovata.shopaholic::lang.field.price'
+            tab: 'lovata.toolbox::lang.tab.settings'
+            span: full
+            type: text
+        preview_text:
+            label: 'lovata.toolbox::lang.field.description'
+            tab: 'lovata.toolbox::lang.tab.settings'
+            span: full
+            type: textarea
+            size: small

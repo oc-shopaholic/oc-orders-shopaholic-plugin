@@ -158,6 +158,7 @@ class ExtendFieldHandler
         $this->addOrderPropertyField($obWidget, $obPropertyList);
         $this->removeOrderUserRelationField($obWidget);
         $this->removePaymentDataField($obWidget);
+        $this->removeDiscountFields($obWidget);
     }
 
     /**
@@ -200,7 +201,7 @@ class ExtendFieldHandler
     }
 
     /**
-     * Add user relation field
+     * Add payment data fields
      * @param \Backend\Widgets\Form $obWidget
      */
     protected function removePaymentDataField($obWidget)
@@ -216,6 +217,24 @@ class ExtendFieldHandler
         $obWidget->removeField('payment_token');
         $obWidget->removeField('payment_data_json');
         $obWidget->removeField('payment_response_json');
+    }
+
+    /**
+     * Add discount fields
+     * @param \Backend\Widgets\Form $obWidget
+     */
+    protected function removeDiscountFields($obWidget)
+    {
+        //Get promo mechanism list
+        $obMechanismList = $obWidget->model->order_promo_mechanism;
+        if ($obMechanismList->isNotEmpty()) {
+            return;
+        }
+
+        $obWidget->removeField('order_promo_mechanism');
+        $obWidget->removeField('discount_log_position_total_price');
+        $obWidget->removeField('discount_log_shipping_price');
+        $obWidget->removeField('discount_log_total_price');
     }
 
     /**

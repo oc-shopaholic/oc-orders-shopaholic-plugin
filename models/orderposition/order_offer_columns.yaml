@@ -26,3 +26,13 @@ columns:
           searchable: false
           sortable: true
           width: 140px
+    total_price:
+          label: 'lovata.ordersshopaholic::lang.field.position_price'
+          type: text
+          searchable: false
+          sortable: true
+    old_total_price:
+          label: 'lovata.ordersshopaholic::lang.field.old_position_price'
+          type: text
+          searchable: false
+          sortable: true

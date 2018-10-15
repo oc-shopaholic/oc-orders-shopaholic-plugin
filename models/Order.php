@@ -4,60 +4,78 @@ use Model;
 use October\Rain\Argon\Argon;
 use October\Rain\Database\Traits\Validation;
 use October\Rain\Database\Traits\Encryptable;
+use Backend\Models\User as BackendUser;
 
 use Kharanenka\Scope\UserBelongsTo;
 
 use Lovata\Toolbox\Classes\Helper\UserHelper;
 use Lovata\Toolbox\Traits\Helpers\TraitCached;
-use Lovata\Toolbox\Classes\Helper\PriceHelper;
 use Lovata\Toolbox\Traits\Helpers\PriceHelperTrait;
 use Lovata\Toolbox\Traits\Models\SetPropertyAttributeTrait;
 
+use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
+
 /**
  * Class Order
- * @package Lovata\Shopaholic\Models
+ * @package Lovata\OrdersShopaholic\Models
  * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  *
  * @mixin \October\Rain\Database\Builder
  * @mixin \Eloquent
  *
- * @property int                       $id
- * @property string                    $order_number
- * @property string                    $secret_key
- * @property int                       $user_id
- * @property int                       $status_id
- * @property int                       $payment_method_id
- * @property int                       $shipping_type_id
- * @property string                    $shipping_price
- * @property float                     $shipping_price_value
- * @property string                    $total_price
- * @property float                     $total_price_value
- * @property string                    $position_total_price
- * @property float                     $position_total_price_value
- * @property array                     $property
+ * @property int                                                                         $id
+ * @property string                                                                      $order_number
+ * @property string                                                                      $secret_key
+ * @property string                                                                      $currency
+ * @property int                                                                         $user_id
+ * @property int                                                                         $status_id
+ * @property int                                                                         $manager_id
+ * @property int                                                                         $payment_method_id
+ * @property int                                                                         $shipping_type_id
+ * @property string                                                                      $shipping_price
+ * @property float                                                                       $shipping_price_value
+ * @property string                                                                      $total_price
+ * @property float                                                                       $total_price_value
+ * @property string                                                                      $position_total_price
+ * @property float                                                                       $position_total_price_value
+ * @property array                                                                       $property
  *
- * @property \October\Rain\Argon\Argon $created_at
- * @property \October\Rain\Argon\Argon $updated_at
+ * @property \October\Rain\Argon\Argon                                                   $created_at
+ * @property \October\Rain\Argon\Argon                                                   $updated_at
  *
- * @property string                    $transaction_id
- * @property string                    $payment_token
- * @property array                     $payment_data
- * @property array                     $payment_response
+ * @property string                                                                      $transaction_id
+ * @property string                                                                      $payment_token
+ * @property array                                                                       $payment_data
+ * @property array                                                                       $payment_response
  *
- * @property \October\Rain\Database\Collection|OrderPosition[] $order_position
+ * @property \October\Rain\Database\Collection|OrderPosition[]                           $order_position
  * @method static \October\Rain\Database\Relations\HasMany|OrderPosition order_position()
  *
- * @property Status                                            $status
+ * @property \October\Rain\Database\Collection|OrderPromoMechanism[]                     $order_promo_mechanism
+ * @method static \October\Rain\Database\Relations\HasMany|OrderPromoMechanism order_promo_mechanism()
+ *
+ * @property \October\Rain\Database\Collection|Task[]                                    $task
+ * @method static \October\Rain\Database\Relations\HasMany|Task task()
+ * @property \October\Rain\Database\Collection|Task[]                                    $active_task
+ * @method static \October\Rain\Database\Relations\HasMany|Task active_task()
+ * @property \October\Rain\Database\Collection|Task[]                                    $completed_task
+ * @method static \October\Rain\Database\Relations\HasMany|Task completed_task()
+ *
+ * @property Status                                                                      $status
  * @method static Status|\October\Rain\Database\Relations\BelongsTo status()
  *
- * @property \Lovata\Buddies\Models\User                       $user
+ * @property \Lovata\Buddies\Models\User                                                 $user
  * @method static \Lovata\Buddies\Models\User|\October\Rain\Database\Relations\BelongsTo user()
  *
- * @property ShippingType                                      $shipping_type
+ * @property ShippingType                                                                $shipping_type
  * @method static ShippingType|\October\Rain\Database\Relations\BelongsTo shipping_type()
  *
- * @property PaymentMethod                                     $payment_method
+ * @property PaymentMethod                                                               $payment_method
  * @method static PaymentMethod|\October\Rain\Database\Relations\BelongsTo payment_method()
+ *
+ * Coupons for Shopaholic
+ * @property \October\Rain\Database\Collection|\Lovata\CouponsShopaholic\Models\Coupon[] $coupon
+ * @method static \October\Rain\Database\Relations\BelongsToMany|\Lovata\CouponsShopaholic\Models\Coupon coupon()
  *
  * @method static $this getByNumber(string $sNumber)
  * @method static $this getByStatus(int $iStatusID)
@@ -98,31 +116,45 @@ class Order extends Model
         'payment_method_id',
         'shipping_price',
         'property',
+        'currency',
+        'manager_id',
     ];
 
     public $cached = [
         'id',
         'secret_key',
         'order_number',
+        'currency',
         'user_id',
         'status_id',
         'payment_method_id',
         'shipping_type_id',
-        'shipping_price_value',
-        'total_price_value',
-        'position_total_price_value',
         'property',
         'created_at',
         'updated_at',
     ];
 
     public $hasMany = [
-        'order_position' => [
+        'order_position'        => [
             OrderPosition::class,
         ],
-        'order_offer'    => [
+        'order_offer'           => [
             OrderPosition::class,
             'condition' => 'item_type = \Lovata\Shopaholic\Models\Offer',
+        ],
+        'order_promo_mechanism' => [
+            OrderPromoMechanism::class
+        ],
+        'task'                  => [
+            Task::class
+        ],
+        'active_task'           => [
+            Task::class,
+            'scope' => 'getActiveTask',
+        ],
+        'completed_task'             => [
+            Task::class,
+            'scope' => 'getCompletedTask',
         ],
     ];
     public $belongsToMany = [];
@@ -224,13 +256,13 @@ class Order extends Model
 
     /**
      * Get order by transaction ID
-     * @param Order $obQuery
+     * @param Order  $obQuery
      * @param string $sData
      * @return Order
      */
     public function scopeGetByTransactionID($obQuery, $sData)
     {
-        if(!empty($sData)) {
+        if (!empty($sData)) {
             $obQuery->where('transaction_id', $sData);
         }
 
@@ -239,13 +271,13 @@ class Order extends Model
 
     /**
      * Get order by payment token
-     * @param Order $obQuery
+     * @param Order  $obQuery
      * @param string $sData
      * @return Order
      */
     public function scopeGetByPaymentToken($obQuery, $sData)
     {
-        if(!empty($sData)) {
+        if (!empty($sData)) {
             $obQuery->where('payment_token', $sData);
         }
 
@@ -253,39 +285,56 @@ class Order extends Model
     }
 
     /**
-     * Get position total price value
-     * @return float
+     * Get manager list (backend)
+     * @return array
      */
-    public function getPositionTotalPriceValueAttribute()
+    public function getManagerIdOptions()
     {
-        $fTotalPrice = 0;
-
-        //Get position list
-        $obPositionList = $this->order_position;
-
-        if ($obPositionList->isEmpty()) {
-            return $fTotalPrice;
+        $obUserList = BackendUser::where('is_superuser', false)->get();
+        if ($obUserList->isEmpty()) {
+            return [];
         }
 
-        foreach ($obPositionList as $obPosition) {
-            $fTotalPrice += $obPosition->total_price_value;
+        $arUserList = [];
+
+        foreach ($obUserList as $obUser) {
+            $arUserList[$obUser->id] = $obUser->first_name.' '.$obUser->last_name.' ('.$obUser->email.')';
         }
 
-        $fTotalPrice = PriceHelper::round($fTotalPrice);
-
-        return $fTotalPrice;
+        return $arUserList;
     }
 
     /**
-     * Get total price value
-     * @return float
+     * Get position total price data
+     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer
      */
-    public function getTotalPriceValueAttribute()
+    public function getPositionTotalPriceData()
     {
-        $fTotalPrice = $this->shipping_price_value + $this->position_total_price_value;
-        $fTotalPrice = PriceHelper::round($fTotalPrice);
+        $obPriceData = $this->getPromoMechanismProcessor()->getPositionTotalPrice();
 
-        return $fTotalPrice;
+        return $obPriceData;
+    }
+
+    /**
+     * Get shipping price data
+     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer
+     */
+    public function getShippingPriceData()
+    {
+        $obPriceData = $this->getPromoMechanismProcessor()->getShippingPrice();
+
+        return $obPriceData;
+    }
+
+    /**
+     * Get total price data
+     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer
+     */
+    public function getTotalPriceData()
+    {
+        $obPriceData = $this->getPromoMechanismProcessor()->getTotalPrice();
+
+        return $obPriceData;
     }
 
     /**
@@ -295,6 +344,74 @@ class Order extends Model
     public function getQuantityAttribute()
     {
         return $this->order_position->count();
+    }
+
+    /**
+     * Get order property value
+     * @param string $sField
+     * @return mixed
+     */
+    public function getProperty($sField)
+    {
+        $arPropertyList = $this->property;
+        if (empty($arPropertyList) || empty($sField)) {
+            return null;
+        }
+
+        return array_get($arPropertyList, $sField);
+    }
+
+    /**
+     * Get order status code
+     * @return string|null
+     */
+    public function getStatusCode()
+    {
+        $obStatus = $this->status;
+        if (empty($obStatus)) {
+            return null;
+        }
+
+        return $obStatus->code;
+    }
+
+    /**
+     * Get order shipping type code
+     * @return string|null
+     */
+    public function getShippingTypeCode()
+    {
+        $obShippingType = $this->shipping_type;
+        if (empty($obShippingType)) {
+            return null;
+        }
+
+        return $obShippingType->code;
+    }
+
+    /**
+     * Get order payment method code
+     * @return string|null
+     */
+    public function getPaymentMethodCode()
+    {
+        $obPaymentMethod = $this->payment_method;
+        if (empty($obPaymentMethod)) {
+            return null;
+        }
+
+        return $obPaymentMethod->code;
+    }
+
+    /**
+     * Get shipping price value from model
+     * @return float
+     */
+    public function getShippingPriceValue()
+    {
+        $fPrice = $this->getAttributeFromArray('shipping_price');
+
+        return $fPrice;
     }
 
     /**
@@ -343,5 +460,55 @@ class Order extends Model
         } while (!$bAvailableNumber);
 
         $this->secret_key = $this->generateSecretKey();
+    }
+
+    /**
+     * Create object of OrderPromoMechanismProcessor class for Order
+     */
+    protected function getPromoMechanismProcessor()
+    {
+        return OrderPromoMechanismProcessor::get($this);
+    }
+
+    /**
+     * Get position total price value
+     * @return float
+     */
+    protected function getPositionTotalPriceValueAttribute()
+    {
+        $obPriceData = $this->getPromoMechanismProcessor()->getPositionTotalPrice();
+
+        return $obPriceData->price_value;
+    }
+
+    /**
+     * Get shipping price value
+     * @return float
+     */
+    protected function getShippingPriceValueAttribute()
+    {
+        $obPriceData = $this->getPromoMechanismProcessor()->getShippingPrice();
+
+        return $obPriceData->price_value;
+    }
+
+    /**
+     * Get total price value
+     * @return float
+     */
+    protected function getTotalPriceValueAttribute()
+    {
+        $obPriceData = $this->getPromoMechanismProcessor()->getTotalPrice();
+
+        return $obPriceData->price_value;
+    }
+
+    /**
+     * Set manager_id attribute value
+     * @param $sValue
+     */
+    protected function setManagerIdAttribute($sValue)
+    {
+        $this->attributes['manager_id'] = (int) $sValue;
     }
 }

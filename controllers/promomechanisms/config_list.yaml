@@ -1,0 +1,14 @@
+title: 'lovata.ordersshopaholic::lang.promo_mechanism.list_title'
+modelClass: Lovata\OrdersShopaholic\Models\PromoMechanism
+list: $/lovata/ordersshopaholic/models/promomechanism/columns.yaml
+recordUrl: 'lovata/ordersshopaholic/promomechanisms/update/:id'
+noRecordsMessage: 'backend::lang.list.no_records'
+showSetup: true
+showCheckboxes: true
+defaultSort:
+    column: id
+    direction: desc
+toolbar:
+    buttons: list_toolbar
+    search:
+        prompt: 'backend::lang.list.search_prompt'

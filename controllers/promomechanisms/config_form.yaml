@@ -1,0 +1,15 @@
+name: 'lovata.ordersshopaholic::lang.promo_mechanism.name'
+form: $/lovata/ordersshopaholic/models/promomechanism/fields.yaml
+modelClass: Lovata\OrdersShopaholic\Models\PromoMechanism
+defaultRedirect: lovata/ordersshopaholic/promomechanisms
+create:
+    title: 'backend::lang.form.create_title'
+    redirect: 'lovata/ordersshopaholic/promomechanisms/update/:id'
+    redirectClose: lovata/ordersshopaholic/promomechanisms
+    flashSave: 'lovata.toolbox::lang.message.create_success'
+update:
+    title: 'backend::lang.form.update_title'
+    redirect: lovata/ordersshopaholic/promomechanisms
+    redirectClose: lovata/ordersshopaholic/promomechanisms
+    flashSave: 'lovata.toolbox::lang.message.update_success'
+    flashDelete: 'lovata.toolbox::lang.message.delete_success'

@@ -5,8 +5,8 @@ use Lovata\Toolbox\Classes\Item\ElementItem;
 use Lovata\Toolbox\Traits\Helpers\PriceHelperTrait;
 
 use Lovata\Shopaholic\Models\Offer;
-use Lovata\Shopaholic\Models\Settings;
 use Lovata\Shopaholic\Classes\Item\OfferItem;
+use Lovata\Shopaholic\Classes\Helper\CurrencyHelper;
 use Lovata\OrdersShopaholic\Classes\Processor\OfferOrderPositionProcessor;
 
 /**
@@ -66,7 +66,7 @@ abstract class AbstractPositionItem extends ElementItem
      */
     protected function getCurrencyAttribute()
     {
-        return Settings::getValue('currency');
+        return CurrencyHelper::instance()->getActive();
     }
 
     /**
