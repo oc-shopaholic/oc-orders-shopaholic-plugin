@@ -83,7 +83,7 @@
         'discount_type_percent'          => 'Percent',
         'final_discount'                 => 'Final discount',
         'final_discount_description'     => 'The final discount <strong>blocks the effect</strong> of other discounts with a lower priority. Otherwise, discounts with <strong>lower</strong> priority <strong>will be applied</strong>.',
-        'order_discount_list'            => 'List of applied discounts',
+        'order_discount_list'            => 'List of available discounts',
         'manager'                        => 'Manager',
         'task_date'                      => 'Notification date',
         'active_task'                    => 'Active tasks',

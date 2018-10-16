@@ -78,3 +78,5 @@
     - table_update_orders_add_currency_field.php
     - table_update_orders_add_manager_id_field.php
     - table_create_tasks.php
+1.11.1:
+- 'Added annotations for integration with Coupons for Shopaholic, Discounts for Shopaholic, Campaigns for Shopaholic plugins.'
