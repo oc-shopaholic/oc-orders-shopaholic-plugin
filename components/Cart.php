@@ -16,6 +16,12 @@ use Lovata\OrdersShopaholic\Models\ShippingType;
  *
  * Campaigns for Shopaholic plugin
  * @method \Lovata\CampaignsShopaholic\Classes\Item\CampaignItem[]|\Lovata\CampaignsShopaholic\Classes\Collection\CampaignCollection getAppliedCampaignList()
+ *
+ * Coupons for Shopaholic plugin
+ * @method array onAddCoupon()
+ * @method array onRemoveCoupon()
+ * @method array onClearCouponList()
+ * @method \Lovata\CouponsShopaholic\Classes\Item\CouponItem[]|\Lovata\CouponsShopaholic\Classes\Collection\CouponCollection getAppliedCouponList()
  */
 class Cart extends ComponentBase
 {

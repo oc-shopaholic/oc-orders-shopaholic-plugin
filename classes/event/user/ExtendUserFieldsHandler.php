@@ -31,20 +31,22 @@ class ExtendUserFieldsHandler extends AbstractBackendFieldHandler
     protected function extendFields($obWidget)
     {
         $arAdditionFields = [
-            'order' => [
+            'order'          => [
                 'type'    => 'partial',
                 'tab'     => 'lovata.ordersshopaholic::lang.menu.orders',
                 'path'    => '$/lovata/ordersshopaholic/views/order.htm',
                 'context' => ['update'],
             ],
-            'active_task' => [
+            'active_task'    => [
                 'type'    => 'partial',
+                'label'   => 'lovata.ordersshopaholic::lang.field.active_task',
                 'tab'     => 'lovata.ordersshopaholic::lang.tab.tasks',
                 'path'    => '$/lovata/ordersshopaholic/views/active_task.htm',
                 'context' => ['update'],
             ],
             'completed_task' => [
                 'type'    => 'partial',
+                'label'   => 'lovata.ordersshopaholic::lang.field.completed_task',
                 'tab'     => 'lovata.ordersshopaholic::lang.tab.tasks',
                 'path'    => '$/lovata/ordersshopaholic/views/completed_task.htm',
                 'context' => ['update'],
