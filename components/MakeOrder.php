@@ -442,19 +442,8 @@ class MakeOrder extends ComponentSubmitForm
             return [];
         }
 
-        $arResult = [
-            'country'  => $obAddress->country,
-            'state'    => $obAddress->state,
-            'city'     => $obAddress->city,
-            'street'   => $obAddress->street,
-            'house'    => $obAddress->house,
-            'building' => $obAddress->building,
-            'flat'     => $obAddress->flat,
-            'floor'    => $obAddress->floor,
-            'address1' => $obAddress->address1,
-            'address2' => $obAddress->address2,
-            'postcode' => $obAddress->postcode,
-        ];
+        $arResult = $obAddress->toArray();
+        array_forget($arResult, ['id', 'type']);
 
         return $arResult;
     }

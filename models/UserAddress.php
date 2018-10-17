@@ -58,6 +58,13 @@ class UserAddress extends Model
         'type' => 'lovata.toolbox::lang.field.type',
     ];
 
+    public $visible = [];
+    public $hidden = [
+        'created_at',
+        'updated_at',
+        'user_id',
+    ];
+
     /**
      * @var array Fillable fields
      */
