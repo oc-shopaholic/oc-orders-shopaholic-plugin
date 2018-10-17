@@ -1,0 +1,11 @@
+{
+    "name": "lovata/oc-ordersshopaholic-plugin",
+    "type": "october-plugin",
+    "description": "Orders for Shopaholic plugin for October CMS",
+    "license": "GPL-3.0-only",
+    "require": {
+        "php": ">=7.0",
+        "lovata/oc-toolbox-plugin": "~1.17",
+        "lovata/oc-shopaholic-plugin": "~1.14"
+    }
+}
