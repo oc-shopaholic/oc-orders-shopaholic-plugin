@@ -79,6 +79,8 @@
     - table_update_orders_add_manager_id_field.php
     - table_create_tasks.php
 1.11.1:
-- 'Added annotations for integration with Coupons for Shopaholic, Discounts for Shopaholic, Campaigns for Shopaholic plugins.'
+    - 'Added annotations for integration with Coupons for Shopaholic, Discounts for Shopaholic, Campaigns for Shopaholic plugins.'
 1.11.2:
-- 'Fixed the logic of getting custom field values of the saved user address when creating an order.'
+    - 'Fixed the logic of getting custom field values of the saved user address when creating an order.'
+1.11.3:
+    - 'Fixed update of price data before sending an order to the payment gateway'
