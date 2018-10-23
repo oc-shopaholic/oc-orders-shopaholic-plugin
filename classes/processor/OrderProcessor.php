@@ -12,6 +12,7 @@ use Lovata\OrdersShopaholic\Models\Order;
 use Lovata\OrdersShopaholic\Models\Status;
 use Lovata\OrdersShopaholic\Models\ShippingType;
 use Lovata\OrdersShopaholic\Models\OrderPosition;
+use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
 
 /**
  * Class OrderProcessor
@@ -80,6 +81,7 @@ class OrderProcessor
         //Fire event after create order
         Event::fire(self::EVENT_UPDATE_ORDER_AFTER_CREATE, $this->obOrder);
 
+        OrderPromoMechanismProcessor::update($this->obOrder);
         if ($this->obOrder->total_price_value > 0) {
             $this->sendPaymentPurchase();
         }
