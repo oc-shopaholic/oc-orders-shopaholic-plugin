@@ -84,3 +84,5 @@
     - 'Fixed the logic of getting custom field values of the saved user address when creating an order.'
 1.11.3:
     - 'Fixed update of price data before sending an order to the payment gateway'
+1.11.4:
+    - 'Fixed creation of an order position via add() method.'
