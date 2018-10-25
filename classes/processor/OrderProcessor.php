@@ -272,7 +272,7 @@ class OrderProcessor
     protected function createOrderPosition($arOrderPositionData)
     {
         try {
-            OrderPosition::create($arOrderPositionData);
+            $this->obOrder->order_position()->add(OrderPosition::create($arOrderPositionData));
         } catch (\October\Rain\Database\ModelException $obException) {
             $this->processValidationError($obException);
             return false;
