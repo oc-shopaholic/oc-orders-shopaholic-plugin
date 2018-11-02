@@ -86,3 +86,5 @@
     - 'Fixed update of price data before sending an order to the payment gateway'
 1.11.4:
     - 'Fixed creation of an order position via add() method.'
+1.12.0:
+    - 'Added supported types of order properties: number, rich editor, single checkbox, switch, balloon selector, tag list, radio.'
