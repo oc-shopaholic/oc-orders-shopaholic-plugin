@@ -119,9 +119,12 @@ class OrderPromoMechanismProcessor extends AbstractPromoMechanismProcessor
 
         foreach ($this->obPositionList as $obOrderPosition) {
             $fPrice = $obOrderPosition->price_value;
-            $fPrice = PriceHelper::round($fPrice * $obOrderPosition->quantity);
+            $fOldPrice = $obOrderPosition->old_price_value > 0 ? $obOrderPosition->old_price_value : $obOrderPosition->price_value;
 
-            $obPriceData = new PriceContainer($fPrice, $fPrice, $obOrderPosition->quantity);
+            $fPrice = PriceHelper::round($fPrice * $obOrderPosition->quantity);
+            $fOldPrice = PriceHelper::round($fOldPrice * $obOrderPosition->quantity);
+
+            $obPriceData = new PriceContainer($fPrice, $fOldPrice, $obOrderPosition->quantity);
 
             if (!empty($this->arDiscountPositionList)) {
                 foreach ($this->arDiscountPositionList as $obMechanism) {
