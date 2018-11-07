@@ -38,6 +38,7 @@ before_script:
       php artisan october:up;
       php artisan plugin:install Lovata.Toolbox;
       php artisan plugin:install Lovata.Shopaholic;
+      php artisan plugin:install Lovata.Buddies;
       cd ..;
       mkdir -p ./october/plugins/lovata/ordersshopaholic;
       mv !(october) october/plugins/lovata/ordersshopaholic;
