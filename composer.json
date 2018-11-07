@@ -3,19 +3,9 @@
     "type": "october-plugin",
     "description": "Orders for Shopaholic plugin for October CMS",
     "license": "GPL-3.0-only",
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/lovata/oc-toolbox-plugin.git"
-        },
-        {
-            "type": "git",
-            "url": "https://github.com/lovata/oc-shopaholic-plugin.git"
-        }
-    ],
     "require": {
         "php": ">=7.0",
         "lovata/oc-toolbox-plugin": "~1.20",
-        "lovata/oc-shopaholic-plugin": "~1.16"
+        "lovata/oc-shopaholic-plugin": "~1.17"
     }
 }
