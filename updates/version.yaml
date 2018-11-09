@@ -92,3 +92,5 @@
     - 'Fixed logic for calculating old total price of order position without discounts.'
 1.13.0:
     - 'Added Japanese language. Thanks for contribution pikanji.'
+1.14.0:
+    - 'Added getCurrency() method in Cart component. Improved parameter generation for redirecting to order page in MakeOrder component. Added shipping_type_id parameter processing in onAdd, onUpdate, onRemove methods (Cart component)'
