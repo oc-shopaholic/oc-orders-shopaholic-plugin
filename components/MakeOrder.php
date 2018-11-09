@@ -5,6 +5,7 @@ use Event;
 use Redirect;
 
 use Kharanenka\Helper\Result;
+use Lovata\Toolbox\Classes\Helper\PageHelper;
 use Lovata\Toolbox\Classes\Helper\UserHelper;
 use Lovata\Toolbox\Classes\Component\ComponentSubmitForm;
 use Lovata\Toolbox\Traits\Helpers\TraitValidationHelper;
@@ -74,6 +75,16 @@ class MakeOrder extends ComponentSubmitForm
             'number' => $this->obOrder->order_number,
             'key'    => $this->obOrder->secret_key,
         ];
+
+        $sRedirectPage = $this->property(self::PROPERTY_REDIRECT_PAGE);
+        if (empty($sRedirectPage)) {
+            return $arResult;
+        }
+
+        $arPropertyList = PageHelper::instance()->getUrlParamList($sRedirectPage, 'OrderPage');
+        if (!empty($arPropertyList)) {
+            $arResult[array_shift($arPropertyList)] = $this->obOrder->secret_key;
+        }
 
         return $arResult;
     }

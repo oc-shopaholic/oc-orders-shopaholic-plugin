@@ -78,12 +78,14 @@ class OrderProcessor
         $this->createOrder();
         $this->processOrderPositionList();
 
-        //Fire event after create order
-        Event::fire(self::EVENT_UPDATE_ORDER_AFTER_CREATE, $this->obOrder);
+        if (!empty($this->obOrder)) {
+            //Fire event after create order
+            Event::fire(self::EVENT_UPDATE_ORDER_AFTER_CREATE, $this->obOrder);
 
-        OrderPromoMechanismProcessor::update($this->obOrder);
-        if ($this->obOrder->total_price_value > 0) {
-            $this->sendPaymentPurchase();
+            OrderPromoMechanismProcessor::update($this->obOrder);
+            if ($this->obOrder->total_price_value > 0) {
+                $this->sendPaymentPurchase();
+            }
         }
 
         if (!Result::status()) {
