@@ -5,10 +5,10 @@ use October\Rain\Database\Schema\Blueprint;
 use October\Rain\Database\Updates\Migration;
 
 /**
- * Class TableCreateNotifications
+ * Class TableCreateTasks
  * @package Lovata\OrdersShopaholic\Updates
  */
-class TableCreateNotifications extends Migration
+class TableCreateTasks extends Migration
 {
     const TABLE_NAME = 'lovata_orders_shopaholic_tasks';
 
