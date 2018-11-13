@@ -94,3 +94,6 @@
     - 'Added Japanese language. Thanks for contribution pikanji.'
 1.14.0:
     - 'Added getCurrency() method in Cart component. Improved parameter generation for redirecting to order page in MakeOrder component. Added shipping_type_id parameter processing in onAdd, onUpdate, onRemove methods (Cart component)'
+1.14.1:
+    - 'Changed type of "description" field in task table.'
+    - table_update_tasks_change_description_type.php
