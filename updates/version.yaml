@@ -97,3 +97,5 @@
 1.14.1:
     - 'Changed type of "description" field in task table.'
     - table_update_tasks_change_description_type.php
+1.14.2:
+    - 'Fixed link to cancel button in backend (OrderPosition controller)'
