@@ -26,8 +26,6 @@
     <p class="flash-message static error"><?= e($this->fatalError) ?></p>
 <?php endif ?>
 
-<p>
-    <a href="<?= Backend::url('lovata/ordersshopaholic/orderpositions') ?>" class="btn btn-default oc-icon-chevron-left">
-        <?= e(trans('backend::lang.form.return_to_list')) ?>
-    </a>
-</p>
+<?php if(!empty($obOrder)) { ?>
+    <p><a href="<?= Backend::url('lovata/ordersshopaholic/orders/update/'.$obOrder->id) ?>" class="btn btn-default"><?= e(trans('backend::lang.form.return_to_list')) ?></a></p>
+<?php } ?>

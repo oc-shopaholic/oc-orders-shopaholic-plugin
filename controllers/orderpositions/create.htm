@@ -1,6 +1,17 @@
 <?php Block::put('breadcrumb') ?>
     <ul>
         <li><a href="<?= Backend::url('lovata/ordersshopaholic/orders') ?>"><?= e(trans('lovata.ordersshopaholic::lang.order.list_title')) ?></a></li>
+        <?php
+        $obOrder = $formModel->order;
+        if(!empty($obOrder)) {
+            ?>
+            <li>
+                <a href="<?= Backend::url('lovata/ordersshopaholic/orders/update/'.$obOrder->id) ?>">
+                    <?= trans('lovata.ordersshopaholic::lang.label.order'); ?>
+                    <?= $obOrder->order_number ?>
+                </a>
+            </li>
+        <?php } ?>
         <li><?= e($this->pageTitle) ?></li>
     </ul>
 <?php Block::endPut() ?>
@@ -32,9 +43,11 @@
                     class="btn btn-default">
                     <?= e(trans('backend::lang.form.create_and_close')) ?>
                 </button>
+                <?php if(!empty($obOrder)) { ?>
                 <span class="btn-text">
-                    <?= e(trans('backend::lang.form.or')) ?> <a href="<?= Backend::url('lovata/ordersshopaholic/orderpositions') ?>"><?= e(trans('backend::lang.form.cancel')) ?></a>
+                    <?= e(trans('backend::lang.form.or')) ?> <a href="<?= Backend::url('lovata/ordersshopaholic/orders/update/'.$obOrder->id) ?>"><?= e(trans('backend::lang.form.cancel')) ?></a>
                 </span>
+                <?php } ?>
             </div>
         </div>
 
@@ -42,5 +55,7 @@
 
 <?php else: ?>
     <p class="flash-message static error"><?= e(trans($this->fatalError)) ?></p>
-    <p><a href="<?= Backend::url('lovata/ordersshopaholic/orderpositions') ?>" class="btn btn-default"><?= e(trans('backend::lang.form.return_to_list')) ?></a></p>
+    <?php if(!empty($obOrder)) { ?>
+        <p><a href="<?= Backend::url('lovata/ordersshopaholic/orders/update/'.$obOrder->id) ?>" class="btn btn-default"><?= e(trans('backend::lang.form.return_to_list')) ?></a></p>
+    <?php } ?>
 <?php endif ?>
