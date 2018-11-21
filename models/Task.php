@@ -111,7 +111,7 @@ class Task extends Model
 
         $obOrder = $this->order;
         if (!empty($obOrder)) {
-            $this->manager_id = $obOrder->manager_id;
+            $this->manager_id = !empty($obOrder->manager_id) ? $obOrder->manager_id : $this->manager_id;
             $this->user_id = $obOrder->user_id;
         }
     }
