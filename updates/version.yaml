@@ -99,3 +99,5 @@
     - table_update_tasks_change_description_type.php
 1.14.2:
     - 'Fixed link to cancel button in backend (OrderPosition controller)'
+1.14.3:
+    - 'Fixed OrderProcessor::EVENT_GET_SHIPPING_PRICE event. Thanks for contribution GitLog.'
