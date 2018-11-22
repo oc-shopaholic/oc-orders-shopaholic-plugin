@@ -190,7 +190,7 @@ class OrderProcessor
      */
     protected function getShippingTypePrice()
     {
-        $fShippingPrice = Event::fire(self::EVENT_GET_SHIPPING_PRICE, $this->arOrderData, true);
+        $fShippingPrice = Event::fire(self::EVENT_GET_SHIPPING_PRICE, [$this->arOrderData], true);
         if ($fShippingPrice !== null) {
             return (float) $fShippingPrice;
         }
