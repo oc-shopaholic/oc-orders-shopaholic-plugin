@@ -101,3 +101,5 @@
     - 'Fixed link to cancel button in backend (OrderPosition controller)'
 1.14.3:
     - 'Fixed OrderProcessor::EVENT_GET_SHIPPING_PRICE event. Thanks for contribution GitLog.'
+1.15.0:
+    - 'Added German language. Thanks for contribution Gerald.'
