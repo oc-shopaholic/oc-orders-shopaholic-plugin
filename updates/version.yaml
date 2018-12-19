@@ -103,3 +103,5 @@
     - 'Fixed OrderProcessor::EVENT_GET_SHIPPING_PRICE event. Thanks for contribution GitLog.'
 1.15.0:
     - 'Added German language. Thanks for contribution Gerald.'
+1.16.0:
+    - 'Added checking addresses for uniqueness before creating a new user address or order.'

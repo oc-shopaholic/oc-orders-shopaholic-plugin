@@ -94,7 +94,14 @@ class UserAddress extends ComponentBase
 
         $iUserID = UserHelper::instance()->getUserId();
         if (empty($arAddressData) || empty($iUserID)) {
-            return Result::setFalse()->get();
+            $sMessage = Lang::get('lovata.toolbox::lang.message.e_not_correct_request');
+            return Result::setFalse()->setMessage($sMessage)->get();
+        }
+
+        $obAddress = UserAddressModel::findAddressByData($arAddressData, $iUserID);
+        if (!empty($obAddress)) {
+            $sMessage = Lang::get('lovata.ordersshopaholic::lang.message.e_address_exists');
+            return Result::setFalse()->setMessage($sMessage)->get();
         }
 
         $arAddressData['user_id'] = $iUserID;
@@ -110,10 +117,18 @@ class UserAddress extends ComponentBase
     public function onUpdate()
     {
         $arAddressData = Input::all();
+        $iAddressID = array_get($arAddressData, 'id');
 
         $iUserID = UserHelper::instance()->getUserId();
-        if (empty($arAddressData) || empty($arAddressData['id']) || empty($iUserID)) {
+        $obAddress = UserAddressModel::findAddressByData($arAddressData, $iUserID);
+
+        if (empty($arAddressData) || empty($iAddressID) || empty($iUserID)) {
             $sMessage = Lang::get('lovata.toolbox::lang.message.e_not_correct_request');
+            return Result::setFalse()->setMessage($sMessage)->get();
+        }
+
+        if (!empty($obAddress) && $obAddress->id != $iAddressID) {
+            $sMessage = Lang::get('lovata.ordersshopaholic::lang.message.e_address_exists');
             return Result::setFalse()->setMessage($sMessage)->get();
         }
 

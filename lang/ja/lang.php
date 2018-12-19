@@ -40,6 +40,7 @@
         'item_required'        => 'ポジションとアイテムのリレーションは必須です',
         'without_condition'    => '条件なし',
         'discount_not_applied' => '割引適用なし',
+        'e_address_exists'     => 'このアドレスは既に存在します',
     ],
     'field'                => [
         'status'       => 'ステータス',

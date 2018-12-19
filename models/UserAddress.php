@@ -112,4 +112,55 @@ class UserAddress extends Model
         'address2',
         'postcode',
     ];
+
+    public static $arCheckedFieldList = [
+        'type',
+        'country',
+        'state',
+        'city',
+        'street',
+        'house',
+        'building',
+        'flat',
+        'floor',
+        'address1',
+        'address2',
+        'postcode',
+    ];
+
+    /**
+     * Find address by data
+     * @param array  $arFindAddress
+     * @param string $iUserID
+     * @return bool|UserAddress|mixed|null
+     */
+    public static function findAddressByData($arFindAddress, $iUserID)
+    {
+        if (empty($arFindAddress) || !is_array($arFindAddress) || empty($iUserID)) {
+            return null;
+        }
+
+        //Get user address list
+        $obAddressList = UserAddress::getByUser($iUserID)->get();
+        if ($obAddressList->isEmpty()) {
+            return null;
+        }
+
+        //We are looking for an address for the complete coincidence of all fields
+        foreach ($obAddressList as $obAddress) {
+            $bCheck = true;
+            foreach (self::$arCheckedFieldList as $sField) {
+                if ($obAddress->$sField != array_get($arFindAddress, $sField)) {
+                    $bCheck = false;
+                    break;
+                }
+            }
+
+            if ($bCheck) {
+                return $obAddress;
+            }
+        }
+
+        return null;
+    }
 }
