@@ -40,6 +40,7 @@
         'item_required'        => 'Relation between position and item is required',
         'without_condition'    => 'Without condition',
         'discount_not_applied' => 'Discount not applied',
+        'e_address_exists'     => 'This address already exists',
     ],
     'field'                => [
         'status'       => 'Status',

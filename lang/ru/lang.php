@@ -40,6 +40,7 @@
         'item_required'        => 'Связь между позицией и элементом обязательна',
         'without_condition'    => 'Без условий',
         'discount_not_applied' => 'Скидки не применялись',
+        'e_address_exists'     => 'Такой адрес уже существует',
     ],
     'field'                => [
         'status'       => 'Статус',
