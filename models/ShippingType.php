@@ -1,5 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Models;
 
+use Event;
 use Model;
 use October\Rain\Database\Traits\Sortable;
 use October\Rain\Database\Traits\Validation;
@@ -48,6 +49,8 @@ class ShippingType extends Model
     use CodeField;
     use TraitCached;
     use PriceHelperTrait;
+
+    const EVENT_GET_SHIPPING_PRICE = 'shopaholic.shipping_type.get_price';
 
     public $table = 'lovata_orders_shopaholic_shipping_types';
 
@@ -107,5 +110,24 @@ class ShippingType extends Model
         $obStatus = self::getByCode($sCode)->first();
 
         return $obStatus;
+    }
+
+    /**
+     * Get price value
+     * @return float
+     */
+    protected function getPriceValueAttribute()
+    {
+        $fShippingPrice = Event::fire(self::EVENT_GET_SHIPPING_PRICE, [$this], true);
+        if ($fShippingPrice !== null) {
+            return (float) $fShippingPrice;
+        }
+
+        $fShippingPrice = 0;
+        if (isset($this->attributes['price'])) {
+            $fShippingPrice = (float) $this->attributes['price'];
+        }
+
+        return $fShippingPrice;
     }
 }

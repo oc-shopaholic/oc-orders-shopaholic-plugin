@@ -117,7 +117,7 @@ abstract class AbstractPromoMechanism implements InterfacePromoMechanism
 
     /**
      * Get discount type
-     * @return float
+     * @return string
      */
     public function getDiscountType()
     {
@@ -170,6 +170,7 @@ abstract class AbstractPromoMechanism implements InterfacePromoMechanism
      */
     public function calculate($fPrice, $obProcessor, $obPosition = null)
     {
+        $this->bApplied = false;
         if (!$this->check($obProcessor, $obPosition)) {
             return $fPrice;
         }

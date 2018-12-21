@@ -59,7 +59,12 @@ class OrderItemPromoMechanismProcessor extends AbstractPromoMechanismProcessor
                 return null;
             }
 
-            $obMechanism = new $sClassName($obOrderMechanism->priority, $obOrderMechanism->discount_value, $obOrderMechanism->discount_type, $obOrderMechanism->final_discount, $obOrderMechanism->property);
+            $arPropertyList = (array) $obOrderMechanism->property;
+            $arPropertyList['element_id'] = $obOrderMechanism->element_id;
+            $arPropertyList['element_type'] = $obOrderMechanism->element_type;
+            $arPropertyList['element_data'] = $obOrderMechanism->element_data;
+
+            $obMechanism = new $sClassName($obOrderMechanism->priority, $obOrderMechanism->discount_value, $obOrderMechanism->discount_type, $obOrderMechanism->final_discount, $arPropertyList);
 
             $obEventMechanism = Event::fire(self::EVENT_MECHANISM_ADD_CHECK_CALLBACK_METHOD, [$obMechanism, $obOrderMechanism->element_id, $obOrderMechanism->element_type, $obOrderMechanism->element_data], true);
             if (!empty($obEventMechanism) && $obEventMechanism instanceof InterfacePromoMechanism) {
