@@ -5,7 +5,6 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer;
 use Model;
 use October\Rain\Database\Traits\Validation;
 
-use Lovata\Toolbox\Classes\Helper\PriceHelper;
 use Lovata\Toolbox\Traits\Helpers\TraitCached;
 use Lovata\Toolbox\Traits\Helpers\PriceHelperTrait;
 use Lovata\Toolbox\Traits\Models\SetPropertyAttributeTrait;
@@ -261,6 +260,21 @@ class OrderPosition extends Model
         $arResult = (array) Offer::active()->getByProduct($this->_product)->orderBy('name')->lists('name', 'id');
 
         return $arResult;
+    }
+
+    /**
+     * Get order property value
+     * @param string $sField
+     * @return mixed
+     */
+    public function getProperty($sField)
+    {
+        $arPropertyList = $this->property;
+        if (empty($arPropertyList) || empty($sField)) {
+            return null;
+        }
+
+        return array_get($arPropertyList, $sField);
     }
 
     /**

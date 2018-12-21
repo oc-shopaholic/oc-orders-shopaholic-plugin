@@ -105,3 +105,5 @@
     - 'Added German language. Thanks for contribution Gerald.'
 1.16.0:
     - 'Added checking addresses for uniqueness before creating a new user address or order.'
+1.17.0:
+    - 'Added shopaholic.shipping_type.get_price event. The event allows you to dynamically change the shipping price.'
