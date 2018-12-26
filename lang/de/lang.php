@@ -40,6 +40,7 @@
         'item_required'        => 'Verknüpfung zwichen Position und Artikel ist erforderlich!',
         'without_condition'    => 'Ohne Bedingung',
         'discount_not_applied' => 'Nicht angewandter Rabatt',
+        'e_address_exists'     => 'This address already exists',
     ],
     'field'                => [
         'status'       => 'Status',
