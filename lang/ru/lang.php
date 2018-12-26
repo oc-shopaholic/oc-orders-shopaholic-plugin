@@ -7,7 +7,7 @@
         'cart_name'                       => 'Корзина',
         'cart_description'                => '',
         'make_order_name'                 => 'Создание заказа',
-        'make_order_description'          => '',
+        'make_order_description'          => 'Create new order',
         'payment_method_list_name'        => 'Методы оплаты',
         'payment_method_list_description' => '',
         'shipping_type_list_name'         => 'Способы доставки',
