@@ -8,6 +8,7 @@ use Backend\Models\User as BackendUser;
 
 use Kharanenka\Scope\UserBelongsTo;
 
+use Lovata\Toolbox\Classes\Helper\PriceHelper;
 use Lovata\Toolbox\Classes\Helper\UserHelper;
 use Lovata\Toolbox\Traits\Helpers\TraitCached;
 use Lovata\Toolbox\Traits\Helpers\PriceHelperTrait;
@@ -421,6 +422,24 @@ class Order extends Model
     {
         //Generate new order number
         $this->generateOrderNumber();
+    }
+
+    /**
+     * Get full shipping price, without discounts
+     * @return string
+     */
+    public function getFullShippingPriceAttribute()
+    {
+        return PriceHelper::format($this->getShippingPriceValue());
+    }
+
+    /**
+     * Set full shipping price (used in backend)
+     * @param string $sValue
+     */
+    public function setFullShippingPriceAttribute($sValue)
+    {
+        $this->shipping_price = $sValue;
     }
 
     /**

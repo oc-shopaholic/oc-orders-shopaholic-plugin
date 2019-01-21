@@ -27,6 +27,7 @@ abstract class AbstractPromoMechanism implements InterfacePromoMechanism
     protected $sRelatedDescription;
 
     protected $bWithQuantityLimit = false;
+    protected $bCalculatePerUnit = false;
     protected $bApplied = false;
 
     /** @var \Lovata\CouponsShopaholic\Models\CouponGroup */
@@ -177,10 +178,20 @@ abstract class AbstractPromoMechanism implements InterfacePromoMechanism
 
         $this->bApplied = true;
 
+        $bNeedCalculatePerUnit = false;
+        if ($this->bCalculatePerUnit && $this->getProperty('calculate_per_unit') && !empty($obPosition)) {
+            $bNeedCalculatePerUnit = true;
+            $fPrice = PriceHelper::round($fPrice / $obPosition->quantity);
+        }
+
         if ($this->bWithQuantityLimit && !empty($obPosition)) {
             $fPrice = $this->applyQuantityLimitDiscount($fPrice, $obPosition->quantity);
         } else {
             $fPrice = $this->applyDiscount($fPrice);
+        }
+
+        if ($bNeedCalculatePerUnit) {
+            $fPrice = PriceHelper::round($fPrice * $obPosition->quantity);
         }
 
         return $fPrice;
