@@ -12,6 +12,7 @@ class OfferTotalQuantityGreaterDiscountPosition extends AbstractOfferTotalQuanti
     const LANG_NAME = 'lovata.ordersshopaholic::lang.promo_mechanism_type.offer_total_quantity_greater_discount_position';
 
     protected $bWithQuantityLimit = true;
+    protected $bCalculatePerUnit = true;
 
     /**
      * Get discount type

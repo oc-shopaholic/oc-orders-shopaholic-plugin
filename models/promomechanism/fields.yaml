@@ -60,6 +60,23 @@ fields:
                 value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferTotalQuantityGreater\OfferTotalQuantityGreaterDiscountTotalPrice]
         span: left
         type: text
+    property[calculate_per_unit]:
+        label: 'lovata.ordersshopaholic::lang.promo_mechanism.calculate_per_unit'
+        comment: 'lovata.ordersshopaholic::lang.promo_mechanism.calculate_per_unit_description'
+        trigger:
+            action: show
+            field: type
+            condition: |
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferQuantityGreater\OfferQuantityGreaterDiscountMinPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferQuantityGreater\OfferQuantityGreaterDiscountPosition] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferTotalQuantityGreater\OfferTotalQuantityGreaterDiscountMinPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\OfferTotalQuantityGreater\OfferTotalQuantityGreaterDiscountPosition] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\PositionCountGreater\PositionCountGreaterDiscountMinPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\PositionCountGreater\PositionCountGreaterDiscountPosition] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\WithoutCondition\WithoutConditionDiscountMinPrice] ||
+                value[Lovata\OrdersShopaholic\Classes\PromoMechanism\WithoutCondition\WithoutConditionDiscountPosition]
+        span: left
+        type: checkbox
     property[quantity_limit]:
         label: 'lovata.ordersshopaholic::lang.promo_mechanism.quantity_limit'
         comment: 'lovata.ordersshopaholic::lang.promo_mechanism.quantity_limit_description'

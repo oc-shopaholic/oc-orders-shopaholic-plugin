@@ -12,6 +12,7 @@ class PositionCountGreaterDiscountPosition extends AbstractPositionCountGreaterD
     const LANG_NAME = 'lovata.ordersshopaholic::lang.promo_mechanism_type.position_count_greater_discount_position';
 
     protected $bWithQuantityLimit = true;
+    protected $bCalculatePerUnit = true;
 
     /**
      * Get discount type

@@ -13,6 +13,7 @@ class WithoutConditionDiscountPosition extends AbstractPromoMechanism implements
     const LANG_NAME = 'lovata.ordersshopaholic::lang.promo_mechanism_type.without_condition_discount_position';
 
     protected $bWithQuantityLimit = true;
+    protected $bCalculatePerUnit = true;
 
     /**
      * Get discount type

@@ -12,6 +12,7 @@ class WithoutConditionDiscountMinPrice extends AbstractWithoutConditionDiscount 
     const LANG_NAME = 'lovata.ordersshopaholic::lang.promo_mechanism_type.without_condition_discount_min_price';
 
     protected $bWithQuantityLimit = true;
+    protected $bCalculatePerUnit = true;
 
     /**
      * Get discount type

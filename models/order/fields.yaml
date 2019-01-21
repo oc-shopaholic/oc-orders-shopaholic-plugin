@@ -53,7 +53,7 @@ tabs:
             emptyOption: 'lovata.toolbox::lang.field.empty'
             type: relation
             tab: 'lovata.ordersshopaholic::lang.tab.info'
-        shipping_price:
+        full_shipping_price:
             label: 'lovata.ordersshopaholic::lang.field.shipping_price'
             span: left
             type: text
