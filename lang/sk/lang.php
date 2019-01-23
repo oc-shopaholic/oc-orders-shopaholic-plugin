@@ -167,6 +167,8 @@
         'quantity_limit_description'      => 'If you set value = 1 and discount value = 100%, than the discount will be applied to one unit. If you set value = 0, than discount will be applied to all units',
         'quantity_limit_from'             => 'Quantity limit at which the discount will be repeated',
         'quantity_limit_from_description' => 'If you set value = 3, value of quantity limit for which the discount will be applied = 1 and discount value = 100%, than the discount will be applied to one unit and will be repeated every 3 offers (3 for the price of 2). If the value is = 0, then the value is ignored.',
+        'calculate_per_unit'              => 'Calculate discount for 1 unit (Only for percent discount)',
+        'calculate_per_unit_description'  => 'If enabled, calculation formula will be as follows: rounding(position_price * (1 - discount)) * quantity. Otherwise, calculation formula will be as follows: rounding(price_position * quantity) * (1 - percent_discounts)',
     ],
     'permission'           => [
         'order'           => 'Manage orders',
