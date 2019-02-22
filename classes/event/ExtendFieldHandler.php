@@ -1,17 +1,19 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Event;
 
-use Lovata\OrdersShopaholic\Controllers\OrderPositions;
-use Lovata\OrdersShopaholic\Models\OrderPosition;
-use Lovata\OrdersShopaholic\Models\OrderPositionProperty;
+use Lang;
 use System\Models\MailTemplate;
 
 use Lovata\Toolbox\Classes\Helper\UserHelper;
 
 use Lovata\Shopaholic\Models\Settings;
+use Lovata\OrdersShopaholic\Controllers\OrderPositions;
 use Lovata\OrdersShopaholic\Models\Order;
+use Lovata\OrdersShopaholic\Models\OrderPosition;
+use Lovata\OrdersShopaholic\Models\OrderPositionProperty;
 use Lovata\OrdersShopaholic\Models\OrderProperty;
 use Lovata\OrdersShopaholic\Controllers\Orders;
 use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
+use Lovata\OrdersShopaholic\Classes\PromoMechanism\AbstractPromoMechanism;
 
 /**
  * Class ExtendCategoryModel
@@ -50,6 +52,17 @@ class ExtendFieldHandler
         }
 
         $arAdditionFieldList = [
+            'formula_calculate_discount_from_price' => [
+                'tab'     => 'lovata.shopaholic::lang.tab.taxes',
+                'label'   => 'lovata.ordersshopaholic::lang.settings.formula_calculate_discount_from_price',
+                'span'    => 'left',
+                'type'    => 'radio',
+                'options' => [
+                    AbstractPromoMechanism::DISCOUNT_FROM_PRICE             => Lang::get('lovata.ordersshopaholic::lang.settings.formula_calculation_from_backend_price'),
+                    AbstractPromoMechanism::DISCOUNT_FROM_PRICE_WITHOUT_TAX => Lang::get('lovata.ordersshopaholic::lang.settings.formula_calculation_from_price_without_tax'),
+                    AbstractPromoMechanism::DISCOUNT_FROM_PRICE_WITH_TAX    => Lang::get('lovata.ordersshopaholic::lang.settings.formula_calculation_from_price_with_tax'),
+                ],
+            ],
             'cart_cookie_lifetime'                 => [
                 'tab'     => 'lovata.ordersshopaholic::lang.tab.order_settings',
                 'label'   => 'lovata.ordersshopaholic::lang.settings.cart_cookie_lifetime',
@@ -163,7 +176,7 @@ class ExtendFieldHandler
 
     /**
      * Add additional order properties
-     * @param \Backend\Widgets\Form $obWidget
+     * @param \Backend\Widgets\Form                                                     $obWidget
      * @param \October\Rain\Database\Collection|OrderProperty[]|OrderPositionProperty[] $obPropertyList
      */
     protected function addOrderPropertyField($obWidget, $obPropertyList)

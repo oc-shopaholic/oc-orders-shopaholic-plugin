@@ -3,6 +3,7 @@
 use Lovata\Toolbox\Classes\Collection\ElementCollection;
 
 use Lovata\Shopaholic\Classes\Helper\CurrencyHelper;
+
 use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
 use Lovata\OrdersShopaholic\Classes\Item\CartPositionItem;
 
@@ -134,7 +135,7 @@ class CartPositionCollection extends ElementCollection
 
     /**
      * Get total position price data
-     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer
+     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\TotalPriceContainer
      */
     public function getTotalPriceData()
     {
@@ -144,12 +145,21 @@ class CartPositionCollection extends ElementCollection
     }
 
     /**
-     * Get currency value
+     * Get currency symbol
      * @return null|string
      */
     public function getCurrency()
     {
-        return CurrencyHelper::instance()->getActive();
+        return CurrencyHelper::instance()->getActiveCurrencySymbol();
+    }
+
+    /**
+     * Get currency code
+     * @return null|string
+     */
+    public function getCurrencyCode()
+    {
+        return CurrencyHelper::instance()->getActiveCurrencyCode();
     }
 
     /**

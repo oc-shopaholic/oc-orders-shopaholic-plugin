@@ -82,13 +82,21 @@ interface InterfacePromoMechanism
     public function getProperty($sField);
 
     /**
-     * Calculate new price value
-     * @param float                                                  $fPrice
-     * @param AbstractPromoMechanismProcessor                        $obProcessor
-     * @param \Lovata\OrdersShopaholic\Classes\Item\CartPositionItem $obPosition
-     * @return float
+     * Calculate item discount and add discount to price container
+     * @param ItemPriceContainer                                                                                            $obPriceContainer
+     * @param AbstractPromoMechanismProcessor                                                                               $obProcessor
+     * @param \Lovata\OrdersShopaholic\Classes\Item\CartPositionItem|\Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem $obPosition
+     * @return ItemPriceContainer
      */
-    public function calculate($fPrice, $obProcessor, $obPosition = null);
+    public function calculateItemDiscount($obPriceContainer, $obProcessor, $obPosition);
+
+    /**
+     * Calculate total discount and add discount to price container
+     * @param TotalPriceContainer             $obPriceContainer
+     * @param AbstractPromoMechanismProcessor $obProcessor
+     * @return ItemPriceContainer
+     */
+    public function calculateTotalDiscount($obPriceContainer, $obProcessor);
 
     /**
      * Set callback function to check position

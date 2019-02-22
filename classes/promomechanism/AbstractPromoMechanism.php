@@ -1,8 +1,10 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\PromoMechanism;
 
 use Lang;
-use Lovata\OrdersShopaholic\Models\PromoMechanism;
 use Lovata\Toolbox\Classes\Helper\PriceHelper;
+use Lovata\OrdersShopaholic\Models\PromoMechanism;
+use Lovata\Shopaholic\Classes\Helper\TaxHelper;
+use Lovata\Shopaholic\Models\Settings;
 
 /**
  * Class AbstractPromoMechanism
@@ -18,6 +20,10 @@ abstract class AbstractPromoMechanism implements InterfacePromoMechanism
     const TYPE_TOTAL_POSITION = 'total_position';
     const TYPE_SHIPPING = 'shipping';
     const TYPE_TOTAL_PRICE = 'total';
+
+    const DISCOUNT_FROM_PRICE = 'discount_from_backend_price';
+    const DISCOUNT_FROM_PRICE_WITHOUT_TAX = 'discount_from_price_without_tax';
+    const DISCOUNT_FROM_PRICE_WITH_TAX = 'discount_from_price_with_tax';
 
     protected $iPriority;
     protected $fDiscountValue;
@@ -163,38 +169,97 @@ abstract class AbstractPromoMechanism implements InterfacePromoMechanism
     }
 
     /**
-     * Calculate new price value
-     * @param float                                                  $fPrice
+     * Calculate item discount and add discount to price container
+     * @param ItemPriceContainer                                     $obPriceContainer
      * @param AbstractPromoMechanismProcessor                        $obProcessor
      * @param \Lovata\OrdersShopaholic\Classes\Item\CartPositionItem $obPosition
-     * @return float
+     * @return ItemPriceContainer
      */
-    public function calculate($fPrice, $obProcessor, $obPosition = null)
+    public function calculateItemDiscount($obPriceContainer, $obProcessor, $obPosition)
     {
         $this->bApplied = false;
         if (!$this->check($obProcessor, $obPosition)) {
-            return $fPrice;
+            return $obPriceContainer;
         }
 
         $this->bApplied = true;
 
-        $bNeedCalculatePerUnit = false;
-        if ($this->bCalculatePerUnit && $this->getProperty('calculate_per_unit') && !empty($obPosition)) {
-            $bNeedCalculatePerUnit = true;
-            $fPrice = PriceHelper::round($fPrice / $obPosition->quantity);
-        }
+        $iQuantityLimit = (int) $this->getProperty('quantity_limit');
+        $iQuantityLimitFrom = (int) $this->getProperty('quantity_limit_from');
+        $bPriceIncludeTax = TaxHelper::instance()->isPriceIncludeTax();
+        $sFormulaCalculationDiscount = Settings::getValue('formula_calculate_discount_from_price', self::DISCOUNT_FROM_PRICE);
 
-        if ($this->bWithQuantityLimit && !empty($obPosition)) {
-            $fPrice = $this->applyQuantityLimitDiscount($fPrice, $obPosition->quantity);
-        } else {
+        //Get unit price list
+        $arUnitPriceList = $obPriceContainer->getUnitPriceList();
+
+        foreach ($arUnitPriceList as $iKey => &$fPrice) {
+
+            if ($iQuantityLimitFrom > 0 && $iQuantityLimit > 0 && $iQuantityLimitFrom > $iQuantityLimit) {
+                $bSkipPrice = $this->bWithQuantityLimit && $iKey % $iQuantityLimitFrom >= $iQuantityLimit;
+                if ($bSkipPrice) {
+                    continue;
+                }
+            }
+
+            //Prepare price, before applying discount
+            if ($bPriceIncludeTax && $sFormulaCalculationDiscount == self::DISCOUNT_FROM_PRICE_WITHOUT_TAX) {
+                $fPrice = TaxHelper::instance()->calculatePriceWithoutTax($fPrice, $obPriceContainer->tax_percent);
+            } else if (!$bPriceIncludeTax && $sFormulaCalculationDiscount == self::DISCOUNT_FROM_PRICE_WITH_TAX) {
+                $fPrice = TaxHelper::instance()->calculatePriceWithTax($fPrice, $obPriceContainer->tax_percent);
+            }
+
             $fPrice = $this->applyDiscount($fPrice);
+
+            //Calculate price after applying the discount
+            if ($bPriceIncludeTax && $sFormulaCalculationDiscount == self::DISCOUNT_FROM_PRICE_WITHOUT_TAX) {
+                $fPrice = TaxHelper::instance()->calculatePriceWithTax($fPrice, $obPriceContainer->tax_percent);
+            } else if (!$bPriceIncludeTax && $sFormulaCalculationDiscount == self::DISCOUNT_FROM_PRICE_WITH_TAX) {
+                $fPrice = TaxHelper::instance()->calculatePriceWithoutTax($fPrice, $obPriceContainer->tax_percent);
+            }
         }
 
-        if ($bNeedCalculatePerUnit) {
-            $fPrice = PriceHelper::round($fPrice * $obPosition->quantity);
+        $obPriceContainer->addDiscount($arUnitPriceList, $this);
+
+        return $obPriceContainer;
+    }
+
+    /**
+     * Calculate total discount and add discount to price container
+     * @param TotalPriceContainer             $obPriceContainer
+     * @param AbstractPromoMechanismProcessor $obProcessor
+     * @return TotalPriceContainer
+     */
+    public function calculateTotalDiscount($obPriceContainer, $obProcessor)
+    {
+        $this->bApplied = false;
+        if (!$this->check($obProcessor)) {
+            return $obPriceContainer;
         }
 
-        return $fPrice;
+        $this->bApplied = true;
+        if ($obPriceContainer->price_value == 0) {
+            return $obPriceContainer;
+        }
+
+        $sFormulaCalculationDiscount = Settings::getValue('formula_calculate_discount_from_price', self::DISCOUNT_FROM_PRICE);
+        switch ($sFormulaCalculationDiscount) {
+            case self::DISCOUNT_FROM_PRICE_WITHOUT_TAX:
+                $fPrice = $obPriceContainer->price_without_tax_value;
+                $fPrice = $this->applyDiscount($fPrice);
+                $obPriceContainer->addDiscountFromPriceWithoutTax($fPrice, $this);
+                break;
+            case self::DISCOUNT_FROM_PRICE_WITH_TAX:
+                $fPrice = $obPriceContainer->price_with_tax_value;
+                $fPrice = $this->applyDiscount($fPrice);
+                $obPriceContainer->addDiscountFromPriceWithTax($fPrice, $this);
+                break;
+            default:
+                $fPrice = $obPriceContainer->price_value;
+                $fPrice = $this->applyDiscount($fPrice);
+                $obPriceContainer->addDiscountFromPrice($fPrice, $this);
+        }
+
+        return $obPriceContainer;
     }
 
     /**
@@ -245,7 +310,7 @@ abstract class AbstractPromoMechanism implements InterfacePromoMechanism
 
 
         if (!empty($iQuantityLimitFrom) && !empty($iQuantityLimit) && $iQuantityLimitFrom > $iQuantityLimit) {
-            $iRepeatCount = floor($iQuantity/$iQuantityLimitFrom);
+            $iRepeatCount = floor($iQuantity / $iQuantityLimitFrom);
             $iQuantityLimit *= $iRepeatCount;
         }
 

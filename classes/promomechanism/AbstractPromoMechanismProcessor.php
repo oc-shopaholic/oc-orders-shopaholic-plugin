@@ -8,19 +8,19 @@
 abstract class AbstractPromoMechanismProcessor
 {
     /**
-     * @var array|PriceContainer[]
+     * @var array|ItemPriceContainer[]
      */
     protected $arPositionPrice = [];
 
     protected $obPositionList;
 
-    /** @var PriceContainer */
+    /** @var TotalPriceContainer */
     protected $obPositionPriceData;
 
-    /** @var PriceContainer */
+    /** @var ItemPriceContainer */
     protected $obShippingPriceData;
 
-    /** @var PriceContainer */
+    /** @var TotalPriceContainer */
     protected $obTotalPriceData;
 
     /** @var array|InterfacePromoMechanism[] */
@@ -71,12 +71,12 @@ abstract class AbstractPromoMechanismProcessor
     /**
      * Get position price with discounts
      * @param int $iPositionID
-     * @return PriceContainer
+     * @return ItemPriceContainer
      */
-    public function getPositionPrice($iPositionID) : PriceContainer
+    public function getPositionPrice($iPositionID) : ItemPriceContainer
     {
         if (empty($this->arPositionPrice) || !isset($this->arPositionPrice[$iPositionID])) {
-            return new PriceContainer(0, 0);
+            return ItemPriceContainer::makeEmpty();
         }
 
         $obPriceData = $this->arPositionPrice[$iPositionID];
@@ -86,27 +86,27 @@ abstract class AbstractPromoMechanismProcessor
 
     /**
      * Get position total price with discounts
-     * @return PriceContainer
+     * @return TotalPriceContainer
      */
-    public function getPositionTotalPrice() : PriceContainer
+    public function getPositionTotalPrice() : TotalPriceContainer
     {
         return $this->obPositionPriceData;
     }
 
     /**
      * Get shipping price with discounts
-     * @return PriceContainer
+     * @return ItemPriceContainer
      */
-    public function getShippingPrice() : PriceContainer
+    public function getShippingPrice() : ItemPriceContainer
     {
         return $this->obShippingPriceData;
     }
 
     /**
      * Get total price with discounts
-     * @return PriceContainer
+     * @return TotalPriceContainer
      */
-    public function getTotalPrice() : PriceContainer
+    public function getTotalPrice() : TotalPriceContainer
     {
         return $this->obTotalPriceData;
     }
@@ -138,12 +138,11 @@ abstract class AbstractPromoMechanismProcessor
 
         /** @var InterfacePromoMechanism $obMechanism */
         foreach ($this->arDiscountTotalPositionList as $obMechanism) {
-            $fNewPrice = $obMechanism->calculate($this->obPositionPriceData->price_value, $this);
+            $this->obPositionPriceData = $obMechanism->calculateTotalDiscount($this->obPositionPriceData, $this);
             if (!$obMechanism->isApplied()) {
                 continue;
             }
 
-            $this->obPositionPriceData->addDiscount($fNewPrice, $obMechanism);
             if ($obMechanism->isFinal()) {
                 break;
             }
@@ -181,21 +180,15 @@ abstract class AbstractPromoMechanismProcessor
 
         /** @var InterfacePromoMechanism $obMechanism */
         foreach ($this->arDiscountPositionMinPriceList as $obMechanism) {
-            $obPriceData = $this->getPositionPrice($obPositionMinPrice->id);
-            $fNewPrice = $obMechanism->calculate($obPriceData->price_value, $this, $obPositionMinPrice);
+            $obPriceData = clone $this->getPositionPrice($obPositionMinPrice->id);
+            $obPriceData = $obMechanism->calculateItemDiscount($obPriceData, $this, $obPositionMinPrice);
             if (!$obMechanism->isApplied()) {
                 continue;
             }
 
-            $this->obPositionPriceData->price_value -= $obPriceData->price_value;
-            $this->obPositionPriceData->old_price_value -= $obPriceData->old_price_value;
-            $this->obPositionPriceData->discount_price_value -= $obPriceData->discount_price_value;
-
-            $obPriceData->addDiscount($fNewPrice, $obMechanism);
-
-            $this->obPositionPriceData->price_value += $obPriceData->price_value;
-            $this->obPositionPriceData->old_price_value += $obPriceData->old_price_value;
-            $this->obPositionPriceData->discount_price_value += $obPriceData->discount_price_value;
+            $obOldPriceData = $this->getPositionPrice($obPositionMinPrice->id);
+            $this->obPositionPriceData->subPriceContainer($obOldPriceData);
+            $this->obPositionPriceData->addPriceContainer($obPriceData);
 
             $this->arPositionPrice[$obPositionMinPrice->id] = $obPriceData;
             if ($obMechanism->isFinal()) {
@@ -209,9 +202,8 @@ abstract class AbstractPromoMechanismProcessor
      */
     protected function applyTotalPriceDiscounts()
     {
-        $this->obTotalPriceData->price_value = $this->obPositionPriceData->price_value + $this->obShippingPriceData->price_value;
-        $this->obTotalPriceData->old_price_value = $this->obPositionPriceData->old_price_value + $this->obShippingPriceData->old_price_value;
-        $this->obTotalPriceData->discount_price_value = $this->obPositionPriceData->discount_price_value + $this->obShippingPriceData->discount_price_value;
+        $this->obTotalPriceData->addPriceContainer($this->obShippingPriceData);
+        $this->obTotalPriceData->addPriceContainer($this->obPositionPriceData);
 
         if (empty($this->arDiscountTotalPriceList)) {
             return;
@@ -221,12 +213,11 @@ abstract class AbstractPromoMechanismProcessor
 
         /** @var InterfacePromoMechanism $obMechanism */
         foreach ($this->arDiscountTotalPriceList as $obMechanism) {
-            $fNewPrice = $obMechanism->calculate($this->obTotalPriceData->price_value, $this);
+            $this->obTotalPriceData = $obMechanism->calculateTotalDiscount($this->obTotalPriceData, $this);
             if (!$obMechanism->isApplied()) {
                 continue;
             }
 
-            $this->obTotalPriceData->addDiscount($fNewPrice, $obMechanism);
             if ($obMechanism->isFinal()) {
                 break;
             }

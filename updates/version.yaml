@@ -109,3 +109,6 @@
     - 'Added shopaholic.shipping_type.get_price event. The event allows you to dynamically change the shipping price.'
 1.18.0:
     - 'Added calculate_per_unit setting parameter in PromoMechanism model.'
+1.19.0:
+    - 'Added Taxes. Added multicyrrency.'
+    - table_update_taxes_add_applied_to_shipping_price.php
