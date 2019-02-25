@@ -6,10 +6,12 @@ use October\Rain\Database\Traits\Validation;
 use Lovata\Toolbox\Traits\Helpers\TraitCached;
 use Lovata\Toolbox\Traits\Helpers\PriceHelperTrait;
 use Lovata\Toolbox\Traits\Models\SetPropertyAttributeTrait;
+use Lovata\Toolbox\Classes\Helper\PriceHelper;
 
 use Lovata\Shopaholic\Models\Offer;
 use Lovata\Shopaholic\Models\Category;
 use Lovata\Shopaholic\Models\Product;
+use Lovata\Shopaholic\Classes\Helper\TaxHelper;
 use Lovata\Shopaholic\Classes\Helper\CurrencyHelper;
 
 use Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer;
@@ -30,10 +32,25 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
  * @property string             $item_type
  * @property string             $currency_symbol
  * @property string             $currency_code
+ *
  * @property string             $price
  * @property float              $price_value
+ * @property string             $tax_price
+ * @property float              $tax_price_value
+ * @property string             $price_without_tax
+ * @property float              $price_without_tax_value
+ * @property string             $price_with_tax
+ * @property float              $price_with_tax_value
+ *
  * @property string             $old_price
  * @property float              $old_price_value
+ * @property string             $tax_old_price
+ * @property float              $tax_old_price_value
+ * @property string             $old_price_without_tax
+ * @property float              $old_price_without_tax_value
+ * @property string             $old_price_with_tax
+ * @property float              $old_price_with_tax_value
+ *
  * @property string             $total_price
  * @property float              $total_price_value
  * @property string             $old_total_price
@@ -123,7 +140,19 @@ class OrderPosition extends Model
         'property',
     ];
 
-    public $arPriceField = ['price', 'old_price', 'total_price', 'old_total_price', 'discount_price'];
+    public $arPriceField = [
+        'price',
+        'old_price',
+        'tax_price',
+        'tax_old_price',
+        'price_with_tax',
+        'old_price_with_tax',
+        'price_without_tax',
+        'old_price_without_tax',
+        'total_price',
+        'old_total_price',
+        'discount_price'
+    ];
 
     /**
      * Before save model event
@@ -308,6 +337,72 @@ class OrderPosition extends Model
     }
 
     /**
+     * Get tax_price_value attribute value
+     * @return float
+     */
+    protected function getTaxPriceValueAttribute()
+    {
+        $fPrice = PriceHelper::round($this->price_with_tax_value - $this->price_without_tax_value);
+
+        return $fPrice;
+    }
+
+    /**
+     * Get tax_old_price_value attribute value
+     * @return float
+     */
+    protected function getTaxOldPriceValueAttribute()
+    {
+        $fPrice = PriceHelper::round($this->old_price_with_tax_value - $this->old_price_without_tax_value);
+
+        return $fPrice;
+    }
+
+    /**
+     * Get price_with_tax_value attribute value
+     * @return float
+     */
+    protected function getPriceWithTaxValueAttribute()
+    {
+        $fPrice = TaxHelper::instance()->getPriceWithTax($this->price_value, $this->tax_percent);
+
+        return $fPrice;
+    }
+
+    /**
+     * Get old_price_with_tax_value attribute value
+     * @return float
+     */
+    protected function getOldPriceWithTaxValueAttribute()
+    {
+        $fPrice = TaxHelper::instance()->getPriceWithTax($this->old_price_value, $this->tax_percent);
+
+        return $fPrice;
+    }
+
+    /**
+     * Get price_without_tax_value attribute value
+     * @return float
+     */
+    protected function getPriceWithoutTaxValueAttribute()
+    {
+        $fPrice = TaxHelper::instance()->getPriceWithoutTax($this->price_value, $this->tax_percent);
+
+        return $fPrice;
+    }
+
+    /**
+     * Get old_price_without_tax_value attribute value
+     * @return float
+     */
+    protected function getOldPriceWithoutTaxValueAttribute()
+    {
+        $fPrice = TaxHelper::instance()->getPriceWithoutTax($this->old_price_value, $this->tax_percent);
+
+        return $fPrice;
+    }
+
+    /**
      * Get currency_symbol attribute value
      * @return null|string
      */
@@ -336,7 +431,6 @@ class OrderPosition extends Model
 
         return $obOrder->currency_code;
     }
-
 
     /**
      * If item ID was changed, then save new price, old_price, code values from new item object

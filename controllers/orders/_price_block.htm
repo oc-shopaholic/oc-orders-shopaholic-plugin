@@ -8,7 +8,7 @@ if(!isset($obOrder) && isset($formModel)) {
 ?>
 
 <?php if(isset($obOrder) && !empty($obOrder)) {?>
-    <?php $obPositionPriceData = $obOrder->total_position_price_data; ?>
+    <?php $obPositionPriceData = $obOrder->position_total_price_data; ?>
     <?php $obShippingPriceData = $obOrder->shipping_price_data; ?>
     <?php $obTotalPriceData = $obOrder->total_price_data; ?>
 <div class="scoreboard">
@@ -20,7 +20,7 @@ if(!isset($obOrder) && isset($formModel)) {
                 <?= trans('lovata.shopaholic::lang.field.tax'); ?>: <?= $obShippingPriceData->tax_price ?> <?= $obOrder->currency_symbol; ?>
             </p>
             <p class="description">
-                <?= trans('lovata.shopaholic::lang.field.without_tax'); ?>: <?= $obShippingPriceData->price_without_tax ?> <?= $obOrder->currency_symbol; ?>;
+                <?= trans('lovata.shopaholic::lang.field.without_tax'); ?>: <?= $obShippingPriceData->price_without_tax ?> <?= $obOrder->currency_symbol; ?>
             </p>
         <?php } ?>
     </div>
@@ -32,7 +32,7 @@ if(!isset($obOrder) && isset($formModel)) {
                 <?= trans('lovata.shopaholic::lang.field.tax'); ?>: <?= $obPositionPriceData->tax_price ?> <?= $obOrder->currency_symbol; ?>
             </p>
             <p class="description">
-                <?= trans('lovata.shopaholic::lang.field.without_tax'); ?>: <?= $obPositionPriceData->price_without_tax ?> <?= $obOrder->currency_symbol; ?>;
+                <?= trans('lovata.shopaholic::lang.field.without_tax'); ?>: <?= $obPositionPriceData->price_without_tax ?> <?= $obOrder->currency_symbol; ?>
             </p>
         <?php } ?>
     </div>
@@ -44,7 +44,7 @@ if(!isset($obOrder) && isset($formModel)) {
                 <?= trans('lovata.shopaholic::lang.field.tax'); ?>: <?= $obTotalPriceData->tax_price ?> <?= $obOrder->currency_symbol; ?>
             </p>
             <p class="description">
-                <?= trans('lovata.shopaholic::lang.field.without_tax'); ?>: <?= $obTotalPriceData->price_without_tax ?> <?= $obOrder->currency_symbol; ?>;
+                <?= trans('lovata.shopaholic::lang.field.without_tax'); ?>: <?= $obTotalPriceData->price_without_tax ?> <?= $obOrder->currency_symbol; ?>
             </p>
         <?php } ?>
     </div>

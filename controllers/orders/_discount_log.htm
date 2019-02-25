@@ -9,7 +9,7 @@ if(!isset($obOrder) && isset($formModel)) {
 
 $sFieldName = $field->fieldName;
 if ($sFieldName == 'discount_log_position_total_price') {
-    $obPriceData = $obOrder->total_position_price_data;
+    $obPriceData = $obOrder->position_total_price_data;
 } elseif ($sFieldName == 'discount_log_shipping_price') {
     $obPriceData = $obOrder->shipping_price_data;
 } else {

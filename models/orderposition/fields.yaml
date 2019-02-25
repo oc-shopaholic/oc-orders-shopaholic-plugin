@@ -3,6 +3,11 @@ fields:
         span: left
         type: partial
         path: $/lovata/ordersshopaholic/controllers/orderpositions/_product_info.htm
+    code:
+        label: 'lovata.shopaholic::lang.field.vendor_code'
+        span: right
+        type: text
+        disabled: ture
 tabs:
     fields:
         quantity:
@@ -11,14 +16,14 @@ tabs:
             type: text
             default: 0
             tab: 'lovata.toolbox::lang.tab.settings'
-        code:
-            label: 'lovata.shopaholic::lang.field.vendor_code'
+        tax_percent:
+            label: 'lovata.shopaholic::lang.field.tax_percent'
             span: right
-            type: text
+            type: number
             disabled: ture
             tab: 'lovata.toolbox::lang.tab.settings'
         _price_table:
-            span: left
+            span: full
             type: partial
             path: $/lovata/ordersshopaholic/controllers/orderpositions/_price_table.htm
             tab: 'lovata.toolbox::lang.tab.settings'

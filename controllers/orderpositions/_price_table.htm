@@ -8,11 +8,19 @@ $obPriceData = $formModel->price_data;
     <tr>
         <td></td>
         <td><?= trans('lovata.shopaholic::lang.field.old_price') ?></td>
-        <td><?= trans('lovata.toolbox::lang.field.discount_price') ?></td>
         <td><?= trans('lovata.shopaholic::lang.field.price') ?></td>
+        <td><?= trans('lovata.ordersshopaholic::lang.field.old_total_price') ?></td>
+        <td><?= trans('lovata.toolbox::lang.field.discount_price') ?></td>
+        <td><?= trans('lovata.ordersshopaholic::lang.field.total_price') ?></td>
     </tr>
     <tr>
         <td><?= trans('lovata.shopaholic::lang.field.without_tax'); ?></td>
+        <td>
+            <strong><?= $formModel->old_price_without_tax ?> <?= $formModel->currency_symbol ?></strong>
+        </td>
+        <td>
+            <strong><?= $formModel->price_without_tax ?> <?= $formModel->currency_symbol ?></strong>
+        </td>
         <td>
             <strong><?= $obPriceData->old_price_without_tax ?> <?= $formModel->currency_symbol ?></strong>
         </td>
@@ -30,6 +38,12 @@ $obPriceData = $formModel->price_data;
     <tr>
         <td><?= trans('lovata.shopaholic::lang.field.tax'); ?></td>
         <td>
+            <strong><?= $formModel->tax_old_price ?> <?= $formModel->currency_symbol ?></strong>
+        </td>
+        <td>
+            <strong><?= $formModel->tax_price ?> <?= $formModel->currency_symbol ?></strong>
+        </td>
+        <td>
             <strong><?= $obPriceData->tax_old_price ?> <?= $formModel->currency_symbol ?></strong>
         </td>
         <td>
@@ -45,6 +59,12 @@ $obPriceData = $formModel->price_data;
     </tr>
     <tr>
         <td><?= trans('lovata.shopaholic::lang.field.with_tax'); ?></td>
+        <td>
+            <strong><?= $formModel->old_price_with_tax ?> <?= $formModel->currency_symbol ?></strong>
+        </td>
+        <td>
+            <strong><?= $formModel->price_with_tax ?> <?= $formModel->currency_symbol ?></strong>
+        </td>
         <td>
             <strong><?= $obPriceData->old_price_with_tax ?> <?= $formModel->currency_symbol ?></strong>
         </td>
@@ -62,10 +82,18 @@ $obPriceData = $formModel->price_data;
 <?php } else { ?>
         <tr>
             <td><?= trans('lovata.shopaholic::lang.field.old_price') ?></td>
-            <td><?= trans('lovata.toolbox::lang.field.discount_price') ?></td>
             <td><?= trans('lovata.shopaholic::lang.field.price') ?></td>
+            <td><?= trans('lovata.ordersshopaholic::lang.field.old_total_price') ?></td>
+            <td><?= trans('lovata.toolbox::lang.field.discount_price') ?></td>
+            <td><?= trans('lovata.ordersshopaholic::lang.field.total_price') ?></td>
         </tr>
         <tr>
+            <td>
+                <strong><?= $formModel->old_price ?> <?= $formModel->currency_symbol ?></strong>
+            </td>
+            <td>
+                <strong><?= $formModel->price ?> <?= $formModel->currency_symbol ?></strong>
+            </td>
             <td>
                 <strong><?= $obPriceData->old_price ?> <?= $formModel->currency_symbol ?></strong>
             </td>

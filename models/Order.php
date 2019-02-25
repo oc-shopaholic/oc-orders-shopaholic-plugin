@@ -43,7 +43,7 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
  * @property string                                                                      $position_total_price
  * @property float                                                                       $position_total_price_value
  * @property float                                                                       $shipping_tax_percent
- * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\TotalPriceContainer         $total_position_price_data
+ * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\TotalPriceContainer         $position_total_price_data
  * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer          $shipping_price_data
  * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\TotalPriceContainer         $total_price_data
  * @property array                                                                       $property
@@ -322,7 +322,7 @@ class Order extends Model
      * Get position total price data
      * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\TotalPriceContainer
      */
-    public function getTotalPositionPriceDataAttribute()
+    public function getPositionTotalPriceDataAttribute()
     {
         $obPriceData = $this->getPromoMechanismProcessor()->getPositionTotalPrice();
 
