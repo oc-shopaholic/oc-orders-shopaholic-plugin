@@ -59,10 +59,11 @@ class OfferOrderPositionProcessor extends AbstractOrderPositionProcessor
     public function getData()
     {
         $arResult = [
-            'item_id'   => $this->obOffer->id,
-            'item_type' => Offer::class,
-            'quantity'  => $this->obCartPosition->quantity,
-            'property'  => $this->obCartPosition->property,
+            'item_id'     => $this->obOffer->id,
+            'item_type'   => Offer::class,
+            'quantity'    => $this->obCartPosition->quantity,
+            'property'    => $this->obCartPosition->property,
+            'tax_percent' => $this->obCartPosition->tax_percent,
         ];
 
         return $arResult;

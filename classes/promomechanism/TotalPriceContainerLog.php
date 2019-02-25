@@ -148,4 +148,12 @@ class TotalPriceContainerLog
 
         return $arResult;
     }
+
+    /**
+     * @return InterfacePromoMechanism|null
+     */
+    public function getMechanismAttribute()
+    {
+        return $this->obMechanism;
+    }
 }

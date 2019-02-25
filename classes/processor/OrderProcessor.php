@@ -10,8 +10,8 @@ use Lovata\Toolbox\Traits\Helpers\TraitValidationHelper;
 
 use Lovata\OrdersShopaholic\Models\Order;
 use Lovata\OrdersShopaholic\Models\Status;
-use Lovata\OrdersShopaholic\Models\ShippingType;
 use Lovata\OrdersShopaholic\Models\OrderPosition;
+use Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem;
 use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
 
 /**
@@ -63,7 +63,7 @@ class OrderProcessor
         $this->initUser($obUser);
         $this->setOrderStatus();
         $this->updateOrderData();
-        $this->arOrderData['shipping_price'] = $this->getShippingTypePrice();
+        $this->fillShippingTypePrice();
 
         $this->initCartPositionList();
 
@@ -186,27 +186,24 @@ class OrderProcessor
 
     /**
      * Get shipping type price
-     * @return float
      */
-    protected function getShippingTypePrice()
+    protected function fillShippingTypePrice()
     {
         $fShippingPrice = Event::fire(self::EVENT_GET_SHIPPING_PRICE, [$this->arOrderData], true);
         if ($fShippingPrice !== null) {
-            return (float) $fShippingPrice;
+            $this->arOrderData['shipping_price'] = (float) $fShippingPrice;
         }
 
         $iShippingTypeID = array_get($this->arOrderData, 'shipping_type_id');
         if (empty($iShippingTypeID)) {
-            return 0;
+            return;
         }
 
         //Get shipping type object
-        $obShippingType = ShippingType::find($iShippingTypeID);
-        if (empty($obShippingType)) {
-            return 0;
-        }
+        $obShippingTypeItem = ShippingTypeItem::make($iShippingTypeID);
 
-        return $obShippingType->price_value;
+        $this->arOrderData['shipping_price'] = $fShippingPrice !== null ? (float) $fShippingPrice : $obShippingTypeItem->getFullPriceValue();
+        $this->arOrderData['shipping_tax_percent'] = $obShippingTypeItem->tax_percent;
     }
 
     /**

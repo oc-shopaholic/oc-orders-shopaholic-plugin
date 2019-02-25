@@ -2,18 +2,18 @@
 
 /** @var \Lovata\OrdersShopaholic\Models\Order $formModel */
 /** @var \Lovata\OrdersShopaholic\Models\Order $obOrder */
-/** @var \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainerLog $obPriceLogData */
+/** @var \Lovata\OrdersShopaholic\Classes\PromoMechanism\TotalPriceContainerLog $obPriceLogData */
 if(!isset($obOrder) && isset($formModel)) {
     $obOrder = $formModel;
 }
 
 $sFieldName = $field->fieldName;
 if ($sFieldName == 'discount_log_position_total_price') {
-    $obPriceData = $obOrder->getPositionTotalPriceData();
+    $obPriceData = $obOrder->total_position_price_data;
 } elseif ($sFieldName == 'discount_log_shipping_price') {
-    $obPriceData = $obOrder->getShippingPriceData();
+    $obPriceData = $obOrder->shipping_price_data;
 } else {
-    $obPriceData = $obOrder->getTotalPriceData();
+    $obPriceData = $obOrder->total_price_data;
 }
 
 $arPriceLog = $obPriceData->log;
@@ -24,12 +24,12 @@ $arPriceLog = $obPriceData->log;
         <table class="table data">
             <thead>
             <tr>
-                <th ><span><?= trans('lovata.toolbox::lang.field.type') ?></span></th>
-                <th ><span><?= trans('lovata.toolbox::lang.field.description') ?></span></th>
-                <th ><span><?= trans('lovata.shopaholic::lang.field.old_price') ?></span></th>
-                <th ><span><?= trans('lovata.toolbox::lang.field.discount_value') ?></span></th>
-                <th ><span><?= trans('lovata.toolbox::lang.field.discount_price') ?></span></th>
-                <th ><span><?= trans('lovata.shopaholic::lang.field.price') ?></span></th>
+                <th><span><?= trans('lovata.toolbox::lang.field.type') ?></span></th>
+                <th colspan="2"><span><?= trans('lovata.toolbox::lang.field.description') ?></span></th>
+                <th><span><?= trans('lovata.shopaholic::lang.field.old_price') ?></span></th>
+                <th><span><?= trans('lovata.toolbox::lang.field.discount_value') ?></span></th>
+                <th><span><?= trans('lovata.toolbox::lang.field.discount_price') ?></span></th>
+                <th><span><?= trans('lovata.shopaholic::lang.field.price') ?></span></th>
             </tr>
             </thead>
             <tbody>
@@ -39,8 +39,21 @@ $arPriceLog = $obPriceData->log;
                     <td><?= !empty($obMechanism) ? $obMechanism::getName() : trans('lovata.ordersshopaholic::lang.message.without_condition') ?></td>
                     <td><?= $obMechanism->getRelatedDescription() ?></td>
                     <td>
+                        <?php if ($obPriceLogData->old_price_without_tax_value != $obPriceLogData->old_price_with_tax_value) {?>
+                            <?= trans('lovata.shopaholic::lang.field.without_tax'); ?>:<br>
+                            <?= trans('lovata.shopaholic::lang.field.tax'); ?>:<br>
+                            <?= trans('lovata.shopaholic::lang.field.with_tax'); ?>:
+                        <?php } ?>
+                    </td>
+                    <td>
                         <span>
-                            <strong><?= $obPriceLogData->old_price ?></strong>
+                            <?php if ($obPriceLogData->old_price_without_tax_value != $obPriceLogData->old_price_with_tax_value) {?>
+                                <strong><?= $obPriceLogData->old_price_without_tax ?></strong><br>
+                                <strong><?= $obPriceLogData->tax_old_price ?></strong><br>
+                                <strong><?= $obPriceLogData->old_price_with_tax ?></strong>
+                            <?php } else { ?>
+                                <strong><?= $obPriceLogData->old_price ?></strong>
+                            <?php } ?>
                         </span>
                     </td>
                     <td>
@@ -55,12 +68,24 @@ $arPriceLog = $obPriceData->log;
                     </td>
                     <td>
                         <span class="text-danger">
-                            <strong>-<?= $obPriceLogData->discount_price ?></strong>
+                            <?php if ($obPriceLogData->discount_price_without_tax_value != $obPriceLogData->discount_price_with_tax_value) {?>
+                                <strong><?= $obPriceLogData->discount_price_without_tax ?></strong><br>
+                                <strong><?= $obPriceLogData->tax_discount_price ?></strong><br>
+                                <strong><?= $obPriceLogData->discount_price_with_tax ?></strong>
+                            <?php } else { ?>
+                                <strong><?= $obPriceLogData->discount_price ?></strong>
+                            <?php }  ?>
                         </span>
                     </td>
                     <td>
                         <span class="text-success">
-                            <strong><?= $obPriceLogData->price ?></strong>
+                            <?php if ($obPriceLogData->price_without_tax_value != $obPriceLogData->price_with_tax_value) {?>
+                                <strong><?= $obPriceLogData->price_without_tax ?></strong><br>
+                                <strong><?= $obPriceLogData->tax_price ?></strong><br>
+                                <strong><?= $obPriceLogData->price_with_tax ?></strong>
+                            <?php } else { ?>
+                                <strong><?= $obPriceLogData->price ?></strong>
+                            <?php } ?>
                         </span>
                     </td>
                 </tr>

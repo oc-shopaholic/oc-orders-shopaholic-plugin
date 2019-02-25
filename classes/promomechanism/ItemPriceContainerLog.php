@@ -69,9 +69,9 @@ use Lovata\Shopaholic\Classes\Helper\TaxHelper;
 class ItemPriceContainerLog
 {
     protected $iQuantity = 0;
-    protected $fOldPricePerUnit = 0;
     protected $fTaxPercent = 0;
     protected $arUnitPriceList = [];
+    protected $arOldUnitPriceList = [];
 
     /** @var InterfacePromoMechanism */
     protected $obMechanism;
@@ -89,13 +89,8 @@ class ItemPriceContainerLog
         $this->iQuantity = $iQuantity;
         $this->fTaxPercent = $fTaxPercent;
         $this->arUnitPriceList = $arNewUnitPriceList;
+        $this->arOldUnitPriceList = $arUnitPriceList;
         $this->obMechanism = $obMechanism;
-
-        foreach ($arUnitPriceList as $fPrice) {
-            $this->fOldPricePerUnit += $fPrice;
-        }
-
-        $this->fOldPricePerUnit = PriceHelper::round($this->fOldPricePerUnit);
     }
 
     /**
@@ -117,28 +112,10 @@ class ItemPriceContainerLog
             return PriceHelper::format($this->$sField);
         }
 
-        //Check field name has _per_unit_with_tax prefix
-        if (preg_match('%^.+_per_unit_with_tax_value$%', $sField)) {
-            $sOriginField = str_replace('_with_tax', '', $sField);
-            $fPrice = TaxHelper::instance()->getPriceWithTax($this->$sOriginField, $this->tax_percent);
-
-            return $fPrice;
-        }
-
         //Check field name has _with_tax prefix
         if (preg_match('%^.+_with_tax_value$%', $sField)) {
             $sOriginField = str_replace('_with_tax', '', $sField);
-            $sOriginField = str_replace('price', 'price_per_unit', $sOriginField);
             $fPrice = TaxHelper::instance()->getPriceWithTax($this->$sOriginField, $this->tax_percent);
-            $fPrice = PriceHelper::round($fPrice * $this->iQuantity);
-
-            return $fPrice;
-        }
-
-        //Check field name has per_unit_without_tax prefix
-        if (preg_match('%^.+_per_unit_without_tax_value$%', $sField)) {
-            $sOriginField = str_replace('_without_tax', '', $sField);
-            $fPrice = TaxHelper::instance()->getPriceWithoutTax($this->$sOriginField, $this->tax_percent);
 
             return $fPrice;
         }
@@ -146,9 +123,7 @@ class ItemPriceContainerLog
         //Check field name has _without_tax prefix
         if (preg_match('%^.+_without_tax_value$%', $sField)) {
             $sOriginField = str_replace('_without_tax', '', $sField);
-            $sOriginField = str_replace('price', 'price_per_unit', $sOriginField);
             $fPrice = TaxHelper::instance()->getPriceWithoutTax($this->$sOriginField, $this->tax_percent);
-            $fPrice = PriceHelper::round($fPrice * $this->iQuantity);
 
             return $fPrice;
         }
@@ -273,7 +248,14 @@ class ItemPriceContainerLog
      */
     protected function getOldPriceValueAttribute()
     {
-        return $this->fOldPricePerUnit;
+        $fPrice = 0;
+        foreach ($this->arOldUnitPriceList as $fUnitPrice) {
+            $fPrice += $fUnitPrice;
+        }
+
+        $fPrice = PriceHelper::round($fPrice);
+
+        return $fPrice;
     }
 
     /**
@@ -300,7 +282,7 @@ class ItemPriceContainerLog
      */
     protected function getOldPricePerUnitValueAttribute()
     {
-        return $this->fOldPricePerUnit;
+        return PriceHelper::round($this->old_price_value / $this->iQuantity);
     }
 
     /**
@@ -309,5 +291,13 @@ class ItemPriceContainerLog
     protected function getDiscountPricePerUnitValueAttribute()
     {
         return PriceHelper::round($this->old_price_per_unit_value - $this->price_per_unit_value);
+    }
+
+    /**
+     * @return InterfacePromoMechanism|null
+     */
+    public function getMechanismAttribute()
+    {
+        return $this->obMechanism;
     }
 }

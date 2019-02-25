@@ -204,7 +204,11 @@ class MakeOrder extends ComponentSubmitForm
         }
 
         $arOrderData = $this->arOrderData;
-        $arOrderData['currency'] = CurrencyHelper::instance()->getActive();
+
+        $obActiveCurrency = CurrencyHelper::instance()->getActive();
+        if (empty(array_get($arOrderData, 'currency')) && !empty($obActiveCurrency)) {
+            $arOrderData['currency_id'] = $obActiveCurrency->id;
+        }
         if (!isset($arOrderData['property']) || !is_array($arOrderData['property'])) {
             $arOrderData['property'] = [];
         }

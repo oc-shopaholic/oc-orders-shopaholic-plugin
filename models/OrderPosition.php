@@ -1,7 +1,5 @@
 <?php namespace Lovata\OrdersShopaholic\Models;
 
-use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
-use Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer;
 use Model;
 use October\Rain\Database\Traits\Validation;
 
@@ -12,6 +10,10 @@ use Lovata\Toolbox\Traits\Models\SetPropertyAttributeTrait;
 use Lovata\Shopaholic\Models\Offer;
 use Lovata\Shopaholic\Models\Category;
 use Lovata\Shopaholic\Models\Product;
+use Lovata\Shopaholic\Classes\Helper\CurrencyHelper;
+
+use Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer;
+use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
 
 /**
  * Class OrderPosition
@@ -21,32 +23,36 @@ use Lovata\Shopaholic\Models\Product;
  * @mixin \October\Rain\Database\Builder
  * @mixin \Eloquent
  *
- * @property int    $id
- * @property int    $order_id
- * @property int    $item_id
- * @property int    $offer_id
- * @property string $item_type
- * @property string $price
- * @property float  $price_value
- * @property string $old_price
- * @property float  $old_price_value
- * @property string $total_price
- * @property float  $total_price_value
- * @property string $old_total_price
- * @property float  $old_total_price_value
- * @property string $discount_price
- * @property float  $discount_price_value
- * @property int    $quantity
- * @property string $code
- * @property array  $property
+ * @property int                $id
+ * @property int                $order_id
+ * @property int                $item_id
+ * @property int                $offer_id
+ * @property string             $item_type
+ * @property string             $currency_symbol
+ * @property string             $currency_code
+ * @property string             $price
+ * @property float              $price_value
+ * @property string             $old_price
+ * @property float              $old_price_value
+ * @property string             $total_price
+ * @property float              $total_price_value
+ * @property string             $old_total_price
+ * @property float              $old_total_price_value
+ * @property string             $discount_price
+ * @property float              $discount_price_value
+ * @property ItemPriceContainer $price_data
+ * @property float              $tax_percent
+ * @property int                $quantity
+ * @property string             $code
+ * @property array              $property
  *
- * @property mixed  $item
+ * @property mixed              $item
  * @method \October\Rain\Database\Relations\MorphTo item()
  *
- * @property Order $order
+ * @property Order              $order
  * @method \October\Rain\Database\Relations\BelongsTo|Order order()
  *
- * @property Offer $offer
+ * @property Offer              $offer
  * @method \October\Rain\Database\Relations\BelongsTo|Offer offer()
  *
  * @method static $this getByItemID(int $iItemID)
@@ -100,6 +106,7 @@ class OrderPosition extends Model
         'old_price',
         'quantity',
         'code',
+        'tax_percent',
         'property',
     ];
 
@@ -112,6 +119,7 @@ class OrderPosition extends Model
         'old_price_value',
         'quantity',
         'code',
+        'tax_percent',
         'property',
     ];
 
@@ -177,7 +185,7 @@ class OrderPosition extends Model
      */
     public function getTotalPriceValueAttribute()
     {
-        $obPriceData = $this->getTotalPriceData();
+        $obPriceData = $this->price_data;
 
         return $obPriceData->price_value;
     }
@@ -188,7 +196,7 @@ class OrderPosition extends Model
      */
     public function getOldTotalPriceValueAttribute()
     {
-        $obPriceData = $this->getTotalPriceData();
+        $obPriceData = $this->price_data;
 
         return $obPriceData->old_price_value;
     }
@@ -199,20 +207,20 @@ class OrderPosition extends Model
      */
     public function getDiscountPriceValueAttribute()
     {
-        $obPriceData = $this->getTotalPriceData();
+        $obPriceData = $this->price_data;
 
         return $obPriceData->discount_price_value;
     }
 
     /**
      * Get total price value
-     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer
+     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer
      */
-    public function getTotalPriceData()
+    public function getPriceDataAttribute()
     {
         $obOrder = $this->order;
         if (empty($obOrder)) {
-            return new PriceContainer(0, 0);
+            return ItemPriceContainer::makeEmpty();
         }
 
         $obMechanismProcessor = OrderPromoMechanismProcessor::get($obOrder);
@@ -300,6 +308,37 @@ class OrderPosition extends Model
     }
 
     /**
+     * Get currency_symbol attribute value
+     * @return null|string
+     */
+    protected function getCurrencySymbolAttribute()
+    {
+        //Get order  object
+        $obOrder = $this->order;
+        if (empty($obOrder)) {
+            return null;
+        }
+
+        return $obOrder->currency_symbol;
+    }
+
+    /**
+     * Get currency_code attribute value
+     * @return null|string
+     */
+    protected function getCurrencyCodeAttribute()
+    {
+        //Get order  object
+        $obOrder = $this->order;
+        if (empty($obOrder)) {
+            return null;
+        }
+
+        return $obOrder->currency_code;
+    }
+
+
+    /**
      * If item ID was changed, then save new price, old_price, code values from new item object
      */
     protected function saveNewPositionData()
@@ -315,8 +354,17 @@ class OrderPosition extends Model
             return;
         }
 
-        $this->price = $obItem->price_value;
-        $this->old_price = $obItem->old_price_value;
+
+        $obOrder = $this->order;
+        if (empty($obOrder)) {
+            $sCurrencyCode = CurrencyHelper::instance()->getActiveCurrencyCode();
+        } else {
+            $sCurrencyCode = $obOrder->currency_code;
+        }
+
+        $this->price = $obItem->setActiveCurrency($sCurrencyCode)->price_value;
+        $this->old_price = $obItem->setActiveCurrency($sCurrencyCode)->old_price_value;
+        $this->tax_percent = $obItem->tax_percent;
         $this->code = $obItem->code;
     }
 
