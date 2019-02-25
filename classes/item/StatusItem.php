@@ -1,5 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Item;
 
+use Lang;
 use Lovata\Toolbox\Classes\Item\ElementItem;
 
 use Lovata\OrdersShopaholic\Models\Status;

@@ -137,7 +137,7 @@ class OrderPositionItem extends AbstractPositionItem
     public function __get($sName)
     {
         $sValue = parent::__get($sName);
-        if ($sValue !== null) {
+        if ($sValue !== null || $this->isEmpty()) {
             return $sValue;
         }
 

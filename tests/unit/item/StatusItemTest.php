@@ -46,7 +46,7 @@ class StatusItemTest extends CommonTest
             self::assertEquals($sValue, $obItem->$sField, $sErrorMessage);
         }
 
-        self::assertEquals('New', $obItem->name_for_user, $sErrorMessage);
+        self::assertEquals('lovata.ordersshopaholic::lang.field.new', $obItem->name_for_user, $sErrorMessage);
     }
 
     /**

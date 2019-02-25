@@ -73,7 +73,7 @@ class ShippingTypeItem extends ElementItem
     public function __get($sName)
     {
         $sValue = parent::__get($sName);
-        if ($sValue !== null) {
+        if ($sValue !== null || $this->isEmpty()) {
             return $sValue;
         }
 
@@ -113,7 +113,10 @@ class ShippingTypeItem extends ElementItem
     {
         $fShippingPrice = Event::fire(ShippingType::EVENT_GET_SHIPPING_PRICE, [$this], true);
         if ($fShippingPrice !== null) {
-            return PriceHelper::round((float) $fShippingPrice);
+            $fShippingPrice = PriceHelper::round((float) $fShippingPrice);
+            $fShippingPrice = CurrencyHelper::instance()->convert($fShippingPrice, $this->getActiveCurrency());
+
+            return $fShippingPrice;
         }
 
         $fShippingPrice = $this->price_full;
