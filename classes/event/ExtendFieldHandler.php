@@ -52,17 +52,6 @@ class ExtendFieldHandler
         }
 
         $arAdditionFieldList = [
-            'formula_calculate_discount_from_price' => [
-                'tab'     => 'lovata.shopaholic::lang.tab.taxes',
-                'label'   => 'lovata.ordersshopaholic::lang.settings.formula_calculate_discount_from_price',
-                'span'    => 'left',
-                'type'    => 'radio',
-                'options' => [
-                    AbstractPromoMechanism::DISCOUNT_FROM_PRICE             => Lang::get('lovata.ordersshopaholic::lang.settings.formula_calculation_from_backend_price'),
-                    AbstractPromoMechanism::DISCOUNT_FROM_PRICE_WITHOUT_TAX => Lang::get('lovata.ordersshopaholic::lang.settings.formula_calculation_from_price_without_tax'),
-                    AbstractPromoMechanism::DISCOUNT_FROM_PRICE_WITH_TAX    => Lang::get('lovata.ordersshopaholic::lang.settings.formula_calculation_from_price_with_tax'),
-                ],
-            ],
             'cart_cookie_lifetime'                 => [
                 'tab'     => 'lovata.ordersshopaholic::lang.tab.order_settings',
                 'label'   => 'lovata.ordersshopaholic::lang.settings.cart_cookie_lifetime',
