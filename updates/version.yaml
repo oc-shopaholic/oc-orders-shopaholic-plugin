@@ -110,7 +110,7 @@
 1.18.0:
     - 'Added calculate_per_unit setting parameter in PromoMechanism model.'
 1.19.0:
-    - 'Added Taxes. Added multicyrrency.'
+    - '!!! Added Taxes. Added multicyrrency. Requires Shopaholic plugin version 1.21.0 and later.'
     - table_update_taxes_add_applied_to_shipping_price.php
     - table_update_order_positions_add_tax_percent_field.php
     - table_update_orders_add_currency_id_field.php
