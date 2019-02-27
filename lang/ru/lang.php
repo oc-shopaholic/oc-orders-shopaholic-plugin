@@ -7,7 +7,7 @@
         'cart_name'                       => 'Корзина',
         'cart_description'                => '',
         'make_order_name'                 => 'Создание заказа',
-        'make_order_description'          => '',
+        'make_order_description'          => 'Создание нового заказа',
         'payment_method_list_name'        => 'Методы оплаты',
         'payment_method_list_description' => '',
         'shipping_type_list_name'         => 'Способы доставки',
@@ -92,6 +92,7 @@
         'task_mail_template'             => 'Шаблон письма для уведомления',
         'task_mail_template_description' => 'Если шаблон письма не выбран, то письмо с уведомление не будет отправлено',
         'notification_sent'              => 'Уведомление отправлено',
+        'applied_to_shipping_price'      => 'Применять к стоймости доставки',
 
         'order_discount_log_position_total_price' => 'Список примененных скидок (для суммы позиций заказов)',
         'order_discount_log_sipping_price'        => 'Список примененных скидок (для стомости доставки)',
@@ -111,6 +112,10 @@
         'creating_order_mail_template'         => 'Шаблон письма создания заказа (для пользователя)',
         'creating_order_manager_mail_template' => 'Шаблон письма создания заказа (для менеджеров)',
         'creating_order_manager_email_list'    => 'Список email адресов менеджеров',
+        'formula_calculate_discount_from_price'      => 'Формула подсчета скидки для цен с налогами',
+        'formula_calculation_from_backend_price'     => 'Скидка вычитается из заданной цены (по-умолчанию)',
+        'formula_calculation_from_price_without_tax' => 'Скидка вычитается из цены без налога',
+        'formula_calculation_from_price_with_tax'    => 'Скидка вычитается из цены с налогом',
 
         'order_create_email' => 'Email для отправки уведомлений при создании заказа',
     ],
