@@ -9,8 +9,8 @@ use Lovata\Toolbox\Classes\Helper\UserHelper;
 use Lovata\Shopaholic\Models\Settings;
 use Lovata\OrdersShopaholic\Models\Cart;
 use Lovata\OrdersShopaholic\Models\CartPosition;
-use Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem;
-use Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer;
+use Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer;
+use Lovata\OrdersShopaholic\Classes\PromoMechanism\TotalPriceContainer;
 use Lovata\OrdersShopaholic\Classes\Collection\CartPositionCollection;
 use Lovata\OrdersShopaholic\Classes\PromoMechanism\CartPromoMechanismProcessor;
 
@@ -40,8 +40,8 @@ class CartProcessor
     /** @var  CartPositionCollection|\Lovata\OrdersShopaholic\Classes\Item\CartPositionItem[] */
     protected $obCartPositionList;
 
-    /** @var \Lovata\OrdersShopaholic\Models\ShippingType */
-    protected $obShippingType;
+    /** @var \Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem */
+    protected $obShippingTypeItem;
 
     /** @var CartPromoMechanismProcessor */
     protected $obPromoProcessor;
@@ -180,15 +180,11 @@ class CartProcessor
 
     /**
      * Set active shipping type
-     * @param \Lovata\OrdersShopaholic\Models\ShippingType|\Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem $obShippingType
+     * @param \Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem $obShippingTypeItem
      */
-    public function setActiveShippingType($obShippingType)
+    public function setActiveShippingType($obShippingTypeItem)
     {
-        if (!empty($obShippingType) && $obShippingType instanceof ShippingTypeItem) {
-            $obShippingType = $obShippingType->getObject();
-        }
-
-        $this->obShippingType = $obShippingType;
+        $this->obShippingTypeItem = $obShippingTypeItem;
 
         $this->updateCartData();
     }
@@ -196,9 +192,9 @@ class CartProcessor
     /**
      * Get cart position price data
      * @param int $iPositionID
-     * @return PriceContainer
+     * @return ItemPriceContainer
      */
-    public function getCartPositionPriceData($iPositionID) : PriceContainer
+    public function getCartPositionPriceData($iPositionID) : ItemPriceContainer
     {
         if (empty($this->obPromoProcessor)) {
             $this->updateCartData();
@@ -211,9 +207,9 @@ class CartProcessor
 
     /**
      * Get cart position total price data
-     * @return PriceContainer
+     * @return TotalPriceContainer
      */
-    public function getCartPositionTotalPriceData() : PriceContainer
+    public function getCartPositionTotalPriceData() : TotalPriceContainer
     {
         if (empty($this->obPromoProcessor)) {
             $this->updateCartData();
@@ -226,9 +222,9 @@ class CartProcessor
 
     /**
      * Get shipping price data
-     * @return PriceContainer
+     * @return ItemPriceContainer
      */
-    public function getShippingPriceData() : PriceContainer
+    public function getShippingPriceData() : ItemPriceContainer
     {
         if (empty($this->obPromoProcessor)) {
             $this->updateCartData();
@@ -241,9 +237,9 @@ class CartProcessor
 
     /**
      * Get cart total price data
-     * @return PriceContainer
+     * @return TotalPriceContainer
      */
-    public function getCartTotalPriceData() : PriceContainer
+    public function getCartTotalPriceData() : TotalPriceContainer
     {
         if (empty($this->obPromoProcessor)) {
             $this->updateCartData();
@@ -332,7 +328,7 @@ class CartProcessor
      */
     protected function initPromoProcessor()
     {
-        $this->obPromoProcessor = new CartPromoMechanismProcessor($this->obCart, $this->obCartPositionList, $this->obShippingType);
+        $this->obPromoProcessor = new CartPromoMechanismProcessor($this->obCart, $this->obCartPositionList, $this->obShippingTypeItem);
     }
 
     /**

@@ -14,6 +14,7 @@ use Lovata\Toolbox\Traits\Helpers\TraitCached;
 use Lovata\Toolbox\Traits\Helpers\PriceHelperTrait;
 use Lovata\Toolbox\Traits\Models\SetPropertyAttributeTrait;
 
+use Lovata\Shopaholic\Models\Currency;
 use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
 
 /**
@@ -27,7 +28,9 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
  * @property int                                                                         $id
  * @property string                                                                      $order_number
  * @property string                                                                      $secret_key
- * @property string                                                                      $currency
+ * @property int                                                                         $currency_id
+ * @property string                                                                      $currency_symbol
+ * @property string                                                                      $currency_code
  * @property int                                                                         $user_id
  * @property int                                                                         $status_id
  * @property int                                                                         $manager_id
@@ -39,6 +42,10 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
  * @property float                                                                       $total_price_value
  * @property string                                                                      $position_total_price
  * @property float                                                                       $position_total_price_value
+ * @property float                                                                       $shipping_tax_percent
+ * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\TotalPriceContainer         $position_total_price_data
+ * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer          $shipping_price_data
+ * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\TotalPriceContainer         $total_price_data
  * @property array                                                                       $property
  *
  * @property \October\Rain\Argon\Argon                                                   $created_at
@@ -61,6 +68,9 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
  * @method static \October\Rain\Database\Relations\HasMany|Task active_task()
  * @property \October\Rain\Database\Collection|Task[]                                    $completed_task
  * @method static \October\Rain\Database\Relations\HasMany|Task completed_task()
+ *
+ * @property Currency                                                                    $currency
+ * @method static Currency|\October\Rain\Database\Relations\BelongsTo currency()
  *
  * @property Status                                                                      $status
  * @method static Status|\October\Rain\Database\Relations\BelongsTo status()
@@ -117,7 +127,8 @@ class Order extends Model
         'payment_method_id',
         'shipping_price',
         'property',
-        'currency',
+        'currency_id',
+        'shipping_tax_percent',
         'manager_id',
     ];
 
@@ -125,11 +136,12 @@ class Order extends Model
         'id',
         'secret_key',
         'order_number',
-        'currency',
         'user_id',
         'status_id',
+        'currency_id',
         'payment_method_id',
         'shipping_type_id',
+        'shipping_tax_percent',
         'property',
         'created_at',
         'updated_at',
@@ -153,7 +165,7 @@ class Order extends Model
             Task::class,
             'scope' => 'getActiveTask',
         ],
-        'completed_task'             => [
+        'completed_task'        => [
             Task::class,
             'scope' => 'getCompletedTask',
         ],
@@ -164,6 +176,7 @@ class Order extends Model
         'status'         => [Status::class, 'order' => 'sort_order asc'],
         'payment_method' => [PaymentMethod::class, 'order' => 'sort_order asc'],
         'shipping_type'  => [ShippingType::class, 'order' => 'sort_order asc'],
+        'currency'       => [Currency::class, 'order' => 'sort_order asc'],
     ];
 
     /**
@@ -307,9 +320,9 @@ class Order extends Model
 
     /**
      * Get position total price data
-     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer
+     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\TotalPriceContainer
      */
-    public function getPositionTotalPriceData()
+    public function getPositionTotalPriceDataAttribute()
     {
         $obPriceData = $this->getPromoMechanismProcessor()->getPositionTotalPrice();
 
@@ -318,9 +331,9 @@ class Order extends Model
 
     /**
      * Get shipping price data
-     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer
+     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer
      */
-    public function getShippingPriceData()
+    public function getShippingPriceDataAttribute()
     {
         $obPriceData = $this->getPromoMechanismProcessor()->getShippingPrice();
 
@@ -329,9 +342,9 @@ class Order extends Model
 
     /**
      * Get total price data
-     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer
+     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\TotalPriceContainer
      */
-    public function getTotalPriceData()
+    public function getTotalPriceDataAttribute()
     {
         $obPriceData = $this->getPromoMechanismProcessor()->getTotalPrice();
 
@@ -520,6 +533,36 @@ class Order extends Model
         $obPriceData = $this->getPromoMechanismProcessor()->getTotalPrice();
 
         return $obPriceData->price_value;
+    }
+
+    /**
+     * Get currency_symbol attribute value
+     * @return null|string
+     */
+    protected function getCurrencySymbolAttribute()
+    {
+        //Get currency object
+        $obCurrency = $this->currency;
+        if (empty($obCurrency)) {
+            return null;
+        }
+
+        return $obCurrency->symbol;
+    }
+
+    /**
+     * Get currency_code attribute value
+     * @return null|string
+     */
+    protected function getCurrencyCodeAttribute()
+    {
+        //Get currency object
+        $obCurrency = $this->currency;
+        if (empty($obCurrency)) {
+            return null;
+        }
+
+        return $obCurrency->code;
     }
 
     /**

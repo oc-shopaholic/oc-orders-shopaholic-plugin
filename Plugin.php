@@ -20,6 +20,9 @@ use Lovata\OrdersShopaholic\Classes\Event\PaymentMethodModelHandler;
 use Lovata\OrdersShopaholic\Classes\Event\ProductModelHandler;
 use Lovata\OrdersShopaholic\Classes\Event\ShippingTypeModelHandler;
 use Lovata\OrdersShopaholic\Classes\Event\StatusModelHandler;
+//Tax events
+use Lovata\OrdersShopaholic\Classes\Event\Tax\TaxModelHandler;
+use Lovata\OrdersShopaholic\Classes\Event\Tax\ExtendTaxFieldsHandler;
 //User events
 use Lovata\OrdersShopaholic\Classes\Event\User\UserModelHandler;
 use Lovata\OrdersShopaholic\Classes\Event\User\ExtendUserItemHandler;
@@ -101,6 +104,9 @@ class Plugin extends PluginBase
         Event::subscribe(ProductModelHandler::class);
         Event::subscribe(ShippingTypeModelHandler::class);
         Event::subscribe(StatusModelHandler::class);
+        //Tax events
+        Event::subscribe(TaxModelHandler::class);
+        Event::subscribe(ExtendTaxFieldsHandler::class);
         //User events
         Event::subscribe(UserModelHandler::class);
         Event::subscribe(ExtendUserItemHandler::class);

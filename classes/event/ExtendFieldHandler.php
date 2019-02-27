@@ -1,17 +1,19 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Event;
 
-use Lovata\OrdersShopaholic\Controllers\OrderPositions;
-use Lovata\OrdersShopaholic\Models\OrderPosition;
-use Lovata\OrdersShopaholic\Models\OrderPositionProperty;
+use Lang;
 use System\Models\MailTemplate;
 
 use Lovata\Toolbox\Classes\Helper\UserHelper;
 
 use Lovata\Shopaholic\Models\Settings;
+use Lovata\OrdersShopaholic\Controllers\OrderPositions;
 use Lovata\OrdersShopaholic\Models\Order;
+use Lovata\OrdersShopaholic\Models\OrderPosition;
+use Lovata\OrdersShopaholic\Models\OrderPositionProperty;
 use Lovata\OrdersShopaholic\Models\OrderProperty;
 use Lovata\OrdersShopaholic\Controllers\Orders;
 use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
+use Lovata\OrdersShopaholic\Classes\PromoMechanism\AbstractPromoMechanism;
 
 /**
  * Class ExtendCategoryModel
@@ -163,7 +165,7 @@ class ExtendFieldHandler
 
     /**
      * Add additional order properties
-     * @param \Backend\Widgets\Form $obWidget
+     * @param \Backend\Widgets\Form                                                     $obWidget
      * @param \October\Rain\Database\Collection|OrderProperty[]|OrderPositionProperty[] $obPropertyList
      */
     protected function addOrderPropertyField($obWidget, $obPropertyList)

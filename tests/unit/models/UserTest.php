@@ -1,9 +1,7 @@
 <?php namespace Lovata\OrdersShopaholic\Tests\Unit\Models;
 
-include_once __DIR__.'/../../../../toolbox/vendor/autoload.php';
-include_once __DIR__.'/../../../../../../tests/PluginTestCase.php';
+use Lovata\Toolbox\Tests\CommonTest;
 
-use PluginTestCase;
 use Lovata\Buddies\Models\User;
 use Lovata\OrdersShopaholic\Models\Order;
 
@@ -14,7 +12,7 @@ use Lovata\OrdersShopaholic\Models\Order;
  *
  * @mixin \PHPUnit\Framework\Assert
  */
-class UserTest extends PluginTestCase
+class UserTest extends CommonTest
 {
     protected $sModelClass;
 

@@ -2,11 +2,8 @@
 
 use Lovata\Toolbox\Classes\Item\ElementItem;
 
-use Lovata\Toolbox\Traits\Helpers\PriceHelperTrait;
-
 use Lovata\Shopaholic\Models\Offer;
 use Lovata\Shopaholic\Classes\Item\OfferItem;
-use Lovata\Shopaholic\Classes\Helper\CurrencyHelper;
 use Lovata\OrdersShopaholic\Classes\Processor\OfferOrderPositionProcessor;
 
 /**
@@ -20,13 +17,12 @@ use Lovata\OrdersShopaholic\Classes\Processor\OfferOrderPositionProcessor;
  * @property string      $type
  * @property int         $quantity
  * @property string      $currency
+ * @property string      $currency_code
  * @property array       $property
  * @property ElementItem $item
  */
 abstract class AbstractPositionItem extends ElementItem
 {
-    use PriceHelperTrait;
-
     /** @var array */
     protected $arItemTypeList = [
         Offer::class => [
@@ -58,15 +54,6 @@ abstract class AbstractPositionItem extends ElementItem
             'item'            => $sItemClass,
             'order_processor' => $sOrderProcessorClass,
         ];
-    }
-
-    /**
-     * Get currency value
-     * @return null|string
-     */
-    protected function getCurrencyAttribute()
-    {
-        return CurrencyHelper::instance()->getActive();
     }
 
     /**

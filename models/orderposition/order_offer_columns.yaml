@@ -14,12 +14,12 @@ columns:
           label: 'lovata.shopaholic::lang.field.price'
           type: text
           searchable: false
-          sortable: true
+          sortable: false
     old_price:
           label: 'lovata.shopaholic::lang.field.old_price'
           type: text
           searchable: false
-          sortable: true
+          sortable: false
     quantity:
           label: 'lovata.shopaholic::lang.field.quantity'
           type: text
@@ -28,11 +28,13 @@ columns:
           width: 140px
     total_price:
           label: 'lovata.ordersshopaholic::lang.field.position_price'
-          type: text
+          type: partial
+          path: $/lovata/ordersshopaholic/controllers/orderpositions/_total_price_column.htm
           searchable: false
-          sortable: true
+          sortable: false
     old_total_price:
           label: 'lovata.ordersshopaholic::lang.field.old_position_price'
-          type: text
+          type: partial
+          path: $/lovata/ordersshopaholic/controllers/orderpositions/_total_old_price_column.htm
           searchable: false
-          sortable: true
+          sortable: false

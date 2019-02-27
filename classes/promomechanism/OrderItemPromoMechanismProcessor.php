@@ -1,7 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\PromoMechanism;
 
 use Event;
-use Lovata\Toolbox\Classes\Helper\PriceHelper;
 use Lovata\OrdersShopaholic\Classes\Item\OrderItem;
 
 /**
@@ -25,9 +24,9 @@ class OrderItemPromoMechanismProcessor extends AbstractPromoMechanismProcessor
      */
     public function __construct(OrderItem $obOrderItem)
     {
-        $this->obPositionPriceData = new PriceContainer(0, 0);
-        $this->obShippingPriceData = new PriceContainer(0, 0);
-        $this->obTotalPriceData = new PriceContainer(0, 0);
+        $this->obPositionPriceData = TotalPriceContainer::makeEmpty();
+        $this->obShippingPriceData = ItemPriceContainer::makeEmpty();
+        $this->obTotalPriceData = TotalPriceContainer::makeEmpty();
 
         $this->obOrderItem = $obOrderItem;
         $this->obPositionList = $obOrderItem->order_position;
@@ -91,20 +90,17 @@ class OrderItemPromoMechanismProcessor extends AbstractPromoMechanismProcessor
         foreach ($this->obPositionList as $obOrderPosition) {
             $fPrice = $obOrderPosition->price_value;
             $fOldPrice = $obOrderPosition->old_price_value > 0 ? $obOrderPosition->old_price_value : $obOrderPosition->price_value;
+            $fTaxPercent = $obOrderPosition->tax_percent;
 
-            $fPrice = PriceHelper::round($fPrice * $obOrderPosition->quantity);
-            $fOldPrice = PriceHelper::round($fOldPrice * $obOrderPosition->quantity);
-
-            $obPriceData = new PriceContainer($fPrice, $fOldPrice, $obOrderPosition->quantity);
+            $obPriceData = new ItemPriceContainer($fPrice, $fOldPrice, $fTaxPercent, $obOrderPosition->quantity);
 
             if (!empty($this->arDiscountPositionList)) {
                 foreach ($this->arDiscountPositionList as $obMechanism) {
-                    $fNewPrice = $obMechanism->calculate($obPriceData->price_value, $this, $obOrderPosition);
+                    $obPriceData = $obMechanism->calculateItemDiscount($obPriceData, $this, $obOrderPosition);
                     if (!$obMechanism->isApplied()) {
                         continue;
                     }
 
-                    $obPriceData->addDiscount($fNewPrice, $obMechanism);
                     if ($obMechanism->isFinal()) {
                         break;
                     }
@@ -113,9 +109,7 @@ class OrderItemPromoMechanismProcessor extends AbstractPromoMechanismProcessor
 
             $this->arPositionPrice[$obOrderPosition->id] = $obPriceData;
 
-            $this->obPositionPriceData->price_value += $obPriceData->price_value;
-            $this->obPositionPriceData->old_price_value += $obPriceData->old_price_value;
-            $this->obPositionPriceData->discount_price_value += $obPriceData->discount_price_value;
+            $this->obPositionPriceData->addPriceContainer($obPriceData);
         }
     }
 
@@ -125,9 +119,9 @@ class OrderItemPromoMechanismProcessor extends AbstractPromoMechanismProcessor
     protected function applyShippingDiscounts()
     {
         $fPrice = $this->obOrderItem->getShippingPriceValue();
+        $fTaxPercent = $this->obOrderItem->shipping_tax_percent;
 
-        $this->obShippingPriceData->price_value += $fPrice;
-        $this->obShippingPriceData->old_price_value += $fPrice;
+        $this->obShippingPriceData = new ItemPriceContainer($fPrice, $fPrice, $fTaxPercent);
 
         if (empty($this->arDiscountShippingPriceList)) {
             return;
@@ -137,12 +131,11 @@ class OrderItemPromoMechanismProcessor extends AbstractPromoMechanismProcessor
 
         /** @var InterfacePromoMechanism $obMechanism */
         foreach ($this->arDiscountShippingPriceList as $obMechanism) {
-            $fNewPrice = $obMechanism->calculate($this->obShippingPriceData->price_value, $this, $this->obOrderItem->shipping_type);
+            $this->obShippingPriceData = $obMechanism->calculateItemDiscount($this->obShippingPriceData, $this, $this->obOrderItem->shipping_type);
             if (!$obMechanism->isApplied()) {
                 continue;
             }
 
-            $this->obShippingPriceData->addDiscount($fNewPrice, $obMechanism);
             if ($obMechanism->isFinal()) {
                 break;
             }

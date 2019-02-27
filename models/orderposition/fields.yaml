@@ -3,6 +3,11 @@ fields:
         span: left
         type: partial
         path: $/lovata/ordersshopaholic/controllers/orderpositions/_product_info.htm
+    code:
+        label: 'lovata.shopaholic::lang.field.vendor_code'
+        span: right
+        type: text
+        disabled: ture
 tabs:
     fields:
         quantity:
@@ -11,30 +16,16 @@ tabs:
             type: text
             default: 0
             tab: 'lovata.toolbox::lang.tab.settings'
-        total_price:
-            label: 'lovata.ordersshopaholic::lang.field.total_price'
-            span: left
-            type: text
-            disabled: ture
-            dependsOn: quantity
-            tab: 'lovata.toolbox::lang.tab.settings'
-        price:
-            label: 'lovata.shopaholic::lang.field.price'
-            span: left
-            type: text
+        tax_percent:
+            label: 'lovata.shopaholic::lang.field.tax_percent'
+            span: right
+            type: number
             disabled: ture
             tab: 'lovata.toolbox::lang.tab.settings'
-        old_price:
-            label: 'lovata.shopaholic::lang.field.old_price'
-            span: left
-            type: text
-            disabled: ture
-            tab: 'lovata.toolbox::lang.tab.settings'
-        code:
-            label: 'lovata.shopaholic::lang.field.vendor_code'
-            span: left
-            type: text
-            disabled: ture
+        _price_table:
+            span: full
+            type: partial
+            path: $/lovata/ordersshopaholic/controllers/orderpositions/_price_table.htm
             tab: 'lovata.toolbox::lang.tab.settings'
         discount_log:
             label: 'lovata.ordersshopaholic::lang.field.order_discount_list'

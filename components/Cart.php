@@ -6,9 +6,9 @@ use Cms\Classes\ComponentBase;
 use Kharanenka\Helper\Result;
 
 use Lovata\Shopaholic\Classes\Helper\CurrencyHelper;
+use Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem;
 use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
 use Lovata\OrdersShopaholic\Classes\Processor\OfferCartPositionProcessor;
-use Lovata\OrdersShopaholic\Models\ShippingType;
 
 /**
  * Class Cart
@@ -45,7 +45,7 @@ class Cart extends ComponentBase
     {
         $arRequestData = Input::get('cart');
         $obActiveShippingType = $this->getActiveShippingTypeFromRequest();
-        if (!empty($obActiveShippingType)) {
+        if (!empty($obActiveShippingType) && $obActiveShippingType->isNotEmpty()) {
             CartProcessor::instance()->setActiveShippingType($obActiveShippingType);
         }
         
@@ -63,7 +63,7 @@ class Cart extends ComponentBase
     {
         $arRequestData = Input::get('cart');
         $obActiveShippingType = $this->getActiveShippingTypeFromRequest();
-        if (!empty($obActiveShippingType)) {
+        if (!empty($obActiveShippingType) && $obActiveShippingType->isNotEmpty()) {
             CartProcessor::instance()->setActiveShippingType($obActiveShippingType);
         }
 
@@ -81,7 +81,7 @@ class Cart extends ComponentBase
     {
         $arRequestData = Input::get('cart');
         $obActiveShippingType = $this->getActiveShippingTypeFromRequest();
-        if (!empty($obActiveShippingType)) {
+        if (!empty($obActiveShippingType) && $obActiveShippingType->isNotEmpty()) {
             CartProcessor::instance()->setActiveShippingType($obActiveShippingType);
         }
 
@@ -112,14 +112,14 @@ class Cart extends ComponentBase
         }
 
         //Get shipping type object
-        $obShippingType = ShippingType::active()->find($iShippingTypeID);
-        if (empty($obShippingType)) {
+        $obShippingTypeItem = ShippingTypeItem::make($iShippingTypeID);
+        if ($obShippingTypeItem->isEmpty()) {
             $sMessage = Lang::get('lovata.toolbox::lang.message.e_not_correct_request');
             Result::setFalse()->setMessage($sMessage);
             return Result::get();
         }
 
-        CartProcessor::instance()->setActiveShippingType($obShippingType);
+        CartProcessor::instance()->setActiveShippingType($obShippingTypeItem);
         Result::setData(CartProcessor::instance()->getCartData());
 
         return Result::get();
@@ -136,12 +136,12 @@ class Cart extends ComponentBase
 
     /**
      * Get offers list from cart
-     * @param ShippingType|\Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem $obShippingType
+     * @param \Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem $obShippingTypeItem
      * @return \Lovata\OrdersShopaholic\Classes\Collection\CartPositionCollection
      */
-    public function get($obShippingType = null)
+    public function get($obShippingTypeItem = null)
     {
-        CartProcessor::instance()->setActiveShippingType($obShippingType);
+        CartProcessor::instance()->setActiveShippingType($obShippingTypeItem);
 
         return CartProcessor::instance()->get();
     }
@@ -214,7 +214,7 @@ class Cart extends ComponentBase
 
     /**
      * Get total position price data
-     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer
+     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\TotalPriceContainer
      */
     public function getTotalPriceData()
     {
@@ -224,17 +224,26 @@ class Cart extends ComponentBase
     }
 
     /**
-     * Get currency value
+     * Get currency symbol
      * @return null|string
      */
     public function getCurrency()
     {
-        return CurrencyHelper::instance()->getActive();
+        return CurrencyHelper::instance()->getActiveCurrencySymbol();
+    }
+
+    /**
+     * Get currency code
+     * @return null|string
+     */
+    public function getCurrencyCode()
+    {
+        return CurrencyHelper::instance()->getActiveCurrencyCode();
     }
 
     /**
      * Get active shipping type from request
-     * @return ShippingType|null
+     * @return ShippingTypeItem
      */
     protected function getActiveShippingTypeFromRequest()
     {
@@ -243,9 +252,9 @@ class Cart extends ComponentBase
             return null;
         }
 
-        //Get shipping type object
-        $obShippingType = ShippingType::active()->find($iShippingTypeID);
+        //Get shipping type item
+        $obShippingTypeItem = ShippingTypeItem::make($iShippingTypeID);
 
-        return $obShippingType;
+        return $obShippingTypeItem;
     }
 }

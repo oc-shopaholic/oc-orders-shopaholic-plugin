@@ -3,6 +3,8 @@
 use Lovata\Toolbox\Classes\Item\ElementItem;
 use Lovata\Toolbox\Traits\Helpers\PriceHelperTrait;
 
+use Lovata\Shopaholic\Classes\Item\CurrencyItem;
+
 use Lovata\OrdersShopaholic\Models\Order;
 use Lovata\OrdersShopaholic\Classes\Collection\OrderPositionCollection;
 use Lovata\OrdersShopaholic\Classes\Collection\OrderPromoMechanismCollection;
@@ -16,7 +18,9 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderItemPromoMechanismProces
  * @property int                                                                             $id
  * @property string                                                                          $order_number
  * @property string                                                                          $secret_key
- * @property string                                                                          $currency
+ * @property CurrencyItem                                                                    $currency
+ * @property string                                                                          $currency_symbol
+ * @property string                                                                          $currency_code
  * @property int                                                                             $user_id
  * @property int                                                                             $status_id
  * @property int                                                                             $payment_method_id
@@ -27,24 +31,25 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderItemPromoMechanismProces
  * @property float                                                                           $old_shipping_price_value
  * @property string                                                                          $discount_shipping_price
  * @property float                                                                           $discount_shipping_price_value
- * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer                  $shipping_price_data
+ * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer              $shipping_price_data
  * @property string                                                                          $total_price
  * @property float                                                                           $total_price_value
  * @property string                                                                          $old_total_price
  * @property float                                                                           $old_total_price_value
  * @property string                                                                          $discount_total_price
  * @property float                                                                           $discount_total_price_value
- * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer                  $total_price_data
+ * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\TotalPriceContainer             $total_price_data
  * @property string                                                                          $position_total_price
  * @property float                                                                           $position_total_price_value
  * @property string                                                                          $old_position_total_price
  * @property float                                                                           $old_position_total_price_value
  * @property string                                                                          $discount_position_total_price
  * @property float                                                                           $discount_position_total_price_value
- * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer                  $position_total_price_data
+ * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\TotalPriceContainer             $position_total_price_data
  * @property array                                                                           $property
  * @property array                                                                           $order_position_id
  * @property array                                                                           $order_promo_mechanism_id
+ * @property float                                                                           $shipping_tax_percent
  *
  * @property \October\Rain\Argon\Argon                                                       $created_at
  * @property \October\Rain\Argon\Argon                                                       $updated_at
@@ -97,6 +102,10 @@ class OrderItem extends ElementItem
             'class' => OrderPromoMechanismCollection::class,
             'field' => 'order_promo_mechanism_id',
         ],
+        'currency'              => [
+            'class' => CurrencyItem::class,
+            'field' => 'currency_id',
+        ],
     ];
 
     /** @var Order */
@@ -146,7 +155,7 @@ class OrderItem extends ElementItem
 
     /**
      * Get price container object for total price
-     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer
+     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\TotalPriceContainer
      */
     protected function getTotalPriceDataAttribute()
     {
@@ -157,7 +166,7 @@ class OrderItem extends ElementItem
 
     /**
      * Get price container object for shipping price
-     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer
+     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer
      */
     protected function getShippingPriceDataAttribute()
     {
@@ -168,7 +177,7 @@ class OrderItem extends ElementItem
 
     /**
      * Get price container object for position total price
-     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\PriceContainer
+     * @return \Lovata\OrdersShopaholic\Classes\PromoMechanism\TotalPriceContainer
      */
     protected function getPositionTotalPriceDataAttribute()
     {
@@ -256,5 +265,23 @@ class OrderItem extends ElementItem
     protected function getDiscountTotalPriceValueAttribute()
     {
         return $this->total_price_data->discount_price_value;
+    }
+
+    /**
+     * Get currency_symbol value
+     * @return float
+     */
+    protected function getCurrencySymbolAttribute()
+    {
+        return $this->currency->symbol;
+    }
+
+    /**
+     * Get currency_code value
+     * @return float
+     */
+    protected function getCurrencyCodeAttribute()
+    {
+        return $this->currency->code;
     }
 }

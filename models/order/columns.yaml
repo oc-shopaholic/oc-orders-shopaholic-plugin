@@ -44,7 +44,8 @@ columns:
         sortable: true
     total_price:
         label: 'lovata.ordersshopaholic::lang.field.total_price'
-        type: text
+        type: partial
+        path: $/lovata/ordersshopaholic/controllers/orders/_total_price_column.htm
         searchable: false
         sortable: false
     id:

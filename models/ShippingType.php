@@ -8,6 +8,7 @@ use October\Rain\Database\Traits\Validation;
 use Kharanenka\Scope\ActiveField;
 use Kharanenka\Scope\CodeField;
 
+use Lovata\Toolbox\Classes\Helper\PriceHelper;
 use Lovata\Toolbox\Traits\Helpers\TraitCached;
 use Lovata\Toolbox\Traits\Helpers\PriceHelperTrait;
 
@@ -113,20 +114,17 @@ class ShippingType extends Model
     }
 
     /**
-     * Get price value
+     * Get full price value
      * @return float
      */
-    protected function getPriceValueAttribute()
+    public function getFullPriceValue()
     {
         $fShippingPrice = Event::fire(self::EVENT_GET_SHIPPING_PRICE, [$this], true);
         if ($fShippingPrice !== null) {
-            return (float) $fShippingPrice;
+            return PriceHelper::round((float) $fShippingPrice);
         }
 
-        $fShippingPrice = 0;
-        if (isset($this->attributes['price'])) {
-            $fShippingPrice = (float) $this->attributes['price'];
-        }
+        $fShippingPrice = $this->price_value;
 
         return $fShippingPrice;
     }

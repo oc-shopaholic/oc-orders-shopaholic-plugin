@@ -1,0 +1,17 @@
+<?php
+
+/** @var \Lovata\OrdersShopaholic\Models\Order $record */
+if (empty($record)) {
+    return;
+}
+
+$obPriceData = $record->total_price_data;
+if ($obPriceData->price_with_tax_value == $obPriceData->price_without_tax_value) {
+    echo $obPriceData->price;
+} else {
+    echo trans('lovata.shopaholic::lang.field.without_tax').': '.$obPriceData->price_without_tax.' '.$record->currency_symbol;
+    echo '<br>';
+    echo trans('lovata.shopaholic::lang.field.tax').': '.$obPriceData->tax_price.' '.$record->currency_symbol;
+    echo '<br>';
+    echo trans('lovata.shopaholic::lang.field.with_tax').': '.$obPriceData->price_with_tax.' '.$record->currency_symbol;
+}
