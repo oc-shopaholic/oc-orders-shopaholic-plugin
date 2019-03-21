@@ -100,19 +100,30 @@ abstract class AbstractCartPositionProcessor
     /**
      * Remove position from current cart
      * @param int $iPositionID
+     * @param string $sType
      * @return void
      * @throws \Exception
      */
-    public function remove($iPositionID)
+    public function remove($iPositionID, $sType = 'offer')
     {
         if (empty($iPositionID)) {
             return;
         }
 
-        $this->arPositionData = [
-            'item_id'   => $iPositionID,
-            'item_type' => static::MODEL_CLASS,
-        ];
+        if($sType == 'position') {
+
+            $this->arPositionData = [
+                'id'        => $iPositionID,
+                'item_type' => static::MODEL_CLASS,
+            ];
+
+        } else {
+
+            $this->arPositionData = [
+                'item_id'   => $iPositionID,
+                'item_type' => static::MODEL_CLASS,
+            ];
+        }
 
         $this->findPosition();
         if (empty($this->obCartPosition)) {
@@ -142,9 +153,44 @@ abstract class AbstractCartPositionProcessor
      */
     protected function findPosition()
     {
-        $this->obCartPosition = CartPosition::getByCart($this->obCart->id)
-            ->getByItemType($this->arPositionData['item_type'])
-            ->getByItemID($this->arPositionData['item_id'])
-            ->first();
+
+        if(empty($this->arPositionData['id'])) {
+
+            $property = $this->arPositionData["property"] ?? [];
+
+            $positions = CartPosition::getByCart($this->obCart->id)
+                ->getByItemType($this->arPositionData['item_type'])
+                ->getByItemID($this->arPositionData['item_id'])
+                ->get();
+
+            foreach ($positions as $position) {
+
+                if(empty($property) && empty($position->property)) {
+
+                    $this->obCartPosition = $position;
+
+                    break;
+
+                } elseif(
+                    !array_diff((array)$property, (array)$position->property) && 
+                    !array_diff((array)$position->property, (array)$property)
+                ) {
+
+                    $this->obCartPosition = $position;
+
+                    break;
+
+                } else {
+
+                    $this->obCartPosition = null;
+                }
+            }
+
+        } else {
+
+            $this->obCartPosition = CartPosition::getByCart($this->obCart->id)
+                ->getByItemType($this->arPositionData['item_type'])
+                ->find($this->arPositionData['id']);
+        }
     }
 }

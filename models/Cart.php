@@ -35,6 +35,18 @@ class Cart extends Model
 
     protected $fillable = [
         'user_id',
+        'email',
+        'user_data',
+        'property',
+        'billing_address',
+        'shipping_address',
+    ];
+
+    public $jsonable = [
+        'property',
+        'user_data',
+        'billing_address',
+        'shipping_address',
     ];
 
     protected $dates = ['created_at', 'updated_at'];

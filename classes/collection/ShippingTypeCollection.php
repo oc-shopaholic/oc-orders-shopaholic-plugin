@@ -36,4 +36,29 @@ class ShippingTypeCollection extends ElementCollection
 
         return $this->intersect($arElementIDList);
     }
+
+    /**
+     * Apply filter by restrictions
+     * @return $this
+     */
+    public function available($arData = null)
+    {
+
+        $arElementIDList = [];
+
+        $obElementList = $this->active();
+
+        if($obElementList->isNotEmpty()) {
+
+            foreach ($obElementList as $obElement) {
+
+                if($obElement->isAvailable($arData)) {
+
+                    $arElementIDList[] = $obElement->id;
+                }
+            }
+        }
+
+        return $this->intersect($arElementIDList);
+    }
 }

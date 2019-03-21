@@ -110,6 +110,15 @@
 1.18.0:
     - 'Added calculate_per_unit setting parameter in PromoMechanism model.'
 1.19.0:
+    - 'Added property and method fields in ShippingType model'
+    - table_update_shipping_types_add_method_and_property_fields.php
+1.19.1:
+    - 'Added ShippingRestriction model'
+    - create_shipping_restrictions_table.php
+1.19.2:
+    - 'Added email, user_data, shipping_address, billing_address, shipping_type_id, payment_method_id, property fields in Cart model'
+    - table_update_carts_add_fields.php
+1.19.3:
     - '!!! Added Taxes. Added multicyrrency. Requires Shopaholic plugin version 1.21.0 and later.'
     - table_update_taxes_add_applied_to_shipping_price.php
     - table_update_order_positions_add_tax_percent_field.php

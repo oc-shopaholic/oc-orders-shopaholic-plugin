@@ -3,7 +3,7 @@
 use Input;
 use Event;
 use Redirect;
-
+use Exception;
 use Kharanenka\Helper\Result;
 use Lovata\Toolbox\Classes\Helper\PageHelper;
 use Lovata\Toolbox\Classes\Helper\UserHelper;
@@ -14,6 +14,7 @@ use Lovata\Shopaholic\Models\Settings;
 use Lovata\Shopaholic\Classes\Helper\CurrencyHelper;
 use Lovata\OrdersShopaholic\Models\UserAddress;
 use Lovata\OrdersShopaholic\Classes\Processor\OrderProcessor;
+use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
 
 /**
  * Class MakeOrder
@@ -184,6 +185,13 @@ class MakeOrder extends ComponentSubmitForm
         $this->arOrderData = (array) $arOrderData;
         $this->arUserData = (array) $arUserData;
 
+        $cart = CartProcessor::instance()->getCartObject();
+
+        if(is_object($cart) && empty($this->arUserData)) {
+
+            $this->arUserData = $cart->user_data ?? [];
+        }
+
         //Find or create new user
         if (empty($this->obUser) && $this->bCreateNewUser) {
             $this->findOrCreateUser();
@@ -318,6 +326,7 @@ class MakeOrder extends ComponentSubmitForm
      */
     protected function createUser()
     {
+
         if (empty($this->arUserData)) {
             return;
         }
@@ -358,6 +367,21 @@ class MakeOrder extends ComponentSubmitForm
 
         $this->arShippingAddressOrder = $this->addOrderAddress(UserAddress::ADDRESS_TYPE_SIPPING, $arShippingAddressData);
         $this->arBillingAddressOrder = $this->addOrderAddress(UserAddress::ADDRESS_TYPE_BILLING, $arBillingAddressData);
+
+        $cart = CartProcessor::instance()->getCartObject();
+
+        if(is_object($cart)) {
+
+            if(empty($this->arShippingAddressOrder)) {
+
+                $this->arShippingAddressOrder = $cart->shipping_address ?? [];
+            }
+
+            if(empty($this->arBillingAddressOrder)) {
+
+                $this->arBillingAddressOrder = $cart->billing_address ?? [];
+            }
+        }
     }
 
     /**
@@ -469,5 +493,75 @@ class MakeOrder extends ComponentSubmitForm
         array_forget($arResult, ['id', 'type']);
 
         return $arResult;
+    }
+
+
+    /**
+     * Update cart
+     * @return array
+     */
+    public function onUpdate()
+    {
+        $cart = CartProcessor::instance()->getCartObject();
+
+        if(is_object($cart)) {
+
+            try {
+
+                $user_data = Input::get('user') ?? [];
+
+                if(!empty($user_data)) {
+
+                    $cart->user_data = $user_data;
+
+                    $cart->email = $cart->user_data['email'] ?? null;
+                }
+
+                $property = Input::get('property') ?? [];
+
+                if(!empty($property)) {
+
+                    $cart->property = $property;
+                }
+
+                $billing_address = Input::get('billing_address') ?? [];
+
+                if(!empty($billing_address)) {
+
+                    $cart->billing_address = $this->prepareAddressData(UserAddress::ADDRESS_TYPE_BILLING, $billing_address);
+                }
+
+                $shipping_address = Input::get('shipping_address') ?? [];
+
+                if(!empty($shipping_address)) {
+
+                    $cart->shipping_address = $this->prepareAddressData(UserAddress::ADDRESS_TYPE_SIPPING, $shipping_address);
+                }
+
+                $shipping_type_id = Input::get('shipping_type_id') ?? null;
+
+                if(!empty($shipping_type_id)) {
+
+                    $cart->shipping_type_id = $shipping_type_id;
+                }
+
+                $payment_method_id = Input::get('payment_method_id') ?? null;
+
+                if(!empty($payment_method_id)) {
+
+                    $cart->payment_method_id = $payment_method_id;
+                }
+
+                $cart->save();
+
+                return Result::setTrue()->get();
+
+            } catch (Exception $e) {
+
+                return Result::setFalse()->setMessage( $e->getMessage() )->get();
+            }
+        }
+
+        return Result::setFalse()->get();
     }
 }

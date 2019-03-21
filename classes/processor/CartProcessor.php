@@ -118,10 +118,11 @@ class CartProcessor
      * Remove position from current cart
      * @param array  $arPositionList
      * @param string $sPositionProcessor
+     * @param string $sType
      * @return bool
      * @throws
      */
-    public function remove($arPositionList, $sPositionProcessor)
+    public function remove($arPositionList, $sPositionProcessor, $sType = 'offer')
     {
         if (!$this->validateRequest($arPositionList, $sPositionProcessor)) {
             return false;
@@ -132,7 +133,7 @@ class CartProcessor
 
         //Process position list and remove position from cart
         foreach ($arPositionList as $iPositionID) {
-            $obPositionProcessor->remove($iPositionID);
+            $obPositionProcessor->remove($iPositionID, $sType);
         }
 
         $this->updateCartData();
@@ -258,14 +259,23 @@ class CartProcessor
     {
         $obCartPositionList = $this->get();
 
+        $cart = $this->getCartObject();
+
         $arResult = [
             'position'             => [],
-            'shipping_type_id'     => null,
+            // 'shipping_type_id'     => null,
             'shipping_price'       => $this->getShippingPriceData()->getData(),
             'position_total_price' => $this->getCartPositionTotalPriceData()->getData(),
             'total_price'          => $this->getCartTotalPriceData()->getData(),
             'quantity'             => 0,
             'total_quantity'       => 0,
+
+            'payment_method_id'    => $cart->payment_method_id,
+            'shipping_type_id'     => $this->obShippingType->id ?? $cart->shipping_type_id,
+            'user_data'            => $cart->user_data,
+            'shipping_address'     => $cart->shipping_address,
+            'billing_address'      => $cart->billing_address,
+            'property'             => $cart->property,
         ];
 
         if ($obCartPositionList->isEmpty()) {
