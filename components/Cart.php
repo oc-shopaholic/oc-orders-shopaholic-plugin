@@ -85,7 +85,9 @@ class Cart extends ComponentBase
             CartProcessor::instance()->setActiveShippingType($obActiveShippingType);
         }
 
-        CartProcessor::instance()->remove($arRequestData, OfferCartPositionProcessor::class);
+        $sType = Input::get('type') ?? 'offer';
+
+        CartProcessor::instance()->remove($arRequestData, OfferCartPositionProcessor::class, $sType);
         Result::setData(CartProcessor::instance()->getCartData());
 
         return Result::get();

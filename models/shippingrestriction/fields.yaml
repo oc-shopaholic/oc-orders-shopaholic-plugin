@@ -1,0 +1,40 @@
+# ===================================
+#  Form Field Definitions
+# ===================================
+
+fields:
+    active:
+        label: 'lovata.toolbox::lang.field.active'
+        span: left
+        default: 1
+        type: switch
+    name:
+        label: 'lovata.toolbox::lang.field.name'
+        span: full
+        type: text
+tabs:
+    fields:
+        code:
+            label: 'lovata.toolbox::lang.field.code'
+            tab: 'lovata.toolbox::lang.tab.settings'
+            span: left
+            type: text
+        sort_order:
+            label: 'lovata.toolbox::lang.field.sort_order'
+            tab: 'lovata.toolbox::lang.tab.settings'
+            span: right
+            default: 20
+            type: number
+        description:
+            label: 'lovata.toolbox::lang.field.description'
+            tab: 'lovata.toolbox::lang.tab.settings'
+            span: full
+            type: textarea
+            size: small
+        restriction:
+            label: 'lovata.ordersshopaholic::lang.field.restriction'
+            tab: 'lovata.toolbox::lang.tab.settings'
+            span: full
+            type: dropdown
+            options: restrictionOptions
+            required: true

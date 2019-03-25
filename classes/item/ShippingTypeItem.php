@@ -8,6 +8,7 @@ use Lovata\Shopaholic\Classes\Helper\TaxHelper;
 use Lovata\Shopaholic\Classes\Helper\CurrencyHelper;
 
 use Lovata\OrdersShopaholic\Models\ShippingType;
+use Lovata\OrdersShopaholic\Models\ShippingRestriction;
 use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
 use Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer;
 
@@ -243,5 +244,39 @@ class ShippingTypeItem extends ElementItem
         ];
 
         return $arResult;
+    }
+
+    public function isAvailable($arData = null) {
+
+        if(is_null($arData)) {
+
+            $arData = CartProcessor::instance()->getCartData();
+        }
+
+        $isOk = true;
+
+        $obRestrictionList = ShippingRestriction::where('shipping_type_id', $this->id)->get();
+
+        foreach ($obRestrictionList as $obj) {
+
+            if(!empty($obj->restriction) && class_exists($obj->restriction)) {
+
+                try {
+
+                    if(!(new $obj->restriction)->run($obj, $arData)) {
+
+                        $isOk = false;
+
+                        break;
+                    }
+
+                } catch(Exeception $e) {
+
+                    continue;
+                }
+            }
+        }
+
+        return $isOk;
     }
 }

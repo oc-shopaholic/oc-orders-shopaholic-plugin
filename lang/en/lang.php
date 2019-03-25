@@ -23,6 +23,7 @@
     'tab'                  => [
         'info'             => 'Order data',
         'offers_info'      => 'Offer list',
+        'shipping_restrictions_info' => 'Restrictions list',
         'order_settings'   => 'Order and cart',
         'gateway'          => 'Gateway',
         'payment_data'     => 'Payment data',
@@ -52,6 +53,7 @@
         'complete'    => 'Complete',
         'in_progress' => 'In progress',
 
+        'restriction'                    => 'Restriction',
         'total_price'                    => 'Total price',
         'old_total_price'                => 'Old total price',
         'position_price'                 => 'Position price',
@@ -124,6 +126,17 @@
         'order_position_property' => 'Additional order position properties',
         'promo_mechanism'         => 'Promo mechanism',
     ],
+    'restriction' => [
+        'name'       => 'restriction',
+        'list_title' => 'Restriction list',
+        'property' => [
+            'price_min' => 'Price min',
+            'price_max' => 'Price max'
+        ],
+        'handler' => [
+            'by_price' => 'By Price',
+        ],
+    ],
     'order'                => [
         'name'       => 'order',
         'list_title' => 'Order list',
@@ -147,6 +160,10 @@
     'shipping_type'        => [
         'name'       => 'shipping type',
         'list_title' => 'Shipping types',
+        'handler' => [
+            'empty_or_not_exists' => 'Shipping handler empty or not exists',
+            'standard' => 'Standard',
+        ],
     ],
     'order_property'       => [
         'name'       => 'property',
