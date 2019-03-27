@@ -97,9 +97,9 @@ class OrderPage extends ElementPage
 
             return Redirect::to($sRedirectURL);
         } else if ($obPaymentGateway->isSuccessful()) {
-            Result::setTrue($this->obPaymentGateway->getResponse());
+            Result::setTrue($obPaymentGateway->getResponse());
         } else {
-            Result::setFalse($this->obPaymentGateway->getResponse());
+            Result::setFalse($obPaymentGateway->getResponse());
         }
 
         return Result::setMessage($obPaymentGateway->getMessage())->get();
