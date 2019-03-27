@@ -5,6 +5,8 @@ use Input;
 use Cms\Classes\ComponentBase;
 use Kharanenka\Helper\Result;
 
+use Lovata\Toolbox\Traits\Helpers\TraitValidationHelper;
+
 use Lovata\Shopaholic\Classes\Helper\CurrencyHelper;
 use Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem;
 use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
@@ -26,6 +28,8 @@ use Lovata\OrdersShopaholic\Classes\Processor\OfferCartPositionProcessor;
  */
 class Cart extends ComponentBase
 {
+    use TraitValidationHelper;
+
     /**
      * @return array
      */
@@ -48,7 +52,7 @@ class Cart extends ComponentBase
         if (!empty($obActiveShippingType) && $obActiveShippingType->isNotEmpty()) {
             CartProcessor::instance()->setActiveShippingType($obActiveShippingType);
         }
-        
+
         CartProcessor::instance()->add($arRequestData, OfferCartPositionProcessor::class);
         Result::setData(CartProcessor::instance()->getCartData());
 
@@ -85,7 +89,7 @@ class Cart extends ComponentBase
             CartProcessor::instance()->setActiveShippingType($obActiveShippingType);
         }
 
-        $sType = Input::get('type') ?? 'offer';
+        $sType = Input::get('type', 'offer');
 
         CartProcessor::instance()->remove($arRequestData, OfferCartPositionProcessor::class, $sType);
         Result::setData(CartProcessor::instance()->getCartData());
@@ -134,6 +138,40 @@ class Cart extends ComponentBase
     public function onGetData()
     {
         return CartProcessor::instance()->getCartData();
+    }
+
+    /**
+     * Update cart
+     * @return array
+     */
+    public function onSaveData()
+    {
+        $arUserData = (array) Input::get('user');
+        $arCartProperty = (array) Input::get('property');
+        $arBillingAddress = (array) Input::get('billing_address');
+        $arShippingAddress = (array) Input::get('shipping_address');
+
+        $obCart = CartProcessor::instance()->getCartObject();
+
+        try {
+
+            $obCart->user_data = array_merge((array) $obCart->user_data, $arUserData);
+            $obCart->email = array_get($obCart->user_data, 'email');
+
+            $obCart->property = array_merge($obCart->property, $arCartProperty);
+
+            $obCart->billing_address = array_merge($obCart->billing_address, $arBillingAddress);
+            $obCart->shipping_address = array_merge($obCart->shipping_address, $arShippingAddress);
+
+            $obCart->shipping_type_id = Input::get('shipping_type_id', $obCart->shipping_type_id);
+            $obCart->payment_method_id = Input::get('payment_method_id', $obCart->payment_method_id);
+
+            $obCart->save();
+        } catch (\October\Rain\Database\ModelException $obException) {
+            $this->processValidationError($obException);
+        }
+
+        return Result::get();
     }
 
     /**

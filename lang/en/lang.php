@@ -21,16 +21,16 @@
         'user_address_description'        => 'Create/update/remove',
     ],
     'tab'                  => [
-        'info'             => 'Order data',
-        'offers_info'      => 'Offer list',
-        'shipping_restrictions_info' => 'Restrictions list',
-        'order_settings'   => 'Order and cart',
-        'gateway'          => 'Gateway',
-        'payment_data'     => 'Payment data',
-        'discount_info'    => 'Discount info',
-        'billing_address'  => 'Billing address',
-        'shipping_address' => 'Shipping address',
-        'tasks'            => 'Tasks',
+        'info'                       => 'Order data',
+        'offers_info'                => 'Offer list',
+        'shipping_restrictions_info' => 'Restrictions',
+        'order_settings'             => 'Order and cart',
+        'gateway'                    => 'Gateway',
+        'payment_data'               => 'Payment data',
+        'discount_info'              => 'Discount info',
+        'billing_address'            => 'Billing address',
+        'shipping_address'           => 'Shipping address',
+        'tasks'                      => 'Tasks',
     ],
     'message'              => [
         'empty_cart'           => 'Cart is empty',
@@ -95,6 +95,7 @@
         'task_mail_template_description' => 'If mail template is not selected, the notification will not be sent.',
         'notification_sent'              => 'Notification sent',
         'applied_to_shipping_price'      => 'Applied to shipping price',
+        'shipping_type_api_class'        => 'API method',
 
         'order_discount_log_position_total_price' => 'List of applied discounts (position total price)',
         'order_discount_log_sipping_price'        => 'List of applied discounts (sipping price)',
@@ -105,36 +106,41 @@
         'middle_name' => 'Middle name',
     ],
     'settings'             => [
-        'cart_cookie_lifetime'                       => 'Life time of cart ID in cookie (min.)',
-        'check_offer_quantity'                       => 'Check the available quantity of the product when creating an order',
-        'decrement_offer_quantity'                   => 'Automatic reduction of the available quantity of offers when creating an order',
-        'create_new_user'                            => 'Automatically create a new user when creating an order',
-        'generate_fake_email'                        => 'When creating a new user, generate a fake email, if the email field is empty',
-        'send_email_after_creating_order'            => 'Send email after creating an order',
-        'creating_order_mail_template'               => 'Mail template of creating orders (for users)',
-        'creating_order_manager_mail_template'       => 'Mail template of creating orders (for managers)',
-        'creating_order_manager_email_list'          => 'Managers email list',
+        'cart_cookie_lifetime'                 => 'Life time of cart ID in cookie (min.)',
+        'check_offer_quantity'                 => 'Check the available quantity of the product when creating an order',
+        'decrement_offer_quantity'             => 'Automatic reduction of the available quantity of offers when creating an order',
+        'create_new_user'                      => 'Automatically create a new user when creating an order',
+        'generate_fake_email'                  => 'When creating a new user, generate a fake email, if the email field is empty',
+        'send_email_after_creating_order'      => 'Send email after creating an order',
+        'creating_order_mail_template'         => 'Mail template of creating orders (for users)',
+        'creating_order_manager_mail_template' => 'Mail template of creating orders (for managers)',
+        'creating_order_manager_email_list'    => 'Managers email list',
 
         'order_create_email' => 'Email for sending mail when creating an order',
     ],
     'menu'                 => [
-        'orders'                  => 'Orders',
-        'statuses'                => 'Statuses',
-        'payment_methods'         => 'Payment methods',
-        'shipping_types'          => 'Shipping types',
-        'order_property'          => 'Additional order properties',
-        'order_position_property' => 'Additional order position properties',
-        'promo_mechanism'         => 'Promo mechanism',
+        'orders'                              => 'Orders',
+        'statuses'                            => 'Order statuses',
+        'statuses_description'                => 'Manage order statuses',
+        'payment_methods'                     => 'Payment methods',
+        'payment_methods_description'         => 'Manage payment methods',
+        'shipping_types'                      => 'Shipping types',
+        'shipping_types_description'          => 'Manage shipping types',
+        'order_property'                      => 'Additional order properties',
+        'order_property_description'          => 'Manage additional order properties',
+        'order_position_property'             => 'Additional order position properties',
+        'order_position_property_description' => 'Manage additional order position properties',
+        'promo_mechanism'                     => 'Promo mechanism',
     ],
-    'restriction' => [
+    'restriction'          => [
         'name'       => 'restriction',
         'list_title' => 'Restriction list',
-        'property' => [
+        'property'   => [
             'price_min' => 'Price min',
             'price_max' => 'Price max'
         ],
-        'handler' => [
-            'by_price' => 'By Price',
+        'handler'    => [
+            'by_total_price' => 'By total price of cart positions',
         ],
     ],
     'order'                => [
@@ -160,10 +166,6 @@
     'shipping_type'        => [
         'name'       => 'shipping type',
         'list_title' => 'Shipping types',
-        'handler' => [
-            'empty_or_not_exists' => 'Shipping handler empty or not exists',
-            'standard' => 'Standard',
-        ],
     ],
     'order_property'       => [
         'name'       => 'property',

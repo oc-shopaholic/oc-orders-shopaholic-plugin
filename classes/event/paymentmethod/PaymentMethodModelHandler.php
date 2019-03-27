@@ -1,19 +1,19 @@
-<?php namespace Lovata\OrdersShopaholic\Classes\Event;
+<?php namespace Lovata\OrdersShopaholic\Classes\Event\PaymentMethod;
 
 use Lovata\Toolbox\Classes\Event\ModelHandler;
 
-use Lovata\OrdersShopaholic\Models\Status;
-use Lovata\OrdersShopaholic\Classes\Item\StatusItem;
-use Lovata\OrdersShopaholic\Classes\Store\StatusListStore;
+use Lovata\OrdersShopaholic\Models\PaymentMethod;
+use Lovata\OrdersShopaholic\Classes\Item\PaymentMethodItem;
+use Lovata\OrdersShopaholic\Classes\Store\PaymentMethodListStore;
 
 /**
- * Class StatusModelHandler
- * @package Lovata\OrdersShopaholic\Classes\Event
- * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
+ * Class PaymentMethodModelHandler
+ * @package Lovata\OrdersShopaholic\Classes\Event\PaymentMethod
+ * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  */
-class StatusModelHandler extends ModelHandler
+class PaymentMethodModelHandler extends ModelHandler
 {
-    /** @var Status */
+    /** @var PaymentMethod */
     protected $obElement;
 
     /**
@@ -24,7 +24,7 @@ class StatusModelHandler extends ModelHandler
     {
         parent::subscribe($obEvent);
 
-        $obEvent->listen('shopaholic.order_status.update.sorting', function () {
+        $obEvent->listen('shopaholic.payment_method.update.sorting', function () {
             $this->clearSortingList();
         });
     }
@@ -35,16 +35,16 @@ class StatusModelHandler extends ModelHandler
      */
     protected function getModelClass()
     {
-        return Status::class;
+        return PaymentMethod::class;
     }
-
+    
     /**
      * Get item class name
      * @return string
      */
     protected function getItemClass()
     {
-        return StatusItem::class;
+        return PaymentMethodItem::class;
     }
 
     /**
@@ -63,7 +63,7 @@ class StatusModelHandler extends ModelHandler
     {
         parent::afterSave();
 
-        $this->checkFieldChanges('is_user_show', StatusListStore::instance()->is_user_show);
+        $this->checkFieldChanges('active', PaymentMethodListStore::instance()->active);
     }
 
     /**
@@ -74,8 +74,8 @@ class StatusModelHandler extends ModelHandler
         parent::afterDelete();
         $this->clearSortingList();
 
-        if ($this->obElement->is_user_show) {
-            StatusListStore::instance()->is_user_show->clear();
+        if ($this->obElement->active) {
+            PaymentMethodListStore::instance()->active->clear();
         }
     }
 
@@ -84,6 +84,6 @@ class StatusModelHandler extends ModelHandler
      */
     public function clearSortingList()
     {
-        StatusListStore::instance()->sorting->clear();
+        PaymentMethodListStore::instance()->sorting->clear();
     }
 }

@@ -2,21 +2,41 @@
 
 use Event;
 use Model;
+use October\Rain\Database\Traits\Validation;
+
 use Kharanenka\Scope\ActiveField;
 use Kharanenka\Scope\CodeField;
-use October\Rain\Database\Traits\Validation;
-use Lovata\Toolbox\Traits\Helpers\TraitCached;
+
 use Lovata\Toolbox\Traits\Models\SetPropertyAttributeTrait;
+use Lovata\OrdersShopaholic\Classes\Restriction\RestrictionByTotalPrice;
 
 /**
- * ShippingRestriction Model
+ * Class ShippingRestriction
+ * @package Lovata\OrdersShopaholic\Models
+ * @author  Tsagan Noniev, deploy@rubium.ru, Rubium Web
+ *
+ * @mixin \October\Rain\Database\Builder
+ * @mixin \Eloquent
+ *
+ * @property int                                              $id
+ * @property bool                                             $active
+ * @property string                                           $name
+ * @property string                                           $code
+ * @property string                                           $restriction
+ * @property string                                           $description
+ * @property string                                           $property
+ * @property int                                              $sort_order
+ * @property \October\Rain\Argon\Argon                        $created_at
+ * @property \October\Rain\Argon\Argon                        $updated_at
+ *
+ * @property \October\Rain\Database\Collection|ShippingType[] $shipping_type
+ * @method static ShippingType|\October\Rain\Database\Relations\BelongsToMany shipping_type()
  */
 class ShippingRestriction extends Model
 {
-    use ActiveField;
     use Validation;
+    use ActiveField;
     use CodeField;
-    use TraitCached;
     use SetPropertyAttributeTrait;
 
     const EVENT_GET_SHIPPING_RESTRICTION_LIST = 'shopaholic.shippingtype.get.restriction.list';
@@ -32,35 +52,14 @@ class ShippingRestriction extends Model
         'code' => 'required|unique:lovata_ordersshopaholic_shipping_restrictions',
     ];
 
-    /**
-     * @var array Guarded fields
-     */
     protected $guarded = ['*'];
-
-    /**
-     * @var array Fillable fields
-     */
     protected $fillable = [
         'active',
         'code',
         'name',
-        'sort_order',
         'description',
         'property',
         'restriction',
-        'shipping_type',
-    ];
-
-    public $cached = [
-        'id',
-        'active',
-        'code',
-        'name',
-        'sort_order',
-        'description',
-        'property',
-        'restriction',
-        'shipping_type',
     ];
 
     public $jsonable = ['property'];
@@ -71,36 +70,42 @@ class ShippingRestriction extends Model
      */
     public $hasOne = [];
     public $hasMany = [];
-    public $belongsTo = [
+    public $belongsTo = [];
+    public $belongsToMany = [
         'shipping_type' => [
             ShippingType::class,
-            'key' => 'shipping_type_id',
+            'table' => 'lovata_ordersshopaholic_shipping_restrictions_link',
         ],
     ];
-    public $belongsToMany = [];
     public $morphTo = [];
     public $morphOne = [];
     public $morphMany = [];
     public $attachOne = [];
     public $attachMany = [];
 
-    public function restrictionOptions() {
+    /**
+     * Get restriction options
+     * @return array
+     */
+    public function getRestrictionOptions()
+    {
+        $arResult = [RestrictionByTotalPrice::class => 'lovata.ordersshopaholic::lang.restriction.handler.by_total_price'];
 
-        $eventResult = Event::fire(self::EVENT_GET_SHIPPING_RESTRICTION_LIST);
-
-        $options = [];
-
-        if (is_array($eventResult)) {
-        
-            foreach ($eventResult as $shipping_restriction) {
-                
-                if (is_array($shipping_restriction) && count($shipping_restriction) > 0) {
-
-                    $options = array_merge($shipping_restriction, $options);
-                }
-            }
+        $arEventResult = Event::fire(self::EVENT_GET_SHIPPING_RESTRICTION_LIST);
+        if (empty($arEventResult)) {
+            return $arResult;
         }
 
-        return $options;
+        foreach ($arEventResult as $arClassList) {
+            if (empty($arClassList) || !is_array($arClassList)) {
+                continue;
+            }
+
+            $arResult = array_merge($arResult, $arClassList);
+        }
+
+        asort($arResult);
+
+        return $arResult;
     }
 }

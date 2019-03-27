@@ -39,7 +39,9 @@ class OfferCartPositionProcessor extends AbstractCartPositionProcessor
             return false;
         }
 
-        if((empty($this->arPositionData['id']) && empty($this->arPositionData['offer_id'])) || empty($this->arPositionData['quantity']) || $this->arPositionData['quantity'] < 1) {
+        $iPositionID = array_get($this->arPositionData, 'id');
+        $iItemID = array_get($this->arPositionData, 'item_id');
+        if((empty($iPositionID) && empty($iItemID)) || empty($this->arPositionData['quantity']) || $this->arPositionData['quantity'] < 1) {
             return false;
         }
 

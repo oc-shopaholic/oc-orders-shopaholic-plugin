@@ -66,6 +66,9 @@ class OrderProcessor
         $this->fillShippingTypePrice();
 
         $this->initCartPositionList();
+        if (!Result::status()) {
+            return null;
+        }
 
         //Begin transaction
         DB::beginTransaction();
@@ -202,7 +205,15 @@ class OrderProcessor
         //Get shipping type object
         $obShippingTypeItem = ShippingTypeItem::make($iShippingTypeID);
 
-        $this->arOrderData['shipping_price'] = $fShippingPrice !== null ? (float) $fShippingPrice : $obShippingTypeItem->getFullPriceValue();
+        if ($fShippingPrice !== null) {
+            $this->arOrderData['shipping_price'] = (float) $fShippingPrice;
+        } else {
+            $this->arOrderData['shipping_price'] = $obShippingTypeItem->getFullPriceValue();
+            $obApiClass = $obShippingTypeItem->api;
+            if (!empty($obApiClass) && !$obApiClass->validate()) {
+                Result::setFalse()->setMessage($obApiClass->getMessage());
+            }
+        }
         $this->arOrderData['shipping_tax_percent'] = $obShippingTypeItem->tax_percent;
     }
 

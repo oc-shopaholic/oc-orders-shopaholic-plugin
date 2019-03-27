@@ -24,12 +24,6 @@ columns:
         searchable: true
         sortable: true
         width: 100px
-    sort_order:
-        label: 'lovata.toolbox::lang.field.sort_order'
-        type: text
-        searchable: false
-        sortable: true
-        width: 150px
     created_at:
         label: 'lovata.toolbox::lang.field.created_at'
         type: timetense

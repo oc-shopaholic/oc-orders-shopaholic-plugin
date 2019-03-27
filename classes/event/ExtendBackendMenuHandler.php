@@ -1,6 +1,7 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Event;
 
 use Backend;
+
 use Lovata\Toolbox\Classes\Event\AbstractBackendMenuHandler;
 
 /**

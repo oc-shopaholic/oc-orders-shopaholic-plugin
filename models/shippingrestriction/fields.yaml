@@ -19,22 +19,14 @@ tabs:
             tab: 'lovata.toolbox::lang.tab.settings'
             span: left
             type: text
-        sort_order:
-            label: 'lovata.toolbox::lang.field.sort_order'
+        restriction:
+            label: 'lovata.ordersshopaholic::lang.field.restriction'
             tab: 'lovata.toolbox::lang.tab.settings'
             span: right
-            default: 20
-            type: number
+            type: dropdown
         description:
             label: 'lovata.toolbox::lang.field.description'
             tab: 'lovata.toolbox::lang.tab.settings'
             span: full
             type: textarea
             size: small
-        restriction:
-            label: 'lovata.ordersshopaholic::lang.field.restriction'
-            tab: 'lovata.toolbox::lang.tab.settings'
-            span: full
-            type: dropdown
-            options: restrictionOptions
-            required: true

@@ -1,4 +1,4 @@
-<?php namespace Lovata\OrdersShopaholic\Classes\Event;
+<?php namespace Lovata\OrdersShopaholic\Classes\Event\ShippingType;
 
 use Lovata\Toolbox\Classes\Event\ModelHandler;
 
@@ -8,7 +8,7 @@ use Lovata\OrdersShopaholic\Classes\Store\ShippingTypeListStore;
 
 /**
  * Class ShippingTypeModelHandler
- * @package Lovata\OrdersShopaholic\Classes\Event
+ * @package Lovata\OrdersShopaholic\Classes\Event\ShippingType
  * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  */
 class ShippingTypeModelHandler extends ModelHandler

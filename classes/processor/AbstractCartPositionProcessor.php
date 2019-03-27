@@ -99,7 +99,7 @@ abstract class AbstractCartPositionProcessor
 
     /**
      * Remove position from current cart
-     * @param int $iPositionID
+     * @param int    $iPositionID
      * @param string $sType
      * @return void
      * @throws \Exception
@@ -110,15 +110,12 @@ abstract class AbstractCartPositionProcessor
             return;
         }
 
-        if($sType == 'position') {
-
+        if ($sType == 'position') {
             $this->arPositionData = [
                 'id'        => $iPositionID,
                 'item_type' => static::MODEL_CLASS,
             ];
-
         } else {
-
             $this->arPositionData = [
                 'item_id'   => $iPositionID,
                 'item_type' => static::MODEL_CLASS,
@@ -153,44 +150,35 @@ abstract class AbstractCartPositionProcessor
      */
     protected function findPosition()
     {
+        $iPositionID = array_get($this->arPositionData, 'id');
 
-        if(empty($this->arPositionData['id'])) {
+        $iItemID = array_get($this->arPositionData, 'item_id');
+        $sItemType = array_get($this->arPositionData, 'item_type');
 
-            $property = $this->arPositionData["property"] ?? [];
+        if (!empty($iPositionID)) {
+            $this->obCartPosition = CartPosition::getByCart($this->obCart->id)->getByItemType($sItemType)->find($iPositionID);
 
-            $positions = CartPosition::getByCart($this->obCart->id)
-                ->getByItemType($this->arPositionData['item_type'])
-                ->getByItemID($this->arPositionData['item_id'])
-                ->get();
+            return;
+        }
 
-            foreach ($positions as $position) {
+        //Get item property
+        $arItemProperty = (array) array_get($this->arPositionData, 'property');
 
-                if(empty($property) && empty($position->property)) {
+        //Get cart position list by item_id and item_type
+        $obCartPositionList = CartPosition::getByCart($this->obCart->id)->getByItemType($sItemType)->getByItemID($iItemID)->get();
+        if ($obCartPositionList->isEmpty()) {
+            return;
+        }
 
-                    $this->obCartPosition = $position;
-
-                    break;
-
-                } elseif(
-                    !array_diff((array)$property, (array)$position->property) && 
-                    !array_diff((array)$position->property, (array)$property)
-                ) {
-
-                    $this->obCartPosition = $position;
-
-                    break;
-
-                } else {
-
-                    $this->obCartPosition = null;
-                }
+        /** @var CartPosition $obCartPosition */
+        foreach ($obCartPositionList as $obCartPosition) {
+            $arCartPositionProperty = (array) $obCartPosition->property;
+            $bCheck = (empty($arItemProperty) && empty($arCartPositionProperty))
+                || (!array_diff($arItemProperty, $arCartPositionProperty) && !array_diff($arCartPositionProperty, $arItemProperty));
+            if ($bCheck) {
+                $this->obCartPosition = $obCartPosition;
+                break;
             }
-
-        } else {
-
-            $this->obCartPosition = CartPosition::getByCart($this->obCart->id)
-                ->getByItemType($this->arPositionData['item_type'])
-                ->find($this->arPositionData['id']);
         }
     }
 }

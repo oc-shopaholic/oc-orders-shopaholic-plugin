@@ -10,6 +10,6 @@ shipping_restriction:
         showSorting: true
         showCheckboxes: true
         recordsPerPage: 10
-        toolbarButtons: create|delete
+        toolbarButtons: create|add|remove|delete
     manage:
         form: $/lovata/ordersshopaholic/models/shippingrestriction/fields.yaml

@@ -3,6 +3,7 @@
 use Event;
 use BackendMenu;
 use Backend\Classes\Controller;
+use System\Classes\SettingsManager;
 
 /**
  * Class ShippingTypes
@@ -29,7 +30,8 @@ class ShippingTypes extends Controller
     public function __construct()
     {
         parent::__construct();
-        BackendMenu::setContext('Lovata.OrdersShopaholic', 'orders-shopaholic-menu', 'orders-shopaholic-menu-shipping-types');
+        BackendMenu::setContext('October.System', 'system', 'settings');
+        SettingsManager::setContext('Lovata.OrdersShopaholic', 'orders-shopaholic-menu-shipping-types');
     }
 
     /**

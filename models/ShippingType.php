@@ -20,22 +20,27 @@ use Lovata\Toolbox\Traits\Helpers\PriceHelperTrait;
  * @mixin \October\Rain\Database\Builder
  * @mixin \Eloquent
  *
- * @property                                           $id
- * @property bool                                      $active
- * @property string                                    $code
- * @property string                                    $name
- * @property string                                    $preview_text
- * @property string                                    $price
- * @property float                                     $price_value
- * @property int                                       $sort_order
- * @property \October\Rain\Argon\Argon                 $created_at
- * @property \October\Rain\Argon\Argon                 $updated_at
+ * @property                                                                                  $id
+ * @property bool                                                                             $active
+ * @property string                                                                           $code
+ * @property string                                                                           $name
+ * @property string                                                                           $preview_text
+ * @property array                                                                            $property
+ * @property string                                                                           $api_class
+ * @property string                                                                           $price
+ * @property float                                                                            $price_value
+ * @property int                                                                              $sort_order
+ * @property \October\Rain\Argon\Argon                                                        $created_at
+ * @property \October\Rain\Argon\Argon                                                        $updated_at
  *
- * @property \October\Rain\Database\Collection|Order[] $order
+ * @property \October\Rain\Database\Collection|Order[]                                        $order
  * @method static Order|\October\Rain\Database\Relations\HasMany order()
  *
+ * @property \October\Rain\Database\Collection|ShippingRestriction[]                          $shipping_restriction
+ * @method static ShippingRestriction|\October\Rain\Database\Relations\BelongsToMany shipping_restriction()
+ *
  * Campaign for Shopaholic
- * @property \October\Rain\Database\Collection|\Lovata\CampaignsShopaholic\Models\Campaign[] $campaign
+ * @property \October\Rain\Database\Collection|\Lovata\CampaignsShopaholic\Models\Campaign[]  $campaign
  * @method static \October\Rain\Database\Relations\BelongsToMany|\Lovata\CampaignsShopaholic\Models\Campaign campaign()
  *
  * Coupons for Shopaholic
@@ -52,7 +57,7 @@ class ShippingType extends Model
     use PriceHelperTrait;
 
     const EVENT_GET_SHIPPING_PRICE = 'shopaholic.shipping_type.get_price';
-    const EVENT_GET_SHIPPING_TYPE_LIST = 'shopaholic.shipping_type.list';
+    const EVENT_GET_SHIPPING_TYPE_API_CLASS_LIST = 'shopaholic.shipping_type.get_api_class_list';
 
     public $table = 'lovata_orders_shopaholic_shipping_types';
 
@@ -83,7 +88,7 @@ class ShippingType extends Model
         'price',
         'preview_text',
         'property',
-        'method',
+        'api_class',
     ];
 
     public $cached = [
@@ -93,16 +98,20 @@ class ShippingType extends Model
         'price_value',
         'preview_text',
         'property',
-        'method',
+        'api_class',
     ];
 
     public $dates = ['created_at', 'updated_at'];
 
     public $hasMany = [
         'order' => Order::class,
-        'shipping_restriction' => ShippingRestriction::class,
     ];
-    public $belongsToMany = [];
+    public $belongsToMany = [
+        'shipping_restriction' => [
+            ShippingRestriction::class,
+            'table' => 'lovata_ordersshopaholic_shipping_restrictions_link',
+        ],
+    ];
     public $belongsTo = [];
 
     public $arPriceField = ['price'];
@@ -139,37 +148,40 @@ class ShippingType extends Model
         return $fShippingPrice;
     }
 
-
     /**
-     * Get default price
-     * @return float
+     * Get order property value
+     * @param string $sField
+     * @return mixed
      */
-    protected function getDefaultPriceAttribute()
+    public function getProperty($sField)
     {
-        return floatval($this->attributes['price'] ?? 0);
+        $arPropertyList = $this->property;
+        if (empty($arPropertyList) || empty($sField)) {
+            return null;
+        }
+
+        return array_get($arPropertyList, $sField);
     }
 
     /**
-     * Get shipping_type options
+     * Get api class options
      * @return array
      */
-    public function getShippingTypeOptions()
+    public function getApiClassOptions()
     {
         $arResult = [];
 
-        $arEventResult = Event::fire(self::EVENT_GET_SHIPPING_TYPE_LIST);
-
+        $arEventResult = Event::fire(self::EVENT_GET_SHIPPING_TYPE_API_CLASS_LIST);
         if (empty($arEventResult)) {
             return $arResult;
         }
 
-        foreach ($arEventResult as $arShippingList) {
-
-            if (empty($arShippingList) || !is_array($arShippingList)) {
+        foreach ($arEventResult as $arApiClassList) {
+            if (empty($arApiClassList) || !is_array($arApiClassList)) {
                 continue;
             }
 
-            $arResult = array_merge($arResult, $arShippingList);
+            $arResult = array_merge($arResult, $arApiClassList);
         }
 
         asort($arResult);

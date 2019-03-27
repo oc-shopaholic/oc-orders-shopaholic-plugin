@@ -33,6 +33,8 @@ class UserModelHandler
 
         if ($sUserPluginName == 'Lovata.Buddies') {
             $this->extendAfterMethodModel($sModelClass);
+            $this->addAddressAttribute();
+            $this->addOrderAttribute();
         }
     }
 
@@ -126,6 +128,36 @@ class UserModelHandler
             /** @var \Lovata\Buddies\Models\User $obUser */
             $obUser->bindEvent('model.afterDelete', function () use ($obUser) {
                 UserAddressListStore::instance()->user->clear($obUser->id);
+            });
+        });
+    }
+
+    /**
+     * Extend class UserItem and add "getAddressAttribute" method
+     */
+    public function addAddressAttribute()
+    {
+        \Lovata\Buddies\Classes\Item\UserItem::extend(function ($obUserItem) {
+            /** @var \Lovata\Buddies\Classes\Item\UserItem $obUserItem */
+            $obUserItem->addDynamicMethod('getAddressAttribute', function () use ($obUserItem) {
+                $obAddressList = UserAddressCollection::make()->user($obUserItem->id);
+
+                return $obAddressList;
+            });
+        });
+    }
+
+    /**
+     * Extend class UserItem and add "getOrderAttribute" method
+     */
+    public function addOrderAttribute()
+    {
+        \Lovata\Buddies\Classes\Item\UserItem::extend(function($obUserItem) {
+            /** @var \Lovata\Buddies\Classes\Item\UserItem $obUserItem */
+            $obUserItem->addDynamicMethod('getOrderAttribute', function () use($obUserItem) {
+                $obOrderList = OrderCollection::make()->user($obUserItem->id);
+
+                return $obOrderList;
             });
         });
     }
