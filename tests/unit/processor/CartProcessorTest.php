@@ -125,6 +125,7 @@ class CartProcessorTest extends CommonTest
             [
                 'offer_id' => $this->obOffer->id,
                 'quantity' => 5,
+                'property' => ['comment' => 'test'],
             ],
         ];
 
@@ -162,6 +163,7 @@ class CartProcessorTest extends CommonTest
             [
                 'offer_id' => $this->obOffer->id,
                 'quantity' => 5,
+                'property' => ['comment' => 'test1'],
             ],
         ];
 

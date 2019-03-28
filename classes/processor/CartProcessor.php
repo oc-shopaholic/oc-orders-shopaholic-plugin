@@ -186,8 +186,11 @@ class CartProcessor
     public function setActiveShippingType($obShippingTypeItem)
     {
         $this->obShippingTypeItem = $obShippingTypeItem;
-
-        $this->updateCartData();
+        if (empty($this->obPromoProcessor)) {
+            $this->updateCartData();
+        } else {
+            $this->obPromoProcessor->recalculateShippingPrice($obShippingTypeItem);
+        }
     }
 
     /**

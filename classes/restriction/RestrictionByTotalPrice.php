@@ -1,5 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Restriction;
 
+use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
 use Lovata\OrdersShopaholic\Interfaces\CheckRestrictionInterface;
 
 /**
@@ -9,6 +10,25 @@ use Lovata\OrdersShopaholic\Interfaces\CheckRestrictionInterface;
  */
 class RestrictionByTotalPrice implements CheckRestrictionInterface
 {
+    protected $fMinPrice;
+    protected $fMaxPrice;
+    protected $fTotalPrice;
+
+    /**
+     * CheckRestrictionInterface constructor.
+     * @param \Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem $obShippingTypeItem
+     * @param array                                                  $arData
+     * @param array                                                  $arProperty
+     * @param string                                                 $sCode
+     */
+    public function __construct($obShippingTypeItem, $arData, $arProperty, $sCode)
+    {
+        $this->fMinPrice = (float) array_get($arProperty, 'price_min');
+        $this->fMaxPrice = (float) array_get($arProperty, 'price_max');
+
+        $this->fTotalPrice = CartProcessor::instance()->getCartPositionTotalPriceData()->price_value;
+    }
+
     /**
      * Get backend fields for restriction settings
      * @return array
@@ -39,16 +59,8 @@ class RestrictionByTotalPrice implements CheckRestrictionInterface
      */
     public function check() : bool
     {
-        $total_price = $cart["position_total_price"]["price_value"] ?? 0;
+        $bResult = $this->fTotalPrice >= $this->fMinPrice && ($this->fMaxPrice == 0 || $this->fTotalPrice <= $this->fMaxPrice);
 
-        $price_min = $restriction->property['price_min'] ?? 0;
-        $price_max = $restriction->property['price_max'] ?? 0;
-
-        if($total_price >= $price_min  && ( $total_price <=  $price_max || $price_max == 0)) {
-
-            return true;
-        }
-
-        return false;
+        return $bResult;
     }
 }

@@ -46,11 +46,10 @@ abstract class AbstractCartPositionProcessor
     public function add($arPositionData)
     {
         $this->arPositionData = $arPositionData;
+        $this->preparePositionData();
         if (!$this->validatePositionData()) {
             return false;
         }
-
-        $this->preparePositionData();
 
         //Find position in current cart
         $this->findPosition();
@@ -77,11 +76,11 @@ abstract class AbstractCartPositionProcessor
     public function update($arPositionData)
     {
         $this->arPositionData = $arPositionData;
+        $this->preparePositionData();
         if (!$this->validatePositionData()) {
             return false;
         }
 
-        $this->preparePositionData();
         $this->findPosition();
         if (empty($this->obCartPosition)) {
             return false;

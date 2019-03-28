@@ -46,7 +46,7 @@ class OfferCartPositionProcessor extends AbstractCartPositionProcessor
         }
 
         //Get offer item
-        $obOfferItem = OfferItem::make($this->arPositionData['offer_id']);
+        $obOfferItem = OfferItem::make($iItemID);
         if ($obOfferItem->isEmpty() || $obOfferItem->product->isEmpty()) {
             return false;
         }
@@ -59,8 +59,8 @@ class OfferCartPositionProcessor extends AbstractCartPositionProcessor
      */
     protected function preparePositionData()
     {
-        $this->arPositionData['item_id'] = $this->arPositionData['offer_id'];
-        unset($this->arPositionData['offer_id']);
+        $this->arPositionData['item_id'] = array_get($this->arPositionData, 'offer_id');
+        array_forget($this->arPositionData, 'offer_id');
 
         parent::preparePositionData();
     }

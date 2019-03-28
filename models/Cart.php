@@ -20,6 +20,8 @@ use Lovata\Toolbox\Classes\Helper\UserHelper;
  * @property array                                                                       $property
  * @property array                                                                       $billing_address
  * @property array                                                                       $shipping_address
+ * @property int                                                                         $payment_method_id
+ * @property int                                                                         $shipping_type_id
  * @property \October\Rain\Argon\Argon                                                   $created_at
  * @property \October\Rain\Argon\Argon                                                   $updated_at
  *

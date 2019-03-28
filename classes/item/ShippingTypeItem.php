@@ -11,6 +11,7 @@ use Lovata\OrdersShopaholic\Models\ShippingType;
 use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
 use Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer;
 use Lovata\OrdersShopaholic\Interfaces\ShippingPriceProcessorInterface;
+use Lovata\OrdersShopaholic\Interfaces\CheckRestrictionInterface;
 
 /**
  * Class ShippingTypeItem
@@ -71,6 +72,17 @@ class ShippingTypeItem extends ElementItem
     protected $sActiveCurrency = null;
     /** @var \Lovata\OrdersShopaholic\Interfaces\ShippingPriceProcessorInterface */
     protected $obApiClass;
+    protected $arFieldList = [
+        'id',
+        'name',
+        'code',
+        'preview_text',
+        'property',
+        'restriction',
+        'api_class',
+        'api',
+        'price_full',
+    ];
 
     /**
      * Get param from model data
@@ -80,7 +92,7 @@ class ShippingTypeItem extends ElementItem
     public function __get($sName)
     {
         $sValue = parent::__get($sName);
-        if ($sValue !== null || $this->isEmpty()) {
+        if ($sValue !== null || $this->isEmpty() || in_array($sName, $this->arFieldList)) {
             return $sValue;
         }
 
@@ -168,7 +180,7 @@ class ShippingTypeItem extends ElementItem
 
         foreach ($arRestrictionList as $arRestrictionData) {
             $sRestrictionClass = array_get($arRestrictionData, 'restriction');
-            if (empty($sRestrictionClass) || !class_exists($sRestrictionClass)) {
+            if (empty($sRestrictionClass) || !class_exists($sRestrictionClass) || !$sRestrictionClass instanceof CheckRestrictionInterface) {
                 continue;
             }
 
@@ -301,7 +313,7 @@ class ShippingTypeItem extends ElementItem
         }
 
         $sApiClass = $this->api_class;
-        if (!empty($sApiClass) && class_exists($sApiClass)) {
+        if (!empty($sApiClass) && class_exists($sApiClass) && $sApiClass instanceof ShippingPriceProcessorInterface) {
             $this->obApiClass = new $sApiClass($this);
         }
 

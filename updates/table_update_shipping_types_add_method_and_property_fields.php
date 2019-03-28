@@ -37,8 +37,7 @@ class TableUpdateShippingTypesAddMethodAndPropertyFields extends Migration
         }
 
         Schema::table(self::TABLE_NAME, function (Blueprint $obTable) {
-            $obTable->dropColumn(['api_class']);
-            $obTable->dropColumn(['property']);
+            $obTable->dropColumn(['api_class', 'property']);
         });
     }
 }
