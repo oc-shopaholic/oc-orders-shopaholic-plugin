@@ -116,7 +116,7 @@
     - table_update_orders_add_currency_id_field.php
     - table_update_orders_add_shipping_tax_percent_field.php
 1.20.0:
-    - 'Added property fields in ShippingType model. Added shipping restrictions. Added email, user_data, shipping_address, billing_address, shipping_type_id, payment_method_id, property fields in Cart model.'
+    - 'Added ability to create integration with API of delivery services. Added property fields in ShippingType model. Added shipping restrictions. Added email, user_data, shipping_address, billing_address, shipping_type_id, payment_method_id, property fields in Cart model. Thanks for contribution Tsagan Noniev and Rubium Web.'
     - table_update_shipping_types_add_method_and_property_fields.php
     - table_update_carts_add_fields.php
     - table_create_shipping_restrictions_table.php
