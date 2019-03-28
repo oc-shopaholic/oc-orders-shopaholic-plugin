@@ -31,6 +31,7 @@ tabs:
             tab: 'lovata.toolbox::lang.tab.settings'
             span: left
             type: dropdown
+            emptyOption: 'lovata.toolbox::lang.field.empty'
         shipping_restriction:
             span: full
             path: $/lovata/ordersshopaholic/controllers/shippingtypes/_shipping_restriction.htm
