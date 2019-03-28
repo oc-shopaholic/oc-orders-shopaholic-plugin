@@ -28,9 +28,12 @@ use Lovata\OrdersShopaholic\Classes\Event\PaymentMethod\PaymentMethodModelHandle
 use Lovata\OrdersShopaholic\Classes\Event\Product\ProductModelHandler;
 //Shipping restriction events
 use Lovata\OrdersShopaholic\Classes\Event\ShippingRestriction\ExtendShippingRestrictionFieldsHandler;
-use Lovata\OrdersShopaholic\Classes\Event\ShippingType\ShippingTypeModelHandler;
+use Lovata\OrdersShopaholic\Classes\Event\ShippingRestriction\ShippingRestrictionRelationHandler;
+use Lovata\OrdersShopaholic\Classes\Event\ShippingRestriction\ShippingRestrictionModelHandler;
 //Shipping type events
 use Lovata\OrdersShopaholic\Classes\Event\ShippingType\ExtendShippingTypeFieldsHandler;
+use Lovata\OrdersShopaholic\Classes\Event\ShippingType\ShippingTypeModelHandler;
+use Lovata\OrdersShopaholic\Classes\Event\ShippingType\ShippingTypeRelationHandler;
 //Settings events
 use Lovata\OrdersShopaholic\Classes\Event\Settings\ExtendSettingsFieldHandler;
 //Status events
@@ -178,9 +181,12 @@ class Plugin extends PluginBase
         Event::subscribe(ProductModelHandler::class);
         //Shipping restriction events
         Event::subscribe(ExtendShippingRestrictionFieldsHandler::class);
-        Event::subscribe(ShippingTypeModelHandler::class);
+        Event::subscribe(ShippingRestrictionRelationHandler::class);
+        Event::subscribe(ShippingRestrictionModelHandler::class);
         //Shipping type events
         Event::subscribe(ExtendShippingTypeFieldsHandler::class);
+        Event::subscribe(ShippingTypeModelHandler::class);
+        Event::subscribe(ShippingTypeRelationHandler::class);
         //Settings events
         Event::subscribe(ExtendSettingsFieldHandler::class);
         //Status events
