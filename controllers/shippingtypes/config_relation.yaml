@@ -1,0 +1,15 @@
+# ===================================
+#  Relation Behavior Config
+# ===================================
+
+shipping_restriction:
+    label: 'lovata.ordersshopaholic::lang.restriction.name'
+    view:
+        list: $/lovata/ordersshopaholic/models/shippingrestriction/columns.yaml
+        showSearch: true
+        showSorting: true
+        showCheckboxes: true
+        recordsPerPage: 10
+        toolbarButtons: create|add|remove|delete
+    manage:
+        form: $/lovata/ordersshopaholic/models/shippingrestriction/fields.yaml

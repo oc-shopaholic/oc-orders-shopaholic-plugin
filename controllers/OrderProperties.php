@@ -2,6 +2,7 @@
 
 use BackendMenu;
 use Backend\Classes\Controller;
+use System\Classes\SettingsManager;
 
 /**
  * Class OrderProperties
@@ -26,6 +27,7 @@ class OrderProperties extends Controller
     public function __construct()
     {
         parent::__construct();
-        BackendMenu::setContext('Lovata.OrdersShopaholic', 'orders-shopaholic-menu', 'orders-shopaholic-menu-order-property');
+        BackendMenu::setContext('October.System', 'system', 'settings');
+        SettingsManager::setContext('Lovata.OrdersShopaholic', 'orders-shopaholic-menu-order-property');
     }
 }

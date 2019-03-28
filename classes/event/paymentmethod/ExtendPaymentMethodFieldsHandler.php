@@ -1,42 +1,24 @@
-<?php namespace Lovata\OrdersShopaholic\Classes\Event;
+<?php namespace Lovata\OrdersShopaholic\Classes\Event\PaymentMethod;
 
 use Event;
+use Lovata\Toolbox\Classes\Event\AbstractBackendFieldHandler;
 
 use Lovata\OrdersShopaholic\Models\PaymentMethod;
 use Lovata\OrdersShopaholic\Controllers\PaymentMethods;
 
 /**
- * Class ExtendPaymentMethodFieldHandler
- * @package Lovata\OrdersShopaholic\Classes\Event
+ * Class ExtendPaymentMethodFieldsHandler
+ * @package Lovata\OrdersShopaholic\Classes\Event\PaymentMethod
  * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  */
-class ExtendPaymentMethodFieldHandler
+class ExtendPaymentMethodFieldsHandler extends AbstractBackendFieldHandler
 {
     /**
-     * Add listeners
-     * @param \Illuminate\Events\Dispatcher $obEvent
-     */
-    public function subscribe($obEvent)
-    {
-        $obEvent->listen('backend.form.extendFields', function ($obWidget) {
-            $this->extendBackendFields($obWidget);
-        });
-    }
-
-    /**
-     * Extend Product fields
+     * Extend form fields
      * @param \Backend\Widgets\Form $obWidget
      */
-    protected function extendBackendFields($obWidget)
+    protected function extendFields($obWidget)
     {
-        if (!$obWidget->getController() instanceof PaymentMethods || $obWidget->isNested) {
-            return;
-        }
-
-        if (!$obWidget->model instanceof PaymentMethod) {
-            return;
-        }
-
         //Get gateway list
         $arGatewayList = $this->getPaymentGatewayList();
         if (empty($arGatewayList)) {
@@ -139,5 +121,23 @@ class ExtendPaymentMethodFieldHandler
         asort($arResult);
 
         return $arResult;
+    }
+
+    /**
+     * Get model class name
+     * @return string
+     */
+    protected function getModelClass() : string
+    {
+        return PaymentMethod::class;
+    }
+
+    /**
+     * Get controller class name
+     * @return string
+     */
+    protected function getControllerClass() : string
+    {
+        return PaymentMethods::class;
     }
 }

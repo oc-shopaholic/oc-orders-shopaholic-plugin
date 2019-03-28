@@ -39,12 +39,14 @@ class OfferCartPositionProcessor extends AbstractCartPositionProcessor
             return false;
         }
 
-        if(empty($this->arPositionData['offer_id']) || empty($this->arPositionData['quantity']) || $this->arPositionData['quantity'] < 1) {
+        $iPositionID = array_get($this->arPositionData, 'id');
+        $iItemID = array_get($this->arPositionData, 'item_id');
+        if((empty($iPositionID) && empty($iItemID)) || empty($this->arPositionData['quantity']) || $this->arPositionData['quantity'] < 1) {
             return false;
         }
 
         //Get offer item
-        $obOfferItem = OfferItem::make($this->arPositionData['offer_id']);
+        $obOfferItem = OfferItem::make($iItemID);
         if ($obOfferItem->isEmpty() || $obOfferItem->product->isEmpty()) {
             return false;
         }
@@ -57,8 +59,8 @@ class OfferCartPositionProcessor extends AbstractCartPositionProcessor
      */
     protected function preparePositionData()
     {
-        $this->arPositionData['item_id'] = $this->arPositionData['offer_id'];
-        unset($this->arPositionData['offer_id']);
+        $this->arPositionData['item_id'] = array_get($this->arPositionData, 'offer_id');
+        array_forget($this->arPositionData, 'offer_id');
 
         parent::preparePositionData();
     }

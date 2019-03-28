@@ -1,4 +1,4 @@
-<?php namespace Lovata\OrdersShopaholic\Classes\Event;
+<?php namespace Lovata\OrdersShopaholic\Classes\Event\Order;
 
 use Lovata\Toolbox\Classes\Helper\UserHelper;
 
@@ -6,7 +6,7 @@ use Lovata\OrdersShopaholic\Controllers\Orders;
 
 /**
  * Class OrdersControllerHandler
- * @package Lovata\OrdersShopaholic\Classes\Event
+ * @package Lovata\OrdersShopaholic\Classes\Event\Order
  * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  */
 class OrdersControllerHandler

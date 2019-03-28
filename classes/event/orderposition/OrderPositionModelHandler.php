@@ -1,4 +1,4 @@
-<?php namespace Lovata\OrdersShopaholic\Classes\Event;
+<?php namespace Lovata\OrdersShopaholic\Classes\Event\OrderPosition;
 
 use Lovata\OrdersShopaholic\Classes\Item\OrderItem;
 use Lovata\Toolbox\Classes\Event\ModelHandler;
@@ -8,7 +8,7 @@ use Lovata\OrdersShopaholic\Classes\Item\OrderPositionItem;
 
 /**
  * Class OrderPositionModelHandler
- * @package Lovata\OrdersShopaholic\Classes\Event
+ * @package Lovata\OrdersShopaholic\Classes\Event\OrderPosition
  * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  */
 class OrderPositionModelHandler extends ModelHandler

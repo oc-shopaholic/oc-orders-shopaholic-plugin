@@ -118,10 +118,11 @@ class CartProcessor
      * Remove position from current cart
      * @param array  $arPositionList
      * @param string $sPositionProcessor
+     * @param string $sType
      * @return bool
      * @throws
      */
-    public function remove($arPositionList, $sPositionProcessor)
+    public function remove($arPositionList, $sPositionProcessor, $sType = 'offer')
     {
         if (!$this->validateRequest($arPositionList, $sPositionProcessor)) {
             return false;
@@ -132,7 +133,7 @@ class CartProcessor
 
         //Process position list and remove position from cart
         foreach ($arPositionList as $iPositionID) {
-            $obPositionProcessor->remove($iPositionID);
+            $obPositionProcessor->remove($iPositionID, $sType);
         }
 
         $this->updateCartData();
@@ -185,8 +186,11 @@ class CartProcessor
     public function setActiveShippingType($obShippingTypeItem)
     {
         $this->obShippingTypeItem = $obShippingTypeItem;
-
-        $this->updateCartData();
+        if (empty($this->obPromoProcessor)) {
+            $this->updateCartData();
+        } else {
+            $this->obPromoProcessor->recalculateShippingPrice($obShippingTypeItem);
+        }
     }
 
     /**
@@ -260,12 +264,18 @@ class CartProcessor
 
         $arResult = [
             'position'             => [],
-            'shipping_type_id'     => null,
             'shipping_price'       => $this->getShippingPriceData()->getData(),
             'position_total_price' => $this->getCartPositionTotalPriceData()->getData(),
             'total_price'          => $this->getCartTotalPriceData()->getData(),
             'quantity'             => 0,
             'total_quantity'       => 0,
+
+            'payment_method_id'    => $this->obCart->payment_method_id,
+            'shipping_type_id'     => !empty($this->obShippingTypeItem) ? $this->obShippingTypeItem->id : $this->obCart->shipping_type_id,
+            'user_data'            => $this->obCart->user_data,
+            'shipping_address'     => $this->obCart->shipping_address,
+            'billing_address'      => $this->obCart->billing_address,
+            'property'             => $this->obCart->property,
         ];
 
         if ($obCartPositionList->isEmpty()) {

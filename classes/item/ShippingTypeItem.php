@@ -10,6 +10,8 @@ use Lovata\Shopaholic\Classes\Helper\CurrencyHelper;
 use Lovata\OrdersShopaholic\Models\ShippingType;
 use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
 use Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer;
+use Lovata\OrdersShopaholic\Interfaces\ShippingPriceProcessorInterface;
+use Lovata\OrdersShopaholic\Interfaces\CheckRestrictionInterface;
 
 /**
  * Class ShippingTypeItem
@@ -20,6 +22,10 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer;
  * @property string                                                                                        $name
  * @property string                                                                                        $code
  * @property string                                                                                        $preview_text
+ * @property array                                                                                         $property
+ * @property array                                                                                         $restriction
+ * @property string                                                                                        $api_class
+ * @property \Lovata\OrdersShopaholic\Interfaces\ShippingPriceProcessorInterface                           $api
  * @property float                                                                                         $price_full
  *
  * @property string                                                                                        $price
@@ -64,6 +70,19 @@ class ShippingTypeItem extends ElementItem
     protected $obElement = null;
 
     protected $sActiveCurrency = null;
+    /** @var \Lovata\OrdersShopaholic\Interfaces\ShippingPriceProcessorInterface */
+    protected $obApiClass;
+    protected $arFieldList = [
+        'id',
+        'name',
+        'code',
+        'preview_text',
+        'property',
+        'restriction',
+        'api_class',
+        'api',
+        'price_full',
+    ];
 
     /**
      * Get param from model data
@@ -73,11 +92,26 @@ class ShippingTypeItem extends ElementItem
     public function __get($sName)
     {
         $sValue = parent::__get($sName);
-        if ($sValue !== null || $this->isEmpty()) {
+        if ($sValue !== null || $this->isEmpty() || in_array($sName, $this->arFieldList)) {
             return $sValue;
         }
 
         return $this->price_data->$sName;
+    }
+
+    /**
+     * Get order property value
+     * @param string $sField
+     * @return mixed
+     */
+    public function getProperty($sField)
+    {
+        $arPropertyList = $this->property;
+        if (empty($arPropertyList) || empty($sField)) {
+            return null;
+        }
+
+        return array_get($arPropertyList, $sField);
     }
 
     /**
@@ -119,11 +153,48 @@ class ShippingTypeItem extends ElementItem
             return $fShippingPrice;
         }
 
-        $fShippingPrice = $this->price_full;
+        $obApiClass = $this->api;
+        if (!empty($obApiClass)) {
+            $fShippingPrice = $obApiClass->getPrice();
+        } else {
+            $fShippingPrice = $this->price_full;
+        }
+
         $fShippingPrice = CurrencyHelper::instance()->convert($fShippingPrice, $this->getActiveCurrency());
         $this->setActiveCurrency(null);
 
         return $fShippingPrice;
+    }
+
+    /**
+     * Return true, if shipping type is available
+     * @param null $arData
+     * @return bool
+     */
+    public function isAvailable($arData = null)
+    {
+        $arRestrictionList = (array) $this->restriction;
+        if (empty($arRestrictionList)) {
+            return true;
+        }
+
+        foreach ($arRestrictionList as $arRestrictionData) {
+            $sRestrictionClass = array_get($arRestrictionData, 'restriction');
+            if (empty($sRestrictionClass) || !class_exists($sRestrictionClass)) {
+                continue;
+            }
+
+            $arProperty = array_get($arRestrictionData, 'property');
+            $sCode = array_get($arRestrictionData, 'code');
+
+            /** @var \Lovata\OrdersShopaholic\Interfaces\CheckRestrictionInterface $obRestrictionCheck */
+            $obRestrictionCheck = new $sRestrictionClass($this, $arData, $arProperty, $sCode);
+            if (!$obRestrictionCheck->check()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -232,14 +303,43 @@ class ShippingTypeItem extends ElementItem
     }
 
     /**
+     * Get api object
+     * @return ShippingPriceProcessorInterface|null
+     */
+    protected function getApiAttribute()
+    {
+        if (!empty($this->obApiClass) && $this->obApiClass instanceof ShippingPriceProcessorInterface) {
+            return $this->obApiClass;
+        }
+
+        $sApiClass = $this->api_class;
+        if (!empty($sApiClass) && class_exists($sApiClass)) {
+            $this->obApiClass = new $sApiClass($this);
+        }
+
+        return $this->obApiClass;
+    }
+
+    /**
      * Set element data from model object
      *
      * @return array
      */
     protected function getElementData()
     {
+        $arRestrictionList = [];
+        $obRestrictionList = $this->obElement->shipping_restriction;
+        foreach ($obRestrictionList as $obRestriction) {
+            $arRestrictionList[] = [
+                'restriction' => $obRestriction->restriction,
+                'property'    => $obRestriction->property,
+                'code'        => $obRestriction->code,
+            ];
+        }
+
         $arResult = [
-            'price_full' => $this->obElement->price_value,
+            'price_full'  => $this->obElement->price_value,
+            'restriction' => $arRestrictionList,
         ];
 
         return $arResult;

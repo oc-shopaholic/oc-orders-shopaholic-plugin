@@ -1,4 +1,4 @@
-<?php namespace Lovata\OrdersShopaholic\Classes\Event;
+<?php namespace Lovata\OrdersShopaholic\Classes\Event\Offer;
 
 use Lovata\Toolbox\Classes\Event\ModelHandler;
 
@@ -8,31 +8,13 @@ use Lovata\OrdersShopaholic\Models\CartPosition;
 
 /**
  * Class OfferModelHandler
- * @package Lovata\OrdersShopaholic\Classes\Event
+ * @package Lovata\OrdersShopaholic\Classes\Event\Offer
  * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  */
 class OfferModelHandler extends ModelHandler
 {
     /** @var  Offer */
     protected $obElement;
-
-    /**
-     * Get model class name
-     * @return string
-     */
-    protected function getModelClass()
-    {
-        return Offer::class;
-    }
-
-    /**
-     * Get item class name
-     * @return string
-     */
-    protected function getItemClass()
-    {
-        return OfferItem::class;
-    }
 
     /**
      * After save event handler
@@ -85,5 +67,23 @@ class OfferModelHandler extends ModelHandler
         foreach ($obCartPositionList as $obCartPosition) {
             $obCartPosition->delete();
         }
+    }
+
+    /**
+     * Get model class name
+     * @return string
+     */
+    protected function getModelClass()
+    {
+        return Offer::class;
+    }
+
+    /**
+     * Get item class name
+     * @return string
+     */
+    protected function getItemClass()
+    {
+        return OfferItem::class;
     }
 }
