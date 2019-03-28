@@ -180,7 +180,7 @@ class ShippingTypeItem extends ElementItem
 
         foreach ($arRestrictionList as $arRestrictionData) {
             $sRestrictionClass = array_get($arRestrictionData, 'restriction');
-            if (empty($sRestrictionClass) || !class_exists($sRestrictionClass) || !$sRestrictionClass instanceof CheckRestrictionInterface) {
+            if (empty($sRestrictionClass) || !class_exists($sRestrictionClass)) {
                 continue;
             }
 
@@ -313,7 +313,7 @@ class ShippingTypeItem extends ElementItem
         }
 
         $sApiClass = $this->api_class;
-        if (!empty($sApiClass) && class_exists($sApiClass) && $sApiClass instanceof ShippingPriceProcessorInterface) {
+        if (!empty($sApiClass) && class_exists($sApiClass)) {
             $this->obApiClass = new $sApiClass($this);
         }
 
