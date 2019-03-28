@@ -3,7 +3,6 @@
 use Input;
 use Event;
 use Redirect;
-use Exception;
 use Kharanenka\Helper\Result;
 use Lovata\Toolbox\Classes\Helper\PageHelper;
 use Lovata\Toolbox\Classes\Helper\UserHelper;
