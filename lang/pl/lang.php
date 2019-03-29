@@ -23,7 +23,6 @@
     'tab'                  => [
         'info'                       => 'Order data',
         'offers_info'                => 'Offer list',
-        'shipping_restrictions_info' => 'Restrictions',
         'order_settings'             => 'Order and cart',
         'gateway'                    => 'Gateway',
         'payment_data'               => 'Payment data',
@@ -31,6 +30,7 @@
         'billing_address'            => 'Billing address',
         'shipping_address'           => 'Shipping address',
         'tasks'                      => 'Tasks',
+        'shipping_restrictions_info' => 'Restrictions',
     ],
     'message'              => [
         'empty_cart'           => 'Cart is empty',
@@ -53,7 +53,6 @@
         'complete'    => 'Complete',
         'in_progress' => 'In progress',
 
-        'restriction'                    => 'Restriction',
         'total_price'                    => 'Total price',
         'old_total_price'                => 'Old total price',
         'position_price'                 => 'Position price',
@@ -95,6 +94,7 @@
         'task_mail_template_description' => 'If mail template is not selected, the notification will not be sent.',
         'notification_sent'              => 'Notification sent',
         'applied_to_shipping_price'      => 'Applied to shipping price',
+        'restriction'                    => 'Restriction',
         'shipping_type_api_class'        => 'API method',
 
         'order_discount_log_position_total_price' => 'List of applied discounts (position total price)',
@@ -131,17 +131,6 @@
         'order_position_property'             => 'Additional order position properties',
         'order_position_property_description' => 'Manage additional order position properties',
         'promo_mechanism'                     => 'Promo mechanism',
-    ],
-    'restriction'          => [
-        'name'       => 'restriction',
-        'list_title' => 'Restriction list',
-        'property'   => [
-            'price_min' => 'Price min',
-            'price_max' => 'Price max'
-        ],
-        'handler'    => [
-            'by_total_price' => 'By total price of cart positions',
-        ],
     ],
     'order'                => [
         'name'       => 'order',
@@ -187,6 +176,17 @@
         'quantity_limit_description'      => 'If you set value = 1 and discount value = 100%, than the discount will be applied to one unit. If you set value = 0, than discount will be applied to all units',
         'quantity_limit_from'             => 'Quantity limit at which the discount will be repeated',
         'quantity_limit_from_description' => 'If you set value = 3, value of quantity limit for which the discount will be applied = 1 and discount value = 100%, than the discount will be applied to one unit and will be repeated every 3 offers (3 for the price of 2). If the value is = 0, then the value is ignored.',
+    ],
+    'restriction'          => [
+        'name'       => 'restriction',
+        'list_title' => 'Restriction list',
+        'property'   => [
+            'price_min' => 'Price min',
+            'price_max' => 'Price max'
+        ],
+        'handler'    => [
+            'by_total_price' => 'By total price of cart positions',
+        ],
     ],
     'permission'           => [
         'order'           => 'Manage orders',
