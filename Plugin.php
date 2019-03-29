@@ -2,30 +2,47 @@
 
 use Lang;
 use Event;
+use Backend;
 use System\Classes\PluginBase;
 //Console commands
 use Lovata\OrdersShopaholic\Classes\Console\SendManagerNotification;
+
 //Events
-//CartPosition events
-use Lovata\OrdersShopaholic\Classes\Event\CartPosition\CartPositionModelHandler;
 //Extend Backend menu events
 use Lovata\OrdersShopaholic\Classes\Event\ExtendBackendMenuHandler;
-use Lovata\OrdersShopaholic\Classes\Event\ExtendFieldHandler;
-use Lovata\OrdersShopaholic\Classes\Event\ExtendPaymentMethodFieldHandler;
-use Lovata\OrdersShopaholic\Classes\Event\OfferModelHandler;
-use Lovata\OrdersShopaholic\Classes\Event\OrdersControllerHandler;
-use Lovata\OrdersShopaholic\Classes\Event\OrderModelHandler;
-use Lovata\OrdersShopaholic\Classes\Event\OrderPositionModelHandler;
-use Lovata\OrdersShopaholic\Classes\Event\PaymentMethodModelHandler;
-use Lovata\OrdersShopaholic\Classes\Event\ProductModelHandler;
-use Lovata\OrdersShopaholic\Classes\Event\ShippingTypeModelHandler;
-use Lovata\OrdersShopaholic\Classes\Event\StatusModelHandler;
+//CartPosition events
+use Lovata\OrdersShopaholic\Classes\Event\CartPosition\CartPositionModelHandler;
+//Offer events
+use Lovata\OrdersShopaholic\Classes\Event\Offer\OfferModelHandler;
+//Order events
+use Lovata\OrdersShopaholic\Classes\Event\Order\ExtendOrderFieldsHandler;
+use Lovata\OrdersShopaholic\Classes\Event\Order\OrderModelHandler;
+use Lovata\OrdersShopaholic\Classes\Event\Order\OrdersControllerHandler;
+//Order position events
+use Lovata\OrdersShopaholic\Classes\Event\OrderPosition\ExtendOrderPositionFieldsHandler;
+use Lovata\OrdersShopaholic\Classes\Event\OrderPosition\OrderPositionModelHandler;
+//Payment method events
+use Lovata\OrdersShopaholic\Classes\Event\PaymentMethod\ExtendPaymentMethodFieldsHandler;
+use Lovata\OrdersShopaholic\Classes\Event\PaymentMethod\PaymentMethodModelHandler;
+//Product events
+use Lovata\OrdersShopaholic\Classes\Event\Product\ProductModelHandler;
+//Shipping restriction events
+use Lovata\OrdersShopaholic\Classes\Event\ShippingRestriction\ExtendShippingRestrictionFieldsHandler;
+use Lovata\OrdersShopaholic\Classes\Event\ShippingRestriction\ShippingRestrictionRelationHandler;
+use Lovata\OrdersShopaholic\Classes\Event\ShippingRestriction\ShippingRestrictionModelHandler;
+//Shipping type events
+use Lovata\OrdersShopaholic\Classes\Event\ShippingType\ExtendShippingTypeFieldsHandler;
+use Lovata\OrdersShopaholic\Classes\Event\ShippingType\ShippingTypeModelHandler;
+use Lovata\OrdersShopaholic\Classes\Event\ShippingType\ShippingTypeRelationHandler;
+//Settings events
+use Lovata\OrdersShopaholic\Classes\Event\Settings\ExtendSettingsFieldHandler;
+//Status events
+use Lovata\OrdersShopaholic\Classes\Event\Status\StatusModelHandler;
 //Tax events
 use Lovata\OrdersShopaholic\Classes\Event\Tax\TaxModelHandler;
 use Lovata\OrdersShopaholic\Classes\Event\Tax\ExtendTaxFieldsHandler;
 //User events
 use Lovata\OrdersShopaholic\Classes\Event\User\UserModelHandler;
-use Lovata\OrdersShopaholic\Classes\Event\User\ExtendUserItemHandler;
 use Lovata\OrdersShopaholic\Classes\Event\User\ExtendUserFieldsHandler;
 use Lovata\OrdersShopaholic\Classes\Event\User\ExtendUserControllerHandler;
 //User address events
@@ -61,6 +78,60 @@ class Plugin extends PluginBase
     /**
      * @return array
      */
+    public function registerSettings()
+    {
+        return [
+            'orders-shopaholic-menu-payment-methods' => [
+                'label'       => 'lovata.ordersshopaholic::lang.menu.payment_methods',
+                'description' => 'lovata.ordersshopaholic::lang.menu.payment_methods_description',
+                'category'    => 'lovata.shopaholic::lang.tab.settings',
+                'icon'        => 'icon-credit-card',
+                'url'         => Backend::url('lovata/ordersshopaholic/paymentmethods'),
+                'order'       => 1000,
+                'permissions' => ['shopaholic-order-payment-type'],
+            ],
+            'orders-shopaholic-menu-shipping-types' => [
+                'label'       => 'lovata.ordersshopaholic::lang.menu.shipping_types',
+                'description' => 'lovata.ordersshopaholic::lang.menu.shipping_types_description',
+                'category'    => 'lovata.shopaholic::lang.tab.settings',
+                'icon'        => 'icon-truck',
+                'url'         => Backend::url('lovata/ordersshopaholic/shippingtypes'),
+                'order'       => 1100,
+                'permissions' => ['shopaholic-delivery-type'],
+            ],
+            'orders-shopaholic-menu-statuses' => [
+                'label'       => 'lovata.ordersshopaholic::lang.menu.statuses',
+                'description' => 'lovata.ordersshopaholic::lang.menu.statuses_description',
+                'category'    => 'lovata.shopaholic::lang.tab.settings',
+                'icon'        => 'icon-random',
+                'url'         => Backend::url('lovata/ordersshopaholic/statuses'),
+                'order'       => 1300,
+                'permissions' => ['shopaholic-order-status'],
+            ],
+            'orders-shopaholic-menu-order-property' => [
+                'label'       => 'lovata.ordersshopaholic::lang.menu.order_property',
+                'description' => 'lovata.ordersshopaholic::lang.menu.order_property_description',
+                'category'    => 'lovata.shopaholic::lang.tab.settings',
+                'icon'        => 'icon-list',
+                'url'         => Backend::url('lovata/ordersshopaholic/orderproperties'),
+                'order'       => 1400,
+                'permissions' => ['shopaholic-order-property'],
+            ],
+            'orders-shopaholic-menu-order-position-property' => [
+                'label'       => 'lovata.ordersshopaholic::lang.menu.order_position_property',
+                'description' => 'lovata.ordersshopaholic::lang.menu.order_position_property_description',
+                'category'    => 'lovata.shopaholic::lang.tab.settings',
+                'icon'        => 'icon-list',
+                'url'         => Backend::url('lovata/ordersshopaholic/orderpositionproperties'),
+                'order'       => 1500,
+                'permissions' => ['shopaholic-order-property'],
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
     public function registerMailTemplates()
     {
         return [
@@ -90,26 +161,41 @@ class Plugin extends PluginBase
      */
     protected function addEventListener()
     {
-        //CartPosition events
-        Event::subscribe(CartPositionModelHandler::class);
         //Extend Backend menu events
         Event::subscribe(ExtendBackendMenuHandler::class);
-        Event::subscribe(ExtendFieldHandler::class);
-        Event::subscribe(ExtendPaymentMethodFieldHandler::class);
+        //CartPosition events
+        Event::subscribe(CartPositionModelHandler::class);
+        //Offer events
         Event::subscribe(OfferModelHandler::class);
-        Event::subscribe(OrdersControllerHandler::class);
+        //Order events
+        Event::subscribe(ExtendOrderFieldsHandler::class);
         Event::subscribe(OrderModelHandler::class);
+        Event::subscribe(OrdersControllerHandler::class);
+        //Order position events
+        Event::subscribe(ExtendOrderPositionFieldsHandler::class);
         Event::subscribe(OrderPositionModelHandler::class);
+        //Payment method events
+        Event::subscribe(ExtendPaymentMethodFieldsHandler::class);
         Event::subscribe(PaymentMethodModelHandler::class);
+        //Product events
         Event::subscribe(ProductModelHandler::class);
+        //Shipping restriction events
+        Event::subscribe(ExtendShippingRestrictionFieldsHandler::class);
+        Event::subscribe(ShippingRestrictionRelationHandler::class);
+        Event::subscribe(ShippingRestrictionModelHandler::class);
+        //Shipping type events
+        Event::subscribe(ExtendShippingTypeFieldsHandler::class);
         Event::subscribe(ShippingTypeModelHandler::class);
+        Event::subscribe(ShippingTypeRelationHandler::class);
+        //Settings events
+        Event::subscribe(ExtendSettingsFieldHandler::class);
+        //Status events
         Event::subscribe(StatusModelHandler::class);
         //Tax events
         Event::subscribe(TaxModelHandler::class);
         Event::subscribe(ExtendTaxFieldsHandler::class);
         //User events
         Event::subscribe(UserModelHandler::class);
-        Event::subscribe(ExtendUserItemHandler::class);
         Event::subscribe(ExtendUserFieldsHandler::class);
         Event::subscribe(ExtendUserControllerHandler::class);
         //User address events

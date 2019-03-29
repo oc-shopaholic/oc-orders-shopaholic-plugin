@@ -46,11 +46,10 @@ abstract class AbstractCartPositionProcessor
     public function add($arPositionData)
     {
         $this->arPositionData = $arPositionData;
+        $this->preparePositionData();
         if (!$this->validatePositionData()) {
             return false;
         }
-
-        $this->preparePositionData();
 
         //Find position in current cart
         $this->findPosition();
@@ -77,11 +76,11 @@ abstract class AbstractCartPositionProcessor
     public function update($arPositionData)
     {
         $this->arPositionData = $arPositionData;
+        $this->preparePositionData();
         if (!$this->validatePositionData()) {
             return false;
         }
 
-        $this->preparePositionData();
         $this->findPosition();
         if (empty($this->obCartPosition)) {
             return false;
@@ -99,20 +98,28 @@ abstract class AbstractCartPositionProcessor
 
     /**
      * Remove position from current cart
-     * @param int $iPositionID
+     * @param int    $iPositionID
+     * @param string $sType
      * @return void
      * @throws \Exception
      */
-    public function remove($iPositionID)
+    public function remove($iPositionID, $sType = 'offer')
     {
         if (empty($iPositionID)) {
             return;
         }
 
-        $this->arPositionData = [
-            'item_id'   => $iPositionID,
-            'item_type' => static::MODEL_CLASS,
-        ];
+        if ($sType == 'position') {
+            $this->arPositionData = [
+                'id'        => $iPositionID,
+                'item_type' => static::MODEL_CLASS,
+            ];
+        } else {
+            $this->arPositionData = [
+                'item_id'   => $iPositionID,
+                'item_type' => static::MODEL_CLASS,
+            ];
+        }
 
         $this->findPosition();
         if (empty($this->obCartPosition)) {
@@ -142,9 +149,35 @@ abstract class AbstractCartPositionProcessor
      */
     protected function findPosition()
     {
-        $this->obCartPosition = CartPosition::getByCart($this->obCart->id)
-            ->getByItemType($this->arPositionData['item_type'])
-            ->getByItemID($this->arPositionData['item_id'])
-            ->first();
+        $iPositionID = array_get($this->arPositionData, 'id');
+
+        $iItemID = array_get($this->arPositionData, 'item_id');
+        $sItemType = array_get($this->arPositionData, 'item_type');
+
+        if (!empty($iPositionID)) {
+            $this->obCartPosition = CartPosition::getByCart($this->obCart->id)->getByItemType($sItemType)->find($iPositionID);
+
+            return;
+        }
+
+        //Get item property
+        $arItemProperty = (array) array_get($this->arPositionData, 'property');
+
+        //Get cart position list by item_id and item_type
+        $obCartPositionList = CartPosition::getByCart($this->obCart->id)->getByItemType($sItemType)->getByItemID($iItemID)->get();
+        if ($obCartPositionList->isEmpty()) {
+            return;
+        }
+
+        /** @var CartPosition $obCartPosition */
+        foreach ($obCartPositionList as $obCartPosition) {
+            $arCartPositionProperty = (array) $obCartPosition->property;
+            $bCheck = (empty($arItemProperty) && empty($arCartPositionProperty))
+                || (!array_diff($arItemProperty, $arCartPositionProperty) && !array_diff($arCartPositionProperty, $arItemProperty));
+            if ($bCheck) {
+                $this->obCartPosition = $obCartPosition;
+                break;
+            }
+        }
     }
 }

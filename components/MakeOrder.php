@@ -3,7 +3,6 @@
 use Input;
 use Event;
 use Redirect;
-
 use Kharanenka\Helper\Result;
 use Lovata\Toolbox\Classes\Helper\PageHelper;
 use Lovata\Toolbox\Classes\Helper\UserHelper;
@@ -14,6 +13,7 @@ use Lovata\Shopaholic\Models\Settings;
 use Lovata\Shopaholic\Classes\Helper\CurrencyHelper;
 use Lovata\OrdersShopaholic\Models\UserAddress;
 use Lovata\OrdersShopaholic\Classes\Processor\OrderProcessor;
+use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
 
 /**
  * Class MakeOrder
@@ -188,14 +188,19 @@ class MakeOrder extends ComponentSubmitForm
         if (empty($this->obUser) && $this->bCreateNewUser) {
             $this->findOrCreateUser();
         } else if (!empty($this->obUser)) {
-            $this->arUserData = [
+            $arAuthUserData = [
                 'email'       => $this->obUser->email,
                 'name'        => $this->obUser->name,
                 'last_name'   => $this->obUser->last_name,
                 'middle_name' => $this->obUser->middle_name,
                 'phone'       => $this->obUser->phone,
             ];
+
+            $this->arUserData = array_merge($arAuthUserData, $this->arUserData);
         }
+
+        $obCart = CartProcessor::instance()->getCartObject();
+        $this->arUserData = array_merge((array) $obCart->user_data, $this->arUserData);
 
         $this->processOrderAddress();
 
@@ -318,6 +323,7 @@ class MakeOrder extends ComponentSubmitForm
      */
     protected function createUser()
     {
+
         if (empty($this->arUserData)) {
             return;
         }
@@ -355,6 +361,10 @@ class MakeOrder extends ComponentSubmitForm
     {
         $arShippingAddressData = (array) Input::get('shipping_address');
         $arBillingAddressData = (array) Input::get('billing_address');
+
+        $obCart = CartProcessor::instance()->getCartObject();
+        $arShippingAddressData = array_merge((array) $obCart->shipping_address, $arShippingAddressData);
+        $arBillingAddressData = array_merge((array) $obCart->billing_address, $arBillingAddressData);
 
         $this->arShippingAddressOrder = $this->addOrderAddress(UserAddress::ADDRESS_TYPE_SIPPING, $arShippingAddressData);
         $this->arBillingAddressOrder = $this->addOrderAddress(UserAddress::ADDRESS_TYPE_BILLING, $arBillingAddressData);

@@ -3,6 +3,7 @@
 use Event;
 use BackendMenu;
 use Backend\Classes\Controller;
+use System\Classes\SettingsManager;
 
 /**
  * Class PaymentMethods
@@ -27,7 +28,8 @@ class PaymentMethods extends Controller
     public function __construct()
     {
         parent::__construct();
-        BackendMenu::setContext('Lovata.OrdersShopaholic', 'orders-shopaholic-menu', 'orders-shopaholic-menu-payment-methods');
+        BackendMenu::setContext('October.System', 'system', 'settings');
+        SettingsManager::setContext('Lovata.OrdersShopaholic', 'orders-shopaholic-menu-payment-methods');
     }
 
     /**

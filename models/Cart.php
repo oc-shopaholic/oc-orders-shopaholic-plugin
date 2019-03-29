@@ -13,14 +13,21 @@ use Lovata\Toolbox\Classes\Helper\UserHelper;
  * @mixin \October\Rain\Database\Builder
  * @mixin \Eloquent
  *
- * @property                                                 $id
- * @property integer                                         $user_id
- * @property \October\Rain\Argon\Argon                       $created_at
- * @property \October\Rain\Argon\Argon                       $updated_at
+ * @property                                                                             $id
+ * @property integer                                                                     $user_id
+ * @property string                                                                      $email
+ * @property array                                                                       $user_data
+ * @property array                                                                       $property
+ * @property array                                                                       $billing_address
+ * @property array                                                                       $shipping_address
+ * @property int                                                                         $payment_method_id
+ * @property int                                                                         $shipping_type_id
+ * @property \October\Rain\Argon\Argon                                                   $created_at
+ * @property \October\Rain\Argon\Argon                                                   $updated_at
  *
- * @property \Lovata\Buddies\Models\User                     $user
+ * @property \Lovata\Buddies\Models\User                                                 $user
  * @method static \Lovata\Buddies\Models\User|\October\Rain\Database\Relations\BelongsTo user()
- * @property \October\Rain\Database\Collection|CartPosition[] $position
+ * @property \October\Rain\Database\Collection|CartPosition[]                            $position
  * @method static CartPosition|\October\Rain\Database\Relations\HasMany position()
  *
  * Coupons for Shopaholic
@@ -35,6 +42,18 @@ class Cart extends Model
 
     protected $fillable = [
         'user_id',
+        'email',
+        'user_data',
+        'property',
+        'billing_address',
+        'shipping_address',
+    ];
+
+    public $jsonable = [
+        'property',
+        'user_data',
+        'billing_address',
+        'shipping_address',
     ];
 
     protected $dates = ['created_at', 'updated_at'];

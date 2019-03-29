@@ -1,4 +1,4 @@
-<?php namespace Lovata\OrdersShopaholic\Classes\Event;
+<?php namespace Lovata\OrdersShopaholic\Classes\Event\Order;
 
 use Lovata\Toolbox\Classes\Event\ModelHandler;
 use Lovata\Toolbox\Classes\Helper\SendMailHelper;
@@ -11,7 +11,7 @@ use Lovata\OrdersShopaholic\Classes\Store\OrderListStore;
 
 /**
  * Class OrderModelHandler
- * @package Lovata\OrdersShopaholic\Classes\Event
+ * @package Lovata\OrdersShopaholic\Classes\Event\Order
  * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  */
 class OrderModelHandler extends ModelHandler
@@ -97,12 +97,12 @@ class OrderModelHandler extends ModelHandler
     protected function sendUserEmailAfterCreating()
     {
         //Get user email
-        $arOrderProeprtyList = $this->obElement->property;
-        if (empty($arOrderProeprtyList) || !isset($arOrderProeprtyList['email']) || empty($arOrderProeprtyList['email'])) {
+        $arOrderPropertyList = $this->obElement->property;
+        if (empty($arOrderPropertyList) || !isset($arOrderPropertyList['email']) || empty($arOrderPropertyList['email'])) {
             return;
         }
 
-        $sEmail = $arOrderProeprtyList['email'];
+        $sEmail = $arOrderPropertyList['email'];
         if (preg_match('%^fake.*@fake\.com$%', $sEmail)) {
             return;
         }

@@ -115,3 +115,9 @@
     - table_update_order_positions_add_tax_percent_field.php
     - table_update_orders_add_currency_id_field.php
     - table_update_orders_add_shipping_tax_percent_field.php
+1.20.0:
+    - 'Added ability to add multiple identical offers, but with different set of properties. Added ability to delete cart positions by ID. Added ability to create integration with API of delivery services. Added property fields in ShippingType model. Added ability to create restrictions for shipping types.  Added restrictions of shipping types by position total price. Added email, user_data, shipping_address, billing_address, shipping_type_id, payment_method_id, property fields in Cart model. Thanks for contribution Tsagan Noniev and Rubium Web.'
+    - table_update_shipping_types_add_method_and_property_fields.php
+    - table_update_carts_add_fields.php
+    - table_create_shipping_restrictions_table.php
+    - table_create_shipping_restrictions_link_table.php

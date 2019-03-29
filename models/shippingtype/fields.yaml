@@ -13,16 +13,30 @@ tabs:
         code:
             label: 'lovata.toolbox::lang.field.code'
             tab: 'lovata.toolbox::lang.tab.settings'
-            span: full
-            type: text
-        price:
-            label: 'lovata.shopaholic::lang.field.price'
-            tab: 'lovata.toolbox::lang.tab.settings'
-            span: full
+            span: left
             type: text
         preview_text:
             label: 'lovata.toolbox::lang.field.description'
             tab: 'lovata.toolbox::lang.tab.settings'
-            span: full
+            span: right
             type: textarea
             size: small
+        price:
+            label: 'lovata.shopaholic::lang.field.price'
+            tab: 'lovata.toolbox::lang.tab.settings'
+            span: left
+            type: text
+        api_class:
+            label: 'lovata.ordersshopaholic::lang.field.shipping_type_api_class'
+            tab: 'lovata.toolbox::lang.tab.settings'
+            span: left
+            type: dropdown
+            emptyOption: 'lovata.toolbox::lang.field.empty'
+        shipping_restriction:
+            span: full
+            path: $/lovata/ordersshopaholic/controllers/shippingtypes/_shipping_restriction.htm
+            context:
+                - update
+                - preview
+            type: partial
+            tab: 'lovata.ordersshopaholic::lang.tab.shipping_restrictions_info'

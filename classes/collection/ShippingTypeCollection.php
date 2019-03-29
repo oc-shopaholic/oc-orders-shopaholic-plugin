@@ -13,7 +13,7 @@ use Lovata\OrdersShopaholic\Classes\Store\ShippingTypeListStore;
 class ShippingTypeCollection extends ElementCollection
 {
     const ITEM_CLASS = ShippingTypeItem::class;
-    
+
     /**
      * Sort list
      * @return $this
@@ -35,5 +35,33 @@ class ShippingTypeCollection extends ElementCollection
         $arElementIDList = ShippingTypeListStore::instance()->active->get();
 
         return $this->intersect($arElementIDList);
+    }
+
+    /**
+     * Apply filter by restrictions
+     * @param array $arData
+     * @return $this
+     */
+    public function available($arData = null)
+    {
+        if ($this->isEmpty()) {
+            return $this->returnThis();
+        }
+
+        $arElementList = $this->all();
+        $arExcludeIDList = [];
+
+        /** @var ShippingTypeItem $obElement */
+        foreach ($arElementList as $obElement) {
+            if (!$obElement->isAvailable($arData)) {
+                $arExcludeIDList[] = $obElement->id;
+            }
+        }
+
+        if (empty($arExcludeIDList)) {
+            $this->returnThis();
+        }
+
+        return $this->diff($arExcludeIDList);
     }
 }

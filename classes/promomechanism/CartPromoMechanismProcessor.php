@@ -68,6 +68,21 @@ class CartPromoMechanismProcessor extends AbstractPromoMechanismProcessor
     }
 
     /**
+     * Recalculate shipping price and total price
+     * @param \Lovata\OrdersShopaholic\Models\ShippingType|\Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem $obShippingType
+     */
+    public function recalculateShippingPrice($obShippingType)
+    {
+        $this->obShippingPriceData = ItemPriceContainer::makeEmpty();
+        $this->obTotalPriceData = TotalPriceContainer::makeEmpty();
+
+        $this->obShippingType = $obShippingType;
+
+        $this->applyShippingDiscounts();
+        $this->applyTotalPriceDiscounts();
+    }
+
+    /**
      * Process position list and apply discounts for positions
      */
     protected function applyPositionDiscounts()
