@@ -41,6 +41,7 @@ class TableCreateCartPositions extends Migration
             $obTable->integer('quantity')->unsigned()->default(0);
             $obTable->text('property')->nullable();
             $obTable->timestamps();
+            $obTable->softDeletes();
 
             $obTable->index('cart_id');
         });

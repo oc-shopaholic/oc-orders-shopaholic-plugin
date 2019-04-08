@@ -45,6 +45,10 @@ class OfferCartPositionProcessor extends AbstractCartPositionProcessor
             return false;
         }
 
+        if (!empty($iPositionID) && empty($iItemID)) {
+            return true;
+        }
+
         //Get offer item
         $obOfferItem = OfferItem::make($iItemID);
         if ($obOfferItem->isEmpty() || $obOfferItem->product->isEmpty()) {

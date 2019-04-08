@@ -98,6 +98,24 @@ class Cart extends ComponentBase
     }
 
     /**
+     * Restore cart position
+     * @return array
+     */
+    public function onRestore()
+    {
+        $arRequestData = Input::get('cart');
+        $obActiveShippingType = $this->getActiveShippingTypeFromRequest();
+        if (!empty($obActiveShippingType) && $obActiveShippingType->isNotEmpty()) {
+            CartProcessor::instance()->setActiveShippingType($obActiveShippingType);
+        }
+
+        CartProcessor::instance()->restore($arRequestData, OfferCartPositionProcessor::class);
+        Result::setData(CartProcessor::instance()->getCartData());
+
+        return Result::get();
+    }
+
+    /**
      * Clear cart
      */
     public function onClear()
@@ -285,7 +303,7 @@ class Cart extends ComponentBase
      * Get active shipping type from request
      * @return ShippingTypeItem
      */
-    protected function getActiveShippingTypeFromRequest()
+    public function getActiveShippingTypeFromRequest()
     {
         $iShippingTypeID = Input::get('shipping_type_id');
         if (empty($iShippingTypeID)) {

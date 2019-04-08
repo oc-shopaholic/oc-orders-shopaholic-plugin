@@ -1,6 +1,7 @@
 <?php namespace Lovata\OrdersShopaholic\Models;
 
 use Model;
+use October\Rain\Database\Traits\SoftDelete;
 use October\Rain\Database\Traits\Validation;
 
 use Lovata\Toolbox\Traits\Helpers\TraitCached;
@@ -22,6 +23,7 @@ use Lovata\Toolbox\Traits\Models\SetPropertyAttributeTrait;
  * @property integer                         $quantity
  * @property \October\Rain\Argon\Argon       $created_at
  * @property \October\Rain\Argon\Argon       $updated_at
+ * @property \October\Rain\Argon\Argon       $deleted_at
  *
  * @property Cart                            $cart
  * @method static Cart|\October\Rain\Database\Relations\BelongsTo cart()
@@ -35,6 +37,7 @@ use Lovata\Toolbox\Traits\Models\SetPropertyAttributeTrait;
  */
 class CartPosition extends Model
 {
+    use SoftDelete;
     use TraitCached;
     use Validation;
     use SetPropertyAttributeTrait;

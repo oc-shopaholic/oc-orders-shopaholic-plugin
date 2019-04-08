@@ -142,6 +142,32 @@ class CartProcessor
     }
 
     /**
+     * Restore position from current cart
+     * @param array  $arPositionList
+     * @param string $sPositionProcessor
+     * @return bool
+     * @throws
+     */
+    public function restore($arPositionList, $sPositionProcessor)
+    {
+        if (!$this->validateRequest($arPositionList, $sPositionProcessor)) {
+            return false;
+        }
+
+        /** @var AbstractCartPositionProcessor $obPositionProcessor */
+        $obPositionProcessor = app($sPositionProcessor, [$this->obCart, $this->obUser]);
+
+        //Process position list and restore position
+        foreach ($arPositionList as $iPositionID) {
+            $obPositionProcessor->restore($iPositionID);
+        }
+
+        $this->updateCartData();
+
+        return $this->prepareSuccessResponse();
+    }
+
+    /**
      * Clear cart
      */
     public function clear()
@@ -156,7 +182,7 @@ class CartProcessor
         }
 
         foreach ($obCartPositionList as $obCartPosition) {
-            $obCartPosition->delete();
+            $obCartPosition->forceDelete();
         }
 
         $this->obCartPositionList = null;
