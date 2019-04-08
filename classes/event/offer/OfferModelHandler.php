@@ -65,7 +65,7 @@ class OfferModelHandler extends ModelHandler
 
         /** @var CartPosition $obCartPosition */
         foreach ($obCartPositionList as $obCartPosition) {
-            $obCartPosition->delete();
+            $obCartPosition->forceDelete();
         }
     }
 

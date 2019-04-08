@@ -98,6 +98,24 @@ class Cart extends ComponentBase
     }
 
     /**
+     * Restore cart position
+     * @return array
+     */
+    public function onRestore()
+    {
+        $arRequestData = Input::get('cart');
+        $obActiveShippingType = $this->getActiveShippingTypeFromRequest();
+        if (!empty($obActiveShippingType) && $obActiveShippingType->isNotEmpty()) {
+            CartProcessor::instance()->setActiveShippingType($obActiveShippingType);
+        }
+
+        CartProcessor::instance()->restore($arRequestData, OfferCartPositionProcessor::class);
+        Result::setData(CartProcessor::instance()->getCartData());
+
+        return Result::get();
+    }
+
+    /**
      * Clear cart
      */
     public function onClear()
@@ -158,10 +176,10 @@ class Cart extends ComponentBase
             $obCart->user_data = array_merge((array) $obCart->user_data, $arUserData);
             $obCart->email = array_get($obCart->user_data, 'email');
 
-            $obCart->property = array_merge($obCart->property, $arCartProperty);
+            $obCart->property = array_merge((array) $obCart->property, $arCartProperty);
 
-            $obCart->billing_address = array_merge($obCart->billing_address, $arBillingAddress);
-            $obCart->shipping_address = array_merge($obCart->shipping_address, $arShippingAddress);
+            $obCart->billing_address = array_merge((array) $obCart->billing_address, $arBillingAddress);
+            $obCart->shipping_address = array_merge((array) $obCart->shipping_address, $arShippingAddress);
 
             $obCart->shipping_type_id = Input::get('shipping_type_id', $obCart->shipping_type_id);
             $obCart->payment_method_id = Input::get('payment_method_id', $obCart->payment_method_id);
@@ -285,7 +303,7 @@ class Cart extends ComponentBase
      * Get active shipping type from request
      * @return ShippingTypeItem
      */
-    protected function getActiveShippingTypeFromRequest()
+    public function getActiveShippingTypeFromRequest()
     {
         $iShippingTypeID = Input::get('shipping_type_id');
         if (empty($iShippingTypeID)) {

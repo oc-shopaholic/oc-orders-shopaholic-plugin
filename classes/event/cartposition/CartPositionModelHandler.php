@@ -12,6 +12,8 @@ use Lovata\OrdersShopaholic\Classes\Item\CartPositionItem;
  */
 class CartPositionModelHandler extends ModelHandler
 {
+    protected $bWithRestore = true;
+
     /**
      * Get model class name
      * @return string

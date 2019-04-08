@@ -91,7 +91,7 @@ class ProductModelHandler extends ModelHandler
 
             /** @var CartPosition $obCartPosition */
             foreach ($obCartPositionList as $obCartPosition) {
-                $obCartPosition->delete();
+                $obCartPosition->forceDelete();
             }
         }
     }

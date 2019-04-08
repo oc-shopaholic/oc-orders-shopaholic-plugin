@@ -121,3 +121,6 @@
     - table_update_carts_add_fields.php
     - table_create_shipping_restrictions_table.php
     - table_create_shipping_restrictions_link_table.php
+1.21.0:
+    - 'Added onRestore method to Cart component.'
+    - table_update_cart_positions_add_deleted_field.php

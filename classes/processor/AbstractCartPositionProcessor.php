@@ -57,6 +57,9 @@ abstract class AbstractCartPositionProcessor
         try {
             if (!empty($this->obCartPosition)) {
                 $this->obCartPosition->update($this->arPositionData);
+                if ($this->obCartPosition->trashed()) {
+                    $this->obCartPosition->restore();
+                }
             } else {
                 $this->obCartPosition = CartPosition::create($this->arPositionData);
             }
@@ -88,6 +91,9 @@ abstract class AbstractCartPositionProcessor
 
         try {
             $this->obCartPosition->update($this->arPositionData);
+            if ($this->obCartPosition->trashed()) {
+                $this->obCartPosition->restore();
+            }
         } catch (\October\Rain\Database\ModelException $obException) {
             $this->processValidationError($obException);
             return false;
@@ -130,6 +136,31 @@ abstract class AbstractCartPositionProcessor
     }
 
     /**
+     * Remove position from current cart
+     * @param int $iPositionID
+     * @return void
+     * @throws \Exception
+     */
+    public function restore($iPositionID)
+    {
+        if (empty($iPositionID)) {
+            return;
+        }
+
+        $this->arPositionData = [
+            'id'        => $iPositionID,
+            'item_type' => static::MODEL_CLASS,
+        ];
+
+        $this->findPosition();
+        if (empty($this->obCartPosition)) {
+            return;
+        }
+
+        $this->obCartPosition->restore();
+    }
+
+    /**
      * Validate position data, after add/update actions
      * @return bool
      */
@@ -142,6 +173,9 @@ abstract class AbstractCartPositionProcessor
     {
         $this->arPositionData['item_type'] = static::MODEL_CLASS;
         $this->arPositionData['cart_id'] = $this->obCart->id;
+        if (array_key_exists('item_id', $this->arPositionData) && empty($this->arPositionData['item_id']) && !empty($this->arPositionData['id'])) {
+            unset($this->arPositionData['item_id']);
+        }
     }
 
     /**
@@ -155,7 +189,7 @@ abstract class AbstractCartPositionProcessor
         $sItemType = array_get($this->arPositionData, 'item_type');
 
         if (!empty($iPositionID)) {
-            $this->obCartPosition = CartPosition::getByCart($this->obCart->id)->getByItemType($sItemType)->find($iPositionID);
+            $this->obCartPosition = CartPosition::withTrashed()->getByCart($this->obCart->id)->getByItemType($sItemType)->find($iPositionID);
 
             return;
         }
@@ -164,7 +198,7 @@ abstract class AbstractCartPositionProcessor
         $arItemProperty = (array) array_get($this->arPositionData, 'property');
 
         //Get cart position list by item_id and item_type
-        $obCartPositionList = CartPosition::getByCart($this->obCart->id)->getByItemType($sItemType)->getByItemID($iItemID)->get();
+        $obCartPositionList = CartPosition::withTrashed()->getByCart($this->obCart->id)->getByItemType($sItemType)->getByItemID($iItemID)->get();
         if ($obCartPositionList->isEmpty()) {
             return;
         }
