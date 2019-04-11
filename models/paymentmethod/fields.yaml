@@ -17,3 +17,14 @@ fields:
         span: full
         type: textarea
         size: small
+
+tabs:
+    fields:
+        payment_restriction:
+            span: full
+            path: $/lovata/ordersshopaholic/controllers/paymentmethods/_payment_restriction.htm
+            context:
+                - update
+                - preview
+            type: partial
+            tab: 'lovata.ordersshopaholic::lang.tab.payment_restrictions_info'
