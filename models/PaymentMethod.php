@@ -50,7 +50,10 @@ use Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface;
  * @method static Status|\October\Rain\Database\Relations\BelongsTo cancel_status()
  * @method static Status|\October\Rain\Database\Relations\BelongsTo fail_status()
  *
- * @property \Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface $gateway
+ * @property \Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface    $gateway
+ *
+ * @property \October\Rain\Database\Collection|ShippingRestriction[]        $payment_restriction
+ * @method static ShippingRestriction|\October\Rain\Database\Relations\BelongsToMany payment_restriction()
  */
 class PaymentMethod extends Model
 {

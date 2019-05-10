@@ -125,6 +125,6 @@
     - 'Added onRestore method to Cart component.'
     - table_update_cart_positions_add_deleted_field.php
 1.22.0:
-    - 'Added ability to create restrictions for payment methods. Added restrictions of payment methods by shipping type.'
+    - 'Added ability to create restrictions for payment methods. Added restrictions of payment methods by shipping type. Thanks for contribution Tsagan Noniev and Rubium Web.'
     - table_create_payment_restrictions_table.php
     - table_create_payment_restrictions_link_table.php

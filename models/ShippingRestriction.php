@@ -9,6 +9,7 @@ use Kharanenka\Scope\CodeField;
 
 use Lovata\Toolbox\Traits\Models\SetPropertyAttributeTrait;
 use Lovata\OrdersShopaholic\Classes\Restriction\RestrictionByTotalPrice;
+use Lovata\OrdersShopaholic\Classes\Restriction\ShippingRestrictionByPaymentMethod;
 
 /**
  * Class ShippingRestriction
@@ -89,7 +90,10 @@ class ShippingRestriction extends Model
      */
     public function getRestrictionOptions()
     {
-        $arResult = [RestrictionByTotalPrice::class => 'lovata.ordersshopaholic::lang.restriction.handler.by_total_price'];
+        $arResult = [
+            RestrictionByTotalPrice::class            => 'lovata.ordersshopaholic::lang.restriction.handler.by_total_price',
+            ShippingRestrictionByPaymentMethod::class => 'lovata.ordersshopaholic::lang.restriction.handler.by_payment_method',
+        ];
 
         $arEventResult = Event::fire(self::EVENT_GET_SHIPPING_RESTRICTION_LIST);
         if (empty($arEventResult)) {

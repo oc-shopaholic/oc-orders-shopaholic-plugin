@@ -1,32 +1,32 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Restriction;
 
-use Lovata\OrdersShopaholic\Models\ShippingType;
+use Lovata\OrdersShopaholic\Models\PaymentMethod;
 
 use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
 use Lovata\OrdersShopaholic\Interfaces\CheckRestrictionInterface;
 
 /**
- * Class PaymentRestrictionByShippingType
+ * Class ShippingRestrictionByPaymentMethod
  * @package Lovata\OrdersShopaholic\Classes\Restriction
- * @author Tsagan Noniev, deploy@rubium.ru, Rubium Web
+ * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  */
-class PaymentRestrictionByShippingType implements CheckRestrictionInterface
+class ShippingRestrictionByPaymentMethod implements CheckRestrictionInterface
 {
-    protected $arAvailableShippingType;
-    protected $iCurrentShippingType;
+    protected $arAvailablePaymentMethod;
+    protected $iCurrentPaymentMethod;
 
     /**
      * CheckRestrictionInterface constructor.
-     * @param \Lovata\OrdersShopaholic\Classes\Item\PaymentMethodItem $obPaymentMethodItem
+     * @param \Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem $obShippingTypeItem
      * @param array                                                  $arData
      * @param array                                                  $arProperty
      * @param string                                                 $sCode
      */
-    public function __construct($obPaymentMethodItem, $arData, $arProperty, $sCode)
+    public function __construct($obShippingTypeItem, $arData, $arProperty, $sCode)
     {
-        $this->arAvailableShippingType = (array) array_get($arProperty, 'shipping_type');
+        $this->arAvailablePaymentMethod = (array) array_get($arProperty, 'payment_method');
 
-        $this->iCurrentShippingType = CartProcessor::instance()->getCartObject()->shipping_type_id;
+        $this->iCurrentPaymentMethod = CartProcessor::instance()->getCartObject()->payment_method_id;
     }
 
     /**
@@ -36,12 +36,12 @@ class PaymentRestrictionByShippingType implements CheckRestrictionInterface
     public static function getFields() : array
     {
         return [
-            'property[shipping_type]' => [
-                'label'   => 'lovata.ordersshopaholic::lang.field.shipping_type',
+            'property[payment_method]' => [
+                'label'   => 'lovata.ordersshopaholic::lang.field.payment_method',
                 'tab'     => 'lovata.toolbox::lang.tab.settings',
                 'span'    => 'full',
                 'type'    => 'checkboxlist',
-                'options' => ShippingType::lists('name', 'id'),
+                'options' => PaymentMethod::lists('name', 'id'),
                 'context' => ['update', 'preview']
             ],
         ];
@@ -53,7 +53,7 @@ class PaymentRestrictionByShippingType implements CheckRestrictionInterface
      */
     public function check() : bool
     {
-        $bResult = empty($this->arAvailableShippingType) || empty($this->iCurrentShippingType) || in_array($this->iCurrentShippingType, $this->arAvailableShippingType);
+        $bResult = empty($this->arAvailablePaymentMethod) || empty($this->iCurrentPaymentMethod) || in_array($this->iCurrentPaymentMethod, $this->arAvailablePaymentMethod);
 
         return $bResult;
     }

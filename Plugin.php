@@ -179,14 +179,14 @@ class Plugin extends PluginBase
         //Order position events
         Event::subscribe(ExtendOrderPositionFieldsHandler::class);
         Event::subscribe(OrderPositionModelHandler::class);
-        //Payment restriction events
-        Event::subscribe(ExtendPaymentRestrictionFieldsHandler::class);
-        Event::subscribe(PaymentRestrictionRelationHandler::class);
-        Event::subscribe(PaymentRestrictionModelHandler::class);
         //Payment method events
         Event::subscribe(ExtendPaymentMethodFieldsHandler::class);
         Event::subscribe(PaymentMethodModelHandler::class);
         Event::subscribe(PaymentMethodRelationHandler::class);
+        //Payment restriction events
+        Event::subscribe(ExtendPaymentRestrictionFieldsHandler::class);
+        Event::subscribe(PaymentRestrictionRelationHandler::class);
+        Event::subscribe(PaymentRestrictionModelHandler::class);
         //Product events
         Event::subscribe(ProductModelHandler::class);
         //Shipping restriction events

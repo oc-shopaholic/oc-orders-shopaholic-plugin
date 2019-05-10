@@ -7,12 +7,13 @@ use Lovata\OrdersShopaholic\Models\PaymentMethod;
 /**
  * Class PaymentMethodItem
  * @package Lovata\Shopaholic\Classes\Item
- * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
+ * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  *
  * @property        $id
  * @property string $name
  * @property string $code
  * @property string $preview_text
+ * @property array  $restriction
  */
 class PaymentMethodItem extends ElementItem
 {
@@ -20,14 +21,6 @@ class PaymentMethodItem extends ElementItem
 
     /** @var PaymentMethod */
     protected $obElement = null;
-
-    protected $arFieldList = [
-        'id',
-        'name',
-        'code',
-        'preview_text',
-        'restriction',
-    ];
 
     /**
      * Set element data from model object
