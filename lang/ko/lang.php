@@ -184,11 +184,11 @@
         'property'   => [
             'price_min' => 'Price min',
             'price_max' => 'Price max',
-            'shipping_type' => 'Shipping type',
         ],
         'handler'    => [
-            'by_total_price' => 'By total price of cart positions',
-            'by_shipping_type' => 'By Shipping type',
+            'by_total_price'    => 'By total price of cart positions',
+            'by_shipping_type'  => 'By shipping type',
+            'by_payment_method' => 'By payment method',
         ],
     ],
     'permission'           => [
