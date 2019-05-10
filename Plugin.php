@@ -24,6 +24,11 @@ use Lovata\OrdersShopaholic\Classes\Event\OrderPosition\OrderPositionModelHandle
 //Payment method events
 use Lovata\OrdersShopaholic\Classes\Event\PaymentMethod\ExtendPaymentMethodFieldsHandler;
 use Lovata\OrdersShopaholic\Classes\Event\PaymentMethod\PaymentMethodModelHandler;
+use Lovata\OrdersShopaholic\Classes\Event\PaymentMethod\PaymentMethodRelationHandler;
+//Payment restriction events
+use Lovata\OrdersShopaholic\Classes\Event\PaymentRestriction\ExtendPaymentRestrictionFieldsHandler;
+use Lovata\OrdersShopaholic\Classes\Event\PaymentRestriction\PaymentRestrictionRelationHandler;
+use Lovata\OrdersShopaholic\Classes\Event\PaymentRestriction\PaymentRestrictionModelHandler;
 //Product events
 use Lovata\OrdersShopaholic\Classes\Event\Product\ProductModelHandler;
 //Shipping restriction events
@@ -174,9 +179,14 @@ class Plugin extends PluginBase
         //Order position events
         Event::subscribe(ExtendOrderPositionFieldsHandler::class);
         Event::subscribe(OrderPositionModelHandler::class);
+        //Payment restriction events
+        Event::subscribe(ExtendPaymentRestrictionFieldsHandler::class);
+        Event::subscribe(PaymentRestrictionRelationHandler::class);
+        Event::subscribe(PaymentRestrictionModelHandler::class);
         //Payment method events
         Event::subscribe(ExtendPaymentMethodFieldsHandler::class);
         Event::subscribe(PaymentMethodModelHandler::class);
+        Event::subscribe(PaymentMethodRelationHandler::class);
         //Product events
         Event::subscribe(ProductModelHandler::class);
         //Shipping restriction events

@@ -1,0 +1,15 @@
+# ===================================
+#  Relation Behavior Config
+# ===================================
+
+payment_restriction:
+    label: 'lovata.ordersshopaholic::lang.restriction.name'
+    view:
+        list: $/lovata/ordersshopaholic/models/paymentrestriction/columns.yaml
+        showSearch: true
+        showSorting: true
+        showCheckboxes: true
+        recordsPerPage: 10
+        toolbarButtons: create|add|remove|delete
+    manage:
+        form: $/lovata/ordersshopaholic/models/paymentrestriction/fields.yaml

@@ -31,6 +31,7 @@
         'shipping_address'           => 'Shipping address',
         'tasks'                      => 'Tasks',
         'shipping_restrictions_info' => 'Restrictions',
+        'payment_restrictions_info'  => 'Restrictions',
     ],
     'message'              => [
         'empty_cart'           => 'Cart is empty',
@@ -182,10 +183,12 @@
         'list_title' => 'Restriction list',
         'property'   => [
             'price_min' => 'Price min',
-            'price_max' => 'Price max'
+            'price_max' => 'Price max',
+            'shipping_type' => 'Shipping type',
         ],
         'handler'    => [
             'by_total_price' => 'By total price of cart positions',
+            'by_shipping_type' => 'By Shipping type',
         ],
     ],
     'permission'           => [

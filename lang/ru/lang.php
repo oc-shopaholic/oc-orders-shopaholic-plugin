@@ -31,6 +31,7 @@
         'shipping_address'           => 'Адрес доставки',
         'tasks'                      => 'Задачи',
         'shipping_restrictions_info' => 'Ограничения',
+        'payment_restrictions_info'  => 'Ограничения',
     ],
     'message'              => [
         'empty_cart'           => 'Корзина пуста',
@@ -182,10 +183,12 @@
         'list_title' => 'Список ограничений',
         'property'   => [
             'price_min' => 'Минимальная цена',
-            'price_max' => 'Максимальная цена'
+            'price_max' => 'Максимальная цена',
+            'shipping_type' => 'Способ доставки',
         ],
         'handler'    => [
             'by_total_price' => 'По общей сумме позиций заказа',
+            'by_shipping_type' => 'По способу доставки',
         ],
     ],
     'permission'           => [

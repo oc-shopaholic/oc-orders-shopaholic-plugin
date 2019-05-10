@@ -119,6 +119,13 @@ class PaymentMethod extends Model
 
     public $hasMany = ['order' => Order::class];
 
+    public $belongsToMany = [
+        'payment_restriction' => [
+            PaymentRestriction::class,
+            'table' => 'lovata_ordersshopaholic_payment_restrictions_link',
+        ],
+    ];
+
     protected $arGatewayClassList = [];
 
     /**
