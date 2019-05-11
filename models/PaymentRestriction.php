@@ -8,49 +8,49 @@ use Kharanenka\Scope\ActiveField;
 use Kharanenka\Scope\CodeField;
 
 use Lovata\Toolbox\Traits\Models\SetPropertyAttributeTrait;
+use Lovata\OrdersShopaholic\Classes\Restriction\PaymentRestrictionByShippingType;
 use Lovata\OrdersShopaholic\Classes\Restriction\RestrictionByTotalPrice;
-use Lovata\OrdersShopaholic\Classes\Restriction\ShippingRestrictionByPaymentMethod;
 
 /**
- * Class ShippingRestriction
+ * Class PaymentRestriction
  * @package Lovata\OrdersShopaholic\Models
  * @author  Tsagan Noniev, deploy@rubium.ru, Rubium Web
  *
  * @mixin \October\Rain\Database\Builder
  * @mixin \Eloquent
  *
- * @property int                                              $id
- * @property bool                                             $active
- * @property string                                           $name
- * @property string                                           $code
- * @property string                                           $restriction
- * @property string                                           $description
- * @property string                                           $property
- * @property int                                              $sort_order
- * @property \October\Rain\Argon\Argon                        $created_at
- * @property \October\Rain\Argon\Argon                        $updated_at
+ * @property int                                               $id
+ * @property bool                                              $active
+ * @property string                                            $name
+ * @property string                                            $code
+ * @property string                                            $restriction
+ * @property string                                            $description
+ * @property string                                            $property
+ * @property int                                               $sort_order
+ * @property \October\Rain\Argon\Argon                         $created_at
+ * @property \October\Rain\Argon\Argon                         $updated_at
  *
- * @property \October\Rain\Database\Collection|ShippingType[] $shipping_type
- * @method static ShippingType|\October\Rain\Database\Relations\BelongsToMany shipping_type()
+ * @property \October\Rain\Database\Collection|PaymentMethod[] $payment_method
+ * @method static PaymentMethod|\October\Rain\Database\Relations\BelongsToMany payment_method()
  */
-class ShippingRestriction extends Model
+class PaymentRestriction extends Model
 {
     use Validation;
     use ActiveField;
     use CodeField;
     use SetPropertyAttributeTrait;
 
-    const EVENT_GET_SHIPPING_RESTRICTION_LIST = 'shopaholic.shippingtype.get.restriction.list';
+    const EVENT_GET_PAYMENT_RESTRICTION_LIST = 'shopaholic.paymentmethod.get.restriction.list';
 
     /**
      * @var string The database table used by the model.
      */
-    public $table = 'lovata_ordersshopaholic_shipping_restrictions';
+    public $table = 'lovata_ordersshopaholic_payment_restrictions';
 
     /** Validation */
     public $rules = [
         'name' => 'required',
-        'code' => 'required|unique:lovata_ordersshopaholic_shipping_restrictions',
+        'code' => 'required|unique:lovata_ordersshopaholic_payment_restrictions',
     ];
 
     protected $guarded = ['*'];
@@ -73,9 +73,9 @@ class ShippingRestriction extends Model
     public $hasMany = [];
     public $belongsTo = [];
     public $belongsToMany = [
-        'shipping_type' => [
-            ShippingType::class,
-            'table' => 'lovata_ordersshopaholic_shipping_restrictions_link',
+        'payment_method' => [
+            PaymentMethod::class,
+            'table' => 'lovata_ordersshopaholic_payment_restrictions_link',
         ],
     ];
     public $morphTo = [];
@@ -91,11 +91,11 @@ class ShippingRestriction extends Model
     public function getRestrictionOptions()
     {
         $arResult = [
-            RestrictionByTotalPrice::class            => 'lovata.ordersshopaholic::lang.restriction.handler.by_total_price',
-            ShippingRestrictionByPaymentMethod::class => 'lovata.ordersshopaholic::lang.restriction.handler.by_payment_method',
+            RestrictionByTotalPrice::class          => 'lovata.ordersshopaholic::lang.restriction.handler.by_total_price',
+            PaymentRestrictionByShippingType::class => 'lovata.ordersshopaholic::lang.restriction.handler.by_shipping_type',
         ];
 
-        $arEventResult = Event::fire(self::EVENT_GET_SHIPPING_RESTRICTION_LIST);
+        $arEventResult = Event::fire(self::EVENT_GET_PAYMENT_RESTRICTION_LIST);
         if (empty($arEventResult)) {
             return $arResult;
         }

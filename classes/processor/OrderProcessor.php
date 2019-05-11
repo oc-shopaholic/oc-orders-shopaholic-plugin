@@ -25,6 +25,7 @@ class OrderProcessor
     use TraitValidationHelper;
 
     const EVENT_ORDER_CREATED = 'shopaholic.order.created';
+    const EVENT_ORDER_POSITION_CREATED = 'shopaholic.order_position.created';
     const EVENT_ORDER_FIND_USER_BEFORE_CREATE = 'shopaholic.order.find_user_before_create';
     const EVENT_ORDER_USER_CREATED = 'shopaholic.order.user_created';
     const EVENT_ORDER_GET_REDIRECT_URL = 'shopaholic.order.get_redirect_url';
@@ -262,7 +263,7 @@ class OrderProcessor
             $arOrderPositionData = $obProcessor->getData();
             $arOrderPositionData['order_id'] = $this->obOrder->id;
 
-            if ($this->createOrderPosition($arOrderPositionData)) {
+            if ($this->createOrderPosition($arOrderPositionData, $obCartPositionItem)) {
                 continue;
             }
 
@@ -277,16 +278,20 @@ class OrderProcessor
     /**
      * Create order position
      * @param array $arOrderPositionData
+     * @param \Lovata\OrdersShopaholic\Classes\Item\CartPositionItem $obCartPositionItem
      * @return bool
      */
-    protected function createOrderPosition($arOrderPositionData)
+    protected function createOrderPosition($arOrderPositionData, $obCartPositionItem)
     {
         try {
-            $this->obOrder->order_position()->add(OrderPosition::create($arOrderPositionData));
+            $obOrderPosition = OrderPosition::create($arOrderPositionData);
+            $this->obOrder->order_position()->add($obOrderPosition);
         } catch (\October\Rain\Database\ModelException $obException) {
             $this->processValidationError($obException);
             return false;
         }
+
+        Event::fire(self::EVENT_ORDER_POSITION_CREATED, [$obCartPositionItem, $obOrderPosition]);
 
         return true;
     }

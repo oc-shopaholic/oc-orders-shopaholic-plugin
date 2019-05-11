@@ -36,4 +36,32 @@ class PaymentMethodCollection extends ElementCollection
 
         return $this->intersect($arElementIDList);
     }
+
+    /**
+     * Apply filter by restrictions
+     * @param array $arData
+     * @return $this
+     */
+    public function available($arData = null)
+    {
+        if ($this->isEmpty()) {
+            return $this->returnThis();
+        }
+
+        $arElementList = $this->all();
+        $arExcludeIDList = [];
+
+        /** @var ShippingTypeItem $obElement */
+        foreach ($arElementList as $obElement) {
+            if (!$obElement->isAvailable($arData)) {
+                $arExcludeIDList[] = $obElement->id;
+            }
+        }
+
+        if (empty($arExcludeIDList)) {
+            $this->returnThis();
+        }
+
+        return $this->diff($arExcludeIDList);
+    }
 }

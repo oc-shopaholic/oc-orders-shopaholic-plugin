@@ -128,11 +128,11 @@ class CartProcessor
             return false;
         }
 
-        /** @var AbstractCartPositionProcessor $obPositionProcessor */
-        $obPositionProcessor = app($sPositionProcessor, [$this->obCart, $this->obUser]);
 
         //Process position list and remove position from cart
         foreach ($arPositionList as $iPositionID) {
+            /** @var AbstractCartPositionProcessor $obPositionProcessor */
+            $obPositionProcessor = app($sPositionProcessor, [$this->obCart, $this->obUser]);
             $obPositionProcessor->remove($iPositionID, $sType);
         }
 
@@ -154,11 +154,11 @@ class CartProcessor
             return false;
         }
 
-        /** @var AbstractCartPositionProcessor $obPositionProcessor */
-        $obPositionProcessor = app($sPositionProcessor, [$this->obCart, $this->obUser]);
 
         //Process position list and restore position
         foreach ($arPositionList as $iPositionID) {
+            /** @var AbstractCartPositionProcessor $obPositionProcessor */
+            $obPositionProcessor = app($sPositionProcessor, [$this->obCart, $this->obUser]);
             $obPositionProcessor->restore($iPositionID);
         }
 

@@ -59,6 +59,10 @@ class TableUpdateOrdersAddCurrencyIdField extends Migration
      */
     protected function seedDefaultCurrencyValue()
     {
+        if (!Schema::hasTable('lovata_shopaholic_currency')) {
+            return;
+        }
+
         $obCurrencyList = Currency::all();
         $obOrderList = Order::all();
         if ($obCurrencyList->isEmpty() || $obOrderList->isEmpty()) {
