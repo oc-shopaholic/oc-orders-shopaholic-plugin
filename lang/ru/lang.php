@@ -105,6 +105,10 @@
         'name'        => 'Имя',
         'last_name'   => 'Фамилия',
         'middle_name' => 'Отчество',
+
+        'widget_аor_the_last'       => 'За последние',
+        'widget_days'               => 'дней',
+        'widget_orders_by_statuses' => 'Заказы по статусам',
     ],
     'settings'             => [
         'cart_cookie_lifetime'                 => 'Время жизни ID корзины в cookie (мин.)',

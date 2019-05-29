@@ -105,6 +105,10 @@
         'name'        => 'Name',
         'last_name'   => 'Last name',
         'middle_name' => 'Middle name',
+
+        'widget_аor_the_last'       => 'For the last',
+        'widget_days'               => 'days',
+        'widget_orders_by_statuses' => 'Orders by statuses',
     ],
     'settings'             => [
         'cart_cookie_lifetime'                 => 'Life time of cart ID in cookie (min.)',

@@ -211,4 +211,16 @@ class Plugin extends PluginBase
         //User address events
         Event::subscribe(UserAddressModelHandler::class);
     }
+
+    /**
+     * @return array
+     */
+    public function registerReportWidgets()
+    {
+        return [
+            'Lovata\OrdersShopaholic\Widgets\OrdersByStatus' => [
+                'label' => 'lovata.ordersshopaholic::lang.field.widget_orders_by_statuses',
+            ],
+        ];
+    }
 }
