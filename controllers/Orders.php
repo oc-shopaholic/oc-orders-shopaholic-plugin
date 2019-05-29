@@ -142,6 +142,7 @@ class Orders extends Controller
                 ->whereDate('created_at', '>=', $obDate)
                 ->get();
 
+            $iCountCompletedOrders = $obCompletedOrderList->count();
             $fCompletedTotalPrice = $this->getCompletedTotalPriceByLastPeriod($obCompletedOrderList);
         }
 
