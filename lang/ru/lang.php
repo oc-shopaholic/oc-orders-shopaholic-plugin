@@ -43,6 +43,7 @@
         'without_condition'    => 'Без условий',
         'discount_not_applied' => 'Скидки не применялись',
         'e_address_exists'     => 'Такой адрес уже существует',
+        'for_the_last_period'  => 'За последний период',
     ],
     'field'                => [
         'status'       => 'Статус',
@@ -105,6 +106,9 @@
         'name'        => 'Имя',
         'last_name'   => 'Фамилия',
         'middle_name' => 'Отчество',
+
+        'orders'           => 'Заказы',
+        'completed_orders' => 'Завершенные заказы',
     ],
     'settings'             => [
         'cart_cookie_lifetime'                 => 'Время жизни ID корзины в cookie (мин.)',

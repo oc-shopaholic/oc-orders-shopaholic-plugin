@@ -43,6 +43,7 @@
         'without_condition'    => 'Without condition',
         'discount_not_applied' => 'Discount not applied',
         'e_address_exists'     => 'This address already exists',
+        'for_the_last_period'  => 'For the last period',
     ],
     'field'                => [
         'status'       => 'Status',
@@ -105,6 +106,9 @@
         'name'        => 'Name',
         'last_name'   => 'Last name',
         'middle_name' => 'Middle name',
+
+        'orders'           => 'Orders',
+        'completed_orders' => 'Completed orders',
     ],
     'settings'             => [
         'cart_cookie_lifetime'                 => 'Life time of cart ID in cookie (min.)',
