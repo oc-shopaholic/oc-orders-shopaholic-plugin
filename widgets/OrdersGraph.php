@@ -6,6 +6,7 @@ use Backend\Classes\ReportWidgetBase;
 
 use Lovata\OrdersShopaholic\Models\Status;
 use Lovata\OrdersShopaholic\Models\Order;
+use Lovata\Shopaholic\Classes\Helper\CurrencyHelper;
 
 /**
  * Class OrdersGraph
@@ -14,8 +15,13 @@ use Lovata\OrdersShopaholic\Models\Order;
  */
 class OrdersGraph extends ReportWidgetBase
 {
+    const TYPE_COUNT_ORDERS = 'count_orders';
+    const TYPE_TOTAL_PRICE  = 'total_price';
+
     /** @var Argon */
     protected $obDate;
+    /** @var int */
+    protected $iDays = 14;
 
     /**
      * Render method
@@ -24,7 +30,8 @@ class OrdersGraph extends ReportWidgetBase
      */
     public function render()
     {
-//        $this->initData();
+        $this->initData();
+
 
         return $this->makePartial('widget');
     }
@@ -37,13 +44,27 @@ class OrdersGraph extends ReportWidgetBase
     {
         return [
             'days' => [
-                'title'   => 'lovata.ordersshopaholic::lang.field.widget_orders_graph',
-                'type'    => 'checkboxlist',
+                'title'   => 'lovata.ordersshopaholic::lang.field.widget_orders_by_statuses',
+                'type'    => 'dropdown',
                 'default' => 14,
                 'options' => [
                     14 => '14'.' '.Lang::get('lovata.ordersshopaholic::lang.field.widget_days'),
                     30 => '30'.' '.Lang::get('lovata.ordersshopaholic::lang.field.widget_days'),
                     90 => '90'.' '.Lang::get('lovata.ordersshopaholic::lang.field.widget_days'),
+                ],
+            ],
+            'completed' => [
+                'title'   => 'lovata.ordersshopaholic::lang.field.widget_only_completed_orders',
+                'type'    => 'checkbox',
+                'default' => false,
+            ],
+            'type' => [
+                'title'   => 'lovata.toolbox::lang.field.type',
+                'type'    => 'dropdown',
+                'default' => self::TYPE_COUNT_ORDERS,
+                'options' => [
+                    self::TYPE_COUNT_ORDERS => Lang::get('lovata.ordersshopaholic::lang.field.count_orders'),
+                    self::TYPE_TOTAL_PRICE  => Lang::get('lovata.ordersshopaholic::lang.field.total_price'),
                 ],
             ],
         ];
@@ -56,46 +77,127 @@ class OrdersGraph extends ReportWidgetBase
     {
         $iDays = $this->property('days');
 
-        if (empty($iDays)) {
-            $iDays = 14;
+        if (!empty($iDays)) {
+            $this->iDays = $iDays;
         }
 
         $this->obDate = Argon::now()->subDays($iDays);
 
-        $this->vars['arOrderListByStatus'] = [];
-        $this->vars['iCountOrders']        = 0;
+        $sGraph = $this->getGraph();
 
-        $obStatusList = Status::all();
-
-        if (empty($obStatusList)) {
-            return;
+        if ($this->property('type') == self::TYPE_COUNT_ORDERS) {
+            $sType = Lang::get('lovata.ordersshopaholic::lang.field.count_orders');
+        } else {
+            $sType = Lang::get('lovata.ordersshopaholic::lang.field.total_price');
         }
 
-        foreach ($obStatusList as $obStatus) {
-            $iCount = $this->countOrdersByStatus($obStatus);
-
-            $this->vars['iCountOrders'] += $iCount;
-            $this->vars['arOrderListByStatus'][] = [
-                'name' => $obStatus->name,
-                'count' => $iCount,
-            ];
-        }
+        $this->vars['sName']  = implode('_', $this->getProperties());
+        $this->vars['sGraph'] = substr($sGraph, 0, -1);
+        $this->vars['sTitle'] = Lang::get('lovata.toolbox::lang.field.type').': '.$sType;
     }
 
     /**
      * Count orders by status
-     * @param Status $obStatus
      * @return int
      */
-    protected function countOrdersByStatus($obStatus)
+    protected function getGraph()
     {
-        if (empty($obStatus) || !$obStatus instanceof Status || empty($this->obDate)) {
+        $sResult = '';
+
+        if (empty($this->obDate) || $this->iDays === null) {
+            return $sResult;
+        }
+
+        $iMaxCount = $this->iDays + 1;
+        for ($i = 1; $i < $iMaxCount; $i++) {
+            $obDate = $this->obDate->addDay();
+
+            if ($this->property('type') == self::TYPE_COUNT_ORDERS) {
+                $fCount = $this->getCountOrders($obDate);
+            } else {
+                $fCount = $this->getTotalPrice($obDate);
+            }
+
+            $sResult .= '['.$obDate->getTimestamp().'000,'.$fCount.'],';
+        }
+
+        return $sResult;
+    }
+
+    /**
+     * Get count order
+     * @param Argon $obDate
+     * @return int
+     */
+    protected function getCountOrders($obDate)
+    {
+        if (empty($obDate) || !$obDate instanceof Argon) {
             return 0;
         }
 
-        return Order::getByStatus($obStatus->id)
-            ->whereDate('created_at', '>=', $this->obDate)
+        $obQuery = Order::whereDate('created_at', '>=', $obDate->toDateString())
+            ->whereDate('created_at', '<=', $obDate->toDateString());
+
+        if ($this->property('completed')) {
+            $obQuery = $this->getQueryByStatus($obQuery);
+        }
+
+        return $obQuery->orderBy('created_at', 'asc')
             ->get()
             ->count();
+    }
+
+    /**
+     * Get total price
+     * @param Argon $obDate
+     * @return int
+     */
+    protected function getTotalPrice($obDate)
+    {
+        $fResult = 0;
+
+        if (empty($obDate) || !$obDate instanceof Argon) {
+            return $fResult;
+        }
+
+        $obQuery = Order::whereDate('created_at', '>=', $obDate->toDateString())
+            ->whereDate('created_at', '<=', $obDate->toDateString());
+
+        if ($this->property('completed')) {
+            $obQuery = $this->getQueryByStatus($obQuery);
+        }
+
+        $obOrderList = $obQuery->orderBy('created_at', 'asc')->get();
+
+        if ($obOrderList->isEmpty()) {
+            return $fResult;
+        }
+
+        foreach ($obOrderList as $obOrder) {
+            $obCurrency = $obOrder->currency;
+            if (empty($obCurrency)) {
+                continue;
+            }
+
+            $fResult = $fResult + CurrencyHelper::instance()->convertTo($obOrder->total_price_value, $obCurrency->code);
+        }
+
+        return $fResult;
+    }
+
+    /**
+     * Get orders by completed status
+     * @param Order $obQuery
+     * @return mixed
+     */
+    protected function getQueryByStatus($obQuery)
+    {
+        $obStatus = Status::getByCode(Status::STATUS_COMPETE)->first();
+
+        if (empty($obStatus)) {
+            return $obQuery;
+        }
+
+        return $obQuery->getByStatus($obStatus->id);
     }
 }

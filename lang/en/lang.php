@@ -97,6 +97,7 @@
         'applied_to_shipping_price'      => 'Applied to shipping price',
         'restriction'                    => 'Restriction',
         'shipping_type_api_class'        => 'API method',
+        'count_orders'                   => 'Count orders',
 
         'order_discount_log_position_total_price' => 'List of applied discounts (position total price)',
         'order_discount_log_sipping_price'        => 'List of applied discounts (sipping price)',
@@ -106,10 +107,11 @@
         'last_name'   => 'Last name',
         'middle_name' => 'Middle name',
 
-        'widget_аor_the_last'       => 'For the last',
-        'widget_days'               => 'days',
-        'widget_orders_by_statuses' => 'Orders by statuses',
-        'widget_orders_graph'       => 'Orders graph',
+        'widget_аor_the_last'          => 'For the last',
+        'widget_days'                  => 'days',
+        'widget_orders_by_statuses'    => 'Orders by statuses',
+        'widget_orders_graph'          => 'Orders graph',
+        'widget_only_completed_orders' => 'Only completed orders',
     ],
     'settings'             => [
         'cart_cookie_lifetime'                 => 'Life time of cart ID in cookie (min.)',

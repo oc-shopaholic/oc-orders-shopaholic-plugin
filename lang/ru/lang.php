@@ -97,6 +97,7 @@
         'applied_to_shipping_price'      => 'Применять к стоймости доставки',
         'restriction'                    => 'Ограничение',
         'shipping_type_api_class'        => 'API метод',
+        'count_orders'                   => 'Количество заказов',
 
         'order_discount_log_position_total_price' => 'Список примененных скидок (для суммы позиций заказов)',
         'order_discount_log_sipping_price'        => 'Список примененных скидок (для стомости доставки)',
@@ -106,10 +107,11 @@
         'last_name'   => 'Фамилия',
         'middle_name' => 'Отчество',
 
-        'widget_аor_the_last'       => 'За последние',
-        'widget_days'               => 'дней',
-        'widget_orders_by_statuses' => 'Заказы по статусам',
-        'widget_orders_graph'       => 'График заказов',
+        'widget_аor_the_last'          => 'За последние',
+        'widget_days'                  => 'дней',
+        'widget_orders_by_statuses'    => 'Заказы по статусам',
+        'widget_orders_graph'          => 'График заказов',
+        'widget_only_completed_orders' => 'Только завершенные заказы',
     ],
     'settings'             => [
         'cart_cookie_lifetime'                 => 'Время жизни ID корзины в cookie (мин.)',

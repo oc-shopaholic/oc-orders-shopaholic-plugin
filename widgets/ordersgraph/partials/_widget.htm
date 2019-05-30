@@ -1,14 +1,18 @@
-<div id="cachesizes" class="report-widget">
-    <div
-            data-control="chart-line"
-            data-time-mode="weeks"
-            class="height-200"
-            data-chart-options="xaxis: {mode: 'time'}">
-    <span
-            data-chart="dataset"
-            data-set-color="#008dc9"
-            data-set-data="[1477857082000, 400], [1477943482000, 380], [1478029882000, 340], [1478116282000, 540], [1478202682000, 440], [1478289082000, 360], [1478375482000, 220]"
-            data-set-name="Visits">
-    </span>
+<strong><?= $sTitle ?></strong>
+<?php if (!empty($sGraph)) { ?>
+    <div id="cachesizes" class="report-widget">
+        <div
+        data-control="chart-line"
+        data-time-mode="years"
+        class="height-200"
+        data-chart-options="xaxis: {mode: 'time'}"
+        >
+            <span
+                data-chart="dataset"
+                data-set-color="#008dc9"
+                data-set-data="<?= $sGraph ?>"
+                data-set-name="<?= $sName ?>">
+            </span>
+        </div>
     </div>
-</div>
+<?php } ?>
