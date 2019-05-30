@@ -221,6 +221,9 @@ class Plugin extends PluginBase
             'Lovata\OrdersShopaholic\Widgets\OrdersByStatus' => [
                 'label' => 'lovata.ordersshopaholic::lang.field.widget_orders_by_statuses',
             ],
+            'Lovata\OrdersShopaholic\Widgets\OrdersGraph' => [
+                'label' => 'lovata.ordersshopaholic::lang.field.widget_orders_graph',
+            ],
         ];
     }
 }

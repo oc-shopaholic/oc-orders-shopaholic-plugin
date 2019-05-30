@@ -109,6 +109,7 @@
         'widget_аor_the_last'       => 'За последние',
         'widget_days'               => 'дней',
         'widget_orders_by_statuses' => 'Заказы по статусам',
+        'widget_orders_graph'       => 'График заказов',
     ],
     'settings'             => [
         'cart_cookie_lifetime'                 => 'Время жизни ID корзины в cookie (мин.)',
