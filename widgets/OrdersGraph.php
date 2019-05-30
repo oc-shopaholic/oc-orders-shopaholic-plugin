@@ -1,12 +1,11 @@
 <?php namespace Lovata\OrdersShopaholic\Widgets;
 
 use Lang;
+use Lovata\Shopaholic\Models\Currency;
 use October\Rain\Argon\Argon;
 use Backend\Classes\ReportWidgetBase;
-
 use Lovata\OrdersShopaholic\Models\Status;
 use Lovata\OrdersShopaholic\Models\Order;
-use Lovata\Shopaholic\Classes\Helper\CurrencyHelper;
 
 /**
  * Class OrdersGraph
@@ -22,6 +21,8 @@ class OrdersGraph extends ReportWidgetBase
     protected $obDate;
     /** @var int */
     protected $iDays = 14;
+    /** @var int */
+    protected $iCurrencyId;
 
     /**
      * Render method
@@ -42,7 +43,7 @@ class OrdersGraph extends ReportWidgetBase
      */
     public function defineProperties()
     {
-        return [
+        $arDefineProperty = [
             'days' => [
                 'title'   => 'lovata.ordersshopaholic::lang.field.widget_orders_by_statuses',
                 'type'    => 'dropdown',
@@ -68,6 +69,29 @@ class OrdersGraph extends ReportWidgetBase
                 ],
             ],
         ];
+
+        $arDefineProperty = array_merge($arDefineProperty, $this->getDefinePropertiesCurrency());
+
+        return $arDefineProperty;
+    }
+
+    /**
+     * Get define properties currency
+     * @return array
+     */
+    protected function getDefinePropertiesCurrency()
+    {
+        if ($this->property('type') != self::TYPE_TOTAL_PRICE) {
+            return [];
+        }
+
+        return [
+            'currency_id' => [
+                'title'   => 'lovata.ordersshopaholic::lang.field.widget_filter_by_currency',
+                'type'    => 'dropdown',
+                'options' => Currency::all()->lists('name',  'id'),
+            ],
+        ];
     }
 
     /**
@@ -85,15 +109,24 @@ class OrdersGraph extends ReportWidgetBase
 
         $sGraph = $this->getGraph();
 
+
         if ($this->property('type') == self::TYPE_COUNT_ORDERS) {
             $sType = Lang::get('lovata.ordersshopaholic::lang.field.count_orders');
         } else {
             $sType = Lang::get('lovata.ordersshopaholic::lang.field.total_price');
         }
 
+
+        $sCurrencyName = '';
+        $obCurrency = Currency::find($this->getCurrencyId());
+
+        if (!empty($obCurrency)) {
+            $sCurrencyName = $obCurrency->name;
+        }
+
         $this->vars['sName']  = implode('_', $this->getProperties());
         $this->vars['sGraph'] = substr($sGraph, 0, -1);
-        $this->vars['sTitle'] = Lang::get('lovata.toolbox::lang.field.type').': '.$sType;
+        $this->vars['sTitle'] = Lang::get('lovata.toolbox::lang.field.type').': '.$sType.' ('.$sCurrencyName.')';
     }
 
     /**
@@ -161,7 +194,8 @@ class OrdersGraph extends ReportWidgetBase
         }
 
         $obQuery = Order::whereDate('created_at', '>=', $obDate->toDateString())
-            ->whereDate('created_at', '<=', $obDate->toDateString());
+            ->whereDate('created_at', '<=', $obDate->toDateString())
+            ->getByCurrency($this->getCurrencyId());
 
         if ($this->property('completed')) {
             $obQuery = $this->getQueryByStatus($obQuery);
@@ -174,17 +208,36 @@ class OrdersGraph extends ReportWidgetBase
         }
 
         foreach ($obOrderList as $obOrder) {
-            $obCurrency = $obOrder->currency;
-            if (empty($obCurrency)) {
-                continue;
-            }
-
-            $fResult = $fResult + CurrencyHelper::instance()->convertTo($obOrder->total_price_value, $obCurrency->code);
+            $fResult = $fResult + $obOrder->total_price_value;
         }
 
         return $fResult;
     }
 
+    /**
+     * Get currency id
+     * @return null|int
+     */
+    protected function getCurrencyId()
+    {
+        if (!empty($this->iCurrencyId)) {
+            return $this->iCurrencyId;
+        }
+
+        $this->iCurrencyId = $this->property('currency_id');
+
+        if (!empty($this->iCurrencyId)) {
+            return $this->iCurrencyId;
+        }
+
+        $obCurrency = Currency::isDefault()->first();
+
+        if (!empty($obCurrency)) {
+            $this->iCurrencyId = $obCurrency->id;
+        }
+
+        return $this->iCurrencyId;
+    }
     /**
      * Get orders by completed status
      * @param Order $obQuery

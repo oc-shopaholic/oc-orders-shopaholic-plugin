@@ -43,6 +43,7 @@
         'without_condition'    => 'Без условий',
         'discount_not_applied' => 'Скидки не применялись',
         'e_address_exists'     => 'Такой адрес уже существует',
+        'for_the_last_period'  => 'За последний период',
     ],
     'field'                => [
         'status'       => 'Статус',
@@ -107,11 +108,15 @@
         'last_name'   => 'Фамилия',
         'middle_name' => 'Отчество',
 
+        'orders'           => 'Заказы',
+        'completed_orders' => 'Завершенные заказы',
+
         'widget_аor_the_last'          => 'За последние',
         'widget_days'                  => 'дней',
         'widget_orders_by_statuses'    => 'Заказы по статусам',
         'widget_orders_graph'          => 'График заказов',
         'widget_only_completed_orders' => 'Только завершенные заказы',
+        'widget_filter_by_currency'    => 'Фильтр по валюте',
     ],
     'settings'             => [
         'cart_cookie_lifetime'                 => 'Время жизни ID корзины в cookie (мин.)',

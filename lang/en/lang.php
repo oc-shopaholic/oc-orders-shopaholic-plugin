@@ -43,6 +43,7 @@
         'without_condition'    => 'Without condition',
         'discount_not_applied' => 'Discount not applied',
         'e_address_exists'     => 'This address already exists',
+        'for_the_last_period'  => 'For the last period',
     ],
     'field'                => [
         'status'       => 'Status',
@@ -107,11 +108,15 @@
         'last_name'   => 'Last name',
         'middle_name' => 'Middle name',
 
+        'orders'           => 'Orders',
+        'completed_orders' => 'Completed orders',
+
         'widget_аor_the_last'          => 'For the last',
         'widget_days'                  => 'days',
         'widget_orders_by_statuses'    => 'Orders by statuses',
         'widget_orders_graph'          => 'Orders graph',
         'widget_only_completed_orders' => 'Only completed orders',
+        'widget_filter_by_currency'    => 'Filter by currency',
     ],
     'settings'             => [
         'cart_cookie_lifetime'                 => 'Life time of cart ID in cookie (min.)',

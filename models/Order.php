@@ -94,6 +94,7 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
  * @method static $this getByPaymentMethod(int $iPaymentMethodID)
  * @method static $this getBySecretKey(string $sNumber)
  * @method static $this getByTransactionID(string $sTransactionID)
+ * @method static $this getByCurrency(int $iCurrencyId)
  */
 class Order extends Model
 {
@@ -293,6 +294,21 @@ class Order extends Model
     {
         if (!empty($sData)) {
             $obQuery->where('payment_token', $sData);
+        }
+
+        return $obQuery;
+    }
+
+    /**
+     * Get order by currency
+     * @param Order  $obQuery
+     * @param string $sData
+     * @return Order
+     */
+    public function scopeGetByCurrency($obQuery, $sData)
+    {
+        if (!empty($sData)) {
+            $obQuery->where('currency_id', $sData);
         }
 
         return $obQuery;
