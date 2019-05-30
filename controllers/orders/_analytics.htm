@@ -1,12 +1,12 @@
-<?php if (!empty($this->vars) && is_array($this->vars)) { ?>
+<?php if (!empty($this->vars)) { ?>
 
-    <?php if ($this->vars['count_all_orders'] !== null) { ?>
+    <?php if ($iCountAllOrders !== null) { ?>
         <div class="scoreboard-item title-value">
             <h4>
                 <?= e(trans('lovata.ordersshopaholic::lang.field.orders')) ?>
             </h4>
             <p class="positive">
-                <?= $this->vars['count_all_orders'] ?>
+                <?= $iCountAllOrders ?>
             </p>
             <p class="description">
                 <?= e(trans('lovata.ordersshopaholic::lang.message.for_the_last_period')) ?>
@@ -14,13 +14,13 @@
         </div>
     <?php } ?>
 
-    <?php if ($this->vars['count_completed_orders'] !== null) { ?>
+    <?php if ($iCountCompletedOrders !== null) { ?>
         <div class="scoreboard-item title-value">
             <h4>
                 <?= e(trans('lovata.ordersshopaholic::lang.field.completed_orders')) ?>
             </h4>
             <p class="positive">
-                <?= $this->vars['count_completed_orders'] ?>
+                <?= $iCountCompletedOrders ?>
             </p>
             <p class="description">
                 <?= e(trans('lovata.ordersshopaholic::lang.message.for_the_last_period')) ?>
@@ -28,13 +28,13 @@
         </div>
     <?php } ?>
 
-    <?php if ($this->vars['default_currency'] !== null || $this->vars['completed_total'] !== null) { ?>
+    <?php if ($sDefaultCurrency !== null || $fCompletedTotalPrice !== null) { ?>
         <div class="scoreboard-item title-value">
             <h4>
                 <?= e(trans('lovata.ordersshopaholic::lang.field.total_price')) ?>
             </h4>
             <p>
-                <?= $this->vars['default_currency'] ?> <?= $this->vars['completed_total price'] ?>
+                <?= $sDefaultCurrency ?> <?= $fCompletedTotalPrice ?>
             </p>
         </div>
     <?php } ?>

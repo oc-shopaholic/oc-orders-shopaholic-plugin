@@ -152,10 +152,10 @@ class Orders extends Controller
             $sDefaultCurrency = $obDefaultCurrency->symbol;
         }
 
-        $this->vars['count_all_orders']       = $iCountAllOrders;
-        $this->vars['count_completed_orders'] = $iCountCompletedOrders;
-        $this->vars['default_currency']       = $sDefaultCurrency;
-        $this->vars['completed_total price']  = $fCompletedTotalPrice;
+        $this->vars['iCountAllOrders']       = $iCountAllOrders;
+        $this->vars['iCountCompletedOrders'] = $iCountCompletedOrders;
+        $this->vars['sDefaultCurrency']       = $sDefaultCurrency;
+        $this->vars['fCompletedTotalPrice']  = $fCompletedTotalPrice;
 
         return [
             '.analytics-ajax' => $this->makePartial('analytics'),
