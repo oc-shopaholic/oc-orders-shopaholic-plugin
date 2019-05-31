@@ -120,13 +120,13 @@ class OrdersGraph extends ReportWidgetBase
         $sCurrencyName = '';
         $obCurrency = Currency::find($this->getCurrencyId());
 
-        if (!empty($obCurrency)) {
-            $sCurrencyName = $obCurrency->name;
+        if (!empty($obCurrency) && $this->property('type') == self::TYPE_TOTAL_PRICE) {
+            $sCurrencyName = ' ('.$obCurrency->name.')';
         }
 
         $this->vars['sName']  = implode('_', $this->getProperties());
         $this->vars['sGraph'] = substr($sGraph, 0, -1);
-        $this->vars['sTitle'] = Lang::get('lovata.toolbox::lang.field.type').': '.$sType.' ('.$sCurrencyName.')';
+        $this->vars['sTitle'] = Lang::get('lovata.toolbox::lang.field.type').': '.$sType.$sCurrencyName;
     }
 
     /**
