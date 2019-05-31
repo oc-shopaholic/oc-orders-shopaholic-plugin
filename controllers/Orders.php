@@ -8,8 +8,6 @@ use Lovata\OrdersShopaholic\Models\Order;
 use Lovata\OrdersShopaholic\Models\Status;
 use Lovata\Shopaholic\Models\Currency;
 
-use Lovata\Shopaholic\Classes\Helper\CurrencyHelper;
-
 /**
  * Class Orders
  * @package Lovata\OrdersShopaholic\Controllers
@@ -131,9 +129,8 @@ class Orders extends Controller
         $obDate = Argon::now()->subDays(30);
 
         $obStatusCompleted = Status::getByCode(Status::STATUS_COMPETE)->first();
+        $obCompletedOrderList = null;
 
-        $sDefaultCurrency      = '';
-        $fCompletedTotalPrice  = 0;
         $iCountCompletedOrders = 0;
         $iCountAllOrders       = Order::whereDate('created_at', '>=', $obDate)->count();
 
@@ -143,19 +140,11 @@ class Orders extends Controller
                 ->get();
 
             $iCountCompletedOrders = $obCompletedOrderList->count();
-            $fCompletedTotalPrice = $this->getCompletedTotalPriceByLastPeriod($obCompletedOrderList);
-        }
-
-        $obDefaultCurrency = Currency::isDefault()->first();
-
-        if (!empty($obDefaultCurrency)) {
-            $sDefaultCurrency = $obDefaultCurrency->symbol;
         }
 
         $this->vars['iCountAllOrders']       = $iCountAllOrders;
         $this->vars['iCountCompletedOrders'] = $iCountCompletedOrders;
-        $this->vars['sDefaultCurrency']       = $sDefaultCurrency;
-        $this->vars['fCompletedTotalPrice']  = $fCompletedTotalPrice;
+        $this->vars['arCompletedTotalPrice'] = $this->getCompletedTotalPriceList($obCompletedOrderList);
 
         return [
             '.analytics-ajax' => $this->makePartial('analytics'),
@@ -165,25 +154,59 @@ class Orders extends Controller
     /**
      * Get total price for the last period
      * @param $obOrderList
-     * @return float
+     * @return array
      */
-    protected function getCompletedTotalPriceByLastPeriod($obOrderList)
+    protected function getCompletedTotalPriceList($obOrderList)
+    {
+        $arResult = [];
+
+        if (empty($obOrderList) || !$obOrderList instanceof \October\Rain\Database\Collection) {
+            return $arResult;
+        }
+
+        $obCurrencyList = Currency::all();
+
+        if ($obOrderList->isEmpty()) {
+            return $arResult;
+        }
+
+        foreach ($obCurrencyList as $obCurrency) {
+            $fPrice = $this->getTotalPriceByCurrency($obOrderList, $obCurrency->id);
+
+            if ($fPrice == 0) {
+                continue;
+            }
+
+            $arResult[] = [
+                'price'    => $fPrice,
+                'currency' => $obCurrency->symbol,
+            ];
+        }
+
+        return $arResult;
+    }
+
+    /**
+     * Get total price by currency
+     * @param  \October\Rain\Database\Collection $obOrderList
+     * @param int $iCurrencyId
+     * @return float|int
+     */
+    protected function getTotalPriceByCurrency($obOrderList, $iCurrencyId)
     {
         $fResult = 0;
 
-        if (empty($obOrderList) || !$obOrderList instanceof \October\Rain\Database\Collection) {
+        if (empty($obOrderList) || !$obOrderList instanceof \October\Rain\Database\Collection || empty($iCurrencyId)) {
             return $fResult;
         }
 
         /** @var \Lovata\OrdersShopaholic\Models\Order $obOrder */
         foreach ($obOrderList as $obOrder) {
-            $obCurrency = $obOrder->currency;
-
-            if (empty($obCurrency)) {
+            if ($obOrder->currency_id != $iCurrencyId) {
                 continue;
             }
 
-            $fResult = $fResult + CurrencyHelper::instance()->convertTo($obOrder->total_price_value, $obCurrency->code);
+            $fResult += $obOrder->total_price_value;
         }
 
         return $fResult;
