@@ -32,6 +32,7 @@ class OrderProcessor
     const EVENT_UPDATE_ORDER_DATA = 'shopaholic.order.update_data';
     const EVENT_UPDATE_ORDER_BEFORE_CREATE = 'shopaholic.order.before_create';
     const EVENT_UPDATE_ORDER_AFTER_CREATE = 'shopaholic.order.after_create';
+    const EVENT_UPDATE_ORDER_RESPONSE_AFTER_CREATE = 'shopaholic.order.response_after_create';
     const EVENT_ORDER_CREATED_USER_MAIL_DATA = 'shopaholic.order.created.user.template.data';
     const EVENT_ORDER_CREATED_MANAGER_MAIL_DATA = 'shopaholic.order.created.manager.template.data';
     const EVENT_GET_SHIPPING_PRICE = 'shopaholic.order.get_shipping_price';

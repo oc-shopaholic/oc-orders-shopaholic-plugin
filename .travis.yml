@@ -76,4 +76,4 @@ jobs:
         skip_cleanup: true
         on:
           tags: true
-          repo: lovata/oc-orders-shopaholic-plugin
+          repo: oc-shopaholic/oc-orders-shopaholic-plugin
