@@ -31,6 +31,9 @@ class TableUpdateUserAddressesChangePostcode extends Migration
 
         Schema::table(self::TABLE_NAME, function (Blueprint $obTable) {
             $obTable->dropColumn('postcode');
+        });
+
+        Schema::table(self::TABLE_NAME, function (Blueprint $obTable) {
             $obTable->renameColumn('postcode_temp', 'postcode');
         });
     }
@@ -53,6 +56,9 @@ class TableUpdateUserAddressesChangePostcode extends Migration
 
         Schema::table(self::TABLE_NAME, function (Blueprint $obTable) {
             $obTable->dropColumn('postcode');
+        });
+
+        Schema::table(self::TABLE_NAME, function (Blueprint $obTable) {
             $obTable->renameColumn('postcode_temp', 'postcode');
         });
     }
