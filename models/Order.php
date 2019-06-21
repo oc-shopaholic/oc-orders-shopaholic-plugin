@@ -94,6 +94,7 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
  * @method static $this getByPaymentMethod(int $iPaymentMethodID)
  * @method static $this getBySecretKey(string $sNumber)
  * @method static $this getByTransactionID(string $sTransactionID)
+ * @method static $this getByPaymentToken(string $sPaymentToken)
  */
 class Order extends Model
 {

@@ -135,7 +135,7 @@ class MakeOrder extends ComponentSubmitForm
             Result::setFalse($this->obPaymentGateway->getResponse());
         }
 
-        Result::setMessage($this->obPaymentGateway->getMessage())->get();
+        Result::setMessage($this->obPaymentGateway->getMessage());
 
         return $this->getResponseModeForm($sRedirectURL);
     }
@@ -155,6 +155,8 @@ class MakeOrder extends ComponentSubmitForm
         //Fire event and get redirect URL
         $sRedirectURL = Event::fire(OrderProcessor::EVENT_ORDER_GET_REDIRECT_URL, $this->obOrder, true);
         if (empty($this->obPaymentGateway) || !Result::status()) {
+            $this->prepareResponseData();
+
             return $this->getResponseModeAjax($sRedirectURL);
         }
 
@@ -168,7 +170,8 @@ class MakeOrder extends ComponentSubmitForm
             Result::setFalse($this->obPaymentGateway->getResponse());
         }
 
-        Result::setMessage($this->obPaymentGateway->getMessage())->get();
+        Result::setMessage($this->obPaymentGateway->getMessage());
+        $this->prepareResponseData();
 
         return $this->getResponseModeAjax($sRedirectURL);
     }
@@ -479,5 +482,31 @@ class MakeOrder extends ComponentSubmitForm
         array_forget($arResult, ['id', 'type']);
 
         return $arResult;
+    }
+
+    /**
+     * Fire event and prepare response data
+     */
+    protected function prepareResponseData()
+    {
+        if (!Result::status()) {
+            return;
+        }
+
+        $arResponseData = Result::data();
+        $arEventData = Event::fire(OrderProcessor::EVENT_UPDATE_ORDER_RESPONSE_AFTER_CREATE, [$arResponseData, $this->obOrder, $this->obUser, $this->obPaymentGateway]);
+        if (empty($arEventData)) {
+            return;
+        }
+
+        foreach ($arEventData as $arData) {
+            if (empty($arData)) {
+                continue;
+            }
+
+            $arResponseData = array_merge($arResponseData, $arData);
+        }
+
+        Result::setData($arResponseData);
     }
 }

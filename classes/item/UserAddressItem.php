@@ -22,7 +22,7 @@ use Lovata\OrdersShopaholic\Models\UserAddress;
  * @property int    $floor
  * @property string $address1
  * @property string $address2
- * @property int    $postcode
+ * @property string $postcode
  */
 
 class UserAddressItem extends ElementItem
