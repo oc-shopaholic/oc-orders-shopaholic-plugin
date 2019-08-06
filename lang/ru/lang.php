@@ -126,7 +126,7 @@
         'payment_methods'                     => 'Методы оплаты',
         'payment_methods_description'         => 'Управление методами оплаты',
         'shipping_types'                      => 'Способы доставки',
-        'shipping_types_description'          => 'Управление мпомобами доставки',
+        'shipping_types_description'          => 'Управление cпоcобами доставки',
         'order_property'                      => 'Дополнительные свойства заказа',
         'order_property_description'          => 'Управление дополнительными свойствами заказа',
         'order_position_property'             => 'Дополнительные свойства позиции заказа',
