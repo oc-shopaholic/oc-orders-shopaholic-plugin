@@ -63,6 +63,7 @@
         'payment_method'                 => 'Zahlungsart',
         'is_user_show'                   => 'Status dem Benutzer anzeigen',
         'user_status'                    => 'Für den Benutzer wird der Status wie folgt angezeigt:',
+        'color'                          => 'Farbe',
         'gateway_id'                     => 'ZahlungsGateway',
         'gateway_currency'               => 'Gateway Währung',
         'before_status_id'               => 'Bestellstatus vor der Zahlung',

@@ -131,3 +131,6 @@
 1.22.1:
     - 'Changed type of postcode field from int to string.'
     - table_update_user_addresses_change_postcode.php
+1.22.2:
+    - 'Added color to status.'
+    - table_update_status_add_color_field.php
