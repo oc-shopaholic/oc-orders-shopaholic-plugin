@@ -57,19 +57,19 @@ class TableUpdateStatusAddColorField extends Migration
         /** @var Status $obStatus */
         foreach ($obStatusList as $obStatus) {
             if ($obStatus->code == Status::STATUS_NEW) {
-                $obStatus->color = Status::STATUS_NEW_COLOR;
+                $obStatus->color = Status::STATUS_COLOR_NEW;
                 $obStatus->save();
             }
             elseif ($obStatus->code == Status::STATUS_IN_PROGRESS) {
-                $obStatus->color = Status::STATUS_IN_PROGRESS_COLOR;
+                $obStatus->color = Status::STATUS_COLOR_IN_PROGRESS;
                 $obStatus->save();
             }
             elseif ($obStatus->code == Status::STATUS_COMPETE) {
-                $obStatus->color = Status::STATUS_COMPLETE_COLOR;
+                $obStatus->color = Status::STATUS_COLOR_COMPLETE;
                 $obStatus->save();
             }
             elseif ($obStatus->code == Status::STATUS_CANCELED) {
-                $obStatus->color = Status::STATUS_CANCELED_COLOR;
+                $obStatus->color = Status::STATUS_COLOR_CANCELED;
                 $obStatus->save();
             }
         }

@@ -45,10 +45,10 @@ class Status extends Model
     const STATUS_COMPETE = 'complete';
     const STATUS_CANCELED = 'canceled';
 
-    const STATUS_NEW_COLOR = '#f1c40f';
-    const STATUS_IN_PROGRESS_COLOR = '#2980b9';
-    const STATUS_COMPLETE_COLOR = '#27ae60';
-    const STATUS_CANCELED_COLOR = '#c0392b';
+    const STATUS_COLOR_NEW = '#f1c40f';
+    const STATUS_COLOR_IN_PROGRESS = '#2980b9';
+    const STATUS_COLOR_COMPLETE = '#27ae60';
+    const STATUS_COLOR_CANCELED = '#c0392b';
 
     public $table = 'lovata_orders_shopaholic_statuses';
 
