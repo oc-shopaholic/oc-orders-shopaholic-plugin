@@ -207,6 +207,15 @@ class Cart extends ComponentBase
     }
 
     /**
+     * Get cart data
+     * @return array
+     */
+    public function getData()
+    {
+        return CartProcessor::instance()->getCartData();
+    }
+
+    /**
      * Get total price string
      * @return string
      */
