@@ -9,6 +9,7 @@ use Lovata\Toolbox\Classes\Helper\UserHelper;
 use Lovata\Shopaholic\Models\Settings;
 use Lovata\OrdersShopaholic\Models\Cart;
 use Lovata\OrdersShopaholic\Models\CartPosition;
+use Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem;
 use Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer;
 use Lovata\OrdersShopaholic\Classes\PromoMechanism\TotalPriceContainer;
 use Lovata\OrdersShopaholic\Classes\Collection\CartPositionCollection;
@@ -56,11 +57,12 @@ class CartProcessor
     }
 
     /**
-     * Init new cart positions and promo processor
+     * Init new cart positions, shipping type, and promo processor
      */
     public function updateCartData()
     {
         $this->initCartPositionList();
+        $this->initShippingTypeItem();
         $this->initPromoProcessor();
     }
 
@@ -356,6 +358,16 @@ class CartProcessor
         //Create new cart
         if (empty($this->obCart)) {
             $this->createNewCart();
+        }
+    }
+
+    /**
+     * Init selected shipping type
+     */
+    protected function initShippingTypeItem()
+    {
+        if (empty($this->obShippingTypeItem)) {
+            $this->obShippingTypeItem = ShippingTypeItem::make($this->getCartObject()->shipping_type_id);
         }
     }
 
