@@ -29,3 +29,7 @@ fields:
             action: show
             field: is_user_show
             condition: checked
+    color:
+        label: 'lovata.ordersshopaholic::lang.field.color'
+        span: right
+        type: colorpicker

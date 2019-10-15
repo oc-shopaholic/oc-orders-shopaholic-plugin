@@ -1,0 +1,8 @@
+<?php
+
+/** @var \Lovata\OrdersShopaholic\Models\Status $record */
+	
+?>
+<div class="shopaholic-badge"<?php if ($record->color): ?> style="background-color: <?= e($record->color) ?>"<?php endif; ?>>
+    <?= e($value); ?>
+</div>

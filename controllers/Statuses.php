@@ -30,6 +30,8 @@ class Statuses extends Controller
         parent::__construct();
         BackendMenu::setContext('October.System', 'system', 'settings');
         SettingsManager::setContext('Lovata.OrdersShopaholic', 'orders-shopaholic-menu-statuses');
+        
+        $this->addCss('/plugins/lovata/ordersshopaholic/assets/css/backend.css');
     }
 
     /**

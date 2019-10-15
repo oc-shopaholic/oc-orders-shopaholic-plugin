@@ -1,7 +1,8 @@
 columns:
     name:
         label: 'lovata.toolbox::lang.field.name'
-        type: text
+        type: partial
+        path: $/lovata/ordersshopaholic/controllers/statuses/_name_column.htm
         searchable: true
         sortable: true
     code:

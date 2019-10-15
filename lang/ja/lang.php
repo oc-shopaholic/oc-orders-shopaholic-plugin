@@ -64,6 +64,7 @@
         'payment_method'                 => '支払い方法',
         'is_user_show'                   => 'ステータスをユーザに表示',
         'user_status'                    => 'ユーザに表示されるステータス',
+        'color'                          => '色',
         'gateway_id'                     => 'ペイメントゲートウェイ',
         'gateway_currency'               => 'ゲートウェイ通貨',
         'before_status_id'               => '注文ステータス (支払い前)',
