@@ -8,7 +8,6 @@ columns:
         label: 'lovata.ordersshopaholic::lang.field.status'
         type: partial
         path: $/lovata/ordersshopaholic/controllers/orders/_status_name_column.htm
-        relation: status
         searchable: false
         sortable: true
     payment_method_name:

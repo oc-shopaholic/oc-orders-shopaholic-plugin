@@ -18,6 +18,7 @@ use Lovata\Toolbox\Traits\Helpers\TraitCached;
  * @property                                           $id
  * @property string                                    $code
  * @property string                                    $name
+ * @property string                                    $color
  * @property string                                    $preview_text
  * @property bool                                      $is_user_show
  * @property int                                       $user_status_id
