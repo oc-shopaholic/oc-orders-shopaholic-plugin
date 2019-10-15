@@ -135,6 +135,7 @@ class Order extends Model
         'currency_id',
         'shipping_tax_percent',
         'manager_id',
+        'payment_data',
     ];
 
     public $cached = [
