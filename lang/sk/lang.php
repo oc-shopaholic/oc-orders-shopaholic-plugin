@@ -66,6 +66,7 @@
         'payment_method'                 => 'Payment method',
         'is_user_show'                   => 'Show status to user',
         'user_status'                    => 'For user, status will be shown as',
+        'color'                          => 'Color',
         'gateway_id'                     => 'Payment gateway',
         'gateway_currency'               => 'Gateway currency',
         'before_status_id'               => 'Order status before payment',
