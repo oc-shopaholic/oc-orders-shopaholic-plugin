@@ -121,7 +121,11 @@ class MakeOrder extends ComponentSubmitForm
 
         //Fire event and get redirect URL
         $sRedirectURL = Event::fire(OrderProcessor::EVENT_ORDER_GET_REDIRECT_URL, $this->obOrder, true);
-        if (empty($this->obPaymentGateway) || !Result::status()) {
+        if (!Result::status() && !empty($this->obPaymentGateway) && $this->obPaymentGateway->isRedirect()) {
+            $sRedirectURL = $this->obPaymentGateway->getRedirectURL();
+
+            return Redirect::to($sRedirectURL);
+        } else if (empty($this->obPaymentGateway) || !Result::status()) {
             return $this->getResponseModeForm($sRedirectURL);
         }
 

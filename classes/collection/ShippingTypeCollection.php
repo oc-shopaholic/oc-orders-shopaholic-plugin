@@ -64,4 +64,28 @@ class ShippingTypeCollection extends ElementCollection
 
         return $this->diff($arExcludeIDList);
     }
+
+    /**
+     * Get shipping type item by code
+     * @param string $sCode
+     *
+     * @return ShippingTypeItem
+     */
+    public function getByCode($sCode)
+    {
+        if ($this->isEmpty() || empty($sCode)) {
+            return ShippingTypeItem::make(null);
+        }
+
+        $arShippingTypeList = $this->all();
+
+        /** @var ShippingTypeItem $obShippingTypeItem */
+        foreach ($arShippingTypeList as $obShippingTypeItem) {
+            if ($obShippingTypeItem->code == $sCode) {
+                return $obShippingTypeItem;
+            }
+        }
+
+        return ShippingTypeItem::make(null);
+    }
 }

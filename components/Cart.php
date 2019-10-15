@@ -116,6 +116,24 @@ class Cart extends ComponentBase
     }
 
     /**
+     * Sync cart positions
+     * @return array
+     */
+    public function onSync()
+    {
+        $arRequestData = Input::get('cart');
+        $obActiveShippingType = $this->getActiveShippingTypeFromRequest();
+        if (!empty($obActiveShippingType) && $obActiveShippingType->isNotEmpty()) {
+            CartProcessor::instance()->setActiveShippingType($obActiveShippingType);
+        }
+
+        CartProcessor::instance()->sync($arRequestData, OfferCartPositionProcessor::class);
+        Result::setData(CartProcessor::instance()->getCartData());
+
+        return Result::get();
+    }
+
+    /**
      * Clear cart
      */
     public function onClear()

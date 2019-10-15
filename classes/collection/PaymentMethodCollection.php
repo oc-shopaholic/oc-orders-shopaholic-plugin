@@ -64,4 +64,28 @@ class PaymentMethodCollection extends ElementCollection
 
         return $this->diff($arExcludeIDList);
     }
+
+    /**
+     * Get payment method type item by code
+     * @param string $sCode
+     *
+     * @return PaymentMethodItem
+     */
+    public function getByCode($sCode)
+    {
+        if ($this->isEmpty() || empty($sCode)) {
+            return PaymentMethodItem::make(null);
+        }
+
+        $arPaymentMethodList = $this->all();
+
+        /** @var PaymentMethodItem $obPaymentMethodItem */
+        foreach ($arPaymentMethodList as $obPaymentMethodItem) {
+            if ($obPaymentMethodItem->code == $sCode) {
+                return $obPaymentMethodItem;
+            }
+        }
+
+        return PaymentMethodItem::make(null);
+    }
 }
