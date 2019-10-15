@@ -420,8 +420,13 @@ class CartProcessor
      */
     protected function initShippingTypeItem()
     {
-        if (empty($this->obShippingTypeItem)) {
-            $this->obShippingTypeItem = ShippingTypeItem::make($this->getCartObject()->shipping_type_id);
+        if (empty($this->obCart) || !empty($this->obShippingTypeItem) || empty($this->obCart->shipping_type_id)) {
+            return;
+        }
+
+        $this->obShippingTypeItem = ShippingTypeItem::make($this->obCart->shipping_type_id);
+        if ($this->obShippingTypeItem->isEmpty()) {
+            $this->obShippingTypeItem = null;
         }
     }
 
