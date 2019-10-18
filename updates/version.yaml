@@ -132,6 +132,6 @@
     - 'Changed type of postcode field from int to string.'
     - table_update_user_addresses_change_postcode.php
 1.23.0:
-    - 'Added color to status (Thanks for contribution definer).'
+    - 'Added color to status. Added onSync(), onGetCartData() methods to Cart component. Added ability to create an order with an active price type. Thanks for contribution definer and pikanji.'
     - table_update_status_add_color_field.php
     - seeder_default_status_colors.php
