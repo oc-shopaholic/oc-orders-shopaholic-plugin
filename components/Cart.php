@@ -177,6 +177,15 @@ class Cart extends ComponentBase
     }
 
     /**
+     * Get cart data with using Result::get method
+     * @return array
+     */
+    public function onGetCartData()
+    {
+        return Result::setData(CartProcessor::instance()->getCartData())->get();
+    }
+
+    /**
      * Update cart
      * @return array
      */
