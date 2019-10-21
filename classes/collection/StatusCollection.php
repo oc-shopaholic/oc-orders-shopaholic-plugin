@@ -36,4 +36,28 @@ class StatusCollection extends ElementCollection
 
         return $this->intersect($arElementIDList);
     }
+
+    /**
+     * Get status item by code
+     * @param string $sCode
+     *
+     * @return StatusItem
+     */
+    public function getByCode($sCode)
+    {
+        if ($this->isEmpty() || empty($sCode)) {
+            return StatusItem::make(null);
+        }
+
+        $arStatusList = $this->all();
+
+        /** @var StatusItem $obStatusItem */
+        foreach ($arStatusList as $obStatusItem) {
+            if ($obStatusItem->code == $sCode) {
+                return $obStatusItem;
+            }
+        }
+
+        return StatusItem::make(null);
+    }
 }

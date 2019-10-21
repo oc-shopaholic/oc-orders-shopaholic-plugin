@@ -18,6 +18,7 @@ use Lovata\Toolbox\Traits\Helpers\TraitCached;
  * @property                                           $id
  * @property string                                    $code
  * @property string                                    $name
+ * @property string                                    $color
  * @property string                                    $preview_text
  * @property bool                                      $is_user_show
  * @property int                                       $user_status_id
@@ -44,6 +45,11 @@ class Status extends Model
     const STATUS_IN_PROGRESS = 'in_progress';
     const STATUS_COMPETE = 'complete';
     const STATUS_CANCELED = 'canceled';
+
+    const STATUS_COLOR_NEW = '#f1c40f';
+    const STATUS_COLOR_IN_PROGRESS = '#2980b9';
+    const STATUS_COLOR_COMPLETE = '#27ae60';
+    const STATUS_COLOR_CANCELED = '#c0392b';
 
     public $table = 'lovata_orders_shopaholic_statuses';
 

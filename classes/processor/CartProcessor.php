@@ -9,6 +9,7 @@ use Lovata\Toolbox\Classes\Helper\UserHelper;
 use Lovata\Shopaholic\Models\Settings;
 use Lovata\OrdersShopaholic\Models\Cart;
 use Lovata\OrdersShopaholic\Models\CartPosition;
+use Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem;
 use Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer;
 use Lovata\OrdersShopaholic\Classes\PromoMechanism\TotalPriceContainer;
 use Lovata\OrdersShopaholic\Classes\Collection\CartPositionCollection;
@@ -56,11 +57,12 @@ class CartProcessor
     }
 
     /**
-     * Init new cart positions and promo processor
+     * Init new cart positions, shipping type, and promo processor
      */
     public function updateCartData()
     {
         $this->initCartPositionList();
+        $this->initShippingTypeItem();
         $this->initPromoProcessor();
     }
 
@@ -76,11 +78,11 @@ class CartProcessor
             return false;
         }
 
-        /** @var AbstractCartPositionProcessor $obPositionProcessor */
-        $obPositionProcessor = app($sPositionProcessor, [$this->obCart, $this->obUser]);
 
         //Process position list and add position to cart
         foreach ($arPositionList as $arPositionData) {
+            /** @var AbstractCartPositionProcessor $obPositionProcessor */
+            $obPositionProcessor = new $sPositionProcessor($this->obCart, $this->obUser);
             $obPositionProcessor->add($arPositionData);
         }
 
@@ -101,11 +103,10 @@ class CartProcessor
             return false;
         }
 
-        /** @var AbstractCartPositionProcessor $obPositionProcessor */
-        $obPositionProcessor = app($sPositionProcessor, [$this->obCart, $this->obUser]);
-
         //Process position list and update position data
         foreach ($arPositionList as $arPositionData) {
+            /** @var AbstractCartPositionProcessor $obPositionProcessor */
+            $obPositionProcessor = new $sPositionProcessor($this->obCart, $this->obUser);
             $obPositionProcessor->update($arPositionData);
         }
 
@@ -132,7 +133,7 @@ class CartProcessor
         //Process position list and remove position from cart
         foreach ($arPositionList as $iPositionID) {
             /** @var AbstractCartPositionProcessor $obPositionProcessor */
-            $obPositionProcessor = app($sPositionProcessor, [$this->obCart, $this->obUser]);
+            $obPositionProcessor = new $sPositionProcessor($this->obCart, $this->obUser);
             $obPositionProcessor->remove($iPositionID, $sType);
         }
 
@@ -158,8 +159,63 @@ class CartProcessor
         //Process position list and restore position
         foreach ($arPositionList as $iPositionID) {
             /** @var AbstractCartPositionProcessor $obPositionProcessor */
-            $obPositionProcessor = app($sPositionProcessor, [$this->obCart, $this->obUser]);
+            $obPositionProcessor = new $sPositionProcessor($this->obCart, $this->obUser);
             $obPositionProcessor->restore($iPositionID);
+        }
+
+        $this->updateCartData();
+
+        return $this->prepareSuccessResponse();
+    }
+
+    /**
+     * Restore position from current cart
+     * @param array  $arPositionList
+     * @param string $sPositionProcessor
+     * @return bool
+     * @throws
+     */
+    public function sync($arPositionList, $sPositionProcessor)
+    {
+        if (empty($this->obCart) || empty($sPositionProcessor)) {
+            $sMessage = Lang::get('lovata.toolbox::lang.message.e_not_correct_request');
+            Result::setFalse()->setMessage($sMessage);
+
+            return false;
+        }
+
+        if (empty($arPositionList)) {
+            $this->clear();
+
+            return $this->prepareSuccessResponse();
+        }
+
+        $arProcessedCartPositionList = [];
+
+        //Process position list and add/update positions
+        foreach ($arPositionList as $arPositionData) {
+            /** @var AbstractCartPositionProcessor $obPositionProcessor */
+            $obPositionProcessor = new $sPositionProcessor($this->obCart, $this->obUser);
+            $obPositionProcessor->add($arPositionData);
+            $obCartPosition = $obPositionProcessor->getPositionObject();
+            if (!empty($obCartPosition)) {
+                $arProcessedCartPositionList[] = $obCartPosition->id;
+            }
+        }
+
+        $this->initCartPositionList();
+
+        //Remove old positions
+        if (!empty($this->obCartPositionList)) {
+            foreach ($this->obCartPositionList as $obCartPosition) {
+                if (in_array($obCartPosition->id, $arProcessedCartPositionList)) {
+                    continue;
+                }
+
+                /** @var AbstractCartPositionProcessor $obPositionProcessor */
+                $obPositionProcessor = new $sPositionProcessor($this->obCart, $this->obUser);
+                $obPositionProcessor->remove($obCartPosition->id, 'position');
+            }
         }
 
         $this->updateCartData();
@@ -296,12 +352,12 @@ class CartProcessor
             'quantity'             => 0,
             'total_quantity'       => 0,
 
-            'payment_method_id'    => $this->obCart->payment_method_id,
-            'shipping_type_id'     => !empty($this->obShippingTypeItem) ? $this->obShippingTypeItem->id : $this->obCart->shipping_type_id,
-            'user_data'            => $this->obCart->user_data,
-            'shipping_address'     => $this->obCart->shipping_address,
-            'billing_address'      => $this->obCart->billing_address,
-            'property'             => $this->obCart->property,
+            'payment_method_id' => $this->obCart->payment_method_id,
+            'shipping_type_id'  => !empty($this->obShippingTypeItem) ? $this->obShippingTypeItem->id : $this->obCart->shipping_type_id,
+            'user_data'         => $this->obCart->user_data,
+            'shipping_address'  => $this->obCart->shipping_address,
+            'billing_address'   => $this->obCart->billing_address,
+            'property'          => $this->obCart->property,
         ];
 
         if ($obCartPositionList->isEmpty()) {
@@ -356,6 +412,21 @@ class CartProcessor
         //Create new cart
         if (empty($this->obCart)) {
             $this->createNewCart();
+        }
+    }
+
+    /**
+     * Init selected shipping type
+     */
+    protected function initShippingTypeItem()
+    {
+        if (empty($this->obCart) || !empty($this->obShippingTypeItem) || empty($this->obCart->shipping_type_id)) {
+            return;
+        }
+
+        $this->obShippingTypeItem = ShippingTypeItem::make($this->obCart->shipping_type_id);
+        if ($this->obShippingTypeItem->isEmpty()) {
+            $this->obShippingTypeItem = null;
         }
     }
 

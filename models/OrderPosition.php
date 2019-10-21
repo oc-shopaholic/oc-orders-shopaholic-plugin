@@ -13,6 +13,7 @@ use Lovata\Shopaholic\Models\Category;
 use Lovata\Shopaholic\Models\Product;
 use Lovata\Shopaholic\Classes\Helper\TaxHelper;
 use Lovata\Shopaholic\Classes\Helper\CurrencyHelper;
+use Lovata\Shopaholic\Classes\Helper\PriceTypeHelper;
 
 use Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer;
 use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
@@ -25,55 +26,64 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
  * @mixin \October\Rain\Database\Builder
  * @mixin \Eloquent
  *
- * @property int                $id
- * @property int                $order_id
- * @property int                $item_id
- * @property int                $offer_id
- * @property string             $item_type
- * @property string             $currency_symbol
- * @property string             $currency_code
+ * @property int                                                           $id
+ * @property int                                                           $order_id
+ * @property int                                                           $item_id
+ * @property int                                                           $offer_id
+ * @property string                                                        $item_type
+ * @property string                                                        $currency_symbol
+ * @property string                                                        $currency_code
  *
- * @property string             $price
- * @property float              $price_value
- * @property string             $tax_price
- * @property float              $tax_price_value
- * @property string             $price_without_tax
- * @property float              $price_without_tax_value
- * @property string             $price_with_tax
- * @property float              $price_with_tax_value
+ * @property string                                                        $price
+ * @property float                                                         $price_value
+ * @property string                                                        $tax_price
+ * @property float                                                         $tax_price_value
+ * @property string                                                        $price_without_tax
+ * @property float                                                         $price_without_tax_value
+ * @property string                                                        $price_with_tax
+ * @property float                                                         $price_with_tax_value
  *
- * @property string             $old_price
- * @property float              $old_price_value
- * @property string             $tax_old_price
- * @property float              $tax_old_price_value
- * @property string             $old_price_without_tax
- * @property float              $old_price_without_tax_value
- * @property string             $old_price_with_tax
- * @property float              $old_price_with_tax_value
+ * @property string                                                        $old_price
+ * @property float                                                         $old_price_value
+ * @property string                                                        $tax_old_price
+ * @property float                                                         $tax_old_price_value
+ * @property string                                                        $old_price_without_tax
+ * @property float                                                         $old_price_without_tax_value
+ * @property string                                                        $old_price_with_tax
+ * @property float                                                         $old_price_with_tax_value
  *
- * @property string             $total_price
- * @property float              $total_price_value
- * @property string             $old_total_price
- * @property float              $old_total_price_value
- * @property string             $discount_price
- * @property float              $discount_price_value
- * @property ItemPriceContainer $price_data
- * @property float              $tax_percent
- * @property int                $quantity
- * @property string             $code
- * @property array              $property
+ * @property string                                                        $total_price
+ * @property float                                                         $total_price_value
+ * @property string                                                        $old_total_price
+ * @property float                                                         $old_total_price_value
+ * @property string                                                        $discount_price
+ * @property float                                                         $discount_price_value
+ * @property ItemPriceContainer                                            $price_data
+ * @property float                                                         $tax_percent
+ * @property int                                                           $quantity
+ * @property string                                                        $code
+ * @property array                                                         $property
  *
- * @property mixed              $item
+ * @property mixed                                                         $item
  * @method \October\Rain\Database\Relations\MorphTo item()
  *
- * @property Order              $order
+ * @property Order                                                         $order
  * @method \October\Rain\Database\Relations\BelongsTo|Order order()
  *
- * @property Offer              $offer
+ * @property Offer                                                         $offer
  * @method \October\Rain\Database\Relations\BelongsTo|Offer offer()
  *
  * @method static $this getByItemID(int $iItemID)
  * @method static $this getByItemType(string $sItemType)
+ *
+ * Digital products for Shopaholic
+ * @property bool                                                          $is_digital_product
+ * @property int                                                           $digital_product_period_id
+ * @property \Lovata\DigitalProductsShopaholic\Models\DigitalProductPeriod $digital_product_period
+ * @method static \October\Rain\Database\Relations\BelongsTo|\Lovata\DigitalProductsShopaholic\Models\DigitalProductPeriod digital_product_period()
+ * @property int                                                           $digital_product_access_id
+ * @property \Lovata\DigitalProductsShopaholic\Models\DigitalProductAccess $digital_product_access
+ * @method static \October\Rain\Database\Relations\BelongsTo|\Lovata\DigitalProductsShopaholic\Models\DigitalProductAccess digital_product_access()
  */
 class OrderPosition extends Model
 {
@@ -276,10 +286,17 @@ class OrderPosition extends Model
     public function getProductOptions()
     {
         if (empty($this->_category)) {
+            $obCategory = Category::first();
+            $iCategoryID = !empty($obCategory) ? $obCategory->id : null;
+        } else {
+            $iCategoryID = $this->_category;
+        }
+
+        if (empty($iCategoryID)) {
             return [];
         }
 
-        $arResult = (array) Product::active()->getByCategory($this->_category)->orderBy('name')->lists('name', 'id');
+        $arResult = (array) Product::active()->getByCategory($iCategoryID)->orderBy('name')->lists('name', 'id');
 
         return $arResult;
     }
@@ -291,10 +308,18 @@ class OrderPosition extends Model
     public function getOfferIdOptions()
     {
         if (empty($this->_product)) {
+            $arProductList = $this->getProductOptions();
+            $arProductIDList = array_keys($arProductList);
+            $iProductID = array_shift($arProductIDList);
+        } else {
+            $iProductID = $this->_product;
+        }
+
+        if (empty($iProductID)) {
             return [];
         }
 
-        $arResult = (array) Offer::active()->getByProduct($this->_product)->orderBy('name')->lists('name', 'id');
+        $arResult = (array) Offer::active()->getByProduct($iProductID)->orderBy('name')->lists('name', 'id');
 
         return $arResult;
     }
@@ -456,8 +481,10 @@ class OrderPosition extends Model
             $sCurrencyCode = $obOrder->currency_code;
         }
 
-        $this->price = $obItem->setActiveCurrency($sCurrencyCode)->price_value;
-        $this->old_price = $obItem->setActiveCurrency($sCurrencyCode)->old_price_value;
+        $iActivePriceType = PriceTypeHelper::instance()->getActivePriceTypeID();
+
+        $this->price = $obItem->setActivePriceType($iActivePriceType)->setActiveCurrency($sCurrencyCode)->price_value;
+        $this->old_price = $obItem->setActivePriceType($iActivePriceType)->setActiveCurrency($sCurrencyCode)->old_price_value;
         $this->tax_percent = $obItem->tax_percent;
         $this->code = $obItem->code;
     }

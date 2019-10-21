@@ -1,7 +1,7 @@
 name: 'lovata.ordersshopaholic::lang.order_position.name'
 form: $/lovata/ordersshopaholic/models/orderposition/fields.yaml
 modelClass: Lovata\OrdersShopaholic\Models\OrderPosition
-defaultRedirect: lovata/ordersshopaholic/orders
+defaultRedirect: lovata/ordersshopaholic/orders/update/:order_id
 create:
     title: 'backend::lang.form.create_title'
     redirect: 'lovata/ordersshopaholic/orderpositions/update/:id'

@@ -88,6 +88,10 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
  * @property \October\Rain\Database\Collection|\Lovata\CouponsShopaholic\Models\Coupon[] $coupon
  * @method static \October\Rain\Database\Relations\BelongsToMany|\Lovata\CouponsShopaholic\Models\Coupon coupon()
  *
+ * CDEK for Shopaholic
+ * @property \Gabix\CdekShopaholic\Models\CdekDispatch $cdek
+ * @method static \October\Rain\Database\Relations\HasOne|\Gabix\CdekShopaholic\Models\CdekDispatch cdek()
+ *
  * @method static $this getByNumber(string $sNumber)
  * @method static $this getByStatus(int $iStatusID)
  * @method static $this getByShippingType(int $iShippingTypeID)
@@ -131,6 +135,7 @@ class Order extends Model
         'currency_id',
         'shipping_tax_percent',
         'manager_id',
+        'payment_data',
     ];
 
     public $cached = [
@@ -179,6 +184,9 @@ class Order extends Model
         'shipping_type'  => [ShippingType::class, 'order' => 'sort_order asc'],
         'currency'       => [Currency::class, 'order' => 'sort_order asc'],
     ];
+
+    public $attachOne = [];
+    public $attachMany = [];
 
     /**
      * Order constructor.
