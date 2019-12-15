@@ -92,6 +92,10 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
  * @property \Gabix\CdekShopaholic\Models\CdekDispatch $cdek
  * @method static \October\Rain\Database\Relations\HasOne|\Gabix\CdekShopaholic\Models\CdekDispatch cdek()
  *
+ * ApiShip for Shopaholic
+ * @property \Gabix\ApiShipShopaholic\Models\ApiShipDispatch $apiship
+ * @method static \October\Rain\Database\Relations\HasOne|\Gabix\ApiShipShopaholic\Models\ApiShipDispatch apiship()
+ *
  * @method static $this getByNumber(string $sNumber)
  * @method static $this getByStatus(int $iStatusID)
  * @method static $this getByShippingType(int $iShippingTypeID)
