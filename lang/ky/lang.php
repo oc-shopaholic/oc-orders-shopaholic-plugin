@@ -78,6 +78,7 @@
         'payment_data'                   => 'Data that was sent to payment gateway',
         'payment_response'               => 'Data that was received from payment gateway',
         'send_purchase_request'          => 'Send request to payment gateway when creating order',
+        'restore_cart'                   => 'Restore cart positions if payment has been canceled or failed',
         'gateway_field_value'            => 'Get value of ":field" field from value of order property field',
         'promo_mechanism'                => 'Promo mechanism',
         'priority_description'           => 'The <strong>higher</strong> the priority, the <strong>earlier</strong> the discount will be applied.',
