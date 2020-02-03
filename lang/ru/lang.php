@@ -78,6 +78,7 @@
         'payment_data'                   => 'Данные, отправленные платежному шлюзу',
         'payment_response'               => 'Данные, полученные из платежного шлюза',
         'send_purchase_request'          => 'Отправлять запрос в платежный шлюз при создании заказа',
+        'restore_cart'                   => 'Restore cart positions if payment has been canceled or failed',
         'gateway_field_value'            => 'Получить значение свойства ":field" из значения свайства заказа',
         'promo_mechanism'                => 'Промо-механизм',
         'priority_description'           => 'Скидка с более <strong>высоким</strong> приоритетом будет применена <strong>раньше</strong>.',
