@@ -1,5 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Processor;
 
+use Crypt;
 use Lang;
 use Cookie;
 use October\Rain\Support\Traits\Singleton;
@@ -166,6 +167,36 @@ class CartProcessor
         $this->updateCartData();
 
         return $this->prepareSuccessResponse();
+    }
+
+    /**
+     * Restore cart positions from order object
+     * @param \Lovata\OrdersShopaholic\Models\Order $obOrder
+     * @param string                                $sPositionProcessor
+     */
+    public function restoreFromOrder($obOrder, $sPositionProcessor)
+    {
+        if (empty($obOrder)) {
+            return;
+        }
+
+        //Get order positions
+        $obOrderPositionList = $obOrder->order_position;
+        if ($obOrderPositionList->isEmpty()) {
+            return;
+        }
+
+        $arPositionList = [];
+        //Create cart positions from order positions
+        foreach ($obOrderPositionList as $obOrderPosition) {
+            $arPositionList[] = [
+                'item_id'  => $obOrderPosition->item_id,
+                'quantity' => $obOrderPosition->quantity,
+                'property' => $obOrderPosition->property,
+            ];
+        }
+
+        $this->add($arPositionList, $sPositionProcessor);
     }
 
     /**
@@ -396,6 +427,14 @@ class CartProcessor
 
         //Get cart id from cookie, if exists
         $iCartID = Cookie::get(self::COOKIE_NAME, self::$iTestCartID);
+        if (!empty($iCartID) && !is_numeric($iCartID)) {
+            try {
+                $iDecryptedCartID = Crypt::decryptString($iCartID);
+                if (!empty($iDecryptedCartID)) {
+                    $iCartID = $iDecryptedCartID;
+                }
+            } catch (\Exception $obException) {}
+        }
 
         //Get auth user
         $this->obUser = UserHelper::instance()->getUser();

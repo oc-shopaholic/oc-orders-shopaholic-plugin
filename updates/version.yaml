@@ -137,3 +137,6 @@
     - seeder_default_status_colors.php
 1.23.1:
     - 'Added annotations for Subscriptions for Shopaholic plugin.'
+1.24.0:
+    - 'Added "restore cart" field to PaymentMethod model. Added restoreFromOrder() method to CartProcessor class.'
+    - table_update_payment_method_add_restore_cart_field.php

@@ -2,6 +2,8 @@
 
 use Event;
 use Redirect;
+use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
+use Lovata\OrdersShopaholic\Classes\Processor\OfferCartPositionProcessor;
 use Lovata\OrdersShopaholic\Models\Order;
 use Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface;
 
@@ -163,6 +165,10 @@ abstract class AbstractPaymentGateway implements PaymentGatewayInterface
 
         $this->obOrder->status_id = $obStatus->id;
         $this->obOrder->save();
+
+        if ($this->obPaymentMethod->restore_cart) {
+            CartProcessor::instance()->restoreFromOrder($this->obOrder, OfferCartPositionProcessor::class);
+        }
     }
 
     /**
@@ -177,6 +183,10 @@ abstract class AbstractPaymentGateway implements PaymentGatewayInterface
 
         $this->obOrder->status_id = $obStatus->id;
         $this->obOrder->save();
+
+        if ($this->obPaymentMethod->restore_cart) {
+            CartProcessor::instance()->restoreFromOrder($this->obOrder, OfferCartPositionProcessor::class);
+        }
     }
 
     /**
