@@ -382,6 +382,7 @@ class CartProcessor
             'total_price'          => $this->getCartTotalPriceData()->getData(),
             'quantity'             => 0,
             'total_quantity'       => 0,
+            'weight'               => 0,
 
             'payment_method_id' => $this->obCart->payment_method_id,
             'shipping_type_id'  => !empty($this->obShippingTypeItem) ? $this->obShippingTypeItem->id : $this->obCart->shipping_type_id,
@@ -402,6 +403,7 @@ class CartProcessor
                 'item_type'    => $obCartPositionItem->item_type,
                 'quantity'     => (int) $obCartPositionItem->quantity,
                 'max_quantity' => (int) $obCartPositionItem->item->quantity,
+                'weight'       => (float) $obCartPositionItem->weight,
                 'property'     => $obCartPositionItem->property,
             ];
 
@@ -409,6 +411,7 @@ class CartProcessor
 
             $arResult['quantity']++;
             $arResult['total_quantity'] += $obCartPositionItem->quantity;
+            $arResult['weight'] += $obCartPositionItem->weight;
             $arResult['position'][$obCartPositionItem->id] = $arPositionData;
         }
 

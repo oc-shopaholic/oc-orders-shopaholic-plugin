@@ -48,5 +48,13 @@ if(!isset($obOrder) && isset($formModel)) {
             </p>
         <?php } ?>
     </div>
+    <?php $fWeight = $obOrder->weight; ?>
+    <?php if ($fWeight > 0) {?>
+    <div class="scoreboard-item title-value">
+        <?php $obMeasureItem = \Lovata\Shopaholic\Classes\Helper\MeasureHelper::instance()->getWeightMeasureItem(); ?>
+        <h4><strong><?= e(trans('lovata.toolbox::lang.field.weight')) ?></strong></h4>
+        <p><span class="order-shopaholic-total-price"><?= $fWeight ?></span> <?= $obMeasureItem->name ;?></p>
+    </div>
+    <?php }?>
 </div>
 <?php }?>

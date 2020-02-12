@@ -179,4 +179,22 @@ class CartPositionCollection extends ElementCollection
 
         return $iQuantityCount;
     }
+
+    /**
+     * Get total weight
+     * @return float
+     */
+    public function getTotalWeight()
+    {
+        $fWeight = 0;
+
+        $arCartPositionList = $this->all();
+
+        /** @var \Lovata\OrdersShopaholic\Classes\Item\CartPositionItem $obCartPositionItem */
+        foreach ($arCartPositionList as $obCartPositionItem) {
+            $fWeight += $obCartPositionItem->weight;
+        }
+
+        return $fWeight;
+    }
 }

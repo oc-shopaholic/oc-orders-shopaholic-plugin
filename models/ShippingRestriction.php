@@ -25,7 +25,7 @@ use Lovata\OrdersShopaholic\Classes\Restriction\ShippingRestrictionByPaymentMeth
  * @property string                                           $code
  * @property string                                           $restriction
  * @property string                                           $description
- * @property string                                           $property
+ * @property array                                            $property
  * @property int                                              $sort_order
  * @property \October\Rain\Argon\Argon                        $created_at
  * @property \October\Rain\Argon\Argon                        $updated_at

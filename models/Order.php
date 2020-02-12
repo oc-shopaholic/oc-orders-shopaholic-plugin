@@ -36,6 +36,7 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
  * @property int                                                                         $manager_id
  * @property int                                                                         $payment_method_id
  * @property int                                                                         $shipping_type_id
+ * @property double                                                                      $weight
  * @property string                                                                      $shipping_price
  * @property float                                                                       $shipping_price_value
  * @property string                                                                      $total_price
@@ -89,11 +90,11 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
  * @method static \October\Rain\Database\Relations\BelongsToMany|\Lovata\CouponsShopaholic\Models\Coupon coupon()
  *
  * CDEK for Shopaholic
- * @property \Gabix\CdekShopaholic\Models\CdekDispatch $cdek
+ * @property \Gabix\CdekShopaholic\Models\CdekDispatch                                   $cdek
  * @method static \October\Rain\Database\Relations\HasOne|\Gabix\CdekShopaholic\Models\CdekDispatch cdek()
  *
  * ApiShip for Shopaholic
- * @property \Gabix\ApiShipShopaholic\Models\ApiShipDispatch $apiship
+ * @property \Gabix\ApiShipShopaholic\Models\ApiShipDispatch                             $apiship
  * @method static \October\Rain\Database\Relations\HasOne|\Gabix\ApiShipShopaholic\Models\ApiShipDispatch apiship()
  *
  * @method static $this getByNumber(string $sNumber)
@@ -585,5 +586,24 @@ class Order extends Model
     protected function setManagerIdAttribute($sValue)
     {
         $this->attributes['manager_id'] = (int) $sValue;
+    }
+
+    /**
+     * Get total weight
+     * @return int
+     */
+    protected function getWeightAttribute()
+    {
+        $obOrderPositionList = $this->order_position;
+        if ($obOrderPositionList->isEmpty()) {
+            return 0;
+        }
+
+        $iWeight = 0;
+        foreach ($obOrderPositionList as $obOrderPosition) {
+            $iWeight += (float) $obOrderPosition->weight;
+        }
+
+        return $iWeight;
     }
 }
