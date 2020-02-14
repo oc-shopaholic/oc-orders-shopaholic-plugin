@@ -3,6 +3,7 @@
 use Lovata\Toolbox\Classes\Helper\PriceHelper;
 use Lovata\Toolbox\Traits\Helpers\PriceHelperTrait;
 
+use Lovata\Shopaholic\Classes\Helper\MeasureHelper;
 use Lovata\Shopaholic\Models\Offer;
 use Lovata\Shopaholic\Classes\Item\OfferItem;
 use Lovata\Shopaholic\Classes\Helper\TaxHelper;
@@ -18,6 +19,12 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer;
  * @property int                                                                 $id
  * @property int                                                                 $order_id
  * @property int                                                                 $quantity
+ * @property double                                                              $weight
+ * @property double                                                              $height
+ * @property double                                                              $length
+ * @property double                                                              $width
+ * @property \Lovata\Shopaholic\Classes\Item\MeasureItem                         $dimensions_measure
+ * @property \Lovata\Shopaholic\Classes\Item\MeasureItem                         $weight_measure
  *
  * @property string                                                              $price
  * @property float                                                               $price_value
@@ -273,5 +280,27 @@ class OrderPositionItem extends AbstractPositionItem
     protected function getCurrencyCodeAttribute()
     {
         return $this->order->currency_code;
+    }
+
+    /**
+     * Get dimensions unit measure
+     * @return \Lovata\Shopaholic\Classes\Item\MeasureItem
+     */
+    protected function getDimensionsMeasureAttribute()
+    {
+        $obMeasureItem = MeasureHelper::instance()->getDimensionsMeasureItem();
+
+        return $obMeasureItem;
+    }
+
+    /**
+     * Get weight unit measure
+     * @return \Lovata\Shopaholic\Classes\Item\MeasureItem
+     */
+    protected function getWeightMeasureAttribute()
+    {
+        $obMeasureItem = MeasureHelper::instance()->getWeightMeasureItem();
+
+        return $obMeasureItem;
     }
 }

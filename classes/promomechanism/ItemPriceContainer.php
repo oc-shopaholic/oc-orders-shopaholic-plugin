@@ -96,7 +96,7 @@ class ItemPriceContainer
         $this->fTaxPercent = PriceHelper::toFloat($fTaxPercent);
         $this->iQuantity = $iQuantity;
         for ($iCount = 0; $iCount < $iQuantity; $iCount++) {
-            $this->arUnitPriceList[] = $fPricePerUnit;
+            $this->arUnitPriceList[] = PriceHelper::toFloat($fPricePerUnit);
         }
     }
 

@@ -1,7 +1,10 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Event\OrderPosition;
 
+use Lang;
 use Lovata\Toolbox\Classes\Event\AbstractBackendFieldHandler;
 
+use Lovata\Shopaholic\Models\Measure;
+use Lovata\Shopaholic\Models\Settings;
 use Lovata\OrdersShopaholic\Controllers\OrderPositions;
 use Lovata\OrdersShopaholic\Models\OrderPosition;
 use Lovata\OrdersShopaholic\Models\OrderPositionProperty;
@@ -32,6 +35,39 @@ class ExtendOrderPositionFieldsHandler extends AbstractBackendFieldHandler
      */
     protected function addOrderPropertyField($obWidget, $obPropertyList)
     {
+        //Get widget data for properties
+        $arAdditionPropertyData = [
+            'weight' => [
+                'label'    => $this->getWeightFieldLabel(),
+                'type'     => 'number',
+                'span'     => 'left',
+                'disabled' => true,
+                'tab'      => 'lovata.shopaholic::lang.tab.dimensions',
+            ],
+            'height' => [
+                'label' => $this->getDimensionsFieldLabel('lovata.toolbox::lang.field.height'),
+                'type'  => 'number',
+                'span'  => 'left',
+                'disabled' => true,
+                'tab'   => 'lovata.shopaholic::lang.tab.dimensions',
+            ],
+            'length' => [
+                'label' => $this->getDimensionsFieldLabel('lovata.toolbox::lang.field.length'),
+                'type'  => 'number',
+                'span'  => 'left',
+                'disabled' => true,
+                'tab'   => 'lovata.shopaholic::lang.tab.dimensions',
+            ],
+            'width'  => [
+                'label' => $this->getDimensionsFieldLabel('lovata.toolbox::lang.field.width'),
+                'type'  => 'number',
+                'span'  => 'left',
+                'disabled' => true,
+                'tab'   => 'lovata.shopaholic::lang.tab.dimensions',
+            ],
+        ];
+
+        $obWidget->addTabFields($arAdditionPropertyData);
         if ($obPropertyList->isEmpty()) {
             return;
         }
@@ -50,6 +86,51 @@ class ExtendOrderPositionFieldsHandler extends AbstractBackendFieldHandler
         if (!empty($arAdditionPropertyData)) {
             $obWidget->addTabFields($arAdditionPropertyData);
         }
+    }
+
+    /**
+     * Get weight field label
+     * @return string
+     */
+    protected function getWeightFieldLabel()
+    {
+        $sLabel = Lang::get('lovata.toolbox::lang.field.weight');
+        $iMeasureID = Settings::getValue('weight_measure');
+        if (empty($iMeasureID)) {
+            return $sLabel;
+        }
+
+        $obMeasure = Measure::find($iMeasureID);
+        if (empty($obMeasure)) {
+            return $sLabel;
+        }
+
+        $sLabel .= " ({$obMeasure->name})";
+
+        return $sLabel;
+    }
+
+    /**
+     * Get dimensions field label
+     * @param string $sLangPath
+     * @return string
+     */
+    protected function getDimensionsFieldLabel($sLangPath)
+    {
+        $sLabel = Lang::get($sLangPath);
+        $iMeasureID = Settings::getValue('dimensions_measure');
+        if (empty($iMeasureID)) {
+            return $sLabel;
+        }
+
+        $obMeasure = Measure::find($iMeasureID);
+        if (empty($obMeasure)) {
+            return $sLabel;
+        }
+
+        $sLabel .= " ({$obMeasure->name})";
+
+        return $sLabel;
     }
 
     /**

@@ -61,6 +61,10 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
  * @property ItemPriceContainer                                        $price_data
  * @property float                                                     $tax_percent
  * @property int                                                       $quantity
+ * @property double                                                    $weight
+ * @property double                                                    $height
+ * @property double                                                    $length
+ * @property double                                                    $width
  * @property string                                                    $code
  * @property array                                                     $property
  *
@@ -135,6 +139,10 @@ class OrderPosition extends Model
         'code',
         'tax_percent',
         'property',
+        'weight',
+        'height',
+        'length',
+        'width',
     ];
 
     public $cached = [
@@ -148,6 +156,10 @@ class OrderPosition extends Model
         'code',
         'tax_percent',
         'property',
+        'weight',
+        'height',
+        'length',
+        'width',
     ];
 
     public $arPriceField = [
@@ -487,6 +499,10 @@ class OrderPosition extends Model
         $this->old_price = $obItem->setActivePriceType($iActivePriceType)->setActiveCurrency($sCurrencyCode)->old_price_value;
         $this->tax_percent = $obItem->tax_percent;
         $this->code = $obItem->code;
+        $this->weight = $obItem->weight;
+        $this->height = $obItem->height;
+        $this->length = $obItem->length;
+        $this->width = $obItem->width;
     }
 
     /**

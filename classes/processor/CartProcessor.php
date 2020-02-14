@@ -1,5 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Processor;
 
+use Crypt;
 use Lang;
 use Cookie;
 use October\Rain\Support\Traits\Singleton;
@@ -166,6 +167,36 @@ class CartProcessor
         $this->updateCartData();
 
         return $this->prepareSuccessResponse();
+    }
+
+    /**
+     * Restore cart positions from order object
+     * @param \Lovata\OrdersShopaholic\Models\Order $obOrder
+     * @param string                                $sPositionProcessor
+     */
+    public function restoreFromOrder($obOrder, $sPositionProcessor)
+    {
+        if (empty($obOrder)) {
+            return;
+        }
+
+        //Get order positions
+        $obOrderPositionList = $obOrder->order_position;
+        if ($obOrderPositionList->isEmpty()) {
+            return;
+        }
+
+        $arPositionList = [];
+        //Create cart positions from order positions
+        foreach ($obOrderPositionList as $obOrderPosition) {
+            $arPositionList[] = [
+                'item_id'  => $obOrderPosition->item_id,
+                'quantity' => $obOrderPosition->quantity,
+                'property' => $obOrderPosition->property,
+            ];
+        }
+
+        $this->add($arPositionList, $sPositionProcessor);
     }
 
     /**
@@ -351,6 +382,7 @@ class CartProcessor
             'total_price'          => $this->getCartTotalPriceData()->getData(),
             'quantity'             => 0,
             'total_quantity'       => 0,
+            'weight'               => 0,
 
             'payment_method_id' => $this->obCart->payment_method_id,
             'shipping_type_id'  => !empty($this->obShippingTypeItem) ? $this->obShippingTypeItem->id : $this->obCart->shipping_type_id,
@@ -371,6 +403,7 @@ class CartProcessor
                 'item_type'    => $obCartPositionItem->item_type,
                 'quantity'     => (int) $obCartPositionItem->quantity,
                 'max_quantity' => (int) $obCartPositionItem->item->quantity,
+                'weight'       => (float) $obCartPositionItem->weight,
                 'property'     => $obCartPositionItem->property,
             ];
 
@@ -378,6 +411,7 @@ class CartProcessor
 
             $arResult['quantity']++;
             $arResult['total_quantity'] += $obCartPositionItem->quantity;
+            $arResult['weight'] += $obCartPositionItem->weight;
             $arResult['position'][$obCartPositionItem->id] = $arPositionData;
         }
 
@@ -396,6 +430,14 @@ class CartProcessor
 
         //Get cart id from cookie, if exists
         $iCartID = Cookie::get(self::COOKIE_NAME, self::$iTestCartID);
+        if (!empty($iCartID) && !is_numeric($iCartID)) {
+            try {
+                $iDecryptedCartID = Crypt::decryptString($iCartID);
+                if (!empty($iDecryptedCartID)) {
+                    $iCartID = $iDecryptedCartID;
+                }
+            } catch (\Exception $obException) {}
+        }
 
         //Get auth user
         $this->obUser = UserHelper::instance()->getUser();
