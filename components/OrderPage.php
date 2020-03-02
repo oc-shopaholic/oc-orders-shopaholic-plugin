@@ -13,8 +13,6 @@ use Lovata\OrdersShopaholic\Classes\Item\OrderItem;
  * Class OrderPage
  * @package Lovata\OrdersShopaholic\Components
  * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
- *
- * @link https://github.com/lovata/oc-shopaholic-plugin/wiki/OrderPage
  */
 class OrderPage extends ElementPage
 {

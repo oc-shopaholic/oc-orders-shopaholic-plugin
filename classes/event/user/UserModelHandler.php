@@ -139,7 +139,8 @@ class UserModelHandler
     {
         \Lovata\Buddies\Classes\Item\UserItem::extend(function ($obUserItem) {
             /** @var \Lovata\Buddies\Classes\Item\UserItem $obUserItem */
-            $obUserItem->addDynamicMethod('getAddressAttribute', function () use ($obUserItem) {
+            $obUserItem->addDynamicMethod('getAddressAttribute', function ($obUserItem) {
+                /** @var \Lovata\Buddies\Classes\Item\UserItem $obUserItem */
                 $obAddressList = UserAddressCollection::make()->user($obUserItem->id);
 
                 return $obAddressList;
@@ -154,7 +155,8 @@ class UserModelHandler
     {
         \Lovata\Buddies\Classes\Item\UserItem::extend(function($obUserItem) {
             /** @var \Lovata\Buddies\Classes\Item\UserItem $obUserItem */
-            $obUserItem->addDynamicMethod('getOrderAttribute', function () use($obUserItem) {
+            $obUserItem->addDynamicMethod('getOrderAttribute', function ($obUserItem) {
+                /** @var \Lovata\Buddies\Classes\Item\UserItem $obUserItem */
                 $obOrderList = OrderCollection::make()->user($obUserItem->id);
 
                 return $obOrderList;
