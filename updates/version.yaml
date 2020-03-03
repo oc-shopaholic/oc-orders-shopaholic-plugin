@@ -141,3 +141,5 @@
     - 'Added "restore cart" field to PaymentMethod model. Added restoreFromOrder() method to CartProcessor class. Added dimensions and weight fields to OrderPosition model.'
     - table_update_payment_method_add_restore_cart_field.php
     - table_update_order_positions_add_dimensions_field.php
+1.24.1:
+    - 'Fixed dynamic method in UserItem class. Requires Toolbox plugin version 1.28.1 and later.'
