@@ -31,6 +31,7 @@ abstract class AbstractPromoMechanism implements InterfacePromoMechanism
     protected $bIsFinalDiscount;
     protected $arPropertyList;
     protected $sRelatedDescription;
+    protected $bIncrease = false;
 
     protected $bWithQuantityLimit = false;
     protected $bCalculatePerUnit = false;
@@ -58,14 +59,16 @@ abstract class AbstractPromoMechanism implements InterfacePromoMechanism
      * @param string $sDiscountType
      * @param bool   $bIsFinalDiscount
      * @param array  $arPropertyList
+     * @param bool   $bIncrease
      */
-    public function __construct($iPriority, $fDiscountValue, $sDiscountType, $bIsFinalDiscount, $arPropertyList)
+    public function __construct($iPriority, $fDiscountValue, $sDiscountType, $bIsFinalDiscount, $arPropertyList, $bIncrease)
     {
         $this->iPriority = (int) $iPriority;
         $this->fDiscountValue = PriceHelper::toFloat($fDiscountValue);
         $this->sDiscountType = $sDiscountType;
         $this->bIsFinalDiscount = (bool) $bIsFinalDiscount;
         $this->arPropertyList = (array) $arPropertyList;
+        $this->bIncrease = (bool) $bIncrease;
     }
 
     /**
@@ -114,6 +117,15 @@ abstract class AbstractPromoMechanism implements InterfacePromoMechanism
     }
 
     /**
+     * Return true, if discount is final
+     * @return bool
+     */
+    public function getIncreaseFlag() : bool
+    {
+        return $this->bIncrease;
+    }
+
+    /**
      * Get discount value
      * @return float
      */
@@ -133,7 +145,7 @@ abstract class AbstractPromoMechanism implements InterfacePromoMechanism
 
     /**
      * Set related model
-     * @param  \Model $obModel
+     * @param \Model $obModel
      */
     public function setRelatedModel($obModel)
     {
@@ -340,9 +352,13 @@ abstract class AbstractPromoMechanism implements InterfacePromoMechanism
      */
     protected function applyFixedDiscount($fPrice)
     {
-        $fPrice = PriceHelper::round($fPrice - $this->fDiscountValue);
-        if ($fPrice < 0) {
-            $fPrice = 0;
+        if ($this->bIncrease) {
+            $fPrice = PriceHelper::round($fPrice + $this->fDiscountValue);
+        } else {
+            $fPrice = PriceHelper::round($fPrice - $this->fDiscountValue);
+            if ($fPrice < 0) {
+                $fPrice = 0;
+            }
         }
 
         return $fPrice;
@@ -355,7 +371,11 @@ abstract class AbstractPromoMechanism implements InterfacePromoMechanism
      */
     protected function applyPercentDiscount($fPrice)
     {
-        $fPrice = PriceHelper::round($fPrice - $fPrice * ($this->fDiscountValue / 100));
+        if ($this->bIncrease) {
+            $fPrice = PriceHelper::round($fPrice + $fPrice * ($this->fDiscountValue / 100));
+        } else {
+            $fPrice = PriceHelper::round($fPrice - $fPrice * ($this->fDiscountValue / 100));
+        }
 
         return $fPrice;
     }
@@ -394,5 +414,22 @@ abstract class AbstractPromoMechanism implements InterfacePromoMechanism
      * @param \Lovata\OrdersShopaholic\Classes\Item\CartPositionItem $obPosition
      * @return bool
      */
-    abstract protected function check($obProcessor, $obPosition = null) : bool;
+    protected function check($obProcessor, $obPosition = null) : bool
+    {
+        $obShippingType = $obProcessor->getShippingType();
+        $arShippingTypeList = $this->getProperty('shipping_type_id');
+        $bFail = !empty($arShippingTypeList) && is_array($arShippingTypeList) && (empty($obShippingType) || (!empty($obShippingType)) && !in_array($obShippingType->id, $arShippingTypeList));
+        if ($bFail) {
+            return false;
+        }
+
+        $obPaymentMethod = $obProcessor->getPaymentMethod();
+        $arPaymentMethodList = $this->getProperty('payment_method_id');
+        $bFail = !empty($arPaymentMethodList) && is_array($arPaymentMethodList) && (empty($obPaymentMethod) || (!empty($obPaymentMethod)) && !in_array($obPaymentMethod->id, $arPaymentMethodList));
+        if ($bFail) {
+            return false;
+        }
+
+        return true;
+    }
 }

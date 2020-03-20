@@ -19,6 +19,10 @@ abstract class AbstractPositionTotalPriceGreaterDiscount extends AbstractPromoMe
      */
     protected function check($obProcessor, $obPosition = null) : bool
     {
+        if (!parent::check($obProcessor, $obPosition)) {
+            return false;
+        }
+
         //Get amount value
         $fAmount = PriceHelper::toFloat($this->getProperty('amount'));
         if ($fAmount >= 0 && $obProcessor->getPositionTotalPrice()->price_value < $fAmount) {

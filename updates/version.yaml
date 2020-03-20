@@ -143,3 +143,7 @@
     - table_update_order_positions_add_dimensions_field.php
 1.24.1:
     - 'Fixed dynamic method in UserItem class. Requires Toolbox plugin version 1.28.1 and later.'
+1.25.0:
+    - 'Adding mechanic of increasing price of products and orders.'
+    - table_update_promo_mechanism_add_increase_field.php
+    - table_update_order_promo_mechanism_add_increase_field.php

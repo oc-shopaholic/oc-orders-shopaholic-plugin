@@ -34,6 +34,15 @@ use Lovata\Toolbox\Classes\Helper\PriceHelper;
  * @property string                  $discount_price_with_tax
  * @property float                   $discount_price_with_tax_value
  *
+ * @property string                         $increase_price
+ * @property float                          $increase_price_value
+ * @property string                         $tax_increase_price
+ * @property float                          $tax_increase_price_value
+ * @property string                         $increase_price_without_tax
+ * @property float                          $increase_price_without_tax_value
+ * @property string                         $increase_price_with_tax
+ * @property float                          $increase_price_with_tax_value
+ *
  * @property InterfacePromoMechanism $mechanism
  */
 class TotalPriceContainerLog
@@ -52,6 +61,11 @@ class TotalPriceContainerLog
     protected $fDiscountPriceWithoutTax = 0;
     protected $fDiscountPriceWithTax = 0;
     protected $fTaxDiscountPrice = 0;
+
+    protected $fIncreasePrice = 0;
+    protected $fIncreasePriceWithoutTax = 0;
+    protected $fIncreasePriceWithTax = 0;
+    protected $fTaxIncreasePrice = 0;
 
     /** @var InterfacePromoMechanism */
     protected $obMechanism;
@@ -78,6 +92,11 @@ class TotalPriceContainerLog
         $this->fDiscountPriceWithoutTax = PriceHelper::round($this->fOldPriceWithoutTax - $this->fPriceWithoutTax);
         $this->fDiscountPriceWithTax = PriceHelper::round($this->fOldPriceWithTax - $this->fPriceWithTax);
         $this->fTaxDiscountPrice = PriceHelper::round($this->fTaxOldPrice - $this->fTaxPrice);
+
+        $this->fIncreasePrice = PriceHelper::round($this->fPrice - $this->fOldPrice);
+        $this->fIncreasePriceWithoutTax = PriceHelper::round($this->fPriceWithoutTax - $this->fOldPriceWithoutTax);
+        $this->fIncreasePriceWithTax = PriceHelper::round($this->fPriceWithTax - $this->fOldPriceWithTax);
+        $this->fTaxIncreasePrice = PriceHelper::round($this->fTaxPrice - $this->fTaxOldPrice);
 
         $this->obMechanism = $obMechanism;
     }
@@ -142,6 +161,15 @@ class TotalPriceContainerLog
             'discount_price_without_tax_value' => $this->discount_price_without_tax_value,
             'discount_price_with_tax'          => $this->discount_price_with_tax,
             'discount_price_with_tax_value'    => $this->discount_price_with_tax_value,
+
+            'increase_price'                   => $this->increase_price,
+            'increase_price_value'             => $this->increase_price_value,
+            'tax_increase_price'               => $this->tax_increase_price,
+            'tax_increase_price_value'         => $this->tax_increase_price_value,
+            'increase_price_without_tax'       => $this->increase_price_without_tax,
+            'increase_price_without_tax_value' => $this->increase_price_without_tax_value,
+            'increase_price_with_tax'          => $this->increase_price_with_tax,
+            'increase_price_with_tax_value'    => $this->increase_price_with_tax_value,
 
             'description' => !empty($this->obMechanism) ? $this->obMechanism->getRelatedDescription() : '',
         ];

@@ -38,6 +38,12 @@ abstract class AbstractPromoMechanismProcessor
     /** @var array|InterfacePromoMechanism */
     protected $arDiscountTotalPriceList = [];
 
+    /** @var \Lovata\OrdersShopaholic\Models\ShippingType|\Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem */
+    protected $obShippingType;
+
+    /** @var \Lovata\OrdersShopaholic\Models\PaymentMethod|\Lovata\OrdersShopaholic\Classes\Item\PaymentMethodItem */
+    protected $obPaymentMethod;
+
     /**
      * Get position list
      * @return mixed
@@ -109,6 +115,24 @@ abstract class AbstractPromoMechanismProcessor
     public function getTotalPrice() : TotalPriceContainer
     {
         return $this->obTotalPriceData;
+    }
+
+    /**
+     * Get active shipping type
+     * @return \Lovata\OrdersShopaholic\Models\ShippingType|\Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem
+     */
+    public function getShippingType()
+    {
+        return $this->obShippingType;
+    }
+
+    /**
+     * Get active payment method
+     * @return \Lovata\OrdersShopaholic\Models\PaymentMethod|\Lovata\OrdersShopaholic\Classes\Item\PaymentMethodItem
+     */
+    public function getPaymentMethod()
+    {
+        return $this->obPaymentMethod;
     }
 
     /**

@@ -35,6 +35,15 @@ use Lovata\Shopaholic\Classes\Helper\TaxHelper;
  * @property string                  $discount_price_with_tax
  * @property float                   $discount_price_with_tax_value
  *
+ * @property string                  $increase_price
+ * @property float                   $increase_price_value
+ * @property string                  $tax_increase_price
+ * @property float                   $tax_increase_price_value
+ * @property string                  $increase_price_without_tax
+ * @property float                   $increase_price_without_tax_value
+ * @property string                  $increase_price_with_tax
+ * @property float                   $increase_price_with_tax_value
+ *
  * @property string                  $price_per_unit
  * @property float                   $price_per_unit_value
  * @property string                  $tax_price_per_unit
@@ -61,6 +70,15 @@ use Lovata\Shopaholic\Classes\Helper\TaxHelper;
  * @property float                   $discount_price_per_unit_without_tax_value
  * @property string                  $discount_price_per_unit_with_tax
  * @property float                   $discount_price_per_unit_with_tax_value
+ *
+ * @property string                  $increase_price_per_unit
+ * @property float                   $increase_price_per_unit_value
+ * @property string                  $tax_increase_price_per_unit
+ * @property float                   $tax_increase_price_per_unit_value
+ * @property string                  $increase_price_per_unit_without_tax
+ * @property float                   $increase_price_per_unit_without_tax_value
+ * @property string                  $increase_price_per_unit_with_tax
+ * @property float                   $increase_price_per_unit_with_tax_value
  *
  * @property float                   $tax_percent
  * @property int                     $quantity
@@ -186,6 +204,15 @@ class ItemPriceContainerLog
             'discount_price_with_tax'          => $this->discount_price_with_tax,
             'discount_price_with_tax_value'    => $this->discount_price_with_tax_value,
 
+            'increase_price'                   => $this->increase_price,
+            'increase_price_value'             => $this->increase_price_value,
+            'tax_increase_price'               => $this->tax_increase_price,
+            'tax_increase_price_value'         => $this->tax_increase_price_value,
+            'increase_price_without_tax'       => $this->increase_price_without_tax,
+            'increase_price_without_tax_value' => $this->increase_price_without_tax_value,
+            'increase_price_with_tax'          => $this->increase_price_with_tax,
+            'increase_price_with_tax_value'    => $this->increase_price_with_tax_value,
+
             'price_per_unit'                   => $this->price_per_unit,
             'price_per_unit_value'             => $this->price_per_unit_value,
             'tax_price_per_unit'               => $this->tax_price_per_unit,
@@ -212,6 +239,15 @@ class ItemPriceContainerLog
             'discount_price_per_unit_without_tax_value' => $this->discount_price_per_unit_without_tax_value,
             'discount_price_per_unit_with_tax'          => $this->discount_price_per_unit_with_tax,
             'discount_price_per_unit_with_tax_value'    => $this->discount_price_per_unit_with_tax_value,
+
+            'increase_price_per_unit'                   => $this->increase_price_per_unit,
+            'increase_price_per_unit_value'             => $this->increase_price_per_unit_value,
+            'tax_increase_price_per_unit'               => $this->tax_increase_price_per_unit,
+            'tax_increase_price_per_unit_value'         => $this->tax_increase_price_per_unit_value,
+            'increase_price_per_unit_without_tax'       => $this->increase_price_per_unit_without_tax,
+            'increase_price_per_unit_without_tax_value' => $this->increase_price_per_unit_without_tax_value,
+            'increase_price_per_unit_with_tax'          => $this->increase_price_per_unit_with_tax,
+            'increase_price_per_unit_with_tax_value'    => $this->increase_price_per_unit_with_tax_value,
 
             'description' => !empty($this->obMechanism) ? $this->obMechanism->getRelatedDescription() : '',
         ];
@@ -269,6 +305,16 @@ class ItemPriceContainerLog
     }
 
     /**
+     * @return float|int
+     */
+    protected function getIncreasePriceValueAttribute()
+    {
+        $fPrice = PriceHelper::round($this->price_value - $this->old_price_value);
+
+        return $fPrice;
+    }
+
+    /**
      * Calculate price per unit
      * @return float|int
      */
@@ -283,6 +329,14 @@ class ItemPriceContainerLog
     protected function getOldPricePerUnitValueAttribute()
     {
         return PriceHelper::round($this->old_price_value / $this->iQuantity);
+    }
+
+    /**
+     * @return float|int
+     */
+    protected function getIncreasePricePerUnitValueAttribute()
+    {
+        return PriceHelper::round($this->price_per_unit_value - $this->old_price_per_unit_value);
     }
 
     /**

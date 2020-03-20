@@ -4,11 +4,11 @@ use BackendMenu;
 use Backend\Classes\Controller;
 
 /**
- * Class PromoMechanisms
+ * Class IncreasePriceMechanisms
  * @package Lovata\OrdersShopaholic\Controllers
  * @author Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  */
-class PromoMechanisms extends Controller
+class IncreasePriceMechanisms extends Controller
 {
     public $implement = [
         'Backend.Behaviors.ListController',
@@ -24,7 +24,7 @@ class PromoMechanisms extends Controller
     public function __construct()
     {
         parent::__construct();
-        BackendMenu::setContext('Lovata.Shopaholic', 'shopaholic-menu-promo', 'orders-shopaholic-menu-promo-mechanism');
+        BackendMenu::setContext('Lovata.Shopaholic', 'shopaholic-menu-promo', 'orders-shopaholic-menu-increase-price-mechanism');
     }
 
     /**
@@ -32,6 +32,6 @@ class PromoMechanisms extends Controller
      */
     public function listExtendQuery($obQuery)
     {
-        $obQuery->withDecrease();
+        $obQuery->withIncrease();
     }
 }
