@@ -22,6 +22,7 @@ use Lovata\Toolbox\Classes\Helper\PriceHelper;
  * @property int                       $mechanism_id
  * @property string                    $name
  * @property string                    $type
+ * @property bool                      $increase
  * @property int                       $priority
  * @property float                     $discount_value
  * @property string                    $discount_type
@@ -36,8 +37,11 @@ use Lovata\Toolbox\Classes\Helper\PriceHelper;
  *
  * @property Order                     $order
  * @method static Order|\October\Rain\Database\Relations\BelongsTo order()
- * @property PromoMechanism       $mechanism
+ * @property PromoMechanism            $mechanism
  * @method static PromoMechanism|\October\Rain\Database\Relations\BelongsTo mechanism()
+ *
+ * @method static $this withIncrease()
+ * @method static $this withDecrease()
  */
 class OrderPromoMechanism extends Model
 {
@@ -67,6 +71,7 @@ class OrderPromoMechanism extends Model
         'mechanism_id',
         'name',
         'type',
+        'increase',
         'priority',
         'discount_value',
         'discount_type',
@@ -83,6 +88,7 @@ class OrderPromoMechanism extends Model
         'mechanism_id',
         'name',
         'type',
+        'increase',
         'priority',
         'discount_value',
         'discount_type',
@@ -113,7 +119,7 @@ class OrderPromoMechanism extends Model
             return null;
         }
 
-        return new $sClassName($this->priority, $this->discount_value, $this->discount_type, $this->final_discount, $this->property);
+        return new $sClassName($this->priority, $this->discount_value, $this->discount_type, $this->final_discount, $this->property, $this->increase);
     }
 
     /**
@@ -126,6 +132,26 @@ class OrderPromoMechanism extends Model
             PromoMechanism::PERCENT_TYPE => Lang::get('lovata.ordersshopaholic::lang.field.discount_type_'.PromoMechanism::PERCENT_TYPE),
             PromoMechanism::FIXED_TYPE   => Lang::get('lovata.ordersshopaholic::lang.field.discount_type_'.PromoMechanism::FIXED_TYPE),
         ];
+    }
+
+    /**
+     * Get element with increase flag = true
+     * @param PromoMechanism $obQuery
+     * @return PromoMechanism
+     */
+    public function scopeWithIncrease($obQuery)
+    {
+        return $obQuery->where('increase', true);
+    }
+
+    /**
+     * Get element with increase flag = false
+     * @param PromoMechanism $obQuery
+     * @return PromoMechanism
+     */
+    public function scopeWithDecrease($obQuery)
+    {
+        return $obQuery->where('increase', false);
     }
 
     /**
@@ -190,7 +216,7 @@ class OrderPromoMechanism extends Model
      */
     protected function getDescriptionAttribute()
     {
-        $sDescription = Event::fire(self::EVENT_GET_DESCRIPTION, $this, true);
+        $sDescription = (string) Event::fire(self::EVENT_GET_DESCRIPTION, $this, true);
 
         return $sDescription;
     }

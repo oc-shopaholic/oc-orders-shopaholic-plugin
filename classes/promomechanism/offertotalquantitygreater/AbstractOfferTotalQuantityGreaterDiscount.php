@@ -18,6 +18,10 @@ abstract class AbstractOfferTotalQuantityGreaterDiscount extends AbstractPromoMe
      */
     protected function check($obProcessor, $obPosition = null) : bool
     {
+        if (!parent::check($obProcessor, $obPosition)) {
+            return false;
+        }
+
         //Get offer limit value
         $iOfferLimit = (int) $this->getProperty('offer_limit');
 

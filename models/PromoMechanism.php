@@ -21,6 +21,8 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\PromoMechanismStore;
  * @property                                           $id
  * @property string                                    $name
  * @property string                                    $type
+ * @property bool                                      $increase
+ * @property bool                                      $auto_add
  * @property int                                       $priority
  * @property float                                     $discount_value
  * @property string                                    $discount_type
@@ -28,6 +30,10 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\PromoMechanismStore;
  * @property array                                     $property
  * @property \October\Rain\Argon\Argon                 $created_at
  * @property \October\Rain\Argon\Argon                 $updated_at
+ *
+ * @method static $this withIncrease()
+ * @method static $this withDecrease()
+ * @method static $this getAutoAdd()
  */
 class PromoMechanism extends Model
 {
@@ -56,6 +62,8 @@ class PromoMechanism extends Model
     public $fillable = [
         'name',
         'type',
+        'increase',
+        'auto_add',
         'priority',
         'discount_value',
         'discount_type',
@@ -78,7 +86,7 @@ class PromoMechanism extends Model
             return null;
         }
 
-        return new $sClassName($this->priority, $this->discount_value, $this->discount_type, $this->final_discount, $this->property);
+        return new $sClassName($this->priority, $this->discount_value, $this->discount_type, $this->final_discount, $this->property, $this->increase);
     }
 
     /**
@@ -97,6 +105,10 @@ class PromoMechanism extends Model
      */
     public function filterFields($obFieldList, $sContext = null)
     {
+        if (!property_exists($obFieldList, 'type')) {
+            return;
+        }
+
         $sTypeClass = $obFieldList->type->value;
         if (empty($sTypeClass)) {
             $arClassList = array_keys(PromoMechanismStore::instance()->getMechanismOptions());
@@ -118,6 +130,58 @@ class PromoMechanism extends Model
             self::PERCENT_TYPE => Lang::get('lovata.ordersshopaholic::lang.field.discount_type_'.self::PERCENT_TYPE),
             self::FIXED_TYPE   => Lang::get('lovata.ordersshopaholic::lang.field.discount_type_'.self::FIXED_TYPE),
         ];
+    }
+
+    /**
+     * Get element with increase flag = true
+     * @param PromoMechanism $obQuery
+     * @return PromoMechanism
+     */
+    public function scopeWithIncrease($obQuery)
+    {
+        return $obQuery->where('increase', true);
+    }
+
+    /**
+     * Get element with increase flag = false
+     * @param PromoMechanism $obQuery
+     * @return PromoMechanism
+     */
+    public function scopeWithDecrease($obQuery)
+    {
+        return $obQuery->where('increase', false);
+    }
+
+    /**
+     * Get element with auto_add flag = true
+     * @param PromoMechanism $obQuery
+     * @return PromoMechanism
+     */
+    public function scopeGetAutoAdd($obQuery)
+    {
+        return $obQuery->where('auto_add', true);
+    }
+
+    /**
+     * Get list with shipping types
+     * @return array
+     */
+    public function getShippingTypeIdOptions()
+    {
+        $arResult = (array) ShippingType::orderBy('sort_order', 'asc')->lists('name', 'id');
+
+        return $arResult;
+    }
+
+    /**
+     * Get list with payment methods
+     * @return array
+     */
+    public function getPaymentMethodIdOptions()
+    {
+        $arResult = (array) PaymentMethod::orderBy('sort_order', 'asc')->lists('name', 'id');
+
+        return $arResult;
     }
 
     /**

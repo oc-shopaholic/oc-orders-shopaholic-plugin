@@ -18,6 +18,10 @@ abstract class AbstractPositionCountGreaterDiscount extends AbstractPromoMechani
      */
     protected function check($obProcessor, $obPosition = null) : bool
     {
+        if (!parent::check($obProcessor, $obPosition)) {
+            return false;
+        }
+
         //Get position limit value
         $iPositionLimit = (int) $this->getProperty('position_limit');
 

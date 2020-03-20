@@ -4,6 +4,7 @@ use Event;
 
 use Lovata\OrdersShopaholic\Models\Cart;
 use Lovata\OrdersShopaholic\Classes\Collection\CartPositionCollection;
+use Lovata\OrdersShopaholic\Models\PromoMechanism;
 
 /**
  * Class CartPromoMechanismProcessor
@@ -20,16 +21,14 @@ class CartPromoMechanismProcessor extends AbstractPromoMechanismProcessor
     /** @var Cart */
     protected $obCart;
 
-    /** @var \Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem */
-    protected $obShippingType;
-
     /**
      * CartPromoMechanismProcessor constructor.
      * @param Cart                                         $obCart
      * @param CartPositionCollection                       $obCartPositionList
      * @param \Lovata\OrdersShopaholic\Models\ShippingType|\Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem $obShippingType
+     * @param \Lovata\OrdersShopaholic\Models\PaymentMethod|\Lovata\OrdersShopaholic\Classes\Item\PaymentMethodItem $obPaymentMethod
      */
-    public function __construct(Cart $obCart, CartPositionCollection $obCartPositionList, $obShippingType)
+    public function __construct(Cart $obCart, CartPositionCollection $obCartPositionList, $obShippingType, $obPaymentMethod)
     {
         $this->obPositionPriceData = TotalPriceContainer::makeEmpty();
         $this->obShippingPriceData = ItemPriceContainer::makeEmpty();
@@ -38,6 +37,7 @@ class CartPromoMechanismProcessor extends AbstractPromoMechanismProcessor
         $this->obCart = $obCart;
         $this->obPositionList = $obCartPositionList;
         $this->obShippingType = $obShippingType;
+        $this->obPaymentMethod = $obPaymentMethod;
 
         $this->calculate();
     }
@@ -158,5 +158,26 @@ class CartPromoMechanismProcessor extends AbstractPromoMechanismProcessor
     protected function initMechanismList()
     {
         Event::fire(self::EVENT_GET_MECHANISM_LIST, $this);
+
+        $obPromoMechanismList = PromoMechanism::getAutoAdd()->get();
+        if ($obPromoMechanismList->isEmpty()) {
+            return;
+        }
+
+        /** @var PromoMechanism $obPromoMechanism */
+        foreach ($obPromoMechanismList as $obPromoMechanism) {
+            $obMechanism = $obPromoMechanism->getTypeObject();
+            $obMechanism->setCheckPositionCallback(function ($obPosition) {
+                return true;
+            });
+
+            $obMechanism->setCheckShippingTypeCallback(function ($obShippingType) {
+                return true;
+            });
+
+            $obMechanism->setRelatedDescription($obPromoMechanism->name);
+
+            $this->addMechanism($obMechanism);
+        }
     }
 }

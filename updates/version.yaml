@@ -141,3 +141,9 @@
     - 'Added "restore cart" field to PaymentMethod model. Added restoreFromOrder() method to CartProcessor class. Added dimensions and weight fields to OrderPosition model.'
     - table_update_payment_method_add_restore_cart_field.php
     - table_update_order_positions_add_dimensions_field.php
+1.24.1:
+    - 'Fixed dynamic method in UserItem class. Requires Toolbox plugin version 1.28.1 and later.'
+1.25.0:
+    - 'Added the ability to automatically apply promo mechanisms to cart and order. Added the ability to link the promo mechanism with shipping types and payment methods. Added the ability to set an active payment method in "Cart" component. Adding mechanisms to increase the price of products and orders.'
+    - table_update_promo_mechanism_add_increase_field.php
+    - table_update_order_promo_mechanism_add_increase_field.php

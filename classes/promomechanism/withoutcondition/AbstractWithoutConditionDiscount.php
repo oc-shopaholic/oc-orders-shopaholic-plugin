@@ -18,6 +18,10 @@ abstract class AbstractWithoutConditionDiscount extends AbstractPromoMechanism i
      */
     protected function check($obProcessor, $obPosition = null) : bool
     {
+        if (!parent::check($obProcessor, $obPosition)) {
+            return false;
+        }
+
         return true;
     }
 }

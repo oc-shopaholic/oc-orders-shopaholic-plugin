@@ -34,15 +34,21 @@ interface InterfacePromoMechanism
 
     /**
      * Return true, is discount was applied
-     * @return int
+     * @return bool
      */
     public function isApplied() : bool;
 
     /**
      * Return true, if discount is final
-     * @return int
+     * @return bool
      */
     public function isFinal() : bool;
+
+    /**
+     * Return value of increase flag
+     * @return bool
+     */
+    public function getIncreaseFlag() : bool;
 
     /**
      * Get discount value

@@ -71,6 +71,15 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer;
  * @property string                                                              $discount_total_price_with_tax
  * @property float                                                               $discount_total_price_with_tax_value
  *
+ * @property string                                                              $increase_total_price
+ * @property float                                                               $increase_total_price_value
+ * @property string                                                              $tax_increase_total_price
+ * @property float                                                               $tax_increase_total_price_value
+ * @property string                                                              $increase_total_price_without_tax
+ * @property float                                                               $increase_total_price_without_tax_value
+ * @property string                                                              $increase_total_price_with_tax
+ * @property float                                                               $increase_total_price_with_tax_value
+ *
  * @property string                                                              $total_price_per_unit
  * @property float                                                               $total_price_per_unit_value
  * @property string                                                              $tax_total_price_per_unit
@@ -97,6 +106,15 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer;
  * @property float                                                               $discount_total_price_per_unit_without_tax_value
  * @property string                                                              $discount_total_price_per_unit_with_tax
  * @property float                                                               $discount_total_price_per_unit_with_tax_value
+ *
+ * @property string                                                              $increase_total_price_per_unit
+ * @property float                                                               $increase_total_price_per_unit_value
+ * @property string                                                              $tax_increase_total_price_per_unit
+ * @property float                                                               $tax_increase_total_price_per_unit_value
+ * @property string                                                              $increase_total_price_per_unit_without_tax
+ * @property float                                                               $increase_total_price_per_unit_without_tax_value
+ * @property string                                                              $increase_total_price_per_unit_with_tax
+ * @property float                                                               $increase_total_price_per_unit_with_tax_value
  *
  * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer  $price_data
  * @property float                                                               $tax_percent

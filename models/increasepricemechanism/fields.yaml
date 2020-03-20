@@ -17,15 +17,15 @@ fields:
         dependsOn: type
         commentHtml: true
     discount_value:
-        label: 'lovata.toolbox::lang.field.discount_value'
+        label: 'lovata.ordersshopaholic::lang.field.increase_price_value'
         span: left
         type: text
     discount_type:
-        label: 'lovata.toolbox::lang.field.discount_type'
+        label: 'lovata.ordersshopaholic::lang.field.increase_price_type'
         span: right
         type: dropdown
     final_discount:
-        label: 'lovata.ordersshopaholic::lang.field.final_discount'
+        label: 'lovata.ordersshopaholic::lang.field.final_increase_price'
         comment: 'lovata.ordersshopaholic::lang.field.final_discount_description'
         commentHtml: true
         span: left
@@ -38,7 +38,7 @@ fields:
         type: checkbox
     property[amount]:
         label: 'lovata.toolbox::lang.field.amount'
-        comment: 'lovata.ordersshopaholic::lang.promo_mechanism.amount_description'
+        comment: 'lovata.ordersshopaholic::lang.increase_price_mechanism.amount_description'
         trigger:
             action: show
             field: type
@@ -48,8 +48,8 @@ fields:
         span: left
         type: text
     property[offer_limit]:
-        label: 'lovata.ordersshopaholic::lang.promo_mechanism.offer_limit'
-        comment: 'lovata.ordersshopaholic::lang.promo_mechanism.offer_limit_description'
+        label: 'lovata.ordersshopaholic::lang.increase_price_mechanism.offer_limit'
+        comment: 'lovata.ordersshopaholic::lang.increase_price_mechanism.offer_limit_description'
         trigger:
             action: show
             field: type
@@ -67,8 +67,8 @@ fields:
         span: left
         type: text
     property[quantity_limit]:
-        label: 'lovata.ordersshopaholic::lang.promo_mechanism.quantity_limit'
-        comment: 'lovata.ordersshopaholic::lang.promo_mechanism.quantity_limit_description'
+        label: 'lovata.ordersshopaholic::lang.increase_price_mechanism.quantity_limit'
+        comment: 'lovata.ordersshopaholic::lang.increase_price_mechanism.quantity_limit_description'
         trigger:
             action: show
             field: type
@@ -84,8 +84,8 @@ fields:
         span: left
         type: text
     property[quantity_limit_from]:
-        label: 'lovata.ordersshopaholic::lang.promo_mechanism.quantity_limit_from'
-        comment: 'lovata.ordersshopaholic::lang.promo_mechanism.quantity_limit_from_description'
+        label: 'lovata.ordersshopaholic::lang.increase_price_mechanism.quantity_limit_from'
+        comment: 'lovata.ordersshopaholic::lang.increase_price_mechanism.quantity_limit_from_description'
         trigger:
             action: show
             field: type
@@ -101,8 +101,8 @@ fields:
         span: right
         type: text
     property[position_limit]:
-        label: 'lovata.ordersshopaholic::lang.promo_mechanism.position_limit'
-        comment: 'lovata.ordersshopaholic::lang.promo_mechanism.position_limit_description'
+        label: 'lovata.ordersshopaholic::lang.increase_price_mechanism.position_limit'
+        comment: 'lovata.ordersshopaholic::lang.increase_price_mechanism.position_limit_description'
         trigger:
             action: show
             field: type
@@ -121,16 +121,16 @@ fields:
             fields:
                 shipping_type_id:
                     label: 'lovata.ordersshopaholic::lang.field.shipping_type'
-                    commentAbove: 'lovata.ordersshopaholic::lang.promo_mechanism.shipping_type'
+                    commentAbove: 'lovata.ordersshopaholic::lang.increase_price_mechanism.shipping_type'
                     span: left
                     type: checkboxlist
                     emptyOption: lovata.toolbox::lang.field.empty
                 payment_method_id:
                     label: 'lovata.ordersshopaholic::lang.field.payment_method'
-                    commentAbove: 'lovata.ordersshopaholic::lang.promo_mechanism.payment_method'
+                    commentAbove: 'lovata.ordersshopaholic::lang.increase_price_mechanism.payment_method'
                     span: right
                     type: checkboxlist
                     emptyOption: lovata.toolbox::lang.field.empty
     increase:
         type: partial
-        path: $/lovata/ordersshopaholic/controllers/promomechanisms/_increase.htm
+        path: $/lovata/ordersshopaholic/controllers/promomechanisms/_decrease.htm

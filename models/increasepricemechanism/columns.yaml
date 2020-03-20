@@ -7,12 +7,7 @@ columns:
     type_name:
         label: 'lovata.toolbox::lang.field.type'
         type: partial
-        path: ~/plugins/lovata/ordersshopaholic/controllers/orders/_promo_type_name.htm
-        searchable: false
-        sortable: false
-    description:
-        label: 'lovata.toolbox::lang.field.description'
-        type: text
+        path: ~/plugins/lovata/ordersshopaholic/controllers/promomechanisms/_promo_type_name.htm
         searchable: false
         sortable: false
     priority:
@@ -20,24 +15,18 @@ columns:
         type: text
         searchable: false
         sortable: true
-    increase:
-        label: ''
-        type: partial
-        path: ~/plugins/lovata/ordersshopaholic/controllers/orders/_promo_increase.htm
-        searchable: false
-        sortable: false
     discount_value:
-        label: 'lovata.ordersshopaholic::lang.field.price_change_value'
+        label: 'lovata.ordersshopaholic::lang.field.increase_price_value'
         type: text
         searchable: false
         sortable: true
     discount_type_name:
-        label: 'lovata.ordersshopaholic::lang.field.price_change_type'
+        label: 'lovata.ordersshopaholic::lang.field.increase_price_type'
         type: text
         searchable: false
         sortable: false
     final_discount:
-        label: 'lovata.ordersshopaholic::lang.field.final_discount'
+        label: 'lovata.ordersshopaholic::lang.field.final_increase_price'
         type: switch
         searchable: false
         sortable: true
@@ -47,3 +36,13 @@ columns:
         searchable: true
         sortable: true
         width: 100px
+    created_at:
+        label: 'lovata.toolbox::lang.field.created_at'
+        type: timetense
+        sortable: true
+        invisible: true
+    updated_at:
+        label: 'lovata.toolbox::lang.field.updated_at'
+        type: timetense
+        sortable: true
+        invisible: true

@@ -17,14 +17,23 @@ class ExtendBackendMenuHandler extends AbstractBackendMenuHandler
      */
     protected function addMenuItems($obManager)
     {
-        $arMenuItemData = [
-            'label' => 'lovata.ordersshopaholic::lang.menu.promo_mechanism',
-            'url'           => Backend::url('lovata/ordersshopaholic/promomechanisms'),
-            'icon'          => 'oc-icon-percent',
-            'permissions'   => ['shopaholic-promo-mechanism'],
-            'order'         => 1000,
+        $arMenuItemList = [
+            'orders-shopaholic-menu-promo-mechanism' => [
+                'label' => 'lovata.ordersshopaholic::lang.menu.promo_mechanism',
+                'url'           => Backend::url('lovata/ordersshopaholic/promomechanisms'),
+                'icon'          => 'oc-icon-percent',
+                'permissions'   => ['shopaholic-promo-mechanism'],
+                'order'         => 1000,
+            ],
+            'orders-shopaholic-menu-increase-price-mechanism' => [
+                'label' => 'lovata.ordersshopaholic::lang.menu.increase_price_mechanism',
+                'url'           => Backend::url('lovata/ordersshopaholic/increasepricemechanisms'),
+                'icon'          => 'oc-icon-percent',
+                'permissions'   => ['shopaholic-promo-mechanism'],
+                'order'         => 1100,
+            ],
         ];
 
-        $obManager->addSideMenuItem('Lovata.Shopaholic', 'shopaholic-menu-promo', 'orders-shopaholic-menu-promo-mechanism', $arMenuItemData);
+        $obManager->addSideMenuItems('Lovata.Shopaholic', 'shopaholic-menu-promo', $arMenuItemList);
     }
 }

@@ -10,6 +10,7 @@ use Lovata\Toolbox\Classes\Helper\UserHelper;
 use Lovata\Shopaholic\Models\Settings;
 use Lovata\OrdersShopaholic\Models\Cart;
 use Lovata\OrdersShopaholic\Models\CartPosition;
+use Lovata\OrdersShopaholic\Classes\Item\PaymentMethodItem;
 use Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem;
 use Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer;
 use Lovata\OrdersShopaholic\Classes\PromoMechanism\TotalPriceContainer;
@@ -45,6 +46,9 @@ class CartProcessor
     /** @var \Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem */
     protected $obShippingTypeItem;
 
+    /** @var \Lovata\OrdersShopaholic\Classes\Item\PaymentMethodItem */
+    protected $obPaymentMethodItem;
+
     /** @var CartPromoMechanismProcessor */
     protected $obPromoProcessor;
 
@@ -64,6 +68,7 @@ class CartProcessor
     {
         $this->initCartPositionList();
         $this->initShippingTypeItem();
+        $this->initPaymentMethodItem();
         $this->initPromoProcessor();
     }
 
@@ -307,6 +312,16 @@ class CartProcessor
     }
 
     /**
+     * Set active payment method
+     * @param \Lovata\OrdersShopaholic\Classes\Item\PaymentMethodItem $obPaymentMethodItem
+     */
+    public function setActivePaymentMethod($obPaymentMethodItem)
+    {
+        $this->obPaymentMethodItem = $obPaymentMethodItem;
+        $this->updateCartData();
+    }
+
+    /**
      * Get cart position price data
      * @param int $iPositionID
      * @return ItemPriceContainer
@@ -384,7 +399,7 @@ class CartProcessor
             'total_quantity'       => 0,
             'weight'               => 0,
 
-            'payment_method_id' => $this->obCart->payment_method_id,
+            'payment_method_id' => !empty($this->obPaymentMethodItem) ? $this->obPaymentMethodItem->id : $this->obCart->payment_method_id,
             'shipping_type_id'  => !empty($this->obShippingTypeItem) ? $this->obShippingTypeItem->id : $this->obCart->shipping_type_id,
             'user_data'         => $this->obCart->user_data,
             'shipping_address'  => $this->obCart->shipping_address,
@@ -473,11 +488,26 @@ class CartProcessor
     }
 
     /**
+     * Init selected payment method
+     */
+    protected function initPaymentMethodItem()
+    {
+        if (empty($this->obCart) || !empty($this->obPaymentMethodItem) || empty($this->obCart->payment_method_id)) {
+            return;
+        }
+
+        $this->obPaymentMethodItem = PaymentMethodItem::make($this->obCart->payment_method_id);
+        if ($this->obPaymentMethodItem->isEmpty()) {
+            $this->obPaymentMethodItem = null;
+        }
+    }
+
+    /**
      * Init promo processor
      */
     protected function initPromoProcessor()
     {
-        $this->obPromoProcessor = new CartPromoMechanismProcessor($this->obCart, $this->obCartPositionList, $this->obShippingTypeItem);
+        $this->obPromoProcessor = new CartPromoMechanismProcessor($this->obCart, $this->obCartPositionList, $this->obShippingTypeItem, $this->obPaymentMethodItem);
     }
 
     /**
