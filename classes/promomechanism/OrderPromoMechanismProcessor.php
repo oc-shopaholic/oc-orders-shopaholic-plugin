@@ -47,6 +47,15 @@ class OrderPromoMechanismProcessor extends AbstractPromoMechanismProcessor
     {
         return $this->obPositionList;
     }
+    
+    /**
+     * Get order
+     * @return Order
+     */
+    public function getOrder()
+    {
+        return $this->obOrder;
+    }
 
     /**
      * Get promo mechanism from static store
