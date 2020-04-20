@@ -11,7 +11,7 @@ fields:
         useRelation: false
         recordsPerPage: 15
         modelClass: Lovata\Shopaholic\Models\Product
-        list: ~/plugins/lovata/shopaholic/models/product/columns.yaml
+        list: $/lovata/shopaholic/models/product/columns.yaml
     offer_id:
         label: 'lovata.ordersshopaholic::lang.label.offer'
         span: full
