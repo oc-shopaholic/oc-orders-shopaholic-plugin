@@ -9,7 +9,7 @@ columns:
         type: partial
         path: $/lovata/ordersshopaholic/controllers/orders/_status_name_column.htm
         searchable: false
-        sortable: true
+        sortable: false
     payment_method_name:
         label: 'lovata.ordersshopaholic::lang.field.payment_method'
         relation: payment_method
