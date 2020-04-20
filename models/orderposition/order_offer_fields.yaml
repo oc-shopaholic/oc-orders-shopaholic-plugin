@@ -4,15 +4,15 @@ fields:
         span: full
         type: number
         default: 1
-    _category:
-        label: 'lovata.toolbox::lang.field.category'
-        span: full
-        type: dropdown
     _product:
         label: 'lovata.ordersshopaholic::lang.label.product'
         span: full
-        type: dropdown
-        dependsOn: _category
+        scope: active
+        type: recordfinder
+        useRelation: false
+        recordsPerPage: 10
+        modelClass: Lovata\Shopaholic\Models\Product
+        list: $/lovata/shopaholic/models/product/columns.yaml
     offer_id:
         label: 'lovata.ordersshopaholic::lang.label.offer'
         span: full

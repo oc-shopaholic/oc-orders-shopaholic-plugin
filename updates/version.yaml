@@ -147,3 +147,5 @@
     - 'Added the ability to automatically apply promo mechanisms to cart and order. Added the ability to link the promo mechanism with shipping types and payment methods. Added the ability to set an active payment method in "Cart" component. Adding mechanisms to increase the price of products and orders.'
     - table_update_promo_mechanism_add_increase_field.php
     - table_update_order_promo_mechanism_add_increase_field.php
+1.26.0:
+    - 'Improved interface for adding an order position to order in backend. Thanks for contribution Nick Khaetsky.'
