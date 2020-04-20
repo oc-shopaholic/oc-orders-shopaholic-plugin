@@ -10,7 +10,7 @@ fields:
         scope: active
         type: recordfinder
         useRelation: false
-        recordsPerPage: 15
+        recordsPerPage: 10
         modelClass: Lovata\Shopaholic\Models\Product
         list: $/lovata/shopaholic/models/product/columns.yaml
     offer_id:
