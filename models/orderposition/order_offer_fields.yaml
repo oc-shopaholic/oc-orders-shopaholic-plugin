@@ -7,6 +7,7 @@ fields:
     _product:
         label: 'lovata.ordersshopaholic::lang.label.product'
         span: full
+        scope: active
         type: recordfinder
         useRelation: false
         recordsPerPage: 15
