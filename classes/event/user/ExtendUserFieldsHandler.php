@@ -35,21 +35,21 @@ class ExtendUserFieldsHandler extends AbstractBackendFieldHandler
                 'type'    => 'partial',
                 'tab'     => 'lovata.ordersshopaholic::lang.menu.orders',
                 'path'    => '$/lovata/ordersshopaholic/views/order.htm',
-                'context' => ['update'],
+                'context' => ['update', 'preview'],
             ],
             'active_task'    => [
                 'type'    => 'partial',
                 'label'   => 'lovata.ordersshopaholic::lang.field.active_task',
                 'tab'     => 'lovata.ordersshopaholic::lang.tab.tasks',
                 'path'    => '$/lovata/ordersshopaholic/views/active_task.htm',
-                'context' => ['update'],
+                'context' => ['update', 'preview'],
             ],
             'completed_task' => [
                 'type'    => 'partial',
                 'label'   => 'lovata.ordersshopaholic::lang.field.completed_task',
                 'tab'     => 'lovata.ordersshopaholic::lang.tab.tasks',
                 'path'    => '$/lovata/ordersshopaholic/views/completed_task.htm',
-                'context' => ['update'],
+                'context' => ['update', 'preview'],
             ],
         ];
 
