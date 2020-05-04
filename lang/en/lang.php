@@ -146,9 +146,13 @@
         'promo_mechanism'                     => 'Promo mechanism',
         'increase_price_mechanism'            => 'Increase price mechanism',
     ],
+    'button' => [
+        'orders' => 'Orders',
+    ],
     'order'                    => [
-        'name'       => 'order',
-        'list_title' => 'Order list',
+        'name'         => 'order',
+        'list_title'   => 'Order list',
+        'export_title' => 'Export orders',
     ],
     'buyer'                    => [
         'name'       => 'buyer',

@@ -1,0 +1,27 @@
+export:
+    title: 'lovata.ordersshopaholic::lang.order.export_title'
+    modelClass: Lovata\OrdersShopaholic\Models\OrderExport
+    list:
+        columns:
+            id:
+                label: 'lovata.toolbox::lang.field.id'
+            relation_status:
+                label: 'lovata.toolbox::lang.field.status'
+            order_number:
+                label: 'lovata.ordersshopaholic::lang.field.order_number'
+            relation_currency:
+                label: 'lovata.shopaholic::lang.field.currency'
+            shipping_price:
+                label: 'lovata.ordersshopaholic::lang.field.shipping_price'
+            position_total_price:
+                label: 'lovata.ordersshopaholic::lang.field.position_total_price'
+            total_price:
+                label: 'lovata.ordersshopaholic::lang.field.total_price'
+            relation_shipping_type:
+                label: 'lovata.ordersshopaholic::lang.field.shipping_type'
+            relation_payment_method:
+                label: 'lovata.ordersshopaholic::lang.field.payment_method'
+            created_at:
+                label: 'lovata.toolbox::lang.field.created_at'
+            updated_at:
+                label: 'lovata.toolbox::lang.field.updated_at'

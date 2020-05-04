@@ -135,9 +135,13 @@
         'order_position_property_description' => 'Управление дополнительными свойствами позиции заказа',
         'promo_mechanism'                     => 'Промо-механизм',
     ],
+    'button' => [
+        'orders' => 'Заказы',
+    ],
     'order'                => [
-        'name'       => 'заказа',
-        'list_title' => 'Список заказов',
+        'name'         => 'заказа',
+        'list_title'   => 'Список заказов',
+        'export_title' => 'Экспорт заказов',
     ],
     'buyer'                => [
         'name'       => 'покупателя',
