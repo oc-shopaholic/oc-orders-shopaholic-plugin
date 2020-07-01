@@ -1,6 +1,7 @@
 <?php namespace Lovata\OrdersShopaholic\Models;
 
 use Backend\Models\ExportModel;
+use DB;
 
 /**
  * Class OrderExport
@@ -16,37 +17,33 @@ use Backend\Models\ExportModel;
  */
 class OrderExport extends ExportModel
 {
-    const ORDER_FIELDS          = [
-        'id',
-        'order_number',
-        'created_at',
-        'total_price',
-        'updated_at',
-        'shipping_price',
-        'position_total_price',
-    ];
-    const ORDER_RELATION_FIELDS = [
-        'status',
-        'shipping_type',
-        'payment_method',
-        'currency',
-    ];
+    const FIELD_TOTAL_PRICE          = 'total_price';
+    const FIELD_POSITION_TOTAL_PRICE = 'position_total_price';
 
-    const PREFIX_RELATION = 'relation_';
-    const PREFIX_PROPERTY = 'property_';
+    const RELATION_STATUS         = 'status';
+    const RELATION_SHIPPING_TYPE  = 'shipping_type';
+    const RELATION_PAYMENT_METHOD = 'payment_method';
+    const RELATION_CURRENCY       = 'currency';
+    const RELATION_ORDER_POSITION = 'order_position';
+
+    const RELATION_LIST = [
+        self::RELATION_STATUS,
+        self::RELATION_SHIPPING_TYPE,
+        self::RELATION_PAYMENT_METHOD,
+        self::RELATION_CURRENCY,
+        self::RELATION_ORDER_POSITION,
+    ];
 
     /** @var string */
     public $table = 'lovata_orders_shopaholic_orders';
     /** @var array */
     public $belongsTo = ['status' => [Status::class, 'order' => 'sort_order asc']];
     /** @var array */
-    protected $arOrderFields = [];
+    protected $arOrderColumnList = [];
     /** @var array */
-    protected $arOrderRelationsFields = [];
+    protected $arRelationColumnList = [];
     /** @var array */
-    protected $arOrderPropertiesFields = [];
-    /** @var null|Order|\October\Rain\Database\Collection */
-    protected $obOrderList;
+    protected $arPropertyColumnList = [];
 
     /**
      * Export data.
@@ -56,15 +53,21 @@ class OrderExport extends ExportModel
      */
     public function exportData($arColumns, $sSessionKey = null) : array
     {
-        $this->init($arColumns);
-
-        if ($this->obOrderList === null || $this->obOrderList->isEmpty()) {
-            return [];
-        }
-
         $arList = [];
 
-        foreach ($this->obOrderList as $obOrder) {
+        if (empty($arColumns)) {
+            return $arList;
+        }
+
+        $this->init($arColumns);
+
+        $obOrderList = Order::with($this->arRelationColumnList)->get();
+
+        if ($obOrderList->isEmpty()) {
+            return $arList;
+        }
+
+        foreach ($obOrderList as $obOrder) {
             $arRow = $this->prepareRow($obOrder);
 
             if (empty($arRow)) {
@@ -84,51 +87,28 @@ class OrderExport extends ExportModel
      */
     protected function init($arColumns)
     {
-        $this->initColumnList($arColumns);
-        $this->initOrderList();
-    }
-
-    /**
-     * Init column list.
-     * @param array $arColumns
-     * @return void
-     */
-    protected function initColumnList($arColumns)
-    {
         if (empty($arColumns) || !is_array($arColumns)) {
             return;
         }
 
-        // Init order fields.
-        $this->arOrderFields = (array) array_intersect(self::ORDER_FIELDS, $arColumns);
+        $arPropertyList = (array) DB::table('lovata_orders_shopaholic_addition_properties')
+            ->where('active', true)
+            ->lists('code');
 
-        // Init relations.
         foreach ($arColumns as $sColumn) {
-            $sColumn = preg_replace("/^".self::PREFIX_RELATION."/", '', $sColumn);
-            if (in_array($sColumn, self::ORDER_RELATION_FIELDS)) {
-                $this->arOrderRelationsFields[] = $sColumn;
+            // Init relations.
+            if (in_array($sColumn, self::RELATION_LIST)) {
+                $this->arRelationColumnList[] = $sColumn;
+                // Init field.
+            } elseif (in_array($sColumn, $arPropertyList)) {
+                $this->arPropertyColumnList[] = $sColumn;
+            } else {
+                if ($sColumn == self::FIELD_TOTAL_PRICE || $sColumn == self::FIELD_POSITION_TOTAL_PRICE) {
+                    $this->arRelationColumnList[] = self::RELATION_ORDER_POSITION;
+                }
+                $this->arOrderColumnList[] = $sColumn;
             }
         }
-    }
-
-    /**
-     * Init order list.
-     * @return void
-     */
-    protected function initOrderList()
-    {
-        $arWith = $this->arOrderRelationsFields;
-
-        // Init order_position query.
-        if (in_array('total_price', $this->arOrderFields)
-            || in_array('position_total_price', $this->arOrderFields))
-        {
-            $arWith[] = 'order_position';
-        }
-
-        $obQuery = Order::with($arWith);
-
-        $this->obOrderList = $obQuery->get();
     }
 
     /**
@@ -152,13 +132,13 @@ class OrderExport extends ExportModel
      */
     protected function prepareOrderData(Order $obOrder) : array
     {
-        if (empty($this->arOrderFields)) {
-            return [];
-        }
-
         $arResult = [];
 
-        foreach ($this->arOrderFields as $sField) {
+        if (empty($this->arOrderColumnList)) {
+            return $arResult;
+        }
+
+        foreach ($this->arOrderColumnList as $sField) {
             $arResult[$sField] = $obOrder->$sField;
         }
 
@@ -172,31 +152,25 @@ class OrderExport extends ExportModel
      */
     protected function prepareOrderRelationsData(Order $obOrder) : array
     {
-        if (empty($this->arOrderRelationsFields)) {
-            return [];
-        }
-
         $arResult = [];
 
-        // Init status relation.
-        if (in_array('status', $this->arOrderRelationsFields)) {
-            $sStatusName = !empty($obOrder->status) ? $obOrder->status->name : '';
-            $arResult[self::PREFIX_RELATION.'status'] = $sStatusName;
+        if (empty($this->arRelationColumnList)) {
+            return $arResult;
         }
-        // Init shipping_type relation.
-        if (in_array('shipping_type', $this->arOrderRelationsFields)) {
-            $sShippingTypeNmae = !empty($obOrder->shipping_type) ? $obOrder->shipping_type->name : '';
-            $arResult[self::PREFIX_RELATION.'shipping_type'] = $sShippingTypeNmae;
+
+        if (!empty($obOrder->status) && in_array(self::RELATION_STATUS, $this->arRelationColumnList)) {
+            $arResult[self::RELATION_STATUS] = $obOrder->status->name;
         }
-        // Init payment_method relation.
-        if (in_array('payment_method', $this->arOrderRelationsFields)) {
-            $sShippingTypeNmae = !empty($obOrder->payment_method) ? $obOrder->payment_method->name : '';
-            $arResult[self::PREFIX_RELATION.'payment_method'] = $sShippingTypeNmae;
+        if (!empty($obOrder->shipping_type)
+            && in_array(self::RELATION_SHIPPING_TYPE, $this->arRelationColumnList)) {
+            $arResult[self::RELATION_SHIPPING_TYPE] = $obOrder->shipping_type->name;
         }
-        // Init currency relation.
-        if (in_array('currency', $this->arOrderRelationsFields)) {
-            $sShippingTypeNmae = !empty($obOrder->currency) ? $obOrder->currency->symbol : '';
-            $arResult[self::PREFIX_RELATION.'currency'] = $sShippingTypeNmae;
+        if (!empty($obOrder->payment_method)
+            && in_array(self::RELATION_PAYMENT_METHOD, $this->arRelationColumnList)) {
+            $arResult[self::RELATION_PAYMENT_METHOD] = $obOrder->payment_method->name;
+        }
+        if (!empty($obOrder->currency) && in_array(self::RELATION_CURRENCY, $this->arRelationColumnList)) {
+            $arResult[self::RELATION_CURRENCY] = $obOrder->currency->symbol;
         }
 
         return $arResult;
@@ -209,6 +183,16 @@ class OrderExport extends ExportModel
      */
     protected function prepareOrderPropertiesData(Order $obOrder) : array
     {
-        return [];
+        $arResult = [];
+
+        if (empty($obOrder->property) || empty($this->arPropertyColumnList)) {
+            return $arResult;
+        }
+
+        foreach ($this->arPropertyColumnList as $sField) {
+            $arResult[$sField] = array_get($obOrder->property, $sField);
+        }
+
+        return $arResult;
     }
 }
