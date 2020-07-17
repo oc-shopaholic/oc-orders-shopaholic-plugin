@@ -12,9 +12,11 @@ class OrderPositions extends Controller
 {
     public $implement = [
         'Backend.Behaviors.FormController',
+        'Backend.Behaviors.ImportExportController',
     ];
-    
+
     public $formConfig = 'config_form.yaml';
+    public $importExportConfig = 'config_import_export.yaml';
 
     /**
      * OrderPositions constructor.

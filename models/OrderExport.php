@@ -96,10 +96,8 @@ class OrderExport extends ExportModel
             ->lists('code');
 
         foreach ($arColumns as $sColumn) {
-            // Init relations.
             if (in_array($sColumn, self::RELATION_LIST)) {
                 $this->arRelationColumnList[] = $sColumn;
-                // Init field.
             } elseif (in_array($sColumn, $arPropertyList)) {
                 $this->arPropertyColumnList[] = $sColumn;
             } else {
@@ -177,7 +175,7 @@ class OrderExport extends ExportModel
     }
 
     /**
-     * Prepare order data.
+     * Prepare order property data.
      * @param Order $obOrder
      * @return array
      */

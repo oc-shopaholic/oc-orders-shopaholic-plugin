@@ -1,5 +1,6 @@
 export:
     title: 'lovata.ordersshopaholic::lang.order.export_title'
     modelClass: Lovata\OrdersShopaholic\Models\OrderExport
+    redirect: lovata/ordersshopaholic/orders
     list:
         columns:

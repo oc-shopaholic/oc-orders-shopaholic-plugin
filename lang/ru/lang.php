@@ -135,8 +135,9 @@
         'order_position_property_description' => 'Управление дополнительными свойствами позиции заказа',
         'promo_mechanism'                     => 'Промо-механизм',
     ],
-    'button' => [
-        'orders' => 'Заказы',
+    'button'               => [
+        'orders'           => 'Заказы',
+        'orders_positions' => 'Позиции заказов',
     ],
     'order'                => [
         'name'         => 'заказа',
@@ -148,8 +149,9 @@
         'list_title' => 'Список покупателей',
     ],
     'order_position'       => [
-        'name'       => 'позиции заказа',
-        'list_title' => 'Список позиций заказа',
+        'name'         => 'позиции заказа',
+        'list_title'   => 'Список позиций заказа',
+        'export_title' => 'Экспорт позиций заказов',
     ],
     'status'               => [
         'name'       => 'статуса',

@@ -57,7 +57,7 @@
         'total_price'                    => 'Total price',
         'old_total_price'                => 'Old total price',
         'position_price'                 => 'Position price',
-        'old_position_price'             => 'old position price',
+        'old_position_price'             => 'Old position price',
         'shipping_price'                 => 'Shipping price',
         'catalog_price'                  => 'Current price',
         'offer_list'                     => 'Offer list',
@@ -146,8 +146,9 @@
         'promo_mechanism'                     => 'Promo mechanism',
         'increase_price_mechanism'            => 'Increase price mechanism',
     ],
-    'button' => [
-        'orders' => 'Orders',
+    'button'                   => [
+        'orders'           => 'Orders',
+        'orders_positions' => 'Orders positions',
     ],
     'order'                    => [
         'name'         => 'order',
@@ -159,8 +160,9 @@
         'list_title' => 'Buyer list',
     ],
     'order_position'           => [
-        'name'       => 'position',
-        'list_title' => 'Position list',
+        'name'         => 'position',
+        'list_title'   => 'Position list',
+        'export_title' => 'Export orders positions',
     ],
     'status'                   => [
         'name'       => 'status',
