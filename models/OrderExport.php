@@ -55,22 +55,13 @@ class OrderExport extends ExportModel
     public function exportData($arColumns, $sSessionKey = null) : array
     {
         $arList = [];
-
         if (empty($arColumns)) {
             return $arList;
         }
 
         $this->init($arColumns);
 
-        $iStatusId = Input::get('status_id');
-
-        $obQuery = Order::with($this->arRelationColumnList);
-
-        if (!empty($iStatusId)) {
-            $obQuery->getByStatus($iStatusId);
-        }
-
-        $obOrderList = $obQuery->get();
+        $obOrderList = $this->getList();
 
         if ($obOrderList->isEmpty()) {
             return $arList;
@@ -78,11 +69,9 @@ class OrderExport extends ExportModel
 
         foreach ($obOrderList as $obOrder) {
             $arRow = $this->prepareRow($obOrder);
-
             if (empty($arRow)) {
                 continue;
             }
-
             $arList[] = $arRow;
         }
 
@@ -116,6 +105,31 @@ class OrderExport extends ExportModel
                 $this->arOrderColumnList[] = $sColumn;
             }
         }
+    }
+
+    /**
+     * Get list.
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|Order[]
+     */
+    protected function getList()
+    {
+        $iStatusId  = Input::get('status_id');
+        $sStartDate = Input::get('start_date');
+        $sEndDate   = Input::get('end_date');
+
+        $obQuery = Order::with($this->arRelationColumnList);
+
+        if (!empty($iStatusId)) {
+            $obQuery->getByStatus($iStatusId);
+        }
+        if (!empty($sStartDate)) {
+            $obQuery->whereDate('created_at', '>=', $sStartDate);
+        }
+        if (!empty($sEndDate)) {
+            $obQuery->whereDate('created_at', '<=', $sEndDate);
+        }
+
+        return $obQuery->get();
     }
 
     /**

@@ -1,7 +1,10 @@
 <?php namespace Lovata\OrdersShopaholic\Controllers;
 
+use Backend\Classes\FormField;
+use Backend\FormWidgets\DatePicker;
 use BackendMenu;
 use Backend\Classes\Controller;
+use Lovata\OrdersShopaholic\Models\Order;
 
 /**
  * Class OrderPositions
@@ -25,5 +28,37 @@ class OrderPositions extends Controller
     {
         parent::__construct();
         BackendMenu::setContext('Lovata.OrdersShopaholic', 'orders-shopaholic-menu', 'orders-shopaholic-menu-orders');
+    }
+
+    /**
+     * Render start date.
+     * @return bool|mixed|string
+     */
+    public function renderStartDate()
+    {
+        $obFormField = new FormField('start_date', 'start_date');
+
+        $obDatePicker = new DatePicker($this, $obFormField);
+        $obDatePicker->mode = 'date';
+        $obDatePicker->format = 'Y-m-d';
+        $obDatePicker->model = new Order();
+
+        return $obDatePicker->render();
+    }
+
+    /**
+     * Render end date.
+     * @return bool|mixed|string
+     */
+    public function renderEndDate()
+    {
+        $obFormField = new FormField('end_date', 'end_date');
+
+        $obDatePicker = new DatePicker($this, $obFormField);
+        $obDatePicker->mode = 'date';
+        $obDatePicker->format = 'Y-m-d';
+        $obDatePicker->model = new Order();
+
+        return $obDatePicker->render();
     }
 }

@@ -10,20 +10,28 @@
 
 <div class="layout-row">
     <?= $this->exportRender() ?>
-    <?php if ($obStatusList->isNotEmpty()) { ?>
     <div class="field-section">
         <h4>3. <?= e(trans('lovata.ordersshopaholic::lang.field.filter')) ?></h4>
     </div>
     <br>
     <div class="form-group dropdown-field span-left">
-        <label><?= e(trans('lovata.toolbox::lang.field.status')) ?></label>
-        <select class="form-control custom-select" name="status_id">
-            <option value=""><?= e(trans('lovata.toolbox::lang.field.empty')) ?></option>
-            <?php foreach($obStatusList as $obStatus) { ?>
-                <option value="<?= $obStatus->id ?>"><?= $obStatus->name ?></option>
-            <?php } ?>
-        </select>
+        <label><?= e(trans('lovata.ordersshopaholic::lang.field.start_date')) ?></label>
+        <?= $this->renderStartDate() ?>
     </div>
+    <div class="form-group dropdown-field span-right">
+        <label><?= e(trans('lovata.ordersshopaholic::lang.field.end_date')) ?></label>
+        <?= $this->renderEndDate() ?>
+    </div>
+    <?php if ($obStatusList->isNotEmpty()) { ?>
+        <div class="form-group dropdown-field span-left">
+            <label><?= e(trans('lovata.toolbox::lang.field.status')) ?></label>
+            <select class="form-control custom-select" name="status_id">
+                <option value=""><?= e(trans('lovata.toolbox::lang.field.empty')) ?></option>
+                <?php foreach($obStatusList as $obStatus) { ?>
+                    <option value="<?= $obStatus->id ?>"><?= $obStatus->name ?></option>
+                <?php } ?>
+            </select>
+        </div>
     <?php } ?>
 </div>
 

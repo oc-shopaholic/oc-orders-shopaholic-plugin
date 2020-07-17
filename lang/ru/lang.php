@@ -100,6 +100,8 @@
         'restriction'                    => 'Ограничение',
         'shipping_type_api_class'        => 'API метод',
         'filter'                         => 'Фильтр',
+        'start_date'                     => 'Дата начала',
+        'end_date'                       => 'Дата завершения',
 
         'order_discount_log_position_total_price' => 'Список примененных скидок (для суммы позиций заказов)',
         'order_discount_log_sipping_price'        => 'Список примененных скидок (для стомости доставки)',

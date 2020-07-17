@@ -46,20 +46,13 @@ class OrderPositionExport extends ExportModel
     public function exportData($arColumns, $sSessionKey = null) : array
     {
         $arList = [];
+        if (empty($arColumns)) {
+            return $arList;
+        }
 
         $this->init($arColumns);
 
-        $iStatusId = Input::get('status_id');
-
-        $obQuery = OrderPosition::with($this->arRelationColumnList);
-
-        if (!empty($iStatusId)) {
-            $obQuery->has('order', '>', 0, 'and', function ($obQuery) use ($iStatusId) {
-                /** @var Builder|Order $obQuery */
-                $obQuery->where('status_id', $iStatusId);
-            });
-        }
-        $obOrderPositionList = $obQuery->get();
+        $obOrderPositionList = $this->getList();
 
         if ($obOrderPositionList->isEmpty()) {
             return $arList;
@@ -67,11 +60,9 @@ class OrderPositionExport extends ExportModel
 
         foreach ($obOrderPositionList as $obOrderPosition) {
             $arRow = $this->prepareRow($obOrderPosition);
-
             if (empty($arRow)) {
                 continue;
             }
-
             $arList[] = $arRow;
         }
 
@@ -110,6 +101,35 @@ class OrderPositionExport extends ExportModel
         $this->arRelationColumnList = array_unique($this->arRelationColumnList);
     }
 
+    /**
+     * Get list.
+     * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|OrderPosition[]
+     */
+    protected function getList()
+    {
+        $iStatusId  = Input::get('status_id');
+        $sStartDate = Input::get('start_date');
+        $sEndDate   = Input::get('end_date');
+
+        $obQuery = OrderPosition::with($this->arRelationColumnList);
+        if (!empty($iStatusId)) {
+            $obQuery->has('order', '>', 0, 'and', function ($obQuery) use ($iStatusId) {
+                $obQuery->where('status_id', $iStatusId);
+            });
+        }
+        if (!empty($sStartDate)) {
+            $obQuery->has('order', '>', 0, 'and', function ($obQuery) use ($sStartDate) {
+                $obQuery->whereDate('created_at', '>=', $sStartDate);
+            });
+        }
+        if (!empty($sEndDate)) {
+            $obQuery->has('order', '>', 0, 'and', function ($obQuery) use ($sEndDate) {
+                $obQuery->whereDate('created_at', '<=', $sEndDate);
+            });
+        }
+
+        return $obQuery->get();
+    }
     /**
      * Prepare row.
      * @param OrderPosition $obOrderPosition
