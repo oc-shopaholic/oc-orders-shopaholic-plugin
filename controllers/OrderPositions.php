@@ -4,7 +4,7 @@ use Backend\Classes\FormField;
 use Backend\FormWidgets\DatePicker;
 use BackendMenu;
 use Backend\Classes\Controller;
-use Lovata\OrdersShopaholic\Models\Order;
+use Lovata\OrdersShopaholic\Models\OrderPosition;
 
 /**
  * Class OrderPositions
@@ -41,7 +41,7 @@ class OrderPositions extends Controller
         $obDatePicker = new DatePicker($this, $obFormField);
         $obDatePicker->mode = 'date';
         $obDatePicker->format = 'Y-m-d';
-        $obDatePicker->model = new Order();
+        $obDatePicker->model = new OrderPosition();
 
         return $obDatePicker->render();
     }
@@ -57,7 +57,7 @@ class OrderPositions extends Controller
         $obDatePicker = new DatePicker($this, $obFormField);
         $obDatePicker->mode = 'date';
         $obDatePicker->format = 'Y-m-d';
-        $obDatePicker->model = new Order();
+        $obDatePicker->model = new OrderPosition();
 
         return $obDatePicker->render();
     }
