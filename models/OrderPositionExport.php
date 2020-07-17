@@ -2,6 +2,8 @@
 
 use Backend\Models\ExportModel;
 use DB;
+use Illuminate\Database\Query\Builder;
+use Input;
 
 /**
  * Class OrderPositionExport
@@ -14,11 +16,17 @@ use DB;
  */
 class OrderPositionExport extends ExportModel
 {
-    const FIELD_ORDER_NUMBER = 'order_number';
-    const FIELD_OFFER_NAME   = 'offer_name';
+    const FIELD_CURRENCY_SYMBOL = 'currency_symbol';
 
-    const RELATION_ORDER = 'order';
-    const RELATION_OFFER = 'offer';
+    const RELATION_ORDER    = 'order';
+    const RELATION_OFFER    = 'offer';
+    const RELATION_CURRENCY = 'currency';
+
+    const RELATION_LIST = [
+        self::RELATION_ORDER,
+        self::RELATION_OFFER,
+        self::RELATION_CURRENCY,
+    ];
 
     /** @var string */
     public $table = 'lovata_orders_shopaholic_order_positions';
@@ -41,7 +49,17 @@ class OrderPositionExport extends ExportModel
 
         $this->init($arColumns);
 
-        $obOrderPositionList = OrderPosition::with($this->arRelationColumnList)->get();
+        $iStatusId = Input::get('status_id');
+
+        $obQuery = OrderPosition::with($this->arRelationColumnList);
+
+        if (!empty($iStatusId)) {
+            $obQuery->has('order', '>', 0, 'and', function ($obQuery) use ($iStatusId) {
+                /** @var Builder|Order $obQuery */
+                $obQuery->where('status_id', $iStatusId);
+            });
+        }
+        $obOrderPositionList = $obQuery->get();
 
         if ($obOrderPositionList->isEmpty()) {
             return $arList;
@@ -76,17 +94,20 @@ class OrderPositionExport extends ExportModel
             ->lists('code');
 
         foreach ($arColumns as $sColumn) {
-            if (self::FIELD_ORDER_NUMBER == $sColumn) {
-                $this->arRelationColumnList[] = self::RELATION_ORDER;
-            } elseif (self::FIELD_OFFER_NAME == $sColumn) {
-                $this->arRelationColumnList[] = self::RELATION_OFFER;
+            if (in_array($sColumn, self::RELATION_LIST)) {
+                $this->arRelationColumnList[] = $sColumn;
             } elseif (in_array($sColumn, $arPropertyList)) {
                 $this->arPropertyColumnList[] = $sColumn;
             } else {
+                if ($sColumn == self::FIELD_CURRENCY_SYMBOL) {
+                    $this->arRelationColumnList[] = self::RELATION_ORDER;
+                }
+
                 $this->arOrderPositionColumnList[] = $sColumn;
             }
         }
 
+        $this->arRelationColumnList = array_unique($this->arRelationColumnList);
     }
 
     /**
@@ -137,10 +158,13 @@ class OrderPositionExport extends ExportModel
         }
 
         if (!empty($obOrderPosition->order) && in_array(self::RELATION_ORDER, $this->arRelationColumnList)) {
-            $arResult[self::FIELD_ORDER_NUMBER] = $obOrderPosition->order->order_number;
+            $arResult[self::RELATION_ORDER] = $obOrderPosition->order->order_number;
         }
         if (!empty($obOrderPosition->offer) && in_array(self::RELATION_OFFER, $this->arRelationColumnList)) {
-            $arResult[self::FIELD_OFFER_NAME] = $obOrderPosition->offer->name;
+            $arResult[self::RELATION_OFFER] = $obOrderPosition->offer->name;
+        }
+        if (!empty($obOrderPosition->currency) && in_array(self::RELATION_CURRENCY, $this->arRelationColumnList)) {
+            $arResult[self::RELATION_CURRENCY] = $obOrderPosition->currency_symbol;
         }
 
         return $arResult;

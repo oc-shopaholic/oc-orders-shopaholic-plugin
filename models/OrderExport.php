@@ -2,6 +2,7 @@
 
 use Backend\Models\ExportModel;
 use DB;
+use Input;
 
 /**
  * Class OrderExport
@@ -61,7 +62,15 @@ class OrderExport extends ExportModel
 
         $this->init($arColumns);
 
-        $obOrderList = Order::with($this->arRelationColumnList)->get();
+        $iStatusId = Input::get('status_id');
+
+        $obQuery = Order::with($this->arRelationColumnList);
+
+        if (!empty($iStatusId)) {
+            $obQuery->getByStatus($iStatusId);
+        }
+
+        $obOrderList = $obQuery->get();
 
         if ($obOrderList->isEmpty()) {
             return $arList;

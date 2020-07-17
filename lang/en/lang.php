@@ -109,6 +109,7 @@
         'shipping_type_api_class'        => 'API method',
         'decrease_price'                 => 'Discount',
         'increase_price'                 => 'Increase price',
+        'filter'                         => 'Filter',
 
         'order_discount_log_position_total_price' => 'List applied of mechanism for changing prices (position total price)',
         'order_discount_log_sipping_price'        => 'List applied of mechanism for changing prices (sipping price)',

@@ -99,6 +99,7 @@
         'applied_to_shipping_price'      => 'Применять к стоймости доставки',
         'restriction'                    => 'Ограничение',
         'shipping_type_api_class'        => 'API метод',
+        'filter'                         => 'Фильтр',
 
         'order_discount_log_position_total_price' => 'Список примененных скидок (для суммы позиций заказов)',
         'order_discount_log_sipping_price'        => 'Список примененных скидок (для стомости доставки)',

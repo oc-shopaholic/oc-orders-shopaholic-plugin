@@ -1,3 +1,4 @@
+<?php $obStatusList = \Lovata\OrdersShopaholic\Models\Status::get() ?>
 <?php Block::put('breadcrumb') ?>
 <ul>
     <li><a href="<?= Backend::url('lovata/ordersshopaholic/orders') ?>"><?= e(trans('lovata.ordersshopaholic::lang.order.list_title')) ?></a></li>
@@ -9,6 +10,21 @@
 
 <div class="layout-row">
     <?= $this->exportRender() ?>
+    <?php if ($obStatusList->isNotEmpty()) { ?>
+    <div class="field-section">
+        <h4>3. <?= e(trans('lovata.ordersshopaholic::lang.field.filter')) ?></h4>
+    </div>
+    <br>
+    <div class="form-group dropdown-field span-left">
+        <label><?= e(trans('lovata.toolbox::lang.field.status')) ?></label>
+        <select class="form-control custom-select" name="status_id">
+            <option value=""><?= e(trans('lovata.toolbox::lang.field.empty')) ?></option>
+            <?php foreach($obStatusList as $obStatus) { ?>
+                <option value="<?= $obStatus->id ?>"><?= $obStatus->name ?></option>
+            <?php } ?>
+        </select>
+    </div>
+    <?php } ?>
 </div>
 
 <div class="form-buttons">

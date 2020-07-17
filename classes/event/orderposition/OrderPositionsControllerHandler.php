@@ -2,6 +2,7 @@
 
 use DB;
 use Lovata\OrdersShopaholic\Controllers\OrderPositions;
+use Lovata\OrdersShopaholic\Models\OrderPositionExport;
 
 /**
  * Class OrderPositionsControllerHandler
@@ -47,14 +48,15 @@ class OrderPositionsControllerHandler
     protected function getExportFieldList() : array
     {
         $arFieldList = [
-            'order_number'    => ['label' => 'lovata.ordersshopaholic::lang.field.order_number'],
-            'offer_name'      => ['label' => 'lovata.toolbox::lang.field.name'],
-            'code'            => ['label' => 'lovata.toolbox::lang.field.code'],
-            'price'           => ['label' => 'lovata.shopaholic::lang.field.price'],
-            'old_price'       => ['label' => 'lovata.shopaholic::lang.field.old_price'],
-            'quantity'        => ['label' => 'lovata.shopaholic::lang.field.quantity'],
-            'total_price'     => ['label' => 'lovata.ordersshopaholic::lang.field.position_price'],
-            'old_total_price' => ['label' => 'lovata.ordersshopaholic::lang.field.old_position_price'],
+            OrderPositionExport::RELATION_ORDER        => ['label' => 'lovata.ordersshopaholic::lang.field.order_number'],
+            OrderPositionExport::RELATION_OFFER        => ['label' => 'lovata.toolbox::lang.field.name'],
+            'code'                                     => ['label' => 'lovata.toolbox::lang.field.code'],
+            OrderPositionExport::FIELD_CURRENCY_SYMBOL => ['label' => 'lovata.shopaholic::lang.field.currency'],
+            'price'                                    => ['label' => 'lovata.shopaholic::lang.field.price'],
+            'old_price'                                => ['label' => 'lovata.shopaholic::lang.field.old_price'],
+            'quantity'                                 => ['label' => 'lovata.shopaholic::lang.field.quantity'],
+            'total_price'                              => ['label' => 'lovata.ordersshopaholic::lang.field.position_price'],
+            'old_total_price'                          => ['label' => 'lovata.ordersshopaholic::lang.field.old_position_price'],
         ];
 
         $arPropertyList = (array) DB::table('lovata_orders_shopaholic_position_properties')
