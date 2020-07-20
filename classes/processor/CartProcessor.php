@@ -533,7 +533,11 @@ class CartProcessor
     {
         //Get cart by user ID
         $this->obCart = Cart::with('position')->getByUser($this->obUser->id)->first();
-        if (empty($this->obCart) || $this->obCart->id == $iCartID) {
+        if (empty($this->obCart)) {
+            $this->createNewCart();
+        }
+
+        if ($this->obCart->id == $iCartID) {
             return;
         }
 
