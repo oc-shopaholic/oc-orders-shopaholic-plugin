@@ -2,4 +2,6 @@
     <a href="<?= Backend::url('lovata/ordersshopaholic/orders/create') ?>" class="btn btn-primary oc-icon-plus">
         <?= e(trans('backend::lang.form.create')) ?>
     </a>
+
+    <?= $this->fireViewEvent($this::EVENT_EXTEND_TOOLBAR) ?>
 </div>

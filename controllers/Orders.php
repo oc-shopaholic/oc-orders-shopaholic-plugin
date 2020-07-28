@@ -10,12 +10,14 @@ use Backend\Classes\Controller;
  */
 class Orders extends Controller
 {
+    const EVENT_EXTEND_TOOLBAR = 'shopaholic.order.extendToolbar';
+
     public $implement = [
         'Backend.Behaviors.ListController',
         'Backend.Behaviors.FormController',
         'Backend.Behaviors.RelationController',
     ];
-    
+
     public $listConfig = 'config_list.yaml';
     public $formConfig = 'config_form.yaml';
     public $relationConfig = 'config_relation.yaml';
