@@ -33,6 +33,8 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
  * @property string                                                    $item_type
  * @property string                                                    $currency_symbol
  * @property string                                                    $currency_code
+ * @property bool                                                      $is_file_access
+ * @property integer                                                   $file_access_id
  *
  * @property string                                                    $price
  * @property float                                                     $price_value
