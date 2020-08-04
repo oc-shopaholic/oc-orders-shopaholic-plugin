@@ -33,8 +33,6 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
  * @property string                                                    $item_type
  * @property string                                                    $currency_symbol
  * @property string                                                    $currency_code
- * @property bool                                                      $is_file_access
- * @property integer                                                   $file_access_id
  *
  * @property string                                                    $price
  * @property float                                                     $price_value
@@ -90,6 +88,10 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
  * @property int                                                       $subscription_access_id
  * @property \Lovata\SubscriptionsShopaholic\Models\SubscriptionAccess $subscription_access
  * @method static \October\Rain\Database\Relations\BelongsTo|\Lovata\SubscriptionsShopaholic\Models\SubscriptionAccess subscription_access()
+ *
+ * Downloadable file for Shopaholic
+ * @property bool                                                      $is_file_access
+ * @property integer                                                   $file_access_id
  */
 class OrderPosition extends Model
 {
