@@ -102,6 +102,7 @@
         'filter'                         => 'Фильтр',
         'start_date'                     => 'Дата начала',
         'end_date'                       => 'Дата завершения',
+        'hide_order_export_to_csv'       => 'Скрыть кнопку "Экспорт в CSV" для заказов',
 
         'order_discount_log_position_total_price' => 'Список примененных скидок (для суммы позиций заказов)',
         'order_discount_log_sipping_price'        => 'Список примененных скидок (для стомости доставки)',

@@ -112,6 +112,7 @@
         'filter'                         => 'Filter',
         'start_date'                     => 'Start date',
         'end_date'                       => 'End date',
+        'hide_order_export_to_csv'       => 'Hide "Export to CSV" button for orders',
 
         'order_discount_log_position_total_price' => 'List applied of mechanism for changing prices (position total price)',
         'order_discount_log_sipping_price'        => 'List applied of mechanism for changing prices (sipping price)',

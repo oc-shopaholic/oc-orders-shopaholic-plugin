@@ -86,6 +86,12 @@ class ExtendSettingsFieldHandler extends AbstractBackendFieldHandler
                     'condition' => 'checked',
                 ],
             ],
+            'hide_order_export_to_csv'             => [
+                'label' => 'lovata.ordersshopaholic::lang.field.hide_order_export_to_csv',
+                'tab'   => 'lovata.shopaholic::lang.tab.export_setting',
+                'span'  => 'left',
+                'type'  => 'checkbox',
+            ],
         ];
 
         $obWidget->addTabFields($arAdditionFieldList);

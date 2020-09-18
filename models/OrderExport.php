@@ -1,8 +1,9 @@
 <?php namespace Lovata\OrdersShopaholic\Models;
 
-use Backend\Models\ExportModel;
 use DB;
 use Input;
+
+use Lovata\Toolbox\Classes\Helper\AbstractExportModelInCSV;
 
 /**
  * Class OrderExport
@@ -16,7 +17,7 @@ use Input;
  * @property Status $status
  * @method static Status|\October\Rain\Database\Relations\BelongsTo status()
  */
-class OrderExport extends ExportModel
+class OrderExport extends AbstractExportModelInCSV
 {
     const FIELD_TOTAL_PRICE          = 'total_price';
     const FIELD_POSITION_TOTAL_PRICE = 'position_total_price';
@@ -39,44 +40,6 @@ class OrderExport extends ExportModel
     public $table = 'lovata_orders_shopaholic_orders';
     /** @var array */
     public $belongsTo = ['status' => [Status::class, 'order' => 'sort_order asc']];
-    /** @var array */
-    protected $arOrderColumnList = [];
-    /** @var array */
-    protected $arRelationColumnList = [];
-    /** @var array */
-    protected $arPropertyColumnList = [];
-
-    /**
-     * Export data.
-     * @param array|null $arColumns
-     * @param string|null $sSessionKey
-     * @return array
-     */
-    public function exportData($arColumns, $sSessionKey = null) : array
-    {
-        $arList = [];
-        if (empty($arColumns)) {
-            return $arList;
-        }
-
-        $this->init($arColumns);
-
-        $obOrderList = $this->getList();
-
-        if ($obOrderList->isEmpty()) {
-            return $arList;
-        }
-
-        foreach ($obOrderList as $obOrder) {
-            $arRow = $this->prepareRow($obOrder);
-            if (empty($arRow)) {
-                continue;
-            }
-            $arList[] = $arRow;
-        }
-
-        return $arList;
-    }
 
     /**
      * Init.
@@ -89,9 +52,7 @@ class OrderExport extends ExportModel
             return;
         }
 
-        $arPropertyList = (array) DB::table('lovata_orders_shopaholic_addition_properties')
-            ->where('active', true)
-            ->lists('code');
+        $arPropertyList = $this->getPropertyList();
 
         foreach ($arColumns as $sColumn) {
             if (in_array($sColumn, self::RELATION_LIST)) {
@@ -102,16 +63,29 @@ class OrderExport extends ExportModel
                 if ($sColumn == self::FIELD_TOTAL_PRICE || $sColumn == self::FIELD_POSITION_TOTAL_PRICE) {
                     $this->arRelationColumnList[] = self::RELATION_ORDER_POSITION;
                 }
-                $this->arOrderColumnList[] = $sColumn;
+                $this->arColumnList[] = $sColumn;
             }
         }
+    }
+
+    /**
+     * Get property list.
+     * @return array
+     */
+    protected function getPropertyList() : array
+    {
+        $arPropertyList = (array) DB::table('lovata_orders_shopaholic_addition_properties')
+            ->where('active', true)
+            ->lists('code');
+
+        return $arPropertyList;
     }
 
     /**
      * Get list.
      * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|Order[]
      */
-    protected function getList()
+    protected function getItemList()
     {
         $iStatusId  = Input::get('status_id');
         $sStartDate = Input::get('start_date');
@@ -133,45 +107,11 @@ class OrderExport extends ExportModel
     }
 
     /**
-     * Prepare row.
-     * @param Order $obOrder
-     * @return array
-     */
-    protected function prepareRow(Order $obOrder) : array
-    {
-        $arOrderData           = $this->prepareOrderData($obOrder);
-        $arOrderRelationsData  = $this->prepareOrderRelationsData($obOrder);
-        $arOrderPropertiesData = $this->prepareOrderPropertiesData($obOrder);
-
-        return array_merge($arOrderData, $arOrderRelationsData, $arOrderPropertiesData);
-    }
-
-    /**
-     * Prepare order data.
-     * @param Order $obOrder
-     * @return array
-     */
-    protected function prepareOrderData(Order $obOrder) : array
-    {
-        $arResult = [];
-
-        if (empty($this->arOrderColumnList)) {
-            return $arResult;
-        }
-
-        foreach ($this->arOrderColumnList as $sField) {
-            $arResult[$sField] = $obOrder->$sField;
-        }
-
-        return $arResult;
-    }
-
-    /**
      * Prepare order relations data.
      * @param Order $obOrder
      * @return array
      */
-    protected function prepareOrderRelationsData(Order $obOrder) : array
+    protected function prepareModelRelationsData($obOrder) : array
     {
         $arResult = [];
 
@@ -198,11 +138,11 @@ class OrderExport extends ExportModel
     }
 
     /**
-     * Prepare order property data.
+     * Prepare order properties data.
      * @param Order $obOrder
      * @return array
      */
-    protected function prepareOrderPropertiesData(Order $obOrder) : array
+    protected function prepareModelPropertiesData($obOrder) : array
     {
         $arResult = [];
 
