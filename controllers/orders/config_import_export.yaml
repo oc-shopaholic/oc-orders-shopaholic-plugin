@@ -2,6 +2,6 @@ export:
     title: 'lovata.ordersshopaholic::lang.order.export_title'
     modelClass: Lovata\OrdersShopaholic\Models\OrderExport
     redirect: lovata/ordersshopaholic/orders
-    fileName: order.csv
+    fileName: orders.csv
     list:
         columns:

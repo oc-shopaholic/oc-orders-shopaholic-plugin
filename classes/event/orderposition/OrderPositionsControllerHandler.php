@@ -68,6 +68,7 @@ class OrderPositionsControllerHandler
         }
 
         foreach ($arPropertyList as $sField => $sLabel) {
+            $sField = 'property.'.$sField;
             $arFieldList[$sField] = ['label' => $sLabel];
         }
 

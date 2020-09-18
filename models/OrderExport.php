@@ -66,6 +66,8 @@ class OrderExport extends AbstractExportModelInCSV
                 $this->arColumnList[] = $sColumn;
             }
         }
+
+        $this->initPropertyColumnList();
     }
 
     /**
@@ -77,6 +79,10 @@ class OrderExport extends AbstractExportModelInCSV
         $arPropertyList = (array) DB::table('lovata_orders_shopaholic_addition_properties')
             ->where('active', true)
             ->lists('code');
+
+        foreach ($arPropertyList as $iKey => $sProperty) {
+            $arPropertyList[$iKey] = 'property.'.$sProperty;
+        }
 
         return $arPropertyList;
     }
@@ -132,26 +138,6 @@ class OrderExport extends AbstractExportModelInCSV
         }
         if (!empty($obOrder->currency) && in_array(self::RELATION_CURRENCY, $this->arRelationColumnList)) {
             $arResult[self::RELATION_CURRENCY] = $obOrder->currency->symbol;
-        }
-
-        return $arResult;
-    }
-
-    /**
-     * Prepare order properties data.
-     * @param Order $obOrder
-     * @return array
-     */
-    protected function prepareModelPropertiesData($obOrder) : array
-    {
-        $arResult = [];
-
-        if (empty($obOrder->property) || empty($this->arPropertyColumnList)) {
-            return $arResult;
-        }
-
-        foreach ($this->arPropertyColumnList as $sField) {
-            $arResult[$sField] = array_get($obOrder->property, $sField);
         }
 
         return $arResult;
