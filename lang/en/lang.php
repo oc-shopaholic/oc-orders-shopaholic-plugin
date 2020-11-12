@@ -57,7 +57,7 @@
         'total_price'                    => 'Total price',
         'old_total_price'                => 'Old total price',
         'position_price'                 => 'Position price',
-        'old_position_price'             => 'old position price',
+        'old_position_price'             => 'Old position price',
         'shipping_price'                 => 'Shipping price',
         'catalog_price'                  => 'Current price',
         'offer_list'                     => 'Offer list',
@@ -109,6 +109,10 @@
         'shipping_type_api_class'        => 'API method',
         'decrease_price'                 => 'Discount',
         'increase_price'                 => 'Increase price',
+        'filter'                         => 'Filter',
+        'start_date'                     => 'Start date',
+        'end_date'                       => 'End date',
+        'hide_order_export_to_csv'       => 'Hide "Export to CSV" button for orders',
 
         'order_discount_log_position_total_price' => 'List applied of mechanism for changing prices (position total price)',
         'order_discount_log_sipping_price'        => 'List applied of mechanism for changing prices (sipping price)',
@@ -146,17 +150,23 @@
         'promo_mechanism'                     => 'Promo mechanism',
         'increase_price_mechanism'            => 'Increase price mechanism',
     ],
+    'button'                   => [
+        'export_order_button'          => 'Export orders to CSV',
+        'export_order_position_button' => 'Export orders positions to CSV',
+    ],
     'order'                    => [
-        'name'       => 'order',
-        'list_title' => 'Order list',
+        'name'         => 'order',
+        'list_title'   => 'Order list',
+        'export_title' => 'Export orders',
     ],
     'buyer'                    => [
         'name'       => 'buyer',
         'list_title' => 'Buyer list',
     ],
     'order_position'           => [
-        'name'       => 'position',
-        'list_title' => 'Position list',
+        'name'         => 'position',
+        'list_title'   => 'Position list',
+        'export_title' => 'Export orders positions',
     ],
     'status'                   => [
         'name'       => 'status',

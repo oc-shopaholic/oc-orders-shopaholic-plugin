@@ -21,6 +21,7 @@ use Lovata\OrdersShopaholic\Classes\Event\Order\OrdersControllerHandler;
 //Order position events
 use Lovata\OrdersShopaholic\Classes\Event\OrderPosition\ExtendOrderPositionFieldsHandler;
 use Lovata\OrdersShopaholic\Classes\Event\OrderPosition\OrderPositionModelHandler;
+use Lovata\OrdersShopaholic\Classes\Event\OrderPosition\OrderPositionsControllerHandler;
 //Payment method events
 use Lovata\OrdersShopaholic\Classes\Event\PaymentMethod\ExtendPaymentMethodFieldsHandler;
 use Lovata\OrdersShopaholic\Classes\Event\PaymentMethod\PaymentMethodModelHandler;
@@ -179,6 +180,7 @@ class Plugin extends PluginBase
         //Order position events
         Event::subscribe(ExtendOrderPositionFieldsHandler::class);
         Event::subscribe(OrderPositionModelHandler::class);
+        Event::subscribe(OrderPositionsControllerHandler::class);
         //Payment method events
         Event::subscribe(ExtendPaymentMethodFieldsHandler::class);
         Event::subscribe(PaymentMethodModelHandler::class);

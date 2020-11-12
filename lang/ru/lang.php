@@ -99,6 +99,10 @@
         'applied_to_shipping_price'      => 'Применять к стоймости доставки',
         'restriction'                    => 'Ограничение',
         'shipping_type_api_class'        => 'API метод',
+        'filter'                         => 'Фильтр',
+        'start_date'                     => 'Дата начала',
+        'end_date'                       => 'Дата завершения',
+        'hide_order_export_to_csv'       => 'Скрыть кнопку "Экспорт в CSV" для заказов',
 
         'order_discount_log_position_total_price' => 'Список примененных скидок (для суммы позиций заказов)',
         'order_discount_log_sipping_price'        => 'Список примененных скидок (для стомости доставки)',
@@ -135,17 +139,23 @@
         'order_position_property_description' => 'Управление дополнительными свойствами позиции заказа',
         'promo_mechanism'                     => 'Промо-механизм',
     ],
+    'button'               => [
+        'export_order_button'          => 'Экспортировать заказы в CSV',
+        'export_order_position_button' => 'Экспортировать позиции заказов в CSV',
+    ],
     'order'                => [
-        'name'       => 'заказа',
-        'list_title' => 'Список заказов',
+        'name'         => 'заказа',
+        'list_title'   => 'Список заказов',
+        'export_title' => 'Экспорт заказов',
     ],
     'buyer'                => [
         'name'       => 'покупателя',
         'list_title' => 'Список покупателей',
     ],
     'order_position'       => [
-        'name'       => 'позиции заказа',
-        'list_title' => 'Список позиций заказа',
+        'name'         => 'позиции заказа',
+        'list_title'   => 'Список позиций заказа',
+        'export_title' => 'Экспорт позиций заказов',
     ],
     'status'               => [
         'name'       => 'статуса',

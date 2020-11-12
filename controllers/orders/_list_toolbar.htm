@@ -2,4 +2,31 @@
     <a href="<?= Backend::url('lovata/ordersshopaholic/orders/create') ?>" class="btn btn-primary oc-icon-plus">
         <?= e(trans('backend::lang.form.create')) ?>
     </a>
+    <?php if (!\Lovata\Shopaholic\Models\Settings::getValue('hide_order_export_to_csv')) { ?>
+    <div class="dropdown dropdown-fixed">
+        <a href="#" data-toggle="dropdown" class="btn btn-primary">
+            <?= e(trans('lovata.toolbox::lang.button.import_export')) ?>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+            <li>
+                <a href="<?= Backend::url('lovata/ordersshopaholic/orders/export') ?>"
+                   tabindex="-1"
+                   role="menuitem"
+                   class="oc-icon-upload"
+                >
+                    <?= e(trans('lovata.ordersshopaholic::lang.button.export_order_button')) ?>
+                </a>
+            </li>
+            <li>
+                <a href="<?= Backend::url('lovata/ordersshopaholic/orderpositions/export') ?>"
+                   tabindex="-1"
+                   role="menuitem"
+                   class="oc-icon-upload"
+                >
+                    <?= e(trans('lovata.ordersshopaholic::lang.button.export_order_position_button')) ?>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <?php } ?>
 </div>
