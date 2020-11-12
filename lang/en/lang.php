@@ -151,8 +151,8 @@
         'increase_price_mechanism'            => 'Increase price mechanism',
     ],
     'button'                   => [
-        'orders'           => 'Orders',
-        'orders_positions' => 'Orders positions',
+        'export_order_button'          => 'Export orders to CSV',
+        'export_order_position_button' => 'Export orders positions to CSV',
     ],
     'order'                    => [
         'name'         => 'order',

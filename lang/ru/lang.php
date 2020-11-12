@@ -140,8 +140,8 @@
         'promo_mechanism'                     => 'Промо-механизм',
     ],
     'button'               => [
-        'orders'           => 'Заказы',
-        'orders_positions' => 'Позиции заказов',
+        'export_order_button'          => 'Экспортировать заказы в CSV',
+        'export_order_position_button' => 'Экспортировать позиции заказов в CSV',
     ],
     'order'                => [
         'name'         => 'заказа',

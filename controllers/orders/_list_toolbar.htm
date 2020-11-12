@@ -1,37 +1,32 @@
-<div class="scoreboard">
-    <div data-control="toolbar">
-        <div class="scoreboard-item title-value">
-            <a href="<?= Backend::url('lovata/ordersshopaholic/orders/create') ?>" class="btn btn-primary oc-icon-plus">
-                <?= e(trans('backend::lang.form.create')) ?>
-            </a>
-        </div>
-        <span class="analytics-ajax"></span>
-        <?php if (!\Lovata\Shopaholic\Models\Settings::getValue('hide_order_export_to_csv')) { ?>
-            <div class="scoreboard-item title-value">
-                <div class="dropdown dropdown-fixed">
-                    <button type="button" class="btn btn-default oc-icon-upload" data-toggle="dropdown">
-                        <?= e(trans('lovata.toolbox::lang.button.export_in_csv')) ?>
-                    </button>
-                    <ul class="dropdown-menu" data-dropdown-title="<?= e(trans('lovata.toolbox::lang.button.export_in_csv')) ?>">
-                        <li>
-                            <a href="<?= Backend::url('lovata/ordersshopaholic/orders/export') ?>"
-                               tabindex="-1"
-                               class="oc-icon-upload"
-                            >
-                                <?= e(trans('lovata.ordersshopaholic::lang.button.orders')) ?>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="<?= Backend::url('lovata/ordersshopaholic/orderpositions/export') ?>"
-                               tabindex="-1"
-                               class="oc-icon-upload"
-                            >
-                                <?= e(trans('lovata.ordersshopaholic::lang.button.orders_positions')) ?>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        <?php } ?>
+<div data-control="toolbar">
+    <a href="<?= Backend::url('lovata/ordersshopaholic/orders/create') ?>" class="btn btn-primary oc-icon-plus">
+        <?= e(trans('backend::lang.form.create')) ?>
+    </a>
+    <?php if (!\Lovata\Shopaholic\Models\Settings::getValue('hide_order_export_to_csv')) { ?>
+    <div class="dropdown dropdown-fixed">
+        <a href="#" data-toggle="dropdown" class="btn btn-primary">
+            <?= e(trans('lovata.toolbox::lang.button.import_export')) ?>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+            <li>
+                <a href="<?= Backend::url('lovata/ordersshopaholic/orders/export') ?>"
+                   tabindex="-1"
+                   role="menuitem"
+                   class="oc-icon-upload"
+                >
+                    <?= e(trans('lovata.ordersshopaholic::lang.button.export_order_button')) ?>
+                </a>
+            </li>
+            <li>
+                <a href="<?= Backend::url('lovata/ordersshopaholic/orderpositions/export') ?>"
+                   tabindex="-1"
+                   role="menuitem"
+                   class="oc-icon-upload"
+                >
+                    <?= e(trans('lovata.ordersshopaholic::lang.button.export_order_position_button')) ?>
+                </a>
+            </li>
+        </ul>
     </div>
+    <?php } ?>
 </div>
