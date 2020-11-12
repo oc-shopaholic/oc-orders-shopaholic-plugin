@@ -304,6 +304,7 @@ class CartProcessor
     public function setActiveShippingType($obShippingTypeItem)
     {
         $this->obShippingTypeItem = $obShippingTypeItem;
+        $this->obCart->shipping_type_id = $obShippingTypeItem->id;
         if (empty($this->obPromoProcessor)) {
             $this->updateCartData();
         } else {
