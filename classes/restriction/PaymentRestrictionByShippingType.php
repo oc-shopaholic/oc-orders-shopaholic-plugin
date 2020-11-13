@@ -18,15 +18,15 @@ class PaymentRestrictionByShippingType implements CheckRestrictionInterface
     /**
      * CheckRestrictionInterface constructor.
      * @param \Lovata\OrdersShopaholic\Classes\Item\PaymentMethodItem $obPaymentMethodItem
-     * @param array                                                  $arData
-     * @param array                                                  $arProperty
-     * @param string                                                 $sCode
+     * @param array                                                   $arData
+     * @param array                                                   $arProperty
+     * @param string                                                  $sCode
      */
     public function __construct($obPaymentMethodItem, $arData, $arProperty, $sCode)
     {
         $this->arAvailableShippingType = (array) array_get($arProperty, 'shipping_type');
 
-        $this->iCurrentShippingType = CartProcessor::instance()->getCartObject()->shipping_type_id;
+        $this->iCurrentShippingType = CartProcessor::instance()->getCartData()['shipping_type_id'];
     }
 
     /**
