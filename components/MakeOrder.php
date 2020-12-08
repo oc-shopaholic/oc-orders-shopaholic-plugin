@@ -61,35 +61,6 @@ class MakeOrder extends ComponentSubmitForm
     }
 
     /**
-     * Get redirect page property list
-     * @return array
-     */
-    protected function getRedirectPageProperties()
-    {
-        if (!Result::status() || empty($this->obOrder)) {
-            return [];
-        }
-
-        $arResult = [
-            'id'     => $this->obOrder->id,
-            'number' => $this->obOrder->order_number,
-            'key'    => $this->obOrder->secret_key,
-        ];
-
-        $sRedirectPage = $this->property(self::PROPERTY_REDIRECT_PAGE);
-        if (empty($sRedirectPage)) {
-            return $arResult;
-        }
-
-        $arPropertyList = PageHelper::instance()->getUrlParamList($sRedirectPage, 'OrderPage');
-        if (!empty($arPropertyList)) {
-            $arResult[array_shift($arPropertyList)] = $this->obOrder->secret_key;
-        }
-
-        return $arResult;
-    }
-
-    /**
      * Init plugin method
      */
     public function init()
@@ -121,7 +92,11 @@ class MakeOrder extends ComponentSubmitForm
 
         //Fire event and get redirect URL
         $sRedirectURL = Event::fire(OrderProcessor::EVENT_ORDER_GET_REDIRECT_URL, $this->obOrder, true);
-        if (empty($this->obPaymentGateway) || !Result::status()) {
+        if (!Result::status() && !empty($this->obPaymentGateway) && $this->obPaymentGateway->isRedirect()) {
+            $sRedirectURL = $this->obPaymentGateway->getRedirectURL();
+
+            return Redirect::to($sRedirectURL);
+        } else if (empty($this->obPaymentGateway) || !Result::status()) {
             return $this->getResponseModeForm($sRedirectURL);
         }
 
@@ -135,7 +110,7 @@ class MakeOrder extends ComponentSubmitForm
             Result::setFalse($this->obPaymentGateway->getResponse());
         }
 
-        Result::setMessage($this->obPaymentGateway->getMessage())->get();
+        Result::setMessage($this->obPaymentGateway->getMessage());
 
         return $this->getResponseModeForm($sRedirectURL);
     }
@@ -154,7 +129,13 @@ class MakeOrder extends ComponentSubmitForm
 
         //Fire event and get redirect URL
         $sRedirectURL = Event::fire(OrderProcessor::EVENT_ORDER_GET_REDIRECT_URL, $this->obOrder, true);
-        if (empty($this->obPaymentGateway) || !Result::status()) {
+        if (!Result::status() && !empty($this->obPaymentGateway) && $this->obPaymentGateway->isRedirect()) {
+            $sRedirectURL = $this->obPaymentGateway->getRedirectURL();
+
+            return Redirect::to($sRedirectURL);
+        } else if (empty($this->obPaymentGateway) || !Result::status()) {
+            $this->prepareResponseData();
+
             return $this->getResponseModeAjax($sRedirectURL);
         }
 
@@ -168,7 +149,8 @@ class MakeOrder extends ComponentSubmitForm
             Result::setFalse($this->obPaymentGateway->getResponse());
         }
 
-        Result::setMessage($this->obPaymentGateway->getMessage())->get();
+        Result::setMessage($this->obPaymentGateway->getMessage());
+        $this->prepareResponseData();
 
         return $this->getResponseModeAjax($sRedirectURL);
     }
@@ -227,6 +209,35 @@ class MakeOrder extends ComponentSubmitForm
 
         $this->obOrder = OrderProcessor::instance()->create($arOrderData, $this->obUser);
         $this->obPaymentGateway = OrderProcessor::instance()->getPaymentGateway();
+    }
+
+    /**
+     * Get redirect page property list
+     * @return array
+     */
+    protected function getRedirectPageProperties()
+    {
+        if (!Result::status() || empty($this->obOrder)) {
+            return [];
+        }
+
+        $arResult = [
+            'id'     => $this->obOrder->id,
+            'number' => $this->obOrder->order_number,
+            'key'    => $this->obOrder->secret_key,
+        ];
+
+        $sRedirectPage = $this->property(self::PROPERTY_REDIRECT_PAGE);
+        if (empty($sRedirectPage)) {
+            return $arResult;
+        }
+
+        $arPropertyList = PageHelper::instance()->getUrlParamList($sRedirectPage, 'OrderPage');
+        if (!empty($arPropertyList)) {
+            $arResult[array_shift($arPropertyList)] = $this->obOrder->secret_key;
+        }
+
+        return $arResult;
     }
 
     /**
@@ -479,5 +490,31 @@ class MakeOrder extends ComponentSubmitForm
         array_forget($arResult, ['id', 'type']);
 
         return $arResult;
+    }
+
+    /**
+     * Fire event and prepare response data
+     */
+    protected function prepareResponseData()
+    {
+        if (!Result::status()) {
+            return;
+        }
+
+        $arResponseData = Result::data();
+        $arEventData = Event::fire(OrderProcessor::EVENT_UPDATE_ORDER_RESPONSE_AFTER_CREATE, [$arResponseData, $this->obOrder, $this->obUser, $this->obPaymentGateway]);
+        if (empty($arEventData)) {
+            return;
+        }
+
+        foreach ($arEventData as $arData) {
+            if (empty($arData)) {
+                continue;
+            }
+
+            $arResponseData = array_merge($arResponseData, $arData);
+        }
+
+        Result::setData($arResponseData);
     }
 }

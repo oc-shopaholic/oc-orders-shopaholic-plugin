@@ -36,6 +36,7 @@ use Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface;
  * @property int                                                            $cancel_status_id
  * @property int                                                            $fail_status_id
  * @property bool                                                           $send_purchase_request
+ * @property bool                                                           $restore_cart
  *
  * @property \October\Rain\Database\Collection|Order[]                      $order
  * @method static Order|\October\Rain\Database\Relations\HasMany order()

@@ -26,7 +26,10 @@ class ShippingRestrictionByPaymentMethod implements CheckRestrictionInterface
     {
         $this->arAvailablePaymentMethod = (array) array_get($arProperty, 'payment_method');
 
-        $this->iCurrentPaymentMethod = CartProcessor::instance()->getCartObject()->payment_method_id;
+        $obPaymentMethod = CartProcessor::instance()->getActivePaymentMethod();
+        if (!empty($obPaymentMethod)) {
+            $this->iCurrentPaymentMethod = $obPaymentMethod->id;
+        }
     }
 
     /**

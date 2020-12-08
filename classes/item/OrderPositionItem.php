@@ -3,6 +3,7 @@
 use Lovata\Toolbox\Classes\Helper\PriceHelper;
 use Lovata\Toolbox\Traits\Helpers\PriceHelperTrait;
 
+use Lovata\Shopaholic\Classes\Helper\MeasureHelper;
 use Lovata\Shopaholic\Models\Offer;
 use Lovata\Shopaholic\Classes\Item\OfferItem;
 use Lovata\Shopaholic\Classes\Helper\TaxHelper;
@@ -15,92 +16,125 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer;
  * @package Lovata\OrdersShopaholic\Classes\Item
  * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  *
- * @property int                                                                $id
- * @property int                                                                $order_id
+ * @property int                                                                 $id
+ * @property int                                                                 $order_id
+ * @property int                                                                 $quantity
+ * @property double                                                              $weight
+ * @property double                                                              $height
+ * @property double                                                              $length
+ * @property double                                                              $width
+ * @property \Lovata\Shopaholic\Classes\Item\MeasureItem                         $dimensions_measure
+ * @property \Lovata\Shopaholic\Classes\Item\MeasureItem                         $weight_measure
  *
- * @property string                                                             $price
- * @property float                                                              $price_value
- * @property string                                                             $tax_price
- * @property float                                                              $tax_price_value
- * @property string                                                             $price_without_tax
- * @property float                                                              $price_without_tax_value
- * @property string                                                             $price_with_tax
- * @property float                                                              $price_with_tax_value
+ * @property string                                                              $price
+ * @property float                                                               $price_value
+ * @property string                                                              $tax_price
+ * @property float                                                               $tax_price_value
+ * @property string                                                              $price_without_tax
+ * @property float                                                               $price_without_tax_value
+ * @property string                                                              $price_with_tax
+ * @property float                                                               $price_with_tax_value
  *
- * @property string                                                             $old_price
- * @property float                                                              $old_price_value
- * @property string                                                             $tax_old_price
- * @property float                                                              $tax_old_price_value
- * @property string                                                             $old_price_without_tax
- * @property float                                                              $old_price_without_tax_value
- * @property string                                                             $old_price_with_tax
- * @property float                                                              $old_price_with_tax_value
+ * @property string                                                              $old_price
+ * @property float                                                               $old_price_value
+ * @property string                                                              $tax_old_price
+ * @property float                                                               $tax_old_price_value
+ * @property string                                                              $old_price_without_tax
+ * @property float                                                               $old_price_without_tax_value
+ * @property string                                                              $old_price_with_tax
+ * @property float                                                               $old_price_with_tax_value
  *
- * @property string                                                             $total_price
- * @property float                                                              $total_price_value
- * @property string                                                             $tax_total_price
- * @property float                                                              $tax_total_price_value
- * @property string                                                             $total_price_without_tax
- * @property float                                                              $total_price_without_tax_value
- * @property string                                                             $total_price_with_tax
- * @property float                                                              $total_price_with_tax_value
+ * @property string                                                              $total_price
+ * @property float                                                               $total_price_value
+ * @property string                                                              $tax_total_price
+ * @property float                                                               $tax_total_price_value
+ * @property string                                                              $total_price_without_tax
+ * @property float                                                               $total_price_without_tax_value
+ * @property string                                                              $total_price_with_tax
+ * @property float                                                               $total_price_with_tax_value
  *
- * @property string                                                             $old_total_price
- * @property float                                                              $old_total_price_value
- * @property string                                                             $tax_old_total_price
- * @property float                                                              $tax_old_total_price_value
- * @property string                                                             $old_total_price_without_tax
- * @property float                                                              $old_total_price_without_tax_value
- * @property string                                                             $old_total_price_with_tax
- * @property float                                                              $old_total_price_with_tax_value
+ * @property string                                                              $old_total_price
+ * @property float                                                               $old_total_price_value
+ * @property string                                                              $tax_old_total_price
+ * @property float                                                               $tax_old_total_price_value
+ * @property string                                                              $old_total_price_without_tax
+ * @property float                                                               $old_total_price_without_tax_value
+ * @property string                                                              $old_total_price_with_tax
+ * @property float                                                               $old_total_price_with_tax_value
  *
- * @property string                                                             $discount_total_price
- * @property float                                                              $discount_total_price_value
- * @property string                                                             $tax_discount_total_price
- * @property float                                                              $tax_discount_total_price_value
- * @property string                                                             $discount_total_price_without_tax
- * @property float                                                              $discount_total_price_without_tax_value
- * @property string                                                             $discount_total_price_with_tax
- * @property float                                                              $discount_total_price_with_tax_value
+ * @property string                                                              $discount_total_price
+ * @property float                                                               $discount_total_price_value
+ * @property string                                                              $tax_discount_total_price
+ * @property float                                                               $tax_discount_total_price_value
+ * @property string                                                              $discount_total_price_without_tax
+ * @property float                                                               $discount_total_price_without_tax_value
+ * @property string                                                              $discount_total_price_with_tax
+ * @property float                                                               $discount_total_price_with_tax_value
  *
- * @property string                                                             $total_price_per_unit
- * @property float                                                              $total_price_per_unit_value
- * @property string                                                             $tax_total_price_per_unit
- * @property float                                                              $tax_total_price_per_unit_value
- * @property string                                                             $total_price_per_unit_without_tax
- * @property float                                                              $total_price_per_unit_without_tax_value
- * @property string                                                             $total_price_per_unit_with_tax
- * @property float                                                              $total_price_per_unit_with_tax_value
+ * @property string                                                              $increase_total_price
+ * @property float                                                               $increase_total_price_value
+ * @property string                                                              $tax_increase_total_price
+ * @property float                                                               $tax_increase_total_price_value
+ * @property string                                                              $increase_total_price_without_tax
+ * @property float                                                               $increase_total_price_without_tax_value
+ * @property string                                                              $increase_total_price_with_tax
+ * @property float                                                               $increase_total_price_with_tax_value
  *
- * @property string                                                             $old_total_price_per_unit
- * @property float                                                              $old_total_price_per_unit_value
- * @property string                                                             $tax_old_total_price_per_unit
- * @property float                                                              $tax_old_total_price_per_unit_value
- * @property string                                                             $old_total_price_per_unit_without_tax
- * @property float                                                              $old_total_price_per_unit_without_tax_value
- * @property string                                                             $old_total_price_per_unit_with_tax
- * @property float                                                              $old_total_price_per_unit_with_tax_value
+ * @property string                                                              $total_price_per_unit
+ * @property float                                                               $total_price_per_unit_value
+ * @property string                                                              $tax_total_price_per_unit
+ * @property float                                                               $tax_total_price_per_unit_value
+ * @property string                                                              $total_price_per_unit_without_tax
+ * @property float                                                               $total_price_per_unit_without_tax_value
+ * @property string                                                              $total_price_per_unit_with_tax
+ * @property float                                                               $total_price_per_unit_with_tax_value
  *
- * @property string                                                             $discount_total_price_per_unit
- * @property float                                                              $discount_total_price_per_unit_value
- * @property string                                                             $tax_discount_total_price_per_unit
- * @property float                                                              $tax_discount_total_price_per_unit_value
- * @property string                                                             $discount_total_price_per_unit_without_tax
- * @property float                                                              $discount_total_price_per_unit_without_tax_value
- * @property string                                                             $discount_total_price_per_unit_with_tax
- * @property float                                                              $discount_total_price_per_unit_with_tax_value
+ * @property string                                                              $old_total_price_per_unit
+ * @property float                                                               $old_total_price_per_unit_value
+ * @property string                                                              $tax_old_total_price_per_unit
+ * @property float                                                               $tax_old_total_price_per_unit_value
+ * @property string                                                              $old_total_price_per_unit_without_tax
+ * @property float                                                               $old_total_price_per_unit_without_tax_value
+ * @property string                                                              $old_total_price_per_unit_with_tax
+ * @property float                                                               $old_total_price_per_unit_with_tax_value
  *
- * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer $price_data
- * @property float                                                              $tax_percent
+ * @property string                                                              $discount_total_price_per_unit
+ * @property float                                                               $discount_total_price_per_unit_value
+ * @property string                                                              $tax_discount_total_price_per_unit
+ * @property float                                                               $tax_discount_total_price_per_unit_value
+ * @property string                                                              $discount_total_price_per_unit_without_tax
+ * @property float                                                               $discount_total_price_per_unit_without_tax_value
+ * @property string                                                              $discount_total_price_per_unit_with_tax
+ * @property float                                                               $discount_total_price_per_unit_with_tax_value
  *
- * @property string                                                             $code
- * @property \Lovata\Shopaholic\Classes\Item\CurrencyItem                       $currency
- * @property string                                                             $currency_symbol
- * @property string                                                             $currency_code
+ * @property string                                                              $increase_total_price_per_unit
+ * @property float                                                               $increase_total_price_per_unit_value
+ * @property string                                                              $tax_increase_total_price_per_unit
+ * @property float                                                               $tax_increase_total_price_per_unit_value
+ * @property string                                                              $increase_total_price_per_unit_without_tax
+ * @property float                                                               $increase_total_price_per_unit_without_tax_value
+ * @property string                                                              $increase_total_price_per_unit_with_tax
+ * @property float                                                               $increase_total_price_per_unit_with_tax_value
  *
- * @property OrderItem                                                          $order
- * @property \Lovata\Shopaholic\Classes\Item\OfferItem                          $item
- * @property \Lovata\Shopaholic\Classes\Item\OfferItem                          $offer
+ * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer  $price_data
+ * @property float                                                               $tax_percent
+ *
+ * @property string                                                              $code
+ * @property \Lovata\Shopaholic\Classes\Item\CurrencyItem                        $currency
+ * @property string                                                              $currency_symbol
+ * @property string                                                              $currency_code
+ *
+ * @property OrderItem                                                           $order
+ * @property \Lovata\Shopaholic\Classes\Item\OfferItem                           $item
+ * @property \Lovata\Shopaholic\Classes\Item\OfferItem                           $offer
+ *
+ * Subscriptions for Shopaholic
+ * @property bool                                                                $is_subscription
+ * @property \October\Rain\Argon\Argon                                           $expire_at
+ * @property int                                                                 $subscription_period_id
+ * @property \Lovata\SubscriptionsShopaholic\Classes\Item\SubscriptionPeriodItem $subscription_period
+ * @property int                                                                 $subscription_access_id
+ * @property \Lovata\SubscriptionsShopaholic\Classes\Item\SubscriptionAccessItem $subscription_access
  */
 class OrderPositionItem extends AbstractPositionItem
 {
@@ -264,5 +298,27 @@ class OrderPositionItem extends AbstractPositionItem
     protected function getCurrencyCodeAttribute()
     {
         return $this->order->currency_code;
+    }
+
+    /**
+     * Get dimensions unit measure
+     * @return \Lovata\Shopaholic\Classes\Item\MeasureItem
+     */
+    protected function getDimensionsMeasureAttribute()
+    {
+        $obMeasureItem = MeasureHelper::instance()->getDimensionsMeasureItem();
+
+        return $obMeasureItem;
+    }
+
+    /**
+     * Get weight unit measure
+     * @return \Lovata\Shopaholic\Classes\Item\MeasureItem
+     */
+    protected function getWeightMeasureAttribute()
+    {
+        $obMeasureItem = MeasureHelper::instance()->getWeightMeasureItem();
+
+        return $obMeasureItem;
     }
 }

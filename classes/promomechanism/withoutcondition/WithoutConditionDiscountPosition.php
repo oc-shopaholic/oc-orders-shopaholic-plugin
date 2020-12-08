@@ -32,6 +32,10 @@ class WithoutConditionDiscountPosition extends AbstractPromoMechanism implements
      */
     protected function check($obProcessor, $obPosition = null) : bool
     {
+        if (!parent::check($obProcessor, $obPosition)) {
+            return false;
+        }
+
         return $this->checkPosition($obPosition);
     }
 }

@@ -55,6 +55,15 @@ use Lovata\OrdersShopaholic\Interfaces\CheckRestrictionInterface;
  * @property string                                                                                        $discount_price_with_tax
  * @property float                                                                                         $discount_price_with_tax_value
  *
+ * @property string                                                                                        $increase_price
+ * @property float                                                                                         $increase_price_value
+ * @property string                                                                                        $tax_increase_price
+ * @property float                                                                                         $tax_increase_price_value
+ * @property string                                                                                        $increase_price_without_tax
+ * @property float                                                                                         $increase_price_without_tax_value
+ * @property string                                                                                        $increase_price_with_tax
+ * @property float                                                                                         $increase_price_with_tax_value
+ *
  * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer                            $price_data
  * @property string                                                                                        $currency
  * @property string                                                                                        $currency_code

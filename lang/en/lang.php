@@ -1,9 +1,9 @@
 <?php return [
-    'plugin'               => [
+    'plugin'                   => [
         'name'        => 'Orders for Shopaholic',
         'description' => 'User cart and order creating',
     ],
-    'component'            => [
+    'component'                => [
         'cart_name'                       => 'Cart',
         'cart_description'                => '',
         'make_order_name'                 => 'Make order',
@@ -20,7 +20,7 @@
         'user_address_name'               => 'User address',
         'user_address_description'        => 'Create/update/remove',
     ],
-    'tab'                  => [
+    'tab'                      => [
         'info'                       => 'Order data',
         'offers_info'                => 'Offer list',
         'order_settings'             => 'Order and cart',
@@ -33,7 +33,7 @@
         'shipping_restrictions_info' => 'Restrictions',
         'payment_restrictions_info'  => 'Restrictions',
     ],
-    'message'              => [
+    'message'                  => [
         'empty_cart'           => 'Cart is empty',
         'offer_not_found'      => 'Offer not found',
         'insufficient_amount'  => 'Offer is not available',
@@ -41,11 +41,11 @@
         'cart_id_required'     => 'Relation between position and cart is required',
         'item_required'        => 'Relation between position and item is required',
         'without_condition'    => 'Without condition',
-        'discount_not_applied' => 'Discount not applied',
+        'discount_not_applied' => 'Mechanism for changing prices has not been applied applied',
         'e_address_exists'     => 'This address already exists',
         'for_the_last_period'  => 'For the last period',
     ],
-    'field'                => [
+    'field'                    => [
         'status'       => 'Status',
         'order_number' => 'Order number',
         'user'         => 'Buyer',
@@ -67,6 +67,7 @@
         'payment_method'                 => 'Payment method',
         'is_user_show'                   => 'Show status to user',
         'user_status'                    => 'For user, status will be shown as',
+        'color'                          => 'Color',
         'gateway_id'                     => 'Payment gateway',
         'gateway_currency'               => 'Gateway currency',
         'before_status_id'               => 'Order status before payment',
@@ -78,16 +79,25 @@
         'payment_data'                   => 'Data that was sent to payment gateway',
         'payment_response'               => 'Data that was received from payment gateway',
         'send_purchase_request'          => 'Send request to payment gateway when creating order',
+        'restore_cart'                   => 'Restore cart positions if payment has been canceled or failed',
         'gateway_field_value'            => 'Get value of ":field" field from value of order property field',
         'promo_mechanism'                => 'Promo mechanism',
-        'priority_description'           => 'The <strong>higher</strong> the priority, the <strong>earlier</strong> the discount will be applied.',
+        'increase_price_mechanism'       => 'Increase price mechanism',
+        'priority_description'           => 'The <strong>higher</strong> the priority, the <strong>earlier</strong> the discount or price increase will be applied.',
         'discount_value'                 => 'Discount value',
         'discount_type'                  => 'Discount type',
+        'increase_price_value'           => 'Value of price increase',
+        'increase_price_type'            => 'Type of price increase',
+        'price_change_value'             => 'Value of price change',
+        'price_change_type'              => 'Type of price change',
         'discount_type_fixed'            => 'Fixed',
         'discount_type_percent'          => 'Percent',
         'final_discount'                 => 'Final discount',
-        'final_discount_description'     => 'The final discount <strong>blocks the effect</strong> of other discounts with a lower priority. Otherwise, discounts with <strong>lower</strong> priority <strong>will be applied</strong>.',
-        'order_discount_list'            => 'List of available discounts',
+        'final_discount_description'     => 'The final discount / price increase <strong>blocks the effect</strong> of other discounts / price increases with a lower priority. Otherwise, discounts / price increases with <strong>lower</strong> priority <strong>will be applied</strong>.',
+        'final_increase_price'           => 'Final price increase',
+        'auto_add'                       => 'Automatically apply mechanism for changing prices',
+        'auto_add_description'           => 'The mechanism for changing prices will <strong>always be automatically</strong> applied to the user cart and added to the order.',
+        'order_discount_list'            => 'List of available discounts and increase price mechanisms',
         'manager'                        => 'Manager',
         'task_date'                      => 'Notification date',
         'active_task'                    => 'Active tasks',
@@ -98,11 +108,13 @@
         'applied_to_shipping_price'      => 'Applied to shipping price',
         'restriction'                    => 'Restriction',
         'shipping_type_api_class'        => 'API method',
+        'decrease_price'                 => 'Discount',
+        'increase_price'                 => 'Increase price',
         'count_orders'                   => 'Count orders',
 
-        'order_discount_log_position_total_price' => 'List of applied discounts (position total price)',
-        'order_discount_log_sipping_price'        => 'List of applied discounts (sipping price)',
-        'order_discount_log_total_price'          => 'List of applied discounts (order total price)',
+        'order_discount_log_position_total_price' => 'List applied of mechanism for changing prices (position total price)',
+        'order_discount_log_sipping_price'        => 'List applied of mechanism for changing prices (sipping price)',
+        'order_discount_log_total_price'          => 'List applied of mechanism for changing prices (order total price)',
 
         'name'        => 'Name',
         'last_name'   => 'Last name',
@@ -118,7 +130,7 @@
         'widget_only_completed_orders' => 'Only completed orders',
         'widget_filter_by_currency'    => 'Filter by currency',
     ],
-    'settings'             => [
+    'settings'                 => [
         'cart_cookie_lifetime'                 => 'Life time of cart ID in cookie (min.)',
         'check_offer_quantity'                 => 'Check the available quantity of the product when creating an order',
         'decrement_offer_quantity'             => 'Automatic reduction of the available quantity of offers when creating an order',
@@ -131,7 +143,7 @@
 
         'order_create_email' => 'Email for sending mail when creating an order',
     ],
-    'menu'                 => [
+    'menu'                     => [
         'orders'                              => 'Orders',
         'statuses'                            => 'Order statuses',
         'statuses_description'                => 'Manage order statuses',
@@ -144,42 +156,43 @@
         'order_position_property'             => 'Additional order position properties',
         'order_position_property_description' => 'Manage additional order position properties',
         'promo_mechanism'                     => 'Promo mechanism',
+        'increase_price_mechanism'            => 'Increase price mechanism',
     ],
-    'order'                => [
+    'order'                    => [
         'name'       => 'order',
         'list_title' => 'Order list',
     ],
-    'buyer'                => [
+    'buyer'                    => [
         'name'       => 'buyer',
         'list_title' => 'Buyer list',
     ],
-    'order_position'       => [
+    'order_position'           => [
         'name'       => 'position',
         'list_title' => 'Position list',
     ],
-    'status'               => [
+    'status'                   => [
         'name'       => 'status',
         'list_title' => 'Status list',
     ],
-    'payment_method'       => [
+    'payment_method'           => [
         'name'       => 'payment method',
         'list_title' => 'Payment methods',
     ],
-    'shipping_type'        => [
+    'shipping_type'            => [
         'name'       => 'shipping type',
         'list_title' => 'Shipping types',
     ],
-    'order_property'       => [
+    'order_property'           => [
         'name'       => 'property',
         'list_title' => 'Property list',
     ],
-    'task'                 => [
+    'task'                     => [
         'name'       => 'task',
         'list_title' => 'Task list',
     ],
-    'promo_mechanism'      => [
+    'promo_mechanism'          => [
         'name'                            => 'promo mechanism',
-        'list_title'                      => 'promo mechanism list',
+        'list_title'                      => 'Promo mechanism list',
         'amount_description'              => 'Discount will be applied if the amount is greater than or equal to',
         'offer_limit'                     => 'Offer quantity at which the discount will be applied',
         'offer_limit_description'         => 'Discount will be applied if offer quantity is greater than or equal to',
@@ -189,8 +202,25 @@
         'quantity_limit_description'      => 'If you set value = 1 and discount value = 100%, than the discount will be applied to one unit. If you set value = 0, than discount will be applied to all units',
         'quantity_limit_from'             => 'Quantity limit at which the discount will be repeated',
         'quantity_limit_from_description' => 'If you set value = 3, value of quantity limit for which the discount will be applied = 1 and discount value = 100%, than the discount will be applied to one unit and will be repeated every 3 offers (3 for the price of 2). If the value is = 0, then the value is ignored.',
+        'shipping_type'                   => 'Discount will be applied if active shipping type is',
+        'payment_method'                  => 'Discount will be applied if active payment method is',
     ],
-    'restriction'          => [
+    'increase_price_mechanism' => [
+        'name'                            => 'price increase mechanism',
+        'list_title'                      => 'Price increase mechanism list',
+        'amount_description'              => 'Price increase will be applied if the amount is greater than or equal to',
+        'offer_limit'                     => 'Offer quantity at which the price increase will be applied',
+        'offer_limit_description'         => 'Price increase will be applied if offer quantity is greater than or equal to',
+        'position_limit'                  => 'Position count at which the price increase will be applied',
+        'position_limit_description'      => 'Price increase will be applied if position count is greater than or equal to',
+        'quantity_limit'                  => 'Quantity limit for which the price increase will be applied',
+        'quantity_limit_description'      => 'If you set value = 1 and price increase value = 100%, than the price increase will be applied to one unit. If you set value = 0, than price increase will be applied to all units',
+        'quantity_limit_from'             => 'Quantity limit at which the price increase will be repeated',
+        'quantity_limit_from_description' => 'If you set value = 3, value of quantity limit for which the price increase will be applied = 1 and price increase value = 100%, than the price increase will be applied to one unit and will be repeated every 3 offers (3 for the price of 2). If the value is = 0, then the value is ignored.',
+        'shipping_type'                   => 'Price increase will be applied if active shipping type is',
+        'payment_method'                  => 'Price increase will be applied if active payment method is',
+    ],
+    'restriction'              => [
         'name'       => 'restriction',
         'list_title' => 'Restriction list',
         'property'   => [
@@ -203,7 +233,7 @@
             'by_payment_method' => 'By payment method',
         ],
     ],
-    'permission'           => [
+    'permission'               => [
         'order'           => 'Manage orders',
         'status'          => 'Manage status list',
         'payment_type'    => 'Manage payment methods',
@@ -211,59 +241,59 @@
         'property'        => 'Manage additional properties of order',
         'promo_mechanism' => 'Manage promo mechanisms',
     ],
-    'label'                => [
+    'label'                    => [
         'order'   => 'Order',
         'product' => 'Product',
         'offer'   => 'Offer',
     ],
-    'promo_mechanism_type' => [
-        'without_condition_discount_position'                         => 'Discount on the <strong>position price</strong> without conditions',
-        'without_condition_discount_position_description'             => 'The discount on the price of the <strong>position</strong> will be applied <strong>without checking any conditions</strong>. For example: Can be used when applying a coupon.',
-        'without_condition_discount_min_price'                        => 'Discount on the <strong>position price with min price</strong> without conditions',
-        'without_condition_discount_min_price_description'            => 'The discount on the price of the <strong>position with min price</strong> will be applied <strong>without checking any conditions</strong>. For example: Can be used when applying a coupon.',
-        'without_condition_discount_position_total_price'             => 'Discount on the <strong>total price</strong> of positions without conditions',
-        'without_condition_discount_position_total_price_description' => 'The discount on the <strong>total price of positions</strong> list will be applied <strong>without checking any conditions</strong>. For example: Can be used when applying a coupon.',
-        'without_condition_discount_shipping_price'                   => 'Discount on the <strong>shipping price</strong> without conditions',
-        'without_condition_discount_shipping_price_description'       => 'The discount on the <strong>shipping price</strong> will be applied <strong>without checking any conditions</strong>. For example: Can be used when applying a coupon.',
-        'without_condition_discount_total_price'                      => 'Discount on the <strong>total price</strong> of order without conditions',
-        'without_condition_discount_total_price_description'          => 'The discount on the <strong>total price</strong> of order will be applied <strong>without checking any conditions</strong>. For example: Can be used when applying a coupon.',
+    'promo_mechanism_type'     => [
+        'without_condition_discount_position'                         => 'Apply a mechanism for changing prices to the <strong>price of position</strong> without any conditions',
+        'without_condition_discount_position_description'             => 'The mechanism for changing prices will be applied to the price of the <strong>position</strong> <strong>without checking any conditions</strong>. For example: Can be used when applying a coupon.',
+        'without_condition_discount_min_price'                        => 'Apply a mechanism for changing prices to the <strong>position price with min price</strong> without any conditions',
+        'without_condition_discount_min_price_description'            => 'The mechanism for changing prices will be applied to the price of the <strong>position with min price</strong> <strong>without checking any conditions</strong>. For example: Can be used when applying a coupon.',
+        'without_condition_discount_position_total_price'             => 'Apply a mechanism for changing prices to the <strong>total price</strong> of positions without any conditions',
+        'without_condition_discount_position_total_price_description' => 'The mechanism for changing prices will be applied to the <strong>total price of positions</strong> list <strong>without checking any conditions</strong>. For example: Can be used when applying a coupon.',
+        'without_condition_discount_shipping_price'                   => 'Apply a mechanism for changing prices to the <strong>shipping price</strong> without any conditions',
+        'without_condition_discount_shipping_price_description'       => 'The mechanism for changing prices will be applied to the <strong>shipping price</strong> <strong>without checking any conditions</strong>. For example: Can be used when applying a coupon.',
+        'without_condition_discount_total_price'                      => 'Apply a mechanism for changing prices to the <strong>total price</strong> of order without any conditions',
+        'without_condition_discount_total_price_description'          => 'The mechanism for changing prices will be applied to the <strong>total price</strong> of order <strong>without checking any conditions</strong>. For example: Can be used when applying a coupon.',
 
-        'position_total_price_greater_discount_shipping_price'             => 'Discount on the <strong>shipping price</strong> if total price of position greater than "XX"',
-        'position_total_price_greater_discount_shipping_price_description' => 'The discount on the <strong>shipping price</strong> will be applied <strong>if total price of the position greater than the set value</strong>. For example: Discount is 5%, if the total price of position is >= 50$.',
-        'position_total_price_greater_discount_total_price'                => 'Discount on the <strong>total price</strong> of order if total price of position greater than "XX"',
-        'position_total_price_greater_discount_total_price_description'    => 'The discount on the <strong>total price</strong> of order will be applied <strong>if total price of position greater then</strong>. For example: Discount is 5%, if total price of position is >= 50$.',
+        'position_total_price_greater_discount_shipping_price'             => 'Apply a mechanism for changing prices to the <strong>shipping price</strong> if total price of position greater than "XX"',
+        'position_total_price_greater_discount_shipping_price_description' => 'The mechanism for changing prices will be applied to the <strong>shipping price</strong> <strong>if total price of the position greater than the set value</strong>. For example: Discount is 5%, if the total price of position is >= 50$.',
+        'position_total_price_greater_discount_total_price'                => 'Apply a mechanism for changing prices to the <strong>total price</strong> of order if total price of position greater than "XX"',
+        'position_total_price_greater_discount_total_price_description'    => 'The mechanism for changing prices will be applied to the <strong>total price</strong> of order <strong>if total price of position greater then</strong>. For example: Discount is 5%, if total price of position is >= 50$.',
 
-        'offer_quantity_greater_discount_position'                         => 'Discount on the <strong>position price</strong> if the total quantity of one offer in the order is greater than "XX"',
-        'offer_quantity_greater_discount_position_description'             => 'The discount on the price of the <strong>position</strong> will be applied <strong> if the total quantity of one offer in the order is greater than the set value</strong>. For example: Discount is 5%, if total quantity of offer "T-shirt size 52" is >= 3.',
-        'offer_quantity_greater_discount_min_price'                        => 'Discount on the <strong>position with min price</strong> if the total quantity of one offer in the order is greater than "XX"',
-        'offer_quantity_greater_discount_min_price_description'            => 'The discount on the price of the <strong>position with min price</strong> will be applied <strong> if the total quantity of one offer in the order is greater than the set value</strong>. For example: Discount is 5%, if total quantity of offer "T-shirt size 52" is >= 3.',
-        'offer_quantity_greater_discount_position_total_price'             => 'Discount on the <strong>total price of positions</strong> if the total quantity of one offer in the order is greater than "XX"',
-        'offer_quantity_greater_discount_position_total_price_description' => 'The discount on the <strong>total price of positions</strong> list will be applied <strong>if the total quantity of one offer in the order is greater than the set value</strong>. For example: Discount is 5%, if total quantity of offer "T-shirt size 52" is >= 3.',
-        'offer_quantity_greater_discount_shipping_price'                   => 'Discount on the <strong>shipping price</strong> if the total quantity of one offer in the order is greater than "XX"',
-        'offer_quantity_greater_discount_shipping_price_description'       => 'The discount on the <strong>shipping price</strong> will be applied <strong>if the total quantity of one offer in the order is greater than the set value</strong>. For example: Discount is 5%, if total quantity of offer "T-shirt size 52" is >= 3.',
-        'offer_quantity_greater_discount_total_price'                      => 'Discount on the <strong>order total price</strong> if the total quantity of one offer in the order is greater than "XX"',
-        'offer_quantity_greater_discount_total_price_description'          => 'The discount on the <strong>total price</strong> of order will be applied <strong>if the total quantity of one offer in the order is greater than the set value</strong>. For example: Discount is 5%, if total quantity of offer "T-shirt size 52" is >= 3.',
+        'offer_quantity_greater_discount_position'                         => 'Apply a mechanism for changing prices to the <strong>position price</strong> if the total quantity of one offer in the order is greater than "XX"',
+        'offer_quantity_greater_discount_position_description'             => 'The mechanism for changing prices will be applied to the price of the <strong>position</strong> <strong> if the total quantity of one offer in the order is greater than the set value</strong>. For example: Discount is 5%, if total quantity of offer "T-shirt size 52" is >= 3.',
+        'offer_quantity_greater_discount_min_price'                        => 'Apply a mechanism for changing prices to the <strong>position with min price</strong> if the total quantity of one offer in the order is greater than "XX"',
+        'offer_quantity_greater_discount_min_price_description'            => 'The mechanism for changing prices will be applied to the price of the <strong>position with min price</strong> <strong> if the total quantity of one offer in the order is greater than the set value</strong>. For example: Discount is 5%, if total quantity of offer "T-shirt size 52" is >= 3.',
+        'offer_quantity_greater_discount_position_total_price'             => 'Apply a mechanism for changing prices to the <strong>total price of positions</strong> if the total quantity of one offer in the order is greater than "XX"',
+        'offer_quantity_greater_discount_position_total_price_description' => 'The mechanism for changing prices will be applied to the <strong>total price of positions</strong> list <strong>if the total quantity of one offer in the order is greater than the set value</strong>. For example: Discount is 5%, if total quantity of offer "T-shirt size 52" is >= 3.',
+        'offer_quantity_greater_discount_shipping_price'                   => 'Apply a mechanism for changing prices to the <strong>shipping price</strong> if the total quantity of one offer in the order is greater than "XX"',
+        'offer_quantity_greater_discount_shipping_price_description'       => 'The mechanism for changing prices will be applied to the <strong>shipping price</strong> <strong>if the total quantity of one offer in the order is greater than the set value</strong>. For example: Discount is 5%, if total quantity of offer "T-shirt size 52" is >= 3.',
+        'offer_quantity_greater_discount_total_price'                      => 'Apply a mechanism for changing prices to the <strong>order total price</strong> if the total quantity of one offer in the order is greater than "XX"',
+        'offer_quantity_greater_discount_total_price_description'          => 'The mechanism for changing prices will be applied to the <strong>total price</strong> of order <strong>if the total quantity of one offer in the order is greater than the set value</strong>. For example: Discount is 5%, if total quantity of offer "T-shirt size 52" is >= 3.',
 
-        'offer_total_quantity_greater_discount_position'                         => 'Discount on the <strong>position price</strong> if the total quantity of offers in the order is greater than "XX"',
-        'offer_total_quantity_greater_discount_position_description'             => 'The discount on the price of the <strong>position</strong> will be applied <strong> if the total quantity of offers in the order is greater than the set value</strong>. For example: Discount is 5%, if total quantity of offers "T-shirt size 52" (quantity = 2) + "T-shirt size 56" (quantity = 2) = 4 is >= 3.',
-        'offer_total_quantity_greater_discount_min_price'                        => 'Discount on the <strong>position with min price</strong> if the total quantity of offers in the order is greater than "XX"',
-        'offer_total_quantity_greater_discount_min_price_description'            => 'The discount on the price of the <strong>position with min price</strong> will be applied <strong> if the total quantity of offers in the order is greater than the set value</strong>. For example: Discount is 5%, if total quantity of offers "T-shirt size 52" (quantity = 2) + "T-shirt size 56" (quantity = 2) = 4 is >= 3.',
-        'offer_total_quantity_greater_discount_position_total_price'             => 'Discount on the <strong>total price of positions</strong> if the total quantity of offers in the order is greater than "XX"',
-        'offer_total_quantity_greater_discount_position_total_price_description' => 'The discount on the <strong>total price of positions</strong> list will be applied <strong>if the total quantity of offers in the order is greater than the set value</strong>. For example: Discount is 5%, if total quantity of offers "T-shirt size 52" (quantity = 2) + "T-shirt size 56" (quantity = 2) = 4 is >= 3.',
-        'offer_total_quantity_greater_discount_shipping_price'                   => 'Discount on the <strong>shipping price</strong> if the total quantity of offers in the order is greater than "XX"',
-        'offer_total_quantity_greater_discount_shipping_price_description'       => 'The discount on the <strong>shipping price</strong> will be applied <strong>if the total quantity of offers in the order is greater than the set value</strong>. For example: Discount is 5%, if total quantity of offers "T-shirt size 52" (quantity = 2) + "T-shirt size 56" (quantity = 2) = 4 is >= 3.',
-        'offer_total_quantity_greater_discount_total_price'                      => 'Discount on the <strong>order total price</strong> if the total quantity of offers in the order is greater than "XX"',
-        'offer_total_quantity_greater_discount_total_price_description'          => 'The discount on the <strong>total price</strong> of order will be applied <strong>if the total quantity of offers in the order is greater than the set value</strong>. For example: Discount is 5%, if total quantity of offers "T-shirt size 52" (quantity = 2) + "T-shirt size 56" (quantity = 2) = 4 is >= 3.',
+        'offer_total_quantity_greater_discount_position'                         => 'Apply a mechanism for changing prices to the <strong>position price</strong> if the total quantity of offers in the order is greater than "XX"',
+        'offer_total_quantity_greater_discount_position_description'             => 'The mechanism for changing prices will be applied to the price of the <strong>position</strong> <strong> if the total quantity of offers in the order is greater than the set value</strong>. For example: Discount is 5%, if total quantity of offers "T-shirt size 52" (quantity = 2) + "T-shirt size 56" (quantity = 2) = 4 is >= 3.',
+        'offer_total_quantity_greater_discount_min_price'                        => 'Apply a mechanism for changing prices to the <strong>position with min price</strong> if the total quantity of offers in the order is greater than "XX"',
+        'offer_total_quantity_greater_discount_min_price_description'            => 'The mechanism for changing prices will be applied to the price of the <strong>position with min price</strong> <strong> if the total quantity of offers in the order is greater than the set value</strong>. For example: Discount is 5%, if total quantity of offers "T-shirt size 52" (quantity = 2) + "T-shirt size 56" (quantity = 2) = 4 is >= 3.',
+        'offer_total_quantity_greater_discount_position_total_price'             => 'Apply a mechanism for changing prices to the <strong>total price of positions</strong> if the total quantity of offers in the order is greater than "XX"',
+        'offer_total_quantity_greater_discount_position_total_price_description' => 'The mechanism for changing prices will be applied to the <strong>total price of positions</strong> list <strong>if the total quantity of offers in the order is greater than the set value</strong>. For example: Discount is 5%, if total quantity of offers "T-shirt size 52" (quantity = 2) + "T-shirt size 56" (quantity = 2) = 4 is >= 3.',
+        'offer_total_quantity_greater_discount_shipping_price'                   => 'Apply a mechanism for changing prices to the <strong>shipping price</strong> if the total quantity of offers in the order is greater than "XX"',
+        'offer_total_quantity_greater_discount_shipping_price_description'       => 'The mechanism for changing prices will be applied to the <strong>shipping price</strong> <strong>if the total quantity of offers in the order is greater than the set value</strong>. For example: Discount is 5%, if total quantity of offers "T-shirt size 52" (quantity = 2) + "T-shirt size 56" (quantity = 2) = 4 is >= 3.',
+        'offer_total_quantity_greater_discount_total_price'                      => 'Apply a mechanism for changing prices to the <strong>order total price</strong> if the total quantity of offers in the order is greater than "XX"',
+        'offer_total_quantity_greater_discount_total_price_description'          => 'The mechanism for changing prices will be applied to the <strong>total price</strong> of order <strong>if the total quantity of offers in the order is greater than the set value</strong>. For example: Discount is 5%, if total quantity of offers "T-shirt size 52" (quantity = 2) + "T-shirt size 56" (quantity = 2) = 4 is >= 3.',
 
-        'position_count_greater_discount_position'                         => 'Discount on the <strong>position price</strong> if the position count in the order is greater than "XX"',
-        'position_count_greater_discount_position_description'             => 'The discount on the price of the <strong>position</strong> will be applied <strong> if the position count in the order is greater than the set value</strong>. For example: Discount is 5%, if position count is >= 3.',
-        'position_count_greater_discount_min_price'                        => 'Discount on the <strong>position with min price</strong> if the position count in the order is greater than "XX"',
-        'position_count_greater_discount_min_price_description'            => 'The discount on the price of the <strong>position with min price</strong> will be applied <strong> if the position count in the order is greater than the set value</strong>. For example: Discount is 5%, if position count is >= 3.',
-        'position_count_greater_discount_position_total_price'             => 'Discount on the <strong>total price of positions</strong> if the position count in the order is greater than "XX"',
-        'position_count_greater_discount_position_total_price_description' => 'The discount on the <strong>total price of positions</strong> list will be applied <strong>if the position count in the order is greater than the set value</strong>. For example: Discount is 5%, if position count is >= 3.',
-        'position_count_greater_discount_shipping_price'                   => 'Discount on the <strong>shipping price</strong> if the position count in the order is greater than "XX"',
-        'position_count_greater_discount_shipping_price_description'       => 'The discount on the <strong>shipping price</strong> will be applied <strong>if the position count in the order is greater than the set value</strong>. For example: Discount is 5%, if position count is >= 3.',
-        'position_count_greater_discount_total_price'                      => 'Discount on the <strong>order total price</strong> if the position count in the order is greater than "XX"',
-        'position_count_greater_discount_total_price_description'          => 'The discount on the <strong>total price</strong> of order will be applied <strong>if the position count in the order is greater than the set value</strong>. For example: Discount is 5%, if position count is >= 3.',
+        'position_count_greater_discount_position'                         => 'Apply a mechanism for changing prices to the <strong>position price</strong> if the position count in the order is greater than "XX"',
+        'position_count_greater_discount_position_description'             => 'The mechanism for changing prices will be applied to the price of the <strong>position</strong> <strong> if the position count in the order is greater than the set value</strong>. For example: Discount is 5%, if position count is >= 3.',
+        'position_count_greater_discount_min_price'                        => 'Apply a mechanism for changing prices to the <strong>position with min price</strong> if the position count in the order is greater than "XX"',
+        'position_count_greater_discount_min_price_description'            => 'The mechanism for changing prices will be applied to the price of the <strong>position with min price</strong> <strong> if the position count in the order is greater than the set value</strong>. For example: Discount is 5%, if position count is >= 3.',
+        'position_count_greater_discount_position_total_price'             => 'Apply a mechanism for changing prices to the <strong>total price of positions</strong> if the position count in the order is greater than "XX"',
+        'position_count_greater_discount_position_total_price_description' => 'The mechanism for changing prices will be applied to the <strong>total price of positions</strong> list <strong>if the position count in the order is greater than the set value</strong>. For example: Discount is 5%, if position count is >= 3.',
+        'position_count_greater_discount_shipping_price'                   => 'Apply a mechanism for changing prices to the <strong>shipping price</strong> if the position count in the order is greater than "XX"',
+        'position_count_greater_discount_shipping_price_description'       => 'The mechanism for changing prices will be applied to the <strong>shipping price</strong> <strong>if the position count in the order is greater than the set value</strong>. For example: Discount is 5%, if position count is >= 3.',
+        'position_count_greater_discount_total_price'                      => 'Apply a mechanism for changing prices to the <strong>order total price</strong> if the position count in the order is greater than "XX"',
+        'position_count_greater_discount_total_price_description'          => 'The mechanism for changing prices will be applied to the <strong>total price</strong> of order <strong>if the position count in the order is greater than the set value</strong>. For example: Discount is 5%, if position count is >= 3.',
     ],
 ];

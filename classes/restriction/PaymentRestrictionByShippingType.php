@@ -26,7 +26,10 @@ class PaymentRestrictionByShippingType implements CheckRestrictionInterface
     {
         $this->arAvailableShippingType = (array) array_get($arProperty, 'shipping_type');
 
-        $this->iCurrentShippingType = CartProcessor::instance()->getCartObject()->shipping_type_id;
+        $obShippingType = CartProcessor::instance()->getActiveShippingType();
+        if (!empty($obShippingType)) {
+            $this->iCurrentShippingType = $obShippingType->id;
+        }
     }
 
     /**

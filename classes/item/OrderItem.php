@@ -25,6 +25,7 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderItemPromoMechanismProces
  * @property int                                                                             $status_id
  * @property int                                                                             $payment_method_id
  * @property int                                                                             $shipping_type_id
+ * @property double                                                                          $weight
  * @property string                                                                          $shipping_price
  * @property float                                                                           $shipping_price_value
  * @property string                                                                          $old_shipping_price
@@ -62,6 +63,10 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderItemPromoMechanismProces
  *
  * Coupons for Shopaholic plugin
  * @property array                                                                           $coupon_list
+ *
+ * Downloadable file for Shopaholic
+ * @property bool                                                                            $is_file_access
+ * @property integer                                                                         $file_access_id
  */
 class OrderItem extends ElementItem
 {
@@ -283,5 +288,24 @@ class OrderItem extends ElementItem
     protected function getCurrencyCodeAttribute()
     {
         return $this->currency->code;
+    }
+
+    /**
+     * Get total weight
+     * @return int
+     */
+    protected function getWeightAttribute()
+    {
+        $obOrderPositionList = $this->order_position;
+        if ($obOrderPositionList->isEmpty()) {
+            return 0;
+        }
+
+        $iWeight = 0;
+        foreach ($obOrderPositionList as $obOrderPosition) {
+            $iWeight += (float) $obOrderPosition->weight;
+        }
+
+        return $iWeight;
     }
 }

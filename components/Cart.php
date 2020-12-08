@@ -8,6 +8,7 @@ use Kharanenka\Helper\Result;
 use Lovata\Toolbox\Traits\Helpers\TraitValidationHelper;
 
 use Lovata\Shopaholic\Classes\Helper\CurrencyHelper;
+use Lovata\OrdersShopaholic\Classes\Item\PaymentMethodItem;
 use Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem;
 use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
 use Lovata\OrdersShopaholic\Classes\Processor\OfferCartPositionProcessor;
@@ -42,16 +43,28 @@ class Cart extends ComponentBase
     }
 
     /**
+     * Init component data
+     */
+    public function init()
+    {
+        $obActiveShippingType = $this->getActiveShippingTypeFromRequest();
+        if (!empty($obActiveShippingType) && $obActiveShippingType->isNotEmpty()) {
+            CartProcessor::instance()->setActiveShippingType($obActiveShippingType);
+        }
+
+        $obActivePaymentMethod = $this->getActivePaymentMethodFromRequest();
+        if (!empty($obActivePaymentMethod) && $obActivePaymentMethod->isNotEmpty()) {
+            CartProcessor::instance()->setActivePaymentMethod($obActivePaymentMethod);
+        }
+    }
+
+    /**
      * Add product to cart
      * @return array
      */
     public function onAdd()
     {
         $arRequestData = Input::get('cart');
-        $obActiveShippingType = $this->getActiveShippingTypeFromRequest();
-        if (!empty($obActiveShippingType) && $obActiveShippingType->isNotEmpty()) {
-            CartProcessor::instance()->setActiveShippingType($obActiveShippingType);
-        }
 
         CartProcessor::instance()->add($arRequestData, OfferCartPositionProcessor::class);
         Result::setData(CartProcessor::instance()->getCartData());
@@ -66,10 +79,6 @@ class Cart extends ComponentBase
     public function onUpdate()
     {
         $arRequestData = Input::get('cart');
-        $obActiveShippingType = $this->getActiveShippingTypeFromRequest();
-        if (!empty($obActiveShippingType) && $obActiveShippingType->isNotEmpty()) {
-            CartProcessor::instance()->setActiveShippingType($obActiveShippingType);
-        }
 
         CartProcessor::instance()->update($arRequestData, OfferCartPositionProcessor::class);
         Result::setData(CartProcessor::instance()->getCartData());
@@ -84,11 +93,6 @@ class Cart extends ComponentBase
     public function onRemove()
     {
         $arRequestData = Input::get('cart');
-        $obActiveShippingType = $this->getActiveShippingTypeFromRequest();
-        if (!empty($obActiveShippingType) && $obActiveShippingType->isNotEmpty()) {
-            CartProcessor::instance()->setActiveShippingType($obActiveShippingType);
-        }
-
         $sType = Input::get('type', 'offer');
 
         CartProcessor::instance()->remove($arRequestData, OfferCartPositionProcessor::class, $sType);
@@ -104,12 +108,22 @@ class Cart extends ComponentBase
     public function onRestore()
     {
         $arRequestData = Input::get('cart');
-        $obActiveShippingType = $this->getActiveShippingTypeFromRequest();
-        if (!empty($obActiveShippingType) && $obActiveShippingType->isNotEmpty()) {
-            CartProcessor::instance()->setActiveShippingType($obActiveShippingType);
-        }
 
         CartProcessor::instance()->restore($arRequestData, OfferCartPositionProcessor::class);
+        Result::setData(CartProcessor::instance()->getCartData());
+
+        return Result::get();
+    }
+
+    /**
+     * Sync cart positions
+     * @return array
+     */
+    public function onSync()
+    {
+        $arRequestData = Input::get('cart');
+
+        CartProcessor::instance()->sync($arRequestData, OfferCartPositionProcessor::class);
         Result::setData(CartProcessor::instance()->getCartData());
 
         return Result::get();
@@ -124,7 +138,8 @@ class Cart extends ComponentBase
     }
 
     /**
-     * Clear cart
+     * Set active shipping type with using AJAX request
+     * @deprecated TODO: Remove in version 2
      */
     public function onSetShippingType()
     {
@@ -151,11 +166,21 @@ class Cart extends ComponentBase
 
     /**
      * Get cart data (ajax request)
+     * @deprecated TODO: Remove in version 2
      * @return array
      */
     public function onGetData()
     {
         return CartProcessor::instance()->getCartData();
+    }
+
+    /**
+     * Get cart data with using Result::get method
+     * @return array
+     */
+    public function onGetCartData()
+    {
+        return Result::setData(CartProcessor::instance()->getCartData())->get();
     }
 
     /**
@@ -195,11 +220,13 @@ class Cart extends ComponentBase
     /**
      * Get offers list from cart
      * @param \Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem $obShippingTypeItem
+     * @param \Lovata\OrdersShopaholic\Classes\Item\PaymentMethodItem $obPaymentMethodItem
      * @return \Lovata\OrdersShopaholic\Classes\Collection\CartPositionCollection
      */
-    public function get($obShippingTypeItem = null)
+    public function get($obShippingTypeItem = null, $obPaymentMethodItem = null)
     {
         CartProcessor::instance()->setActiveShippingType($obShippingTypeItem);
+        CartProcessor::instance()->setActivePaymentMethod($obPaymentMethodItem);
 
         return CartProcessor::instance()->get();
     }
@@ -314,5 +341,22 @@ class Cart extends ComponentBase
         $obShippingTypeItem = ShippingTypeItem::make($iShippingTypeID);
 
         return $obShippingTypeItem;
+    }
+
+    /**
+     * Get active payment method from request
+     * @return PaymentMethodItem
+     */
+    public function getActivePaymentMethodFromRequest()
+    {
+        $iPaymentMethodID = Input::get('payment_method_id');
+        if (empty($iPaymentMethodID)) {
+            return null;
+        }
+
+        //Get shipping type item
+        $obPaymentMethodItem = PaymentMethodItem::make($iPaymentMethodID);
+
+        return $obPaymentMethodItem;
     }
 }

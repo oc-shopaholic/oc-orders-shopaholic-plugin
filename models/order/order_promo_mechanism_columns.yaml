@@ -20,13 +20,19 @@ columns:
         type: text
         searchable: false
         sortable: true
+    increase:
+        label: ''
+        type: partial
+        path: ~/plugins/lovata/ordersshopaholic/controllers/orders/_promo_increase.htm
+        searchable: false
+        sortable: false
     discount_value:
-        label: 'lovata.ordersshopaholic::lang.field.discount_value'
+        label: 'lovata.ordersshopaholic::lang.field.price_change_value'
         type: text
         searchable: false
         sortable: true
     discount_type_name:
-        label: 'lovata.ordersshopaholic::lang.field.discount_type'
+        label: 'lovata.ordersshopaholic::lang.field.price_change_type'
         type: text
         searchable: false
         sortable: false

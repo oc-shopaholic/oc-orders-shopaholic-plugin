@@ -92,6 +92,12 @@ class ExtendPaymentMethodFieldsHandler extends AbstractBackendFieldHandler
                 'span'        => 'left',
                 'type'        => 'switch',
             ],
+            'restore_cart'    => [
+                'tab'         => 'lovata.ordersshopaholic::lang.tab.gateway',
+                'label'       => 'lovata.ordersshopaholic::lang.field.restore_cart',
+                'span'        => 'left',
+                'type'        => 'switch',
+            ],
         ];
 
         $obWidget->addTabFields($arFieldList);

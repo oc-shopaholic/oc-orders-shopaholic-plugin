@@ -161,6 +161,15 @@ abstract class AbstractCartPositionProcessor
     }
 
     /**
+     * Get position object
+     * @return CartPosition
+     */
+    public function getPositionObject()
+    {
+        return $this->obCartPosition;
+    }
+
+    /**
      * Validate position data, after add/update actions
      * @return bool
      */

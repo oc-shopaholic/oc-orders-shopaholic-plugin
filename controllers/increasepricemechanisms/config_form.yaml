@@ -1,0 +1,15 @@
+name: 'lovata.ordersshopaholic::lang.increase_price_mechanism.name'
+form: $/lovata/ordersshopaholic/models/increasepricemechanism/fields.yaml
+modelClass: Lovata\OrdersShopaholic\Models\PromoMechanism
+defaultRedirect: lovata/ordersshopaholic/increasepricemechanisms
+create:
+    title: 'backend::lang.form.create_title'
+    redirect: 'lovata/ordersshopaholic/increasepricemechanisms/update/:id'
+    redirectClose: lovata/ordersshopaholic/increasepricemechanisms
+    flashSave: 'lovata.toolbox::lang.message.create_success'
+update:
+    title: 'backend::lang.form.update_title'
+    redirect: lovata/ordersshopaholic/increasepricemechanisms
+    redirectClose: lovata/ordersshopaholic/increasepricemechanisms
+    flashSave: 'lovata.toolbox::lang.message.update_success'
+    flashDelete: 'lovata.toolbox::lang.message.delete_success'

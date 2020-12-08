@@ -30,6 +30,12 @@ fields:
         commentHtml: true
         span: left
         type: checkbox
+    auto_add:
+        label: 'lovata.ordersshopaholic::lang.field.auto_add'
+        comment: 'lovata.ordersshopaholic::lang.field.auto_add_description'
+        commentHtml: true
+        span: right
+        type: checkbox
     property[amount]:
         label: 'lovata.toolbox::lang.field.amount'
         comment: 'lovata.ordersshopaholic::lang.promo_mechanism.amount_description'
@@ -108,3 +114,23 @@ fields:
                 value[Lovata\OrdersShopaholic\Classes\PromoMechanism\PositionCountGreater\PositionCountGreaterDiscountTotalPrice]
         span: left
         type: text
+    property:
+        type: nestedform
+        usePanelStyles: false
+        form:
+            fields:
+                shipping_type_id:
+                    label: 'lovata.ordersshopaholic::lang.field.shipping_type'
+                    commentAbove: 'lovata.ordersshopaholic::lang.promo_mechanism.shipping_type'
+                    span: left
+                    type: checkboxlist
+                    emptyOption: lovata.toolbox::lang.field.empty
+                payment_method_id:
+                    label: 'lovata.ordersshopaholic::lang.field.payment_method'
+                    commentAbove: 'lovata.ordersshopaholic::lang.promo_mechanism.payment_method'
+                    span: right
+                    type: checkboxlist
+                    emptyOption: lovata.toolbox::lang.field.empty
+    increase:
+        type: partial
+        path: $/lovata/ordersshopaholic/controllers/promomechanisms/_increase.htm

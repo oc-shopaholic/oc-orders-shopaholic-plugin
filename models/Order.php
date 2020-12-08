@@ -36,6 +36,7 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
  * @property int                                                                         $manager_id
  * @property int                                                                         $payment_method_id
  * @property int                                                                         $shipping_type_id
+ * @property double                                                                      $weight
  * @property string                                                                      $shipping_price
  * @property float                                                                       $shipping_price_value
  * @property string                                                                      $total_price
@@ -88,12 +89,21 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
  * @property \October\Rain\Database\Collection|\Lovata\CouponsShopaholic\Models\Coupon[] $coupon
  * @method static \October\Rain\Database\Relations\BelongsToMany|\Lovata\CouponsShopaholic\Models\Coupon coupon()
  *
+ * CDEK for Shopaholic
+ * @property \Gabix\CdekShopaholic\Models\CdekDispatch                                   $cdek
+ * @method static \October\Rain\Database\Relations\HasOne|\Gabix\CdekShopaholic\Models\CdekDispatch cdek()
+ *
+ * ApiShip for Shopaholic
+ * @property \Gabix\ApiShipShopaholic\Models\ApiShipDispatch                             $apiship
+ * @method static \October\Rain\Database\Relations\HasOne|\Gabix\ApiShipShopaholic\Models\ApiShipDispatch apiship()
+ *
  * @method static $this getByNumber(string $sNumber)
  * @method static $this getByStatus(int $iStatusID)
  * @method static $this getByShippingType(int $iShippingTypeID)
  * @method static $this getByPaymentMethod(int $iPaymentMethodID)
  * @method static $this getBySecretKey(string $sNumber)
  * @method static $this getByTransactionID(string $sTransactionID)
+ * @method static $this getByPaymentToken(string $sPaymentToken)
  * @method static $this getByCurrency(int $iCurrencyId)
  */
 class Order extends Model
@@ -131,6 +141,7 @@ class Order extends Model
         'currency_id',
         'shipping_tax_percent',
         'manager_id',
+        'payment_data',
     ];
 
     public $cached = [
@@ -179,6 +190,9 @@ class Order extends Model
         'shipping_type'  => [ShippingType::class, 'order' => 'sort_order asc'],
         'currency'       => [Currency::class, 'order' => 'sort_order asc'],
     ];
+
+    public $attachOne = [];
+    public $attachMany = [];
 
     /**
      * Order constructor.
@@ -588,5 +602,24 @@ class Order extends Model
     protected function setManagerIdAttribute($sValue)
     {
         $this->attributes['manager_id'] = (int) $sValue;
+    }
+
+    /**
+     * Get total weight
+     * @return int
+     */
+    protected function getWeightAttribute()
+    {
+        $obOrderPositionList = $this->order_position;
+        if ($obOrderPositionList->isEmpty()) {
+            return 0;
+        }
+
+        $iWeight = 0;
+        foreach ($obOrderPositionList as $obOrderPosition) {
+            $iWeight += (float) $obOrderPosition->weight;
+        }
+
+        return $iWeight;
     }
 }

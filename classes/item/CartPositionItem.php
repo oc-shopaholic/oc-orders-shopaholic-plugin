@@ -2,6 +2,7 @@
 
 use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
 
+use Lovata\Shopaholic\Classes\Helper\MeasureHelper;
 use Lovata\Shopaholic\Models\Offer;
 use Lovata\Shopaholic\Classes\Item\OfferItem;
 use Lovata\Shopaholic\Classes\Helper\CurrencyHelper;
@@ -19,6 +20,8 @@ use Lovata\OrdersShopaholic\Models\CartPosition;
  * @property integer                                                                                       $quantity
  * @property string                                                                                        $currency
  * @property string                                                                                        $currency_code
+ * @property double                                                                                        $weight
+ * @property \Lovata\Shopaholic\Classes\Item\MeasureItem                                                   $weight_measure
  *
  * @property string                                                                                        $price
  * @property float                                                                                         $price_value
@@ -47,6 +50,15 @@ use Lovata\OrdersShopaholic\Models\CartPosition;
  * @property string                                                                                        $discount_price_with_tax
  * @property float                                                                                         $discount_price_with_tax_value
  *
+ * @property string                                                                                        $increase_price
+ * @property float                                                                                         $increase_price_value
+ * @property string                                                                                        $tax_increase_price
+ * @property float                                                                                         $tax_increase_price_value
+ * @property string                                                                                        $increase_price_without_tax
+ * @property float                                                                                         $increase_price_without_tax_value
+ * @property string                                                                                        $increase_price_with_tax
+ * @property float                                                                                         $increase_price_with_tax_value
+ *
  * @property string                                                                                        $price_per_unit
  * @property float                                                                                         $price_per_unit_value
  * @property string                                                                                        $tax_price_per_unit
@@ -73,6 +85,15 @@ use Lovata\OrdersShopaholic\Models\CartPosition;
  * @property float                                                                                         $discount_price_per_unit_without_tax_value
  * @property string                                                                                        $discount_price_per_unit_with_tax
  * @property float                                                                                         $discount_price_per_unit_with_tax_value
+ *
+ * @property string                                                                                        $increase_price_per_unit
+ * @property float                                                                                         $increase_price_per_unit_value
+ * @property string                                                                                        $tax_increase_price_per_unit
+ * @property float                                                                                         $tax_increase_price_per_unit_value
+ * @property string                                                                                        $increase_price_per_unit_without_tax
+ * @property float                                                                                         $increase_price_per_unit_without_tax_value
+ * @property string                                                                                        $increase_price_per_unit_with_tax
+ * @property float                                                                                         $increase_price_per_unit_with_tax_value
  *
  * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer                            $price_data
  *
@@ -170,5 +191,27 @@ class CartPositionItem extends AbstractPositionItem
     protected function getCurrencyCodeAttribute()
     {
         return CurrencyHelper::instance()->getActiveCurrencyCode();
+    }
+
+    /**
+     * Get weight
+     * @return float
+     */
+    protected function getWeightAttribute()
+    {
+        $fWeight = $this->quantity * $this->item->weight;
+
+        return $fWeight;
+    }
+
+    /**
+     * Get weight unit measure
+     * @return \Lovata\Shopaholic\Classes\Item\MeasureItem
+     */
+    protected function getWeightMeasureAttribute()
+    {
+        $obMeasureItem = MeasureHelper::instance()->getWeightMeasureItem();
+
+        return $obMeasureItem;
     }
 }

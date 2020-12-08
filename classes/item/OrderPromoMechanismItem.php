@@ -15,6 +15,7 @@ use Lovata\OrdersShopaholic\Models\OrderPromoMechanism;
  * @property int       $mechanism_id
  * @property string    $name
  * @property string    $type
+ * @property bool      $increase
  * @property int       $priority
  * @property float     $discount_value
  * @property string    $discount_type

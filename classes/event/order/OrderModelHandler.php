@@ -41,24 +41,6 @@ class OrderModelHandler extends ModelHandler
     }
 
     /**
-     * Get model class name
-     * @return string
-     */
-    protected function getModelClass()
-    {
-        return Order::class;
-    }
-
-    /**
-     * Get item class name
-     * @return string
-     */
-    protected function getItemClass()
-    {
-        return OrderItem::class;
-    }
-
-    /**
      * After save event handler
      */
     protected function afterSave()
@@ -89,6 +71,24 @@ class OrderModelHandler extends ModelHandler
 
         OrderListStore::instance()->payment_method->clear($this->obElement->payment_method_id);
         OrderListStore::instance()->payment_method->clear($this->obElement->payment_method_id, $this->obElement->user_id);
+
+        //Remove order positions
+        $obPositionList = $this->obElement->order_position;
+        foreach ($obPositionList as $obPosition) {
+            $obPosition->delete();
+        }
+
+        //Remove promo mechanisms
+        $obPromoMechanismList = $this->obElement->order_promo_mechanism;
+        foreach ($obPromoMechanismList as $obPromoMechanism) {
+            $obPromoMechanism->delete();
+        }
+
+        //Remove tasks
+        $obTaskList = $this->obElement->task;
+        foreach ($obTaskList as $obTask) {
+            $obTask->delete();
+        }
     }
 
     /**
@@ -161,5 +161,23 @@ class OrderModelHandler extends ModelHandler
         ];
 
         return $arResult;
+    }
+
+    /**
+     * Get model class name
+     * @return string
+     */
+    protected function getModelClass()
+    {
+        return Order::class;
+    }
+
+    /**
+     * Get item class name
+     * @return string
+     */
+    protected function getItemClass()
+    {
+        return OrderItem::class;
     }
 }

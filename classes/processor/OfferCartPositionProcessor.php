@@ -63,8 +63,10 @@ class OfferCartPositionProcessor extends AbstractCartPositionProcessor
      */
     protected function preparePositionData()
     {
-        $this->arPositionData['item_id'] = array_get($this->arPositionData, 'offer_id');
-        array_forget($this->arPositionData, 'offer_id');
+        if (!isset($this->arPositionData['item_id'])) {
+            $this->arPositionData['item_id'] = array_get($this->arPositionData, 'offer_id');
+            array_forget($this->arPositionData, 'offer_id');
+        }
 
         parent::preparePositionData();
     }

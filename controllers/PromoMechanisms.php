@@ -26,4 +26,12 @@ class PromoMechanisms extends Controller
         parent::__construct();
         BackendMenu::setContext('Lovata.Shopaholic', 'shopaholic-menu-promo', 'orders-shopaholic-menu-promo-mechanism');
     }
+
+    /**
+     * @param \Lovata\OrdersShopaholic\Models\PromoMechanism $obQuery
+     */
+    public function listExtendQuery($obQuery)
+    {
+        $obQuery->withDecrease();
+    }
 }

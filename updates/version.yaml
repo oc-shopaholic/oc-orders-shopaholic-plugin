@@ -128,3 +128,24 @@
     - 'Added ability to create restrictions for payment methods. Added restrictions of payment methods by shipping type. Thanks for contribution Tsagan Noniev and Rubium Web.'
     - table_create_payment_restrictions_table.php
     - table_create_payment_restrictions_link_table.php
+1.22.1:
+    - 'Changed type of postcode field from int to string.'
+    - table_update_user_addresses_change_postcode.php
+1.23.0:
+    - 'Added color to status. Added onSync(), onGetCartData() methods to Cart component. Added ability to create an order with an active price type. Thanks for contribution definer and pikanji.'
+    - table_update_status_add_color_field.php
+    - seeder_default_status_colors.php
+1.23.1:
+    - 'Added annotations for Subscriptions for Shopaholic plugin.'
+1.24.0:
+    - 'Added "restore cart" field to PaymentMethod model. Added restoreFromOrder() method to CartProcessor class. Added dimensions and weight fields to OrderPosition model.'
+    - table_update_payment_method_add_restore_cart_field.php
+    - table_update_order_positions_add_dimensions_field.php
+1.24.1:
+    - 'Fixed dynamic method in UserItem class. Requires Toolbox plugin version 1.28.1 and later.'
+1.25.0:
+    - 'Added the ability to automatically apply promo mechanisms to cart and order. Added the ability to link the promo mechanism with shipping types and payment methods. Added the ability to set an active payment method in "Cart" component. Adding mechanisms to increase the price of products and orders.'
+    - table_update_promo_mechanism_add_increase_field.php
+    - table_update_order_promo_mechanism_add_increase_field.php
+1.26.0:
+    - 'Improved interface for adding an order position to order in backend. Thanks for contribution Nick Khaetsky.'

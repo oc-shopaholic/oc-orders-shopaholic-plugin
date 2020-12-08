@@ -33,6 +33,8 @@ class OrderPromoMechanismProcessor extends AbstractPromoMechanismProcessor
 
         $this->obOrder = $obOrder;
         $this->obPositionList = $obOrder->order_position;
+        $this->obShippingType = $obOrder->shipping_type;
+        $this->obPaymentMethod = $obOrder->payment_method;
 
         $this->calculate();
     }
@@ -44,6 +46,15 @@ class OrderPromoMechanismProcessor extends AbstractPromoMechanismProcessor
     public function getPositionList()
     {
         return $this->obPositionList;
+    }
+    
+    /**
+     * Get order
+     * @return Order
+     */
+    public function getOrder()
+    {
+        return $this->obOrder;
     }
 
     /**
@@ -97,7 +108,7 @@ class OrderPromoMechanismProcessor extends AbstractPromoMechanismProcessor
             $arPropertyList['element_type'] = $obOrderMechanism->element_type;
             $arPropertyList['element_data'] = $obOrderMechanism->element_data;
 
-            $obMechanism = new $sClassName($obOrderMechanism->priority, $obOrderMechanism->discount_value, $obOrderMechanism->discount_type, $obOrderMechanism->final_discount, $arPropertyList);
+            $obMechanism = new $sClassName($obOrderMechanism->priority, $obOrderMechanism->discount_value, $obOrderMechanism->discount_type, $obOrderMechanism->final_discount, $arPropertyList, $obOrderMechanism->increase);
 
             $obEventMechanism = Event::fire(self::EVENT_MECHANISM_ADD_CHECK_CALLBACK_METHOD, [$obMechanism, $obOrderMechanism->element_id, $obOrderMechanism->element_type, $obOrderMechanism->element_data], true);
             if (!empty($obEventMechanism) && $obEventMechanism instanceof InterfacePromoMechanism) {

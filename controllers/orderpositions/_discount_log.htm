@@ -15,8 +15,7 @@ $arPriceLog = $obPriceData->log;
                 <th><span><?= trans('lovata.toolbox::lang.field.type') ?></span></th>
                 <th colspan="2"><span><?= trans('lovata.toolbox::lang.field.description') ?></span></th>
                 <th><span><?= trans('lovata.shopaholic::lang.field.old_price') ?></span></th>
-                <th><span><?= trans('lovata.toolbox::lang.field.discount_value') ?></span></th>
-                <th><span><?= trans('lovata.toolbox::lang.field.discount_price') ?></span></th>
+                <th><span><?= trans('lovata.ordersshopaholic::lang.field.price_change_value') ?></span></th>
                 <th><span><?= trans('lovata.shopaholic::lang.field.price') ?></span></th>
             </tr>
             </thead>
@@ -45,25 +44,33 @@ $arPriceLog = $obPriceData->log;
                         </span>
                     </td>
                     <td>
-                        <span class="text-danger">
+                        <span class="text-<?= $obMechanism->getIncreaseFlag() ? 'success' : 'danger'; ?>">
                             <?php if (!empty($obMechanism)) {?>
                             <strong>
-                                -<?= $obMechanism->getDiscountValue() ?>
-                                <?=  $obMechanism->getDiscountType() == \Lovata\OrdersShopaholic\Models\PromoMechanism::PERCENT_TYPE ? '%' : '' ?>
+                                <?= $obMechanism->getIncreaseFlag() ? '+' : '-'; ?><?= $obMechanism->getDiscountValue() ?><?=  $obMechanism->getDiscountType() == \Lovata\OrdersShopaholic\Models\PromoMechanism::PERCENT_TYPE ? '%' : '' ?>
                             </strong>
                             <?php }?>
                         </span>
-                    </td>
-                    <td>
-                        <span class="text-danger">
-                            <?php if ($obPriceLogData->discount_price_without_tax_value != $obPriceLogData->discount_price_with_tax_value) {?>
-                                <strong><?= $obPriceLogData->discount_price_without_tax ?></strong><br>
-                                <strong><?= $obPriceLogData->tax_discount_price ?></strong><br>
-                                <strong><?= $obPriceLogData->discount_price_with_tax ?></strong>
-                            <?php } else { ?>
-                                <strong><?= $obPriceLogData->discount_price ?></strong>
-                            <?php }  ?>
-                        </span>
+                        =
+                        <span class="text-<?= $obMechanism->getIncreaseFlag() ? 'success' : 'danger'; ?>">
+                              <?php if ($obMechanism->getIncreaseFlag()) {?>
+                                  <?php if ($obPriceLogData->increase_price_without_tax_value != $obPriceLogData->increase_price_with_tax_value) {?>
+                                    <strong><?= $obPriceLogData->increase_price_without_tax ?></strong><br>
+                                    <strong><?= $obPriceLogData->tax_increase_price ?></strong><br>
+                                    <strong><?= $obPriceLogData->increase_price_with_tax ?></strong>
+                                  <?php } else { ?>
+                                    <strong><?= $obPriceLogData->increase_price ?></strong>
+                                  <?php }  ?>
+                              <?php } else { ?>
+                                  <?php if ($obPriceLogData->discount_price_without_tax_value != $obPriceLogData->discount_price_with_tax_value) {?>
+                                  <strong><?= $obPriceLogData->discount_price_without_tax ?></strong><br>
+                                  <strong><?= $obPriceLogData->tax_discount_price ?></strong><br>
+                                  <strong><?= $obPriceLogData->discount_price_with_tax ?></strong>
+                                  <?php } else { ?>
+                                  <strong><?= $obPriceLogData->discount_price ?></strong>
+                                  <?php }  ?>
+                              <?php } ?>
+                          </span>
                     </td>
                     <td>
                         <span class="text-success">

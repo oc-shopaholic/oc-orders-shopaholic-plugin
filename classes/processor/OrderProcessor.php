@@ -11,6 +11,8 @@ use Lovata\Toolbox\Traits\Helpers\TraitValidationHelper;
 use Lovata\OrdersShopaholic\Models\Order;
 use Lovata\OrdersShopaholic\Models\Status;
 use Lovata\OrdersShopaholic\Models\OrderPosition;
+use Lovata\OrdersShopaholic\Models\OrderPromoMechanism;
+use Lovata\OrdersShopaholic\Models\PromoMechanism;
 use Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem;
 use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
 
@@ -32,6 +34,7 @@ class OrderProcessor
     const EVENT_UPDATE_ORDER_DATA = 'shopaholic.order.update_data';
     const EVENT_UPDATE_ORDER_BEFORE_CREATE = 'shopaholic.order.before_create';
     const EVENT_UPDATE_ORDER_AFTER_CREATE = 'shopaholic.order.after_create';
+    const EVENT_UPDATE_ORDER_RESPONSE_AFTER_CREATE = 'shopaholic.order.response_after_create';
     const EVENT_ORDER_CREATED_USER_MAIL_DATA = 'shopaholic.order.created.user.template.data';
     const EVENT_ORDER_CREATED_MANAGER_MAIL_DATA = 'shopaholic.order.created.manager.template.data';
     const EVENT_GET_SHIPPING_PRICE = 'shopaholic.order.get_shipping_price';
@@ -85,6 +88,7 @@ class OrderProcessor
         if (!empty($this->obOrder)) {
             //Fire event after create order
             Event::fire(self::EVENT_UPDATE_ORDER_AFTER_CREATE, $this->obOrder);
+            $this->attachPromoMechanism();
 
             OrderPromoMechanismProcessor::update($this->obOrder);
             if ($this->obOrder->total_price_value > 0) {
@@ -277,7 +281,7 @@ class OrderProcessor
 
     /**
      * Create order position
-     * @param array $arOrderPositionData
+     * @param array                                                  $arOrderPositionData
      * @param \Lovata\OrdersShopaholic\Classes\Item\CartPositionItem $obCartPositionItem
      * @return bool
      */
@@ -340,6 +344,42 @@ class OrderProcessor
         $this->obPaymentGateway->purchase($this->obOrder);
         if (!$this->obPaymentGateway->isRedirect() && !$this->obPaymentGateway->isSuccessful()) {
             Result::setFalse($this->obPaymentGateway->getResponse())->setMessage($this->obPaymentGateway->getMessage());
+        }
+    }
+
+    /**
+     * Attach promo mechanisms with auto add == true
+     */
+    protected function attachPromoMechanism()
+    {
+        $obPromoMechanismList = PromoMechanism::getAutoAdd()->get();
+        if ($obPromoMechanismList->isEmpty()) {
+            return;
+        }
+
+        /** @var PromoMechanism $obPromoMechanism */
+        foreach ($obPromoMechanismList as $obPromoMechanism) {
+            try {
+                $arPromoMechanismData = [
+                    'order_id'       => $this->obOrder->id,
+                    'mechanism_id'   => $obPromoMechanism->id,
+                    'name'           => $obPromoMechanism->name,
+                    'type'           => $obPromoMechanism->type,
+                    'increase'       => $obPromoMechanism->increase,
+                    'priority'       => $obPromoMechanism->priority,
+                    'discount_value' => $obPromoMechanism->discount_value,
+                    'discount_type'  => $obPromoMechanism->discount_type,
+                    'final_discount' => $obPromoMechanism->final_discount,
+                    'property'       => $obPromoMechanism->property,
+                    'element_id'     => $obPromoMechanism->id,
+                    'element_type'   => PromoMechanism::class,
+                    'element_data'   => [],
+                ];
+
+                $this->obOrder->order_promo_mechanism()->add(OrderPromoMechanism::create($arPromoMechanismData));
+            } catch (\Exception $obException) {
+                return;
+            }
         }
     }
 }
