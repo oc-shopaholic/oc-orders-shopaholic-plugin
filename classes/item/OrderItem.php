@@ -63,6 +63,10 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderItemPromoMechanismProces
  *
  * Coupons for Shopaholic plugin
  * @property array                                                                           $coupon_list
+ *
+ * Downloadable file for Shopaholic
+ * @property bool                                                                            $is_file_access
+ * @property integer                                                                         $file_access_id
  */
 class OrderItem extends ElementItem
 {
