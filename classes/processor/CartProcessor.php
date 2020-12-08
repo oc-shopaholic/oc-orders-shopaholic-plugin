@@ -312,6 +312,19 @@ class CartProcessor
     }
 
     /**
+     * Get active shipping type object
+     * @return ShippingTypeItem
+     */
+    public function getActiveShippingType()
+    {
+        if (empty($this->obPromoProcessor)) {
+            $this->updateCartData();
+        }
+
+        return $this->obShippingTypeItem;
+    }
+
+    /**
      * Set active payment method
      * @param \Lovata\OrdersShopaholic\Classes\Item\PaymentMethodItem $obPaymentMethodItem
      */
@@ -319,6 +332,19 @@ class CartProcessor
     {
         $this->obPaymentMethodItem = $obPaymentMethodItem;
         $this->updateCartData();
+    }
+
+    /**
+     * Get active payment method object
+     * @return PaymentMethodItem
+     */
+    public function getActivePaymentMethod()
+    {
+        if (empty($this->obPromoProcessor)) {
+            $this->updateCartData();
+        }
+
+        return $this->obPaymentMethodItem;
     }
 
     /**

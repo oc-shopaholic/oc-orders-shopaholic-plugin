@@ -139,7 +139,7 @@ class Cart extends ComponentBase
 
     /**
      * Set active shipping type with using AJAX request
-     * @deprecated
+     * @deprecated TODO: Remove in version 2
      */
     public function onSetShippingType()
     {
@@ -166,6 +166,7 @@ class Cart extends ComponentBase
 
     /**
      * Get cart data (ajax request)
+     * @deprecated TODO: Remove in version 2
      * @return array
      */
     public function onGetData()
