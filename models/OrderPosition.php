@@ -349,10 +349,10 @@ class OrderPosition extends Model
     {
         $arPropertyList = $this->property;
         if (empty($arPropertyList) || empty($sField)) {
-            return null;
+            return $arPropertyList;
         }
 
-        return ($sField) ? array_get($arPropertyList, $sField) : $arPropertyList;
+        return array_get($arPropertyList, $sField);
     }
 
     /**
