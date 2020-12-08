@@ -43,7 +43,7 @@
         'without_condition'    => 'Without condition',
         'discount_not_applied' => 'Mechanism for changing prices has not been applied applied',
         'e_address_exists'     => 'This address already exists',
-        'for_the_last_period'  => 'For the last period',
+        'for_the_last_period'  => 'For the last period (30 days)',
     ],
     'field'                    => [
         'status'       => 'Status',

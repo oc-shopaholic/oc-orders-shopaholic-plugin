@@ -133,7 +133,7 @@ class Orders extends Controller
         $obCompletedOrderList = null;
 
         $iCountCompletedOrders = 0;
-        $iCountAllOrders       = Order::whereDate('created_at', '>=', $obDate)->count();
+        $iCountAllOrders = Order::whereDate('created_at', '>=', $obDate)->count();
 
         if (!empty($obStatusCompleted)) {
             $obCompletedOrderList = Order::getByStatus($obStatusCompleted->id)
@@ -143,12 +143,12 @@ class Orders extends Controller
             $iCountCompletedOrders = $obCompletedOrderList->count();
         }
 
-        $this->vars['iCountAllOrders']       = $iCountAllOrders;
+        $this->vars['iCountAllOrders'] = $iCountAllOrders;
         $this->vars['iCountCompletedOrders'] = $iCountCompletedOrders;
         $this->vars['arCompletedTotalPrice'] = $this->getCompletedTotalPriceList($obCompletedOrderList);
 
         return [
-            '.analytics-ajax' => $this->makePartial('analytics'),
+            '^.analytics-ajax' => $this->makePartial('analytics'),
         ];
     }
 
@@ -160,20 +160,17 @@ class Orders extends Controller
     protected function getCompletedTotalPriceList($obOrderList)
     {
         $arResult = [];
-
         if (empty($obOrderList) || !$obOrderList instanceof \October\Rain\Database\Collection) {
             return $arResult;
         }
 
         $obCurrencyList = Currency::all();
-
         if ($obOrderList->isEmpty()) {
             return $arResult;
         }
 
         foreach ($obCurrencyList as $obCurrency) {
             $fPrice = $this->getTotalPriceByCurrency($obOrderList, $obCurrency->id);
-
             if ($fPrice == 0) {
                 continue;
             }
@@ -189,21 +186,20 @@ class Orders extends Controller
 
     /**
      * Get total price by currency
-     * @param  \October\Rain\Database\Collection $obOrderList
-     * @param int $iCurrencyId
+     * @param \October\Rain\Database\Collection $obOrderList
+     * @param int                               $iCurrencyID
      * @return float|int
      */
-    protected function getTotalPriceByCurrency($obOrderList, $iCurrencyId)
+    protected function getTotalPriceByCurrency($obOrderList, $iCurrencyID)
     {
         $fResult = 0;
-
-        if (empty($obOrderList) || !$obOrderList instanceof \October\Rain\Database\Collection || empty($iCurrencyId)) {
+        if (empty($obOrderList) || !$obOrderList instanceof \October\Rain\Database\Collection || empty($iCurrencyID)) {
             return $fResult;
         }
 
         /** @var \Lovata\OrdersShopaholic\Models\Order $obOrder */
         foreach ($obOrderList as $obOrder) {
-            if ($obOrder->currency_id != $iCurrencyId) {
+            if ($obOrder->currency_id != $iCurrencyID) {
                 continue;
             }
 
