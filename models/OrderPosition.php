@@ -342,17 +342,17 @@ class OrderPosition extends Model
 
     /**
      * Get order property value
-     * @param string $sField
+     * @param string|null $sField
      * @return mixed
      */
-    public function getProperty($sField)
+    public function getProperty($sField = null)
     {
         $arPropertyList = $this->property;
         if (empty($arPropertyList) || empty($sField)) {
             return null;
         }
 
-        return array_get($arPropertyList, $sField);
+        return ($sField) ? array_get($arPropertyList, $sField) : $arPropertyList;
     }
 
     /**
