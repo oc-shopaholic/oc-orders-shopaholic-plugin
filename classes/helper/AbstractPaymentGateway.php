@@ -14,6 +14,11 @@ use Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface;
  */
 abstract class AbstractPaymentGateway implements PaymentGatewayInterface
 {
+    const EVENT_PAYMENT_WAITING = 'shopaholic.order.payment.waiting';
+    const EVENT_PAYMENT_SUCCESS = 'shopaholic.order.payment.success';
+    const EVENT_PAYMENT_CANCELED = 'shopaholic.order.payment.canceled';
+    const EVENT_PAYMENT_FAILED = 'shopaholic.order.payment.failed';
+
     /** @var \Lovata\OrdersShopaholic\Models\Order */
     protected $obOrder;
 
@@ -138,7 +143,10 @@ abstract class AbstractPaymentGateway implements PaymentGatewayInterface
         $this->obOrder->status_id = $obStatus->id;
         $this->obOrder->save();
 
-        Event::fire('shopaholic.order.payment.waiting', [&$this->obOrder]);
+        $obUpdatedOrder = Event::fire(self::EVENT_PAYMENT_WAITING, [$this->obOrder]);
+        if (!empty($obUpdatedOrder) && $obUpdatedOrder instanceof Order) {
+            $this->obOrder = $obUpdatedOrder;
+        }
     }
 
     /**
@@ -154,7 +162,10 @@ abstract class AbstractPaymentGateway implements PaymentGatewayInterface
         $this->obOrder->status_id = $obStatus->id;
         $this->obOrder->save();
 
-        Event::fire('shopaholic.order.payment.succeed', [&$this->obOrder]);
+        $obUpdatedOrder = Event::fire(self::EVENT_PAYMENT_SUCCESS, [$this->obOrder]);
+        if (!empty($obUpdatedOrder) && $obUpdatedOrder instanceof Order) {
+            $this->obOrder = $obUpdatedOrder;
+        }
     }
 
     /**
@@ -174,7 +185,10 @@ abstract class AbstractPaymentGateway implements PaymentGatewayInterface
             CartProcessor::instance()->restoreFromOrder($this->obOrder, OfferCartPositionProcessor::class);
         }
 
-        Event::fire('shopaholic.order.payment.canceled', [&$this->obOrder]);
+        $obUpdatedOrder = Event::fire(self::EVENT_PAYMENT_CANCELED, [$this->obOrder]);
+        if (!empty($obUpdatedOrder) && $obUpdatedOrder instanceof Order) {
+            $this->obOrder = $obUpdatedOrder;
+        }
     }
 
     /**
@@ -194,7 +208,10 @@ abstract class AbstractPaymentGateway implements PaymentGatewayInterface
             CartProcessor::instance()->restoreFromOrder($this->obOrder, OfferCartPositionProcessor::class);
         }
 
-        Event::fire('shopaholic.order.payment.failed', [&$this->obOrder]);
+        $obUpdatedOrder = Event::fire(self::EVENT_PAYMENT_FAILED, [$this->obOrder]);
+        if (!empty($obUpdatedOrder) && $obUpdatedOrder instanceof Order) {
+            $this->obOrder = $obUpdatedOrder;
+        }
     }
 
     /**
