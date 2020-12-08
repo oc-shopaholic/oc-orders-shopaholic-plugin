@@ -137,6 +137,8 @@ abstract class AbstractPaymentGateway implements PaymentGatewayInterface
 
         $this->obOrder->status_id = $obStatus->id;
         $this->obOrder->save();
+
+        Event::fire('shopaholic.order.payment.waiting', [&$this->obOrder]);
     }
 
     /**
@@ -151,6 +153,8 @@ abstract class AbstractPaymentGateway implements PaymentGatewayInterface
 
         $this->obOrder->status_id = $obStatus->id;
         $this->obOrder->save();
+
+        Event::fire('shopaholic.order.payment.succeed', [&$this->obOrder]);
     }
 
     /**
@@ -169,6 +173,8 @@ abstract class AbstractPaymentGateway implements PaymentGatewayInterface
         if ($this->obPaymentMethod->restore_cart) {
             CartProcessor::instance()->restoreFromOrder($this->obOrder, OfferCartPositionProcessor::class);
         }
+
+        Event::fire('shopaholic.order.payment.canceled', [&$this->obOrder]);
     }
 
     /**
@@ -187,6 +193,8 @@ abstract class AbstractPaymentGateway implements PaymentGatewayInterface
         if ($this->obPaymentMethod->restore_cart) {
             CartProcessor::instance()->restoreFromOrder($this->obOrder, OfferCartPositionProcessor::class);
         }
+
+        Event::fire('shopaholic.order.payment.failed', [&$this->obOrder]);
     }
 
     /**
