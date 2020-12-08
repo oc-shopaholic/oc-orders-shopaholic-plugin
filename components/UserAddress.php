@@ -222,18 +222,16 @@ class UserAddress extends ComponentBase
             return;
         }
 
-        $arResponse = ['id' => null];
+        Result::setData(['id' => null]);
 
         try {
             $obAddress = UserAddressModel::create($arAddressData);
+
+            if (!empty($obAddress)) {
+                Result::setData(['id' => $obAddress->id]);
+            }
         } catch (\October\Rain\Database\ModelException $obException) {
             $this->processValidationError($obException);
         }
-
-        if (!empty($obAddress)) {
-            $arResponse['id'] = $obAddress->id;
-        }
-
-        Result::setData($arResponse);
     }
 }
