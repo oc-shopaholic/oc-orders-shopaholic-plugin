@@ -132,7 +132,6 @@ class OrderModelHandler extends ModelHandler
     {
         //Get email list
         $mEmailList = $this->getManagerEmailList();
-
         if (empty($mEmailList)) {
             return;
         }
