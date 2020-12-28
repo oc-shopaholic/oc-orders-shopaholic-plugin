@@ -149,3 +149,5 @@
     - table_update_order_promo_mechanism_add_increase_field.php
 1.26.0:
     - 'Improved interface for adding an order position to order in backend. Thanks for contribution Nick Khaetsky.'
+1.27.0:
+    - 'Added payment events to AbstractPaymentGateway class. Fixed bugs.'
