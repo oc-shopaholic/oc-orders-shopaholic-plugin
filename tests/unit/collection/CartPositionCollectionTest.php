@@ -144,7 +144,7 @@ class CartPositionCollectionTest extends CommonTest
 
         self::assertEquals(105.5, $obCollection->getTotalPriceValue(), $sErrorMessage);
     }
-    
+
     /**
      * Create shipping type object for test
      */

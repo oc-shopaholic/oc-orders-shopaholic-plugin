@@ -64,7 +64,7 @@ class CartProcessorTest extends CommonTest
         'password_confirmation' => 'test',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->runPluginRefreshCommand('lovata.popularityshopaholic', false);

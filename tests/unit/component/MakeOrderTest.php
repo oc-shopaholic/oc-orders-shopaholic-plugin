@@ -76,7 +76,7 @@ class MakeOrderTest extends CommonTest
         'price'        => '1,10',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->runPluginRefreshCommand('lovata.popularityshopaholic', false);

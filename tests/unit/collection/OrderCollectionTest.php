@@ -66,7 +66,7 @@ class OrderCollectionTest extends CommonTest
         'password_confirmation' => 'test',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->runPluginRefreshCommand('lovata.popularityshopaholic', false);
@@ -153,7 +153,7 @@ class OrderCollectionTest extends CommonTest
         /** @var OrderItem $obItem */
         $obItem = $obCollection->first();
         self::assertEquals($this->obElement->id, $obItem->id);
-        
+
         $obItem = $obUserCollection->first();
         self::assertEquals($this->obElement->id, $obItem->id);
 
