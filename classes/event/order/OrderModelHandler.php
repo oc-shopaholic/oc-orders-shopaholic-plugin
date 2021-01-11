@@ -1,5 +1,8 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Event\Order;
 
+use Backend\Models\User as BackendUser;
+use Illuminate\Database\Eloquent\Builder;
+
 use Lovata\Toolbox\Classes\Event\ModelHandler;
 use Lovata\Toolbox\Classes\Helper\SendMailHelper;
 
@@ -128,8 +131,8 @@ class OrderModelHandler extends ModelHandler
     protected function sendManagerEmailAfterCreating()
     {
         //Get email list
-        $sEmailList = Settings::getValue('creating_order_manager_email_list');
-        if (empty($sEmailList)) {
+        $mEmailList = $this->getManagerEmailList();
+        if (empty($mEmailList)) {
             return;
         }
 
@@ -142,10 +145,30 @@ class OrderModelHandler extends ModelHandler
         $obSendMailHelper = SendMailHelper::instance();
         $obSendMailHelper->send(
             $sMailTemplate,
-            $sEmailList,
+            $mEmailList,
             $arMailData,
             OrderProcessor::EVENT_ORDER_CREATED_MANAGER_MAIL_DATA,
             true);
+    }
+
+    /**
+     * Get manager email list
+     * @return array|string|null
+     */
+    protected function getManagerEmailList()
+    {
+        $bSendMailAdminGroup = Settings::getValue('creating_order_manager_group');
+
+        if ($bSendMailAdminGroup) {
+            return BackendUser::whereHas('groups', function (Builder $obQuery) {
+                $obQuery->where('user_group_id', Settings::getValue('creating_order_manager_group_selected'));
+            })
+                ->get()
+                ->pluck('email')
+                ->toArray();
+        }
+
+        return Settings::getValue('creating_order_manager_email_list');
     }
 
     /**

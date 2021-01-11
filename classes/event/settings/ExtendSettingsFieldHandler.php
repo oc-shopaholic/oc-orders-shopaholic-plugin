@@ -1,5 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Event\Settings;
 
+use Backend\Models\UserGroup;
 use System\Models\MailTemplate;
 
 use Lovata\Toolbox\Classes\Event\AbstractBackendFieldHandler;
@@ -83,6 +84,31 @@ class ExtendSettingsFieldHandler extends AbstractBackendFieldHandler
                 'trigger' => [
                     'action'    => 'show',
                     'field'     => 'send_email_after_creating_order',
+                    'condition' => 'checked',
+                ],
+            ],
+            'creating_order_manager_group' => [
+                'tab'   => 'lovata.ordersshopaholic::lang.tab.order_settings',
+                'label' => 'lovata.ordersshopaholic::lang.settings.creating_order_manager_group',
+                'comment' => 'lovata.ordersshopaholic::lang.settings.creating_order_manager_group_description',
+                'span'  => 'left',
+                'type'  => 'checkbox',
+                'trigger'     => [
+                    'action'    => 'show',
+                    'field'     => 'send_email_after_creating_order',
+                    'condition' => 'checked',
+                ],
+            ],
+            'creating_order_manager_group_selected' => [
+                'tab'   => 'lovata.ordersshopaholic::lang.tab.order_settings',
+                'label' => 'lovata.ordersshopaholic::lang.settings.creating_order_manager_group_selected',
+                'span'  => 'left',
+                'type'        => 'dropdown',
+                'emptyOption' => 'lovata.toolbox::lang.field.empty',
+                'options'     => UserGroup::all()->pluck('name', 'id'),
+                'trigger'     => [
+                    'action'    => 'show',
+                    'field'     => 'creating_order_manager_group',
                     'condition' => 'checked',
                 ],
             ],
