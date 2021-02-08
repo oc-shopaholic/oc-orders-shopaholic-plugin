@@ -216,6 +216,7 @@ abstract class AbstractCartPositionProcessor
         /** @var CartPosition $obCartPosition */
         foreach ($obCartPositionList as $obCartPosition) {
             $arCartPositionProperty = (array) $obCartPosition->property;
+            $arCartPositionProperty = array_dot($arCartPositionProperty);
             $bCheck = (empty($arItemProperty) && empty($arCartPositionProperty))
                 || (!array_diff($arItemProperty, $arCartPositionProperty) && !array_diff($arCartPositionProperty, $arItemProperty));
             if ($bCheck) {
