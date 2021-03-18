@@ -417,6 +417,7 @@ class CartProcessor
         $obCartPositionList = $this->get();
 
         $arResult = [
+            'id'                   => $this->obCart->id,
             'position'             => [],
             'shipping_price'       => $this->getShippingPriceData()->getData(),
             'position_total_price' => $this->getCartPositionTotalPriceData()->getData(),
