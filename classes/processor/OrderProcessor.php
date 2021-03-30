@@ -3,6 +3,7 @@
 use DB;
 use Lang;
 use Event;
+use Lovata\Shopaholic\Models\Settings;
 use October\Rain\Support\Traits\Singleton;
 
 use Kharanenka\Helper\Result;
@@ -107,7 +108,9 @@ class OrderProcessor
 
         Event::fire(self::EVENT_ORDER_CREATED, $this->obOrder);
 
-        CartProcessor::instance()->clear();
+        if (! Settings::get('disable_cart_clear_on_new_order')) {
+            CartProcessor::instance()->clear();
+        }
 
         $arResult = [
             'id'     => $this->obOrder->id,
