@@ -128,6 +128,7 @@
         'creating_order_mail_template'         => 'Mail template of creating orders (for users)',
         'creating_order_manager_mail_template' => 'Mail template of creating orders (for managers)',
         'creating_order_manager_email_list'    => 'Managers email list',
+        'disable_cart_clear_on_new_order'      => 'Disable cart clear on new order',
 
         'order_create_email' => 'Email for sending mail when creating an order',
     ],

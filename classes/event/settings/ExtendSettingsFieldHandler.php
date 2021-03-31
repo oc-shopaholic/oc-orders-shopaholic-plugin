@@ -108,6 +108,12 @@ class ExtendSettingsFieldHandler extends AbstractBackendFieldHandler
                 'span'  => 'left',
                 'type'  => 'checkbox',
             ],
+            'disable_cart_clear_on_new_order'       => [
+                'tab'   => 'lovata.ordersshopaholic::lang.tab.order_settings',
+                'label' => 'lovata.ordersshopaholic::lang.settings.disable_cart_clear_on_new_order',
+                'span'  => 'left',
+                'type'  => 'checkbox',
+            ],
         ]);
     }
 
