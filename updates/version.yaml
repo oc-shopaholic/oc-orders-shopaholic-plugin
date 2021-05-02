@@ -151,3 +151,5 @@
     - 'Improved interface for adding an order position to order in backend. Thanks for contribution Nick Khaetsky.'
 1.27.0:
     - 'Added payment events to AbstractPaymentGateway class. Fixed bugs.'
+1.28.0:
+    - 'Added composer.json to plugin'
