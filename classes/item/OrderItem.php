@@ -74,6 +74,11 @@ class OrderItem extends ElementItem
 
     const MODEL_CLASS = Order::class;
 
+    public static $arQueryWith = [
+        'order_position',
+        'order_promo_mechanism',
+    ];
+
     public $arPriceField = [
         'shipping_price',
         'old_shipping_price',
@@ -150,10 +155,18 @@ class OrderItem extends ElementItem
     protected function getElementData()
     {
         $arResult = [
-            'order_position_id'        => (array) $this->obElement->order_position->lists('id'),
-            'order_promo_mechanism_id' => (array) $this->obElement->order_promo_mechanism->lists('id'),
+            'order_position_id'        => (array) $this->obElement->order_position->pluck('id')->all(),
+            'order_promo_mechanism_id' => (array) $this->obElement->order_promo_mechanism->pluck('id')->all(),
             'shipping_price_value'     => $this->obElement->getShippingPriceValue(),
         ];
+
+        foreach ($this->obElement->order_position as $obOrderPosition) {
+            OrderPositionItem::make($obOrderPosition->id, $obOrderPosition);
+        }
+
+        foreach ($this->obElement->order_promo_mechanism as $obOrderPromoMechanism) {
+            OrderPromoMechanismItem::make($obOrderPromoMechanism->id, $obOrderPromoMechanism);
+        }
 
         return $arResult;
     }

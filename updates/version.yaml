@@ -155,3 +155,5 @@
     - 'Added setting to disable clearing user cart after creating a new order. Thanks for contribution Sebastiaan Kloos.'
 1.29.0:
     - 'Added composer.json to plugin'
+1.30.0:
+    - 'Reduced count of database queries, if cache is empty. Requires Toolbox plugin version 1.32.0 and later.'
