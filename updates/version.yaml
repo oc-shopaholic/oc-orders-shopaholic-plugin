@@ -152,4 +152,6 @@
 1.27.0:
     - 'Added payment events to AbstractPaymentGateway class. Fixed bugs.'
 1.28.0:
+    - 'Added setting to disable clearing user cart after creating a new order. Thanks for contribution Sebastiaan Kloos.'
+1.29.0:
     - 'Added composer.json to plugin'
