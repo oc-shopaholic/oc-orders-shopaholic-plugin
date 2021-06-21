@@ -21,6 +21,10 @@ class ExtendOrderFieldsHandler extends AbstractBackendFieldHandler
      */
     protected function extendFields($obWidget)
     {
+        if ($obWidget->context === 'create') {
+            return;
+        }
+
         $obPropertyList = OrderProperty::active()->orderBy('sort_order', 'asc')->get();
 
         $this->addOrderPropertyField($obWidget, $obPropertyList);

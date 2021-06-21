@@ -76,8 +76,8 @@ tabs:
             span: right
             path: $/lovata/ordersshopaholic/controllers/orders/_user.htm
             context:
-            - update
-            - preview
+                - update
+                - preview
             type: partial
             tab: 'lovata.ordersshopaholic::lang.field.user'
         active_task:
@@ -85,64 +85,70 @@ tabs:
             span: full
             path: $/lovata/ordersshopaholic/controllers/orders/_active_task.htm
             context:
-            - update
-            - preview
+                - update
+                - preview
             type: partial
             tab: 'lovata.ordersshopaholic::lang.tab.tasks'
         completed_task:
             label: 'lovata.ordersshopaholic::lang.field.completed_task'
             span: full
             path: $/lovata/ordersshopaholic/controllers/orders/_completed_task.htm
-            context:
-            - update
-            - preview
             type: partial
             tab: 'lovata.ordersshopaholic::lang.tab.tasks'
+            context:
+                - update
+                - preview
         payment_data_json:
             label: 'lovata.ordersshopaholic::lang.field.payment_data'
             span: left
             type: partial
             path: ~/plugins/lovata/ordersshopaholic/controllers/orders/_payment_data_json.htm
             tab: 'lovata.ordersshopaholic::lang.tab.payment_data'
+            context:
+                - update
+                - preview
         payment_response_json:
             label: 'lovata.ordersshopaholic::lang.field.payment_response'
             span: right
             type: partial
             path: ~/plugins/lovata/ordersshopaholic/controllers/orders/_payment_response_json.htm
             tab: 'lovata.ordersshopaholic::lang.tab.payment_data'
+            context:
+                - update
+                - preview
         order_promo_mechanism:
             label: 'lovata.ordersshopaholic::lang.field.order_discount_list'
             span: full
             path: $/lovata/ordersshopaholic/controllers/orders/_order_promo_mechanism.htm
-            context:
-            - update
-            - preview
             type: partial
             tab: 'lovata.ordersshopaholic::lang.tab.discount_info'
+            context:
+                - update
+                - preview
         discount_log_position_total_price:
             label: 'lovata.ordersshopaholic::lang.field.order_discount_log_position_total_price'
             span: full
             path: $/lovata/ordersshopaholic/controllers/orders/_discount_log.htm
-            context:
-            - update
-            - preview
             type: partial
             tab: 'lovata.ordersshopaholic::lang.tab.discount_info'
+            context:
+                - update
+                - preview
         discount_log_shipping_price:
             label: 'lovata.ordersshopaholic::lang.field.order_discount_log_sipping_price'
             span: full
             path: $/lovata/ordersshopaholic/controllers/orders/_discount_log.htm
-            context:
-            - update
-            - preview
             type: partial
             tab: 'lovata.ordersshopaholic::lang.tab.discount_info'
+            context:
+                - update
+                - preview
         discount_log_total_price:
             label: 'lovata.ordersshopaholic::lang.field.order_discount_log_total_price'
             span: full
             path: $/lovata/ordersshopaholic/controllers/orders/_discount_log.htm
-            context:
-            - update
-            - preview
             type: partial
             tab: 'lovata.ordersshopaholic::lang.tab.discount_info'
+            context:
+                - update
+                - preview
