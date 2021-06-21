@@ -11,3 +11,4 @@ user:
         list: $/rainlab/user/models/user/columns.yaml
         form: $/rainlab/user/models/user/fields.yaml
         recordsPerPage: 10
+        showSearch: true
