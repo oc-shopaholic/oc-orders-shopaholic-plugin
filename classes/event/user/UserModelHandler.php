@@ -149,7 +149,7 @@ class UserModelHandler
     }
 
     /**
-     * Extend class UserItem and add "getOrderAttribute" method
+     * Extend class UserItem and add "addOrderAttribute" method
      */
     public function addOrderAttribute()
     {
