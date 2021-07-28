@@ -339,7 +339,7 @@ class MakeOrder extends ComponentSubmitForm
             return;
         }
 
-        $sPassword = md5(microtime(true));
+        $sPassword = str_random(8);
 
         //Get user email
         if (Settings::getValue('generate_fake_email') && (!isset($this->arUserData['email']) || empty($this->arUserData['email']))) {
