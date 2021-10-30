@@ -1,4 +1,4 @@
-<?php namespace Lovata\Ordersshopaholic\Models;
+<?php namespace Lovata\OrdersShopaholic\Models;
 
 use Model;
 use October\Rain\Database\Traits\Validation;
