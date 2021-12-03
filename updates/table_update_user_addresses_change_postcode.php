@@ -19,7 +19,7 @@ class TableUpdateUserAddressesChangePostcode extends Migration
             return;
         }
 
-        $arPostCodeList = (array) UserAddress::lists('postcode', 'id');
+        $arPostCodeList = (array) UserAddress::pluck('postcode', 'id')->all();
 
         Schema::table(self::TABLE_NAME, function (Blueprint $obTable) {
             $obTable->string('postcode_temp')->after('address2')->nullable();
@@ -44,7 +44,7 @@ class TableUpdateUserAddressesChangePostcode extends Migration
             return;
         }
 
-        $arPostCodeList = (array) UserAddress::lists('postcode', 'id');
+        $arPostCodeList = (array) UserAddress::pluck('postcode', 'id')->all();
 
         Schema::table(self::TABLE_NAME, function (Blueprint $obTable) {
             $obTable->integer('postcode_temp')->after('address2')->nullable();
