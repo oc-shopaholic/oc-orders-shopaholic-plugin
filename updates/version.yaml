@@ -159,3 +159,5 @@
     - 'Reduced count of database queries, if cache is empty. Requires Toolbox plugin version 1.32.0 and later.'
 1.31.0:
     - 'Added search panel in user relation config (RainLab.User plugin)'
+1.31.1:
+    - 'Small fix.'
