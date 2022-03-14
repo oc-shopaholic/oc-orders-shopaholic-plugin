@@ -290,7 +290,7 @@ class OrderPosition extends Model
      */
     public function getCategoryOptions()
     {
-        $arResult = (array) Category::orderBy('nest_left')->lists('name', 'id');
+        $arResult = (array) Category::orderBy('nest_left')->pluck('name', 'id')->all();
 
         return $arResult;
     }
@@ -312,7 +312,7 @@ class OrderPosition extends Model
             return [];
         }
 
-        $arResult = (array) Product::active()->getByCategory($iCategoryID)->orderBy('name')->lists('name', 'id');
+        $arResult = (array) Product::active()->getByCategory($iCategoryID)->orderBy('name')->pluck('name', 'id')->all();
 
         return $arResult;
     }
@@ -335,7 +335,7 @@ class OrderPosition extends Model
             return [];
         }
 
-        $arResult = (array) Offer::active()->getByProduct($iProductID)->orderBy('name')->lists('name', 'id');
+        $arResult = (array) Offer::active()->getByProduct($iProductID)->orderBy('name')->pluck('name', 'id')->all();
 
         return $arResult;
     }

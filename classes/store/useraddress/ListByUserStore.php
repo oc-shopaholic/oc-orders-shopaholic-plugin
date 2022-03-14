@@ -19,7 +19,7 @@ class ListByUserStore extends AbstractStoreWithParam
      */
     protected function getIDListFromDB() : array
     {
-        $arElementIDList = (array) UserAddress::getByUser($this->sValue)->lists('id');
+        $arElementIDList = (array) UserAddress::getByUser($this->sValue)->pluck('id')->all();
 
         return $arElementIDList;
     }

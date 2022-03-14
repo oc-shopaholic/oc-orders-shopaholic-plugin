@@ -20,9 +20,9 @@ class StatusListStore extends AbstractStoreWithTwoParam
     protected function getIDListFromDB() : array
     {
         if (empty($this->sAdditionParam)) {
-            $arElementIDList = (array) Order::getByStatus($this->sValue)->lists('id');
+            $arElementIDList = (array) Order::getByStatus($this->sValue)->pluck('id')->all();
         } else {
-            $arElementIDList = (array) Order::getByUser($this->sAdditionParam)->getByStatus($this->sValue)->lists('id');
+            $arElementIDList = (array) Order::getByUser($this->sAdditionParam)->getByStatus($this->sValue)->pluck('id')->all();
         }
 
         return $arElementIDList;

@@ -78,7 +78,7 @@ class ProductModelHandler extends ModelHandler
     protected function removeCartPositionList()
     {
         //Get offer ID list
-        $arOfferIDList = $this->obElement->offer()->active()->lists('id');
+        $arOfferIDList = $this->obElement->offer()->active()->pluck('id')->all();
         if (empty($arOfferIDList)) {
             return;
         }

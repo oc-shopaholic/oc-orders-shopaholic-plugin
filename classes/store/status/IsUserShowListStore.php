@@ -19,7 +19,7 @@ class IsUserShowListStore extends AbstractStoreWithoutParam
      */
     protected function getIDListFromDB() : array
     {
-        $arElementIDList = (array) Status::isUserShow()->lists('id');
+        $arElementIDList = (array) Status::isUserShow()->pluck('id')->all();
 
         return $arElementIDList;
     }

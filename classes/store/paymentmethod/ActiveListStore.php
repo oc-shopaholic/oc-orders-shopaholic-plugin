@@ -19,7 +19,7 @@ class ActiveListStore extends AbstractStoreWithoutParam
      */
     protected function getIDListFromDB() : array
     {
-        $arElementIDList = (array) PaymentMethod::active()->lists('id');
+        $arElementIDList = (array) PaymentMethod::active()->pluck('id')->all();
 
         return $arElementIDList;
     }

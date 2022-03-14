@@ -168,7 +168,7 @@ class PromoMechanism extends Model
      */
     public function getShippingTypeIdOptions()
     {
-        $arResult = (array) ShippingType::orderBy('sort_order', 'asc')->lists('name', 'id');
+        $arResult = (array) ShippingType::orderBy('sort_order', 'asc')->pluck('name', 'id')->all();
 
         return $arResult;
     }
@@ -179,7 +179,7 @@ class PromoMechanism extends Model
      */
     public function getPaymentMethodIdOptions()
     {
-        $arResult = (array) PaymentMethod::orderBy('sort_order', 'asc')->lists('name', 'id');
+        $arResult = (array) PaymentMethod::orderBy('sort_order', 'asc')->pluck('name', 'id')->all();
 
         return $arResult;
     }

@@ -547,7 +547,7 @@ class CartProcessor
         }
 
         /** @var array $arCartPositionIDList */
-        $arCartPositionIDList = CartPosition::getByCart($this->obCart->id)->lists('id');
+        $arCartPositionIDList = CartPosition::getByCart($this->obCart->id)->pluck('id')->all();
         $this->obCartPositionList = CartPositionCollection::make($arCartPositionIDList);
     }
 

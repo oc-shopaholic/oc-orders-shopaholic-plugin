@@ -19,7 +19,7 @@ class ActiveListStore extends AbstractStoreWithoutParam
      */
     protected function getIDListFromDB() : array
     {
-        $arElementIDList = (array) ShippingType::active()->lists('id');
+        $arElementIDList = (array) ShippingType::active()->pluck('id')->all();
 
         return $arElementIDList;
     }
