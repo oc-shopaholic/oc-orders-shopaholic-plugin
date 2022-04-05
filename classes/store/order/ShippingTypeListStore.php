@@ -20,9 +20,9 @@ class ShippingTypeListStore extends AbstractStoreWithTwoParam
     protected function getIDListFromDB() : array
     {
         if (empty($this->sAdditionParam)) {
-            $arElementIDList = (array) Order::getByShippingType($this->sValue)->lists('id');
+            $arElementIDList = (array) Order::getByShippingType($this->sValue)->pluck('id')->all();
         } else {
-            $arElementIDList = (array) Order::getByUser($this->sAdditionParam)->getByShippingType($this->sValue)->lists('id');
+            $arElementIDList = (array) Order::getByUser($this->sAdditionParam)->getByShippingType($this->sValue)->pluck('id')->all();
         }
 
         return $arElementIDList;

@@ -20,9 +20,9 @@ class PaymentMethodListStore extends AbstractStoreWithTwoParam
     protected function getIDListFromDB() : array
     {
         if (empty($this->sAdditionParam)) {
-            $arElementIDList = (array) Order::getByPaymentMethod($this->sValue)->lists('id');
+            $arElementIDList = (array) Order::getByPaymentMethod($this->sValue)->pluck('id')->all();
         } else {
-            $arElementIDList = (array) Order::getByUser($this->sAdditionParam)->getByPaymentMethod($this->sValue)->lists('id');
+            $arElementIDList = (array) Order::getByUser($this->sAdditionParam)->getByPaymentMethod($this->sValue)->pluck('id')->all();
         }
 
         return $arElementIDList;

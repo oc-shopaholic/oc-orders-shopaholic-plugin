@@ -19,7 +19,7 @@ class UserListStore extends AbstractStoreWithParam
      */
     protected function getIDListFromDB() : array
     {
-        $arElementIDList = (array) Order::getByUser($this->sValue)->orderBy('id', 'desc')->lists('id');
+        $arElementIDList = (array) Order::getByUser($this->sValue)->orderBy('id', 'desc')->pluck('id')->all();
 
         return $arElementIDList;
     }
