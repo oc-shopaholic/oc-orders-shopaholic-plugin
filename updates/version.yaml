@@ -161,3 +161,5 @@
     - 'Added search panel in user relation config (RainLab.User plugin)'
 1.31.1:
     - 'Small fix.'
+1.31.2:
+    - 'Change lists method to pluck method. Thanks for contribution Nick Khaetsky.'
