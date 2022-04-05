@@ -3,6 +3,7 @@ modelClass: Lovata\OrdersShopaholic\Models\ShippingType
 list: $/lovata/ordersshopaholic/models/shippingtype/columns.yaml
 recordUrl: 'lovata/ordersshopaholic/shippingtypes/update/:id'
 noRecordsMessage: 'backend::lang.list.no_records'
+recordsPerPage: '25'
 showSetup: true
 showCheckboxes: true
 defaultSort:
