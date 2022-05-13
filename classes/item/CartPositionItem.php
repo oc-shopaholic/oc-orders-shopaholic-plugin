@@ -1,5 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Item;
 
+use App;
 use Lovata\OrdersShopaholic\Classes\Processor\CartProcessor;
 
 use Lovata\Shopaholic\Classes\Helper\MeasureHelper;
@@ -145,7 +146,9 @@ class CartPositionItem extends AbstractPositionItem
 
         $sClassName = $this->arItemTypeList[$sModelClass]['order_processor'];
 
-        $obPositionProcessor = app($sClassName, [$this]);
+        $obPositionProcessor = App::make($sClassName, [
+            'obCartPosition' => $this
+        ]);
         $this->obOrderPositionProcessor = $obPositionProcessor;
 
         return $obPositionProcessor;
