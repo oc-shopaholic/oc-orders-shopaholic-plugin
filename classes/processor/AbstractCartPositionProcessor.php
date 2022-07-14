@@ -138,19 +138,27 @@ abstract class AbstractCartPositionProcessor
     /**
      * Remove position from current cart
      * @param int $iPositionID
+     * @param string $sType
      * @return void
      * @throws \Exception
      */
-    public function restore($iPositionID)
+    public function restore($iPositionID, $sType = 'offer')
     {
         if (empty($iPositionID)) {
             return;
         }
 
-        $this->arPositionData = [
-            'id'        => $iPositionID,
-            'item_type' => static::MODEL_CLASS,
-        ];
+        if ($sType == 'position') {
+            $this->arPositionData = [
+                'id'        => $iPositionID,
+                'item_type' => static::MODEL_CLASS,
+            ];
+        } else {
+            $this->arPositionData = [
+                'item_id'   => $iPositionID,
+                'item_type' => static::MODEL_CLASS,
+            ];
+        }
 
         $this->findPosition();
         if (empty($this->obCartPosition)) {
