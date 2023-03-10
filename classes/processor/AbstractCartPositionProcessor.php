@@ -205,6 +205,7 @@ abstract class AbstractCartPositionProcessor
 
         //Get item property
         $arItemProperty = (array) array_get($this->arPositionData, 'property');
+        $arItemProperty = array_dot($arItemProperty);
 
         //Get cart position list by item_id and item_type
         $obCartPositionList = CartPosition::withTrashed()->getByCart($this->obCart->id)->getByItemType($sItemType)->getByItemID($iItemID)->get();
@@ -215,6 +216,7 @@ abstract class AbstractCartPositionProcessor
         /** @var CartPosition $obCartPosition */
         foreach ($obCartPositionList as $obCartPosition) {
             $arCartPositionProperty = (array) $obCartPosition->property;
+            $arCartPositionProperty = array_dot($arCartPositionProperty);
             $bCheck = (empty($arItemProperty) && empty($arCartPositionProperty))
                 || (!array_diff($arItemProperty, $arCartPositionProperty) && !array_diff($arCartPositionProperty, $arItemProperty));
             if ($bCheck) {
