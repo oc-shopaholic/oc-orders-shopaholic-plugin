@@ -14,7 +14,6 @@ fields:
         label: 'lovata.toolbox::lang.field.type'
         span: full
         type: dropdown
-        dependsOn: type
         commentHtml: true
     discount_value:
         label: 'lovata.toolbox::lang.field.discount_value'
