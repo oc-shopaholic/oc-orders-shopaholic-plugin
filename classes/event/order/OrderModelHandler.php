@@ -1,5 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Event\Order;
 
+use Site;
 use Lovata\Toolbox\Classes\Event\ModelHandler;
 use Lovata\Toolbox\Classes\Helper\SendMailHelper;
 
@@ -8,6 +9,7 @@ use Lovata\OrdersShopaholic\Models\Order;
 use Lovata\OrdersShopaholic\Classes\Item\OrderItem;
 use Lovata\OrdersShopaholic\Classes\Processor\OrderProcessor;
 use Lovata\OrdersShopaholic\Classes\Store\OrderListStore;
+use System\Models\MailTemplate;
 
 /**
  * Class OrderModelHandler
@@ -112,6 +114,11 @@ class OrderModelHandler extends ModelHandler
 
         //Get mail template
         $sMailTemplate = Settings::getValue('creating_order_mail_template', 'lovata.ordersshopaholic::mail.create_order_user');
+        $iSiteCode = Site::getSiteIdFromContext();
+        $sSiteMailTemplate = $sMailTemplate.'_site_'.$iSiteCode;
+        if (MailTemplate::where('code', $sSiteMailTemplate)->exists()) {
+            $sMailTemplate = $sSiteMailTemplate;
+        }
 
         $obSendMailHelper = SendMailHelper::instance();
         $obSendMailHelper->send(
