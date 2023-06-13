@@ -8,6 +8,7 @@ use October\Rain\Database\Traits\Encryptable;
 use Kharanenka\Scope\ActiveField;
 use Kharanenka\Scope\CodeField;
 
+use Lovata\Toolbox\Traits\Models\MultisiteHelperTrait;
 use Lovata\Toolbox\Traits\Helpers\TraitCached;
 use Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface;
 
@@ -25,6 +26,7 @@ use Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface;
  * @property string                                                         $name
  * @property string                                                         $preview_text
  * @property int                                                            $sort_order
+ * @property array                                                          $site_list
  * @property \October\Rain\Argon\Argon                                      $created_at
  * @property \October\Rain\Argon\Argon                                      $updated_at
  *
@@ -64,6 +66,7 @@ class PaymentMethod extends Model
     use Sortable;
     use TraitCached;
     use Encryptable;
+    use MultisiteHelperTrait;
 
     const EVENT_GET_GATEWAY_LIST = 'shopaholic.payment_method.get.gateway.list';
 
@@ -94,7 +97,7 @@ class PaymentMethod extends Model
         'fail_status'   => [Status::class, 'order' => 'sort_order asc'],
     ];
 
-    public $jsonable = [];
+    public $jsonable = ['site_list'];
     public $encryptable = ['gateway_property'];
     public $hidden = ['gateway_property'];
     public $fillable = [

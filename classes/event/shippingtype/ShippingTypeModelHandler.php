@@ -1,5 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Event\ShippingType;
 
+use Site;
 use Lovata\Toolbox\Classes\Event\ModelHandler;
 
 use Lovata\OrdersShopaholic\Models\ShippingType;
@@ -54,6 +55,7 @@ class ShippingTypeModelHandler extends ModelHandler
     {
         parent::afterCreate();
         $this->clearSortingList();
+        $this->clearCachedListBySite();
     }
 
     /**
@@ -62,6 +64,10 @@ class ShippingTypeModelHandler extends ModelHandler
     protected function afterSave()
     {
         parent::afterSave();
+
+        if ($this->isFieldChanged('site_list')) {
+            $this->clearCachedListBySite();
+        }
 
         $this->checkFieldChanges('active', ShippingTypeListStore::instance()->active);
     }
@@ -77,6 +83,7 @@ class ShippingTypeModelHandler extends ModelHandler
         if ($this->obElement->active) {
             ShippingTypeListStore::instance()->active->clear();
         }
+        $this->clearCachedListBySite();
     }
 
     /**
@@ -85,5 +92,21 @@ class ShippingTypeModelHandler extends ModelHandler
     public function clearSortingList()
     {
         ShippingTypeListStore::instance()->sorting->clear();
+    }
+
+    /**
+     * Clear filtered entities by site ID
+     */
+    protected function clearCachedListBySite()
+    {
+        /** @var \October\Rain\Database\Collection $obSiteList */
+        $obSiteList = Site::listEnabled();
+        if (empty($obSiteList) || $obSiteList->isEmpty()) {
+            return;
+        }
+
+        foreach ($obSiteList as $obSite) {
+            ShippingTypeListStore::instance()->site->clear($obSite->id);
+        }
     }
 }

@@ -1,5 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Collection;
 
+use Site;
 use Lovata\Toolbox\Classes\Collection\ElementCollection;
 
 use Lovata\OrdersShopaholic\Classes\Item\PaymentMethodItem;
@@ -51,7 +52,7 @@ class PaymentMethodCollection extends ElementCollection
         $arElementList = $this->all();
         $arExcludeIDList = [];
 
-        /** @var ShippingTypeItem $obElement */
+        /** @var PaymentMethodItem $obElement */
         foreach ($arElementList as $obElement) {
             if (!$obElement->isAvailable($arData)) {
                 $arExcludeIDList[] = $obElement->id;
@@ -87,5 +88,17 @@ class PaymentMethodCollection extends ElementCollection
         }
 
         return PaymentMethodItem::make(null);
+    }
+
+    /**
+     * Apply filter by site_list field
+     * @return $this
+     */
+    public function site($iSiteID = null): self
+    {
+        $iSiteID = empty($iSiteID) ? Site::getSiteIdFromContext() : $iSiteID;
+        $arResultIDList = PaymentMethodListStore::instance()->site->get($iSiteID);
+
+        return $this->intersect($arResultIDList);
     }
 }

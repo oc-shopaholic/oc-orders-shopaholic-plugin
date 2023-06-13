@@ -26,6 +26,12 @@ tabs:
             tab: 'lovata.toolbox::lang.tab.settings'
             span: left
             type: text
+        site_list:
+            label: 'lovata.toolbox::lang.field.site_list'
+            span: left
+            type: checkboxlist
+            quickselect: true
+            tab: 'lovata.toolbox::lang.tab.settings'
         api_class:
             label: 'lovata.ordersshopaholic::lang.field.shipping_type_api_class'
             tab: 'lovata.toolbox::lang.tab.settings'

@@ -1,5 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Event\PaymentMethod;
 
+use Site;
 use Lovata\Toolbox\Classes\Event\ModelHandler;
 
 use Lovata\OrdersShopaholic\Models\PaymentMethod;
@@ -37,7 +38,7 @@ class PaymentMethodModelHandler extends ModelHandler
     {
         return PaymentMethod::class;
     }
-    
+
     /**
      * Get item class name
      * @return string
@@ -54,6 +55,8 @@ class PaymentMethodModelHandler extends ModelHandler
     {
         parent::afterCreate();
         $this->clearSortingList();
+
+        $this->clearCachedListBySite();
     }
 
     /**
@@ -64,6 +67,10 @@ class PaymentMethodModelHandler extends ModelHandler
         parent::afterSave();
 
         $this->checkFieldChanges('active', PaymentMethodListStore::instance()->active);
+
+        if ($this->isFieldChanged('site_list')) {
+            $this->clearCachedListBySite();
+        }
     }
 
     /**
@@ -77,6 +84,7 @@ class PaymentMethodModelHandler extends ModelHandler
         if ($this->obElement->active) {
             PaymentMethodListStore::instance()->active->clear();
         }
+        $this->clearCachedListBySite();
     }
 
     /**
@@ -85,5 +93,21 @@ class PaymentMethodModelHandler extends ModelHandler
     public function clearSortingList()
     {
         PaymentMethodListStore::instance()->sorting->clear();
+    }
+
+    /**
+     * Clear filtered entities by site ID
+     */
+    protected function clearCachedListBySite()
+    {
+        /** @var \October\Rain\Database\Collection $obSiteList */
+        $obSiteList = Site::listEnabled();
+        if (empty($obSiteList) || $obSiteList->isEmpty()) {
+            return;
+        }
+
+        foreach ($obSiteList as $obSite) {
+            PaymentMethodListStore::instance()->site->clear($obSite->id);
+        }
     }
 }

@@ -165,3 +165,7 @@
     - 'Change lists method to pluck method. Thanks for contribution Nick Khaetsky.'
 1.31.3:
     - 'Fix errors for integration with v3. Thanks for contribution Nick Khaetsky.'
+1.32.0:
+    - 'Added the ability to link shipping types, payment methods to different sites. Added site() method to ShippingTypeCollection, PaymentMethodCollection classes.'
+    - table_update_payment_methods_add_site_list_field.php
+    - table_update_shipping_types_add_site_list_field.php

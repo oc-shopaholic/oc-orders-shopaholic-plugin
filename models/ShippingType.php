@@ -8,6 +8,7 @@ use October\Rain\Database\Traits\Validation;
 use Kharanenka\Scope\ActiveField;
 use Kharanenka\Scope\CodeField;
 
+use Lovata\Toolbox\Traits\Models\MultisiteHelperTrait;
 use Lovata\Toolbox\Classes\Helper\PriceHelper;
 use Lovata\Toolbox\Traits\Helpers\TraitCached;
 use Lovata\Toolbox\Traits\Helpers\PriceHelperTrait;
@@ -30,6 +31,7 @@ use Lovata\Toolbox\Traits\Helpers\PriceHelperTrait;
  * @property string                                                                           $price
  * @property float                                                                            $price_value
  * @property int                                                                              $sort_order
+ * @property array                                                                            $site_list
  * @property \October\Rain\Argon\Argon                                                        $created_at
  * @property \October\Rain\Argon\Argon                                                        $updated_at
  *
@@ -55,6 +57,7 @@ class ShippingType extends Model
     use CodeField;
     use TraitCached;
     use PriceHelperTrait;
+    use MultisiteHelperTrait;
 
     const EVENT_GET_SHIPPING_PRICE = 'shopaholic.shipping_type.get_price';
     const EVENT_GET_SHIPPING_TYPE_API_CLASS_LIST = 'shopaholic.shipping_type.get_api_class_list';
@@ -78,7 +81,7 @@ class ShippingType extends Model
         'code' => 'lovata.toolbox::lang.field.code',
     ];
 
-    public $jsonable = ['property'];
+    public $jsonable = ['property', 'site_list'];
 
     public $fillable = [
         'active',

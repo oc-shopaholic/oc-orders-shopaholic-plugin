@@ -12,14 +12,20 @@ fields:
         label: 'lovata.toolbox::lang.field.code'
         span: right
         type: text
-    preview_text:
-        label: 'lovata.toolbox::lang.field.description'
-        span: full
-        type: textarea
-        size: small
-
 tabs:
     fields:
+        preview_text:
+            label: 'lovata.toolbox::lang.field.description'
+            span: full
+            type: textarea
+            size: small
+            tab: 'lovata.toolbox::lang.tab.settings'
+        site_list:
+            label: 'lovata.toolbox::lang.field.site_list'
+            span: left
+            type: checkboxlist
+            quickselect: true
+            tab: 'lovata.toolbox::lang.tab.settings'
         payment_restriction:
             span: full
             path: $/lovata/ordersshopaholic/controllers/paymentmethods/_payment_restriction.htm

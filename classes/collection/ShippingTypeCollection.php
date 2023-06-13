@@ -1,5 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Collection;
 
+use Site;
 use Lovata\Toolbox\Classes\Collection\ElementCollection;
 
 use Lovata\OrdersShopaholic\Classes\Item\ShippingTypeItem;
@@ -87,5 +88,17 @@ class ShippingTypeCollection extends ElementCollection
         }
 
         return ShippingTypeItem::make(null);
+    }
+
+    /**
+     * Apply filter by site_list field
+     * @return $this
+     */
+    public function site($iSiteID = null): self
+    {
+        $iSiteID = empty($iSiteID) ? Site::getSiteIdFromContext() : $iSiteID;
+        $arResultIDList = ShippingTypeListStore::instance()->site->get($iSiteID);
+
+        return $this->intersect($arResultIDList);
     }
 }
