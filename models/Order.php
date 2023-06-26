@@ -36,6 +36,7 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
  * @property int                                                                         $manager_id
  * @property int                                                                         $payment_method_id
  * @property int                                                                         $shipping_type_id
+ * @property int                                                                         $site_id
  * @property double                                                                      $weight
  * @property string                                                                      $shipping_price
  * @property float                                                                       $shipping_price_value
@@ -141,6 +142,7 @@ class Order extends Model
         'shipping_tax_percent',
         'manager_id',
         'payment_data',
+        'site_id',
     ];
 
     public $cached = [
@@ -167,10 +169,10 @@ class Order extends Model
             'condition' => 'item_type = \Lovata\Shopaholic\Models\Offer',
         ],
         'order_promo_mechanism' => [
-            OrderPromoMechanism::class
+            OrderPromoMechanism::class,
         ],
         'task'                  => [
-            Task::class
+            Task::class,
         ],
         'active_task'           => [
             Task::class,

@@ -26,3 +26,8 @@ scopes:
         label: 'lovata.toolbox::lang.field.updated_at'
         type: daterange
         conditions: updated_at >= ':after' AND updated_at <= ':before'
+    site_id:
+        label: 'lovata.toolbox::lang.field.site'
+        modelClass: System\Models\SiteDefinition
+        nameFrom: name
+        conditions: site_id in (:filtered)

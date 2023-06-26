@@ -3,6 +3,7 @@
 use DB;
 use Lang;
 use Event;
+use Site;
 use Lovata\Shopaholic\Models\Settings;
 use October\Rain\Support\Traits\Singleton;
 
@@ -139,6 +140,7 @@ class OrderProcessor
     protected function initOrderData($arOrderData)
     {
         $this->arOrderData = $arOrderData;
+        $this->arOrderData['site_id'] = Site::getSiteIdFromContext();
         if (!empty($this->arOrderData)) {
             return;
         }

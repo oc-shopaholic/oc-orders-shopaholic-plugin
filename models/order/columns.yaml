@@ -48,6 +48,12 @@ columns:
         path: $/lovata/ordersshopaholic/controllers/orders/_total_price_column.htm
         searchable: false
         sortable: false
+    site_id:
+        label: 'lovata.toolbox::lang.field.site_id'
+        type: text
+        searchable: false
+        sortable: true
+        width: 100px
     id:
         label: 'lovata.toolbox::lang.field.id'
         type: text

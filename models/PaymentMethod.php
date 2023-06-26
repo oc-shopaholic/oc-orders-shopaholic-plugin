@@ -4,6 +4,7 @@ use Model;
 use October\Rain\Database\Traits\Sortable;
 use October\Rain\Database\Traits\Validation;
 use October\Rain\Database\Traits\Encryptable;
+use System\Models\SiteDefinition;
 
 use Kharanenka\Scope\ActiveField;
 use Kharanenka\Scope\CodeField;
@@ -42,6 +43,9 @@ use Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface;
  *
  * @property \October\Rain\Database\Collection|Order[]                      $order
  * @method static Order|\October\Rain\Database\Relations\HasMany order()
+ *
+ * @property \October\Rain\Database\Collection|SiteDefinition[]             $site
+ * @method \October\Rain\Database\Relations\MorphToMany|SiteDefinition site()
  *
  * @property Status                                                         $before_status
  * @property Status                                                         $after_status
@@ -96,8 +100,16 @@ class PaymentMethod extends Model
         'cancel_status' => [Status::class, 'order' => 'sort_order asc'],
         'fail_status'   => [Status::class, 'order' => 'sort_order asc'],
     ];
+    public $morphToMany = [
+        'site' => [
+            SiteDefinition::class,
+            'name'     => 'entity',
+            'table'    => 'lovata_shopaholic_entity_site_relation',
+            'otherKey' => 'site_id',
+        ],
+    ];
 
-    public $jsonable = ['site_list'];
+    public $jsonable = [];
     public $encryptable = ['gateway_property'];
     public $hidden = ['gateway_property'];
     public $fillable = [

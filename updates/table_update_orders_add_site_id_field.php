@@ -7,11 +7,11 @@ use October\Rain\Database\Updates\Migration;
 /**
  * @package Lovata\OrdersShopaholic\Updates
  */
-class TableUpdateShippingTypesAddSiteListField extends Migration
+class TableUpdateOrdersAddSiteIDField extends Migration
 {
-    const TABLE_NAME = 'lovata_orders_shopaholic_shipping_types';
+    const TABLE_NAME = 'lovata_orders_shopaholic_orders';
     const COLUMN_LIST = [
-        'site_list',
+        'site_id',
     ];
 
     /**
@@ -19,12 +19,16 @@ class TableUpdateShippingTypesAddSiteListField extends Migration
      */
     public function up()
     {
+        if (!Schema::hasTable(self::TABLE_NAME)) {
+            return;
+        }
+
         if (!Schema::hasTable(self::TABLE_NAME) || Schema::hasColumns(self::TABLE_NAME, self::COLUMN_LIST)) {
             return;
         }
 
         Schema::table(self::TABLE_NAME, function (Blueprint $obTable) {
-            $obTable->json('site_list')->nullable();
+            $obTable->integer('site_id')->nullable();
         });
     }
 
