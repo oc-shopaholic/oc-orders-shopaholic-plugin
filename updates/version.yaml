@@ -168,3 +168,5 @@
 1.32.0:
     - 'Added the ability to link shipping types, payment methods to different sites. Added site() method to ShippingTypeCollection, PaymentMethodCollection classes.'
     - table_update_orders_add_site_id_field.php
+1.32.1:
+    - 'Updated composer file'
