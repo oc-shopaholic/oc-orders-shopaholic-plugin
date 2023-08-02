@@ -23,6 +23,9 @@ tabs:
         site_list:
             label: 'lovata.toolbox::lang.field.site_list'
             span: left
+            context:
+                - update
+                - preview
             type: checkboxlist
             quickselect: true
             tab: 'lovata.toolbox::lang.tab.settings'
