@@ -603,7 +603,7 @@ class Order extends Model
 
         $iWeight = 0;
         foreach ($obOrderPositionList as $obOrderPosition) {
-            $iWeight += (float) $obOrderPosition->weight;
+            $iWeight += (float) $obOrderPosition->weight * $obOrderPosition->quantity;
         }
 
         return $iWeight;
