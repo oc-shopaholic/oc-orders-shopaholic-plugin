@@ -1,0 +1,45 @@
+<?php if (!empty($this->vars)) { ?>
+
+    <?php if ($iCountAllOrders !== null) { ?>
+        <div class="scoreboard-item title-value">
+            <h4>
+                <?= e(trans('lovata.ordersshopaholic::lang.field.orders')) ?>
+            </h4>
+            <p class="positive">
+                <?= $iCountAllOrders ?>
+            </p>
+            <p class="description">
+                <?= e(trans('lovata.ordersshopaholic::lang.message.for_the_last_period')) ?>
+            </p>
+        </div>
+    <?php } ?>
+
+    <?php if ($iCountCompletedOrders !== null) { ?>
+        <div class="scoreboard-item title-value">
+            <h4>
+                <?= e(trans('lovata.ordersshopaholic::lang.field.completed_orders')) ?>
+            </h4>
+            <p class="positive">
+                <?= $iCountCompletedOrders ?>
+            </p>
+            <p class="description">
+                <?= e(trans('lovata.ordersshopaholic::lang.message.for_the_last_period')) ?>
+            </p>
+        </div>
+    <?php } ?>
+
+    <?php if (!empty($arCompletedTotalPrice) && is_array($arCompletedTotalPrice)) { ?>
+        <?php foreach($arCompletedTotalPrice as $arTotalPrice) { ?>
+            <?php if(!empty($arTotalPrice['price']) && !empty($arTotalPrice['currency'])) { ?>
+                <div class="scoreboard-item title-value">
+                    <h4>
+                        <?= e(trans('lovata.ordersshopaholic::lang.field.total_price')) ?>
+                    </h4>
+                    <p>
+                        <?= $arTotalPrice['currency'] ?> <?= $arTotalPrice['price'] ?>
+                    </p>
+                </div>
+            <?php } ?>
+        <?php } ?>
+    <?php } ?>
+<?php } ?>

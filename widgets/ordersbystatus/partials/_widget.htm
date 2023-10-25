@@ -1,0 +1,24 @@
+<div id="cachesizes" class="report-widget">
+    <h3>
+        <?= e(trans('lovata.ordersshopaholic::lang.field.widget_orders_by_statuses')) ?>
+    </h3>
+    <div
+        class="control-chart"
+        data-control="chart-pie"
+        data-size="200"
+        data-center-text="<?= $iCountOrders ?>"
+    >
+        <?php if (!empty($arOrderListByStatus) && is_array($arOrderListByStatus)) { ?>
+            <ul>
+                <?php foreach($arOrderListByStatus as $arStatus) { ?>
+                    <li>
+                        <?= array_get($arStatus, 'name') ?>
+                        <span>
+                            <?= array_get($arStatus, 'count') ?>
+                        </span>
+                    </li>
+                <?php } ?>
+            </ul>
+        <?php } ?>
+    </div>
+</div>

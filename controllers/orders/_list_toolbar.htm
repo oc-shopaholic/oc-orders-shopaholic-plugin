@@ -1,6 +1,10 @@
-<div data-control="toolbar">
-    <a href="<?= Backend::url('lovata/ordersshopaholic/orders/create') ?>" class="btn btn-primary oc-icon-plus">
-        <?= e(trans('backend::lang.form.create')) ?>
-    </a>
-    <?= $this->fireViewEvent('lovata.backend.extend_list_toolbar', [$this]) ?>
+<div class="scoreboard">
+    <div class="analytics-ajax" data-control="toolbar">
+        <div class="scoreboard-item title-value">
+            <a href="<?= Backend::url('lovata/ordersshopaholic/orders/create') ?>" class="btn btn-primary oc-icon-plus">
+                <?= e(trans('backend::lang.form.create')) ?>
+            </a>
+            <?= $this->fireViewEvent('lovata.backend.extend_list_toolbar', [$this]) ?>
+        </div>
+    </div>
 </div>

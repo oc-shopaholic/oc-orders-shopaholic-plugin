@@ -1,0 +1,18 @@
+<strong><?= $sTitle ?></strong>
+<?php if (!empty($sGraph)) { ?>
+    <div id="cachesizes" class="report-widget">
+        <div
+        data-control="chart-line"
+        data-time-mode="years"
+        class="height-200"
+        data-chart-options="xaxis: {mode: 'time'}"
+        >
+            <span
+                data-chart="dataset"
+                data-set-color="#008dc9"
+                data-set-data="<?= $sGraph ?>"
+                data-set-name="<?= $sName ?>">
+            </span>
+        </div>
+    </div>
+<?php } ?>

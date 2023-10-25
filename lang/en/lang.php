@@ -43,6 +43,7 @@
         'without_condition'    => 'Without condition',
         'discount_not_applied' => 'Mechanism for changing prices has not been applied applied',
         'e_address_exists'     => 'This address already exists',
+        'for_the_last_period'  => 'For the last period (30 days)',
     ],
     'field'                    => [
         'status'       => 'Status',
@@ -109,6 +110,7 @@
         'shipping_type_api_class'        => 'API method',
         'decrease_price'                 => 'Discount',
         'increase_price'                 => 'Increase price',
+        'count_orders'                   => 'Count orders',
 
         'order_discount_log_position_total_price' => 'List applied of mechanism for changing prices (position total price)',
         'order_discount_log_sipping_price'        => 'List applied of mechanism for changing prices (sipping price)',
@@ -117,6 +119,16 @@
         'name'        => 'Name',
         'last_name'   => 'Last name',
         'middle_name' => 'Middle name',
+
+        'orders'           => 'Orders',
+        'completed_orders' => 'Completed orders',
+
+        'widget_аor_the_last'          => 'For the last',
+        'widget_days'                  => 'days',
+        'widget_orders_by_statuses'    => 'Orders by statuses',
+        'widget_orders_graph'          => 'Orders graph',
+        'widget_only_completed_orders' => 'Only completed orders',
+        'widget_filter_by_currency'    => 'Filter by currency',
     ],
     'settings'                 => [
         'cart_cookie_lifetime'                 => 'Life time of cart ID in cookie (min.)',
