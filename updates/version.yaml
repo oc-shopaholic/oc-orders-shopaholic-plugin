@@ -174,3 +174,5 @@
     - 'Minor fix of integration with multisite.'
 1.32.3:
     - 'Fixed weight calculation in orders. Thanks for contribution Nick Khaetsky.'
+1.32.4:
+    - 'Fixed an error saving promomechanism model properties. Remove nested form. Thanks for contribution Semen Kuznetsov (dblackCat)'
