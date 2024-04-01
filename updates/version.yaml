@@ -176,3 +176,5 @@
     - 'Fixed weight calculation in orders. Thanks for contribution Nick Khaetsky.'
 1.32.4:
     - 'Fixed an error saving promomechanism model properties. Remove nested form. Thanks for contribution Semen Kuznetsov (dblackCat)'
+1.32.5:
+    - 'Fixed field list in price containers'

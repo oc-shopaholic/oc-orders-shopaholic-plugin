@@ -1,7 +1,6 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\PromoMechanism;
 
 use Lovata\Toolbox\Classes\Helper\PriceHelper;
-
 use Lovata\Shopaholic\Classes\Helper\TaxHelper;
 
 /**
@@ -93,6 +92,48 @@ class ItemPriceContainer
     protected $arLogData = [];
     protected $arUnitPriceList = [];
 
+    protected $arAvailableFieldList = [
+        'price',
+        'tax_price',
+        'price_without_tax',
+        'price_with_tax',
+
+        'old_price',
+        'tax_old_price',
+        'old_price_without_tax',
+        'old_price_with_tax',
+
+        'discount_price',
+        'tax_discount_price',
+        'discount_price_without_tax',
+        'discount_price_with_tax',
+
+        'increase_price',
+        'tax_increase_price',
+        'increase_price_without_tax',
+        'increase_price_with_tax',
+
+        'price_per_unit',
+        'tax_price_per_unit',
+        'price_per_unit_without_tax',
+        'price_per_unit_with_tax',
+
+        'old_price_per_unit',
+        'tax_old_price_per_unit',
+        'old_price_per_unit_without_tax',
+        'old_price_per_unit_with_tax',
+
+        'discount_price_per_unit',
+        'tax_discount_price_per_unit',
+        'discount_price_per_unit_without_tax',
+        'discount_price_per_unit_with_tax',
+
+        'increase_price_per_unit',
+        'tax_increase_price_per_unit',
+        'increase_price_per_unit_without_tax',
+        'increase_price_per_unit_with_tax',
+    ];
+
     /**
      * @return ItemPriceContainer
      */
@@ -132,7 +173,7 @@ class ItemPriceContainer
         }
 
         //Add to field name _value prefix
-        if (!preg_match('%^.+_value$%', $sField)) {
+        if (!preg_match('%^.+_value$%', $sField) && in_array($sField, $this->arAvailableFieldList)) {
             $sField .= '_value';
             return PriceHelper::format($this->$sField);
         }
@@ -184,81 +225,14 @@ class ItemPriceContainer
      */
     public function getData($arAdditionResult = [])
     {
-        $arResult = [
-            'price'                   => $this->price,
-            'price_value'             => $this->price_value,
-            'tax_price'               => $this->tax_price,
-            'tax_price_value'         => $this->tax_price_value,
-            'price_without_tax'       => $this->price_without_tax,
-            'price_without_tax_value' => $this->price_without_tax_value,
-            'price_with_tax'          => $this->price_with_tax,
-            'price_with_tax_value'    => $this->price_with_tax_value,
+        $arResult = [];
+        foreach ($this->arAvailableFieldList as $sField) {
+            $arResult[$sField] = $this->$sField;
+            $sField = $sField.'_value';
+            $arResult[$sField] = $this->$sField;
+        }
 
-            'old_price'                   => $this->old_price,
-            'old_price_value'             => $this->old_price_value,
-            'tax_old_price'               => $this->tax_old_price,
-            'tax_old_price_value'         => $this->tax_old_price_value,
-            'old_price_without_tax'       => $this->old_price_without_tax,
-            'old_price_without_tax_value' => $this->old_price_without_tax_value,
-            'old_price_with_tax'          => $this->old_price_with_tax,
-            'old_price_with_tax_value'    => $this->old_price_with_tax_value,
-
-            'discount_price'                   => $this->discount_price,
-            'discount_price_value'             => $this->discount_price_value,
-            'tax_discount_price'               => $this->tax_discount_price,
-            'tax_discount_price_value'         => $this->tax_discount_price_value,
-            'discount_price_without_tax'       => $this->discount_price_without_tax,
-            'discount_price_without_tax_value' => $this->discount_price_without_tax_value,
-            'discount_price_with_tax'          => $this->discount_price_with_tax,
-            'discount_price_with_tax_value'    => $this->discount_price_with_tax_value,
-
-            'increase_price'                   => $this->increase_price,
-            'increase_price_value'             => $this->increase_price_value,
-            'tax_increase_price'               => $this->tax_increase_price,
-            'tax_increase_price_value'         => $this->tax_increase_price_value,
-            'increase_price_without_tax'       => $this->increase_price_without_tax,
-            'increase_price_without_tax_value' => $this->increase_price_without_tax_value,
-            'increase_price_with_tax'          => $this->increase_price_with_tax,
-            'increase_price_with_tax_value'    => $this->increase_price_with_tax_value,
-
-            'price_per_unit'                   => $this->price_per_unit,
-            'price_per_unit_value'             => $this->price_per_unit_value,
-            'tax_price_per_unit'               => $this->tax_price_per_unit,
-            'tax_price_per_unit_value'         => $this->tax_price_per_unit_value,
-            'price_per_unit_without_tax'       => $this->price_per_unit_without_tax,
-            'price_per_unit_without_tax_value' => $this->price_per_unit_without_tax_value,
-            'price_per_unit_with_tax'          => $this->price_per_unit_with_tax,
-            'price_per_unit_with_tax_value'    => $this->price_per_unit_with_tax_value,
-
-            'old_price_per_unit'                   => $this->old_price_per_unit,
-            'old_price_per_unit_value'             => $this->old_price_per_unit_value,
-            'tax_old_price_per_unit'               => $this->tax_old_price_per_unit,
-            'tax_old_price_per_unit_value'         => $this->tax_old_price_per_unit_value,
-            'old_price_per_unit_without_tax'       => $this->old_price_per_unit_without_tax,
-            'old_price_per_unit_without_tax_value' => $this->old_price_per_unit_without_tax_value,
-            'old_price_per_unit_with_tax'          => $this->old_price_per_unit_with_tax,
-            'old_price_per_unit_with_tax_value'    => $this->old_price_per_unit_with_tax_value,
-
-            'discount_price_per_unit'                   => $this->discount_price_per_unit,
-            'discount_price_per_unit_value'             => $this->discount_price_per_unit_value,
-            'tax_discount_price_per_unit'               => $this->tax_discount_price_per_unit,
-            'tax_discount_price_per_unit_value'         => $this->tax_discount_price_per_unit_value,
-            'discount_price_per_unit_without_tax'       => $this->discount_price_per_unit_without_tax,
-            'discount_price_per_unit_without_tax_value' => $this->discount_price_per_unit_without_tax_value,
-            'discount_price_per_unit_with_tax'          => $this->discount_price_per_unit_with_tax,
-            'discount_price_per_unit_with_tax_value'    => $this->discount_price_per_unit_with_tax_value,
-
-            'increase_price_per_unit'                   => $this->increase_price_per_unit,
-            'increase_price_per_unit_value'             => $this->increase_price_per_unit_value,
-            'tax_increase_price_per_unit'               => $this->tax_increase_price_per_unit,
-            'tax_increase_price_per_unit_value'         => $this->tax_increase_price_per_unit_value,
-            'increase_price_per_unit_without_tax'       => $this->increase_price_per_unit_without_tax,
-            'increase_price_per_unit_without_tax_value' => $this->increase_price_per_unit_without_tax_value,
-            'increase_price_per_unit_with_tax'          => $this->increase_price_per_unit_with_tax,
-            'increase_price_per_unit_with_tax_value'    => $this->increase_price_per_unit_with_tax_value,
-
-            'log' => [],
-        ];
+        $arResult['log'] = [];
 
         if (!empty($arAdditionResult) && is_array($arAdditionResult)) {
             $arResult = array_merge($arResult, $arAdditionResult);

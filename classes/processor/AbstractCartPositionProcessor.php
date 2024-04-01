@@ -205,6 +205,7 @@ abstract class AbstractCartPositionProcessor
 
         //Get item property
         $arItemProperty = (array) array_get($this->arPositionData, 'property');
+        $arItemProperty = array_filter($arItemProperty);
 
         //Get cart position list by item_id and item_type
         $obCartPositionList = CartPosition::withTrashed()->getByCart($this->obCart->id)->getByItemType($sItemType)->getByItemID($iItemID)->get();
