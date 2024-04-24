@@ -10,13 +10,14 @@ use Lovata\OrdersShopaholic\Models\Status;
  * @package Lovata\Shopaholic\Classes\Item
  * @author  Andrey Kharanenka, a.khoronenko@lovata.com, LOVATA Group
  *
- * @property        $id
- * @property string $name
- * @property string $name_for_user
- * @property string $code
- * @property string $preview_text
- * @property bool $is_user_show
- * @property int $user_status_id
+ * @property            $id
+ * @property string     $name
+ * @property string     $color
+ * @property string     $name_for_user
+ * @property string     $code
+ * @property string     $preview_text
+ * @property bool       $is_user_show
+ * @property int        $user_status_id
  *
  * @property StatusItem $user_status
  */

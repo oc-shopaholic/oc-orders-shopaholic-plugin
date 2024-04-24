@@ -52,7 +52,7 @@ class Status extends Model
     const STATUS_COLOR_CANCELED = '#c0392b';
 
     public $table = 'lovata_orders_shopaholic_statuses';
-    
+
     public $implement = [
         '@RainLab.Translate.Behaviors.TranslatableModel',
     ];
@@ -82,6 +82,7 @@ class Status extends Model
         'id',
         'code',
         'name',
+        'color',
         'is_user_show',
         'user_status_id',
         'preview_text',
