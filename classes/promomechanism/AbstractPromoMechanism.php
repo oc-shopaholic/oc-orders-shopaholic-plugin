@@ -207,7 +207,7 @@ abstract class AbstractPromoMechanism implements InterfacePromoMechanism
         foreach ($arUnitPriceList as $iKey => &$fPrice) {
 
             if ($iQuantityLimitFrom > 0 && $iQuantityLimit > 0 && $iQuantityLimitFrom > $iQuantityLimit) {
-                $bSkipPrice = $this->bWithQuantityLimit && $iKey % $iQuantityLimitFrom >= $iQuantityLimit;
+                $bSkipPrice = $this->bWithQuantityLimit && $iKey % $iQuantityLimitFrom < $iQuantityLimitFrom - $iQuantityLimit;
                 if ($bSkipPrice) {
                     continue;
                 }

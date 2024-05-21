@@ -1,0 +1,13 @@
+<?php
+$sTypeClass = $formModel->type;
+$sDescription = !empty($sTypeClass) && class_exists($sTypeClass) ? $sTypeClass::getDescription() : null;
+?>
+
+<?php if (!empty($sDescription)) { ?>
+    <div class="callout fade in callout-info no-subheader">
+        <div class="header">
+            <i class="icon-warning"></i>
+            <p><?php echo $sDescription; ?></p>
+        </div>
+    </div>
+<?php } ?>

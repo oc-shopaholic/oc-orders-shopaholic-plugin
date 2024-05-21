@@ -178,3 +178,5 @@
     - 'Fixed an error saving promomechanism model properties. Remove nested form. Thanks for contribution Semen Kuznetsov (dblackCat)'
 1.33.0:
     - 'Added color field to StatusItem'
+1.33.1:
+    - 'Fixed logic of discount calculation in calculateItemDiscount method. Fixed description block in promo mechanism type field'

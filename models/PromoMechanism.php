@@ -99,28 +99,6 @@ class PromoMechanism extends Model
     }
 
     /**
-     * Change field properties (backend)
-     * @param      $obFieldList
-     * @param null $sContext
-     */
-    public function filterFields($obFieldList, $sContext = null)
-    {
-        if (!property_exists($obFieldList, 'type')) {
-            return;
-        }
-
-        $sTypeClass = $obFieldList->type->value;
-        if (empty($sTypeClass)) {
-            $arClassList = array_keys(PromoMechanismStore::instance()->getMechanismOptions());
-            $sTypeClass = array_shift($arClassList);
-        }
-
-        if (!empty($sTypeClass) && class_exists($sTypeClass)) {
-            $obFieldList->type->comment = $sTypeClass::getDescription();
-        }
-    }
-
-    /**
      * Get discount type options (backend)
      * @return array
      */
