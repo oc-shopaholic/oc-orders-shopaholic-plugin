@@ -152,10 +152,11 @@ class CartProcessor
      * Restore position from current cart
      * @param array  $arPositionList
      * @param string $sPositionProcessor
+     * @param string $sType
      * @return bool
      * @throws
      */
-    public function restore($arPositionList, $sPositionProcessor)
+    public function restore($arPositionList, $sPositionProcessor, $sType = 'offer')
     {
         if (!$this->validateRequest($arPositionList, $sPositionProcessor)) {
             return false;
@@ -166,7 +167,7 @@ class CartProcessor
         foreach ($arPositionList as $iPositionID) {
             /** @var AbstractCartPositionProcessor $obPositionProcessor */
             $obPositionProcessor = new $sPositionProcessor($this->obCart, $this->obUser);
-            $obPositionProcessor->restore($iPositionID);
+            $obPositionProcessor->restore($iPositionID, $sType);
         }
 
         $this->updateCartData();
