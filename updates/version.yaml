@@ -180,5 +180,5 @@
     - 'Added color field to StatusItem'
 1.33.1:
     - 'Fixed logic of discount calculation in calculateItemDiscount method. Fixed description block in promo mechanism type field'
-1.33.4:
+1.33.2:
     - 'Fixed October v4 compatibility'
