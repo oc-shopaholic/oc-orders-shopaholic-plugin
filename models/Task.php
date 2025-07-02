@@ -19,7 +19,7 @@ use Lovata\Toolbox\Classes\Helper\UserHelper;
  *
  * @property int                         $id
  * @property bool                        $sent
- * @property \October\Rain\Argon\Argon   $date
+ * @property \Carbon\Carbon              $date
  * @property string                      $status
  * @property string                      $title
  * @property string                      $description
@@ -28,16 +28,16 @@ use Lovata\Toolbox\Classes\Helper\UserHelper;
  * @property int                         $manager_id
  * @property int                         $author_id
  * @property string                      $mail_template
- * @property \October\Rain\Argon\Argon   $created_at
- * @property \October\Rain\Argon\Argon   $updated_at
+ * @property \Carbon\Carbon              $created_at
+ * @property \Carbon\Carbon              $updated_at
  *
  * @property Order                       $order
  * @method Order||\October\Rain\Database\Relations\BelongsTo order()
  * @property \Lovata\Buddies\Models\User $user
  * @method static \Lovata\Buddies\Models\User|\October\Rain\Database\Relations\BelongsTo user()
- * @property BackendUser $manager
+ * @property BackendUser                 $manager
  * @method static BackendUser|\October\Rain\Database\Relations\BelongsTo manager()
- * @property BackendUser $author
+ * @property BackendUser                 $author
  * @method static BackendUser|\October\Rain\Database\Relations\BelongsTo author()
  *
  * @method static $this getByOrder(int $iOrderID)

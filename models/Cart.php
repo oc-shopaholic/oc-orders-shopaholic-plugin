@@ -22,8 +22,8 @@ use Lovata\Toolbox\Classes\Helper\UserHelper;
  * @property array                                                                       $shipping_address
  * @property int                                                                         $payment_method_id
  * @property int                                                                         $shipping_type_id
- * @property \October\Rain\Argon\Argon                                                   $created_at
- * @property \October\Rain\Argon\Argon                                                   $updated_at
+ * @property \Carbon\Carbon                                                              $created_at
+ * @property \Carbon\Carbon                                                              $updated_at
  *
  * @property \Lovata\Buddies\Models\User                                                 $user
  * @method static \Lovata\Buddies\Models\User|\October\Rain\Database\Relations\BelongsTo user()

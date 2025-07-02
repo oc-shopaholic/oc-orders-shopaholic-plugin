@@ -130,7 +130,7 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\ItemPriceContainer;
  *
  * Subscriptions for Shopaholic
  * @property bool                                                                $is_subscription
- * @property \October\Rain\Argon\Argon                                           $expire_at
+ * @property \Carbon\Carbon                                                      $expire_at
  * @property int                                                                 $subscription_period_id
  * @property \Lovata\SubscriptionsShopaholic\Classes\Item\SubscriptionPeriodItem $subscription_period
  * @property int                                                                 $subscription_access_id

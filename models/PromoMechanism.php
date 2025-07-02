@@ -28,8 +28,8 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\PromoMechanismStore;
  * @property string                                    $discount_type
  * @property bool                                      $final_discount
  * @property array                                     $property
- * @property \October\Rain\Argon\Argon                 $created_at
- * @property \October\Rain\Argon\Argon                 $updated_at
+ * @property \Carbon\Carbon                            $created_at
+ * @property \Carbon\Carbon                            $updated_at
  *
  * @method static $this withIncrease()
  * @method static $this withDecrease()
@@ -93,7 +93,7 @@ class PromoMechanism extends Model
      * Get promo mechanism list for backend
      * @return array
      */
-    public function getTypeOptions() : array
+    public function getTypeOptions(): array
     {
         return PromoMechanismStore::instance()->getMechanismOptions();
     }
@@ -102,7 +102,7 @@ class PromoMechanism extends Model
      * Get discount type options (backend)
      * @return array
      */
-    public function getDiscountTypeOptions() : array
+    public function getDiscountTypeOptions(): array
     {
         return [
             self::PERCENT_TYPE => Lang::get('lovata.ordersshopaholic::lang.field.discount_type_'.self::PERCENT_TYPE),

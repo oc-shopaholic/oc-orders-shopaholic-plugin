@@ -21,9 +21,9 @@ use Lovata\Toolbox\Traits\Models\SetPropertyAttributeTrait;
  * @property string                          $item_type
  * @property array                           $property
  * @property integer                         $quantity
- * @property \October\Rain\Argon\Argon       $created_at
- * @property \October\Rain\Argon\Argon       $updated_at
- * @property \October\Rain\Argon\Argon       $deleted_at
+ * @property \Carbon\Carbon                  $created_at
+ * @property \Carbon\Carbon                  $updated_at
+ * @property \Carbon\Carbon                  $deleted_at
  *
  * @property Cart                            $cart
  * @method static Cart|\October\Rain\Database\Relations\BelongsTo cart()
@@ -51,8 +51,8 @@ class CartPosition extends Model
     ];
 
     public $customMessages = [
-        'cart_id.required' => 'lovata.ordersshopaholic::lang.message.cart_id_required',
-        'item_id.required' => 'lovata.ordersshopaholic::lang.message.item_required',
+        'cart_id.required'   => 'lovata.ordersshopaholic::lang.message.cart_id_required',
+        'item_id.required'   => 'lovata.ordersshopaholic::lang.message.item_required',
         'item_type.required' => 'lovata.ordersshopaholic::lang.message.item_required',
     ];
 

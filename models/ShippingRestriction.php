@@ -27,8 +27,8 @@ use Lovata\OrdersShopaholic\Classes\Restriction\ShippingRestrictionByPaymentMeth
  * @property string                                           $description
  * @property array                                            $property
  * @property int                                              $sort_order
- * @property \October\Rain\Argon\Argon                        $created_at
- * @property \October\Rain\Argon\Argon                        $updated_at
+ * @property \Carbon\Carbon                                   $created_at
+ * @property \Carbon\Carbon                                   $updated_at
  *
  * @property \October\Rain\Database\Collection|ShippingType[] $shipping_type
  * @method static ShippingType|\October\Rain\Database\Relations\BelongsToMany shipping_type()

@@ -28,8 +28,8 @@ use Lovata\OrdersShopaholic\Interfaces\PaymentGatewayInterface;
  * @property string                                                         $preview_text
  * @property int                                                            $sort_order
  * @property array                                                          $site_list
- * @property \October\Rain\Argon\Argon                                      $created_at
- * @property \October\Rain\Argon\Argon                                      $updated_at
+ * @property \Carbon\Carbon                                                 $created_at
+ * @property \Carbon\Carbon                                                 $updated_at
  *
  * @property string                                                         $gateway_id
  * @property string                                                         $gateway_currency

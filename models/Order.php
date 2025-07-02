@@ -1,7 +1,7 @@
 <?php namespace Lovata\OrdersShopaholic\Models;
 
 use Model;
-use October\Rain\Argon\Argon;
+use Carbon\Carbon;
 use October\Rain\Database\Traits\Validation;
 use October\Rain\Database\Traits\Encryptable;
 use Backend\Models\User as BackendUser;
@@ -50,8 +50,8 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderPromoMechanismProcessor;
  * @property \Lovata\OrdersShopaholic\Classes\PromoMechanism\TotalPriceContainer         $total_price_data
  * @property array                                                                       $property
  *
- * @property \October\Rain\Argon\Argon                                                   $created_at
- * @property \October\Rain\Argon\Argon                                                   $updated_at
+ * @property \Carbon\Carbon                                                              $created_at
+ * @property \Carbon\Carbon                                                              $updated_at
  *
  * @property string                                                                      $transaction_id
  * @property string                                                                      $payment_token
@@ -490,7 +490,7 @@ class Order extends Model
             return;
         }
 
-        $obDate = Argon::today()->startOfDay();
+        $obDate = Carbon::today()->startOfDay();
         $bAvailableNumber = false;
         $iTodayOrdersCount = $this->where('created_at', '>=', $obDate->toDateTimeString())->count() + 1;
 
@@ -499,7 +499,7 @@ class Order extends Model
                 $iTodayOrdersCount = '0'.$iTodayOrdersCount;
             }
 
-            $this->order_number = Argon::today()->format('ymd').'-'.$iTodayOrdersCount;
+            $this->order_number = Carbon::today()->format('ymd').'-'.$iTodayOrdersCount;
             if (empty($this->getByNumber($this->order_number)->first())) {
                 $bAvailableNumber = true;
             } else {

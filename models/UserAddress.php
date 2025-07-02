@@ -29,8 +29,8 @@ use Lovata\Toolbox\Traits\Helpers\TraitCached;
  * @property string                                                                      $address1
  * @property string                                                                      $address2
  * @property string                                                                      $postcode
- * @property \October\Rain\Argon\Argon                                                   $created_at
- * @property \October\Rain\Argon\Argon                                                   $updated_at
+ * @property \Carbon\Carbon                                                              $created_at
+ * @property \Carbon\Carbon                                                              $updated_at
  * @property \Lovata\Buddies\Models\User                                                 $user
  * @method static \October\Rain\Database\Relations\BelongsTo|\Lovata\Buddies\Models\User user()
  */

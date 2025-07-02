@@ -52,8 +52,8 @@ use Lovata\OrdersShopaholic\Classes\PromoMechanism\OrderItemPromoMechanismProces
  * @property array                                                                           $order_promo_mechanism_id
  * @property float                                                                           $shipping_tax_percent
  *
- * @property \October\Rain\Argon\Argon                                                       $created_at
- * @property \October\Rain\Argon\Argon                                                       $updated_at
+ * @property \Carbon\Carbon                                                                  $created_at
+ * @property \Carbon\Carbon                                                                  $updated_at
  *
  * @property StatusItem                                                                      $status
  * @property PaymentMethodItem                                                               $payment_method
@@ -127,7 +127,7 @@ class OrderItem extends ElementItem
     /**
      * Create object of OrderPromoMechanismProcessor class for Order
      */
-    public function getPromoMechanismProcessor() : OrderItemPromoMechanismProcessor
+    public function getPromoMechanismProcessor(): OrderItemPromoMechanismProcessor
     {
         if (!empty($this->obPromoProcessor) && $this->obPromoProcessor instanceof OrderItemPromoMechanismProcessor) {
             return $this->obPromoProcessor;

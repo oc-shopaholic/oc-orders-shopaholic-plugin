@@ -1,7 +1,7 @@
 <?php namespace Lovata\OrdersShopaholic\Classes\Console;
 
 use Lovata\Toolbox\Classes\Helper\SendMailHelper;
-use October\Rain\Argon\Argon;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use System\Models\MailTemplate;
 
@@ -29,7 +29,7 @@ class SendManagerNotification extends Command
      */
     public function handle()
     {
-        $obDateNow = Argon::now();
+        $obDateNow = Carbon::now();
 
         //Get active task list
         $obTaskList = Task::where('sent', false)

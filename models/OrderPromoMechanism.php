@@ -17,27 +17,27 @@ use Lovata\Toolbox\Classes\Helper\PriceHelper;
  * @mixin \October\Rain\Database\Builder
  * @mixin \Eloquent
  *
- * @property int                       $id
- * @property int                       $order_id
- * @property int                       $mechanism_id
- * @property string                    $name
- * @property string                    $type
- * @property bool                      $increase
- * @property int                       $priority
- * @property float                     $discount_value
- * @property string                    $discount_type
- * @property bool                      $final_discount
- * @property array                     $property
- * @property int                       $element_id
- * @property string                    $element_type
- * @property array                     $element_data
- * @property string                    $description
- * @property \October\Rain\Argon\Argon $created_at
- * @property \October\Rain\Argon\Argon $updated_at
+ * @property int            $id
+ * @property int            $order_id
+ * @property int            $mechanism_id
+ * @property string         $name
+ * @property string         $type
+ * @property bool           $increase
+ * @property int            $priority
+ * @property float          $discount_value
+ * @property string         $discount_type
+ * @property bool           $final_discount
+ * @property array          $property
+ * @property int            $element_id
+ * @property string         $element_type
+ * @property array          $element_data
+ * @property string         $description
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  *
- * @property Order                     $order
+ * @property Order          $order
  * @method static Order|\October\Rain\Database\Relations\BelongsTo order()
- * @property PromoMechanism            $mechanism
+ * @property PromoMechanism $mechanism
  * @method static PromoMechanism|\October\Rain\Database\Relations\BelongsTo mechanism()
  *
  * @method static $this withIncrease()
@@ -126,7 +126,7 @@ class OrderPromoMechanism extends Model
      * Get discount type options (backend)
      * @return array
      */
-    public function getDiscountTypeOptions() : array
+    public function getDiscountTypeOptions(): array
     {
         return [
             PromoMechanism::PERCENT_TYPE => Lang::get('lovata.ordersshopaholic::lang.field.discount_type_'.PromoMechanism::PERCENT_TYPE),

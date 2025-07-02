@@ -23,8 +23,8 @@ use Lovata\Toolbox\Traits\Helpers\TraitCached;
  * @property bool                                      $is_user_show
  * @property int                                       $user_status_id
  * @property int                                       $sort_order
- * @property \October\Rain\Argon\Argon                 $created_at
- * @property \October\Rain\Argon\Argon                 $updated_at
+ * @property \Carbon\Carbon                            $created_at
+ * @property \Carbon\Carbon                            $updated_at
  *
  * @property \October\Rain\Database\Collection|Order[] $order
  * @method static Order|\October\Rain\Database\Relations\HasMany order()

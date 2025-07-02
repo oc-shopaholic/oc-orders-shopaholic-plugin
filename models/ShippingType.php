@@ -33,8 +33,8 @@ use Lovata\Toolbox\Traits\Helpers\PriceHelperTrait;
  * @property float                                                                            $price_value
  * @property int                                                                              $sort_order
  * @property array                                                                            $site_list
- * @property \October\Rain\Argon\Argon                                                        $created_at
- * @property \October\Rain\Argon\Argon                                                        $updated_at
+ * @property \Carbon\Carbon                                                                   $created_at
+ * @property \Carbon\Carbon                                                                   $updated_at
  *
  * @property \October\Rain\Database\Collection|Order[]                                        $order
  * @method static Order|\October\Rain\Database\Relations\HasMany order()
