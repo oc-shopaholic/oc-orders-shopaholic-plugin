@@ -108,8 +108,9 @@ class Cart extends ComponentBase
     public function onRestore()
     {
         $arRequestData = Input::get('cart');
+        $sType = Input::get('type', 'offer');
 
-        CartProcessor::instance()->restore($arRequestData, OfferCartPositionProcessor::class);
+        CartProcessor::instance()->restore($arRequestData, OfferCartPositionProcessor::class, $sType);
         Result::setData(CartProcessor::instance()->getCartData());
 
         return Result::get();
