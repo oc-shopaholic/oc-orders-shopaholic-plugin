@@ -225,8 +225,13 @@ class Cart extends ComponentBase
      */
     public function get($obShippingTypeItem = null, $obPaymentMethodItem = null)
     {
-        CartProcessor::instance()->setActiveShippingType($obShippingTypeItem);
-        CartProcessor::instance()->setActivePaymentMethod($obPaymentMethodItem);
+        if ($obShippingTypeItem !== null) {
+            CartProcessor::instance()->setActiveShippingType($obShippingTypeItem);
+        }
+
+        if ($obPaymentMethodItem !== null) {
+            CartProcessor::instance()->setActivePaymentMethod($obPaymentMethodItem);
+        }
 
         return CartProcessor::instance()->get();
     }
