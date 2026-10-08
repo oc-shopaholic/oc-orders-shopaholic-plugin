@@ -27,7 +27,7 @@ class StatusList extends ComponentBase
      *
      * @return StatusCollection
      */
-    public function make($arElementIDList = null)
+    public function makeCollection($arElementIDList = null)
     {
         return StatusCollection::make($arElementIDList);
     }
