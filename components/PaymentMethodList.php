@@ -27,7 +27,7 @@ class PaymentMethodList extends ComponentBase
      *
      * @return PaymentMethodCollection
      */
-    public function make($arElementIDList = null)
+    public function makeCollection($arElementIDList = null)
     {
         return PaymentMethodCollection::make($arElementIDList);
     }

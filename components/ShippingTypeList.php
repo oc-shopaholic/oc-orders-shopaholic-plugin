@@ -27,7 +27,7 @@ class ShippingTypeList extends ComponentBase
      *
      * @return ShippingTypeCollection
      */
-    public function make($arElementIDList = null)
+    public function makeCollection($arElementIDList = null)
     {
         return ShippingTypeCollection::make($arElementIDList);
     }
